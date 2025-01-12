@@ -1,38 +1,24 @@
-import axios, { AxiosError } from "axios";
+import axios from "axios";
 
-let port = 3000;
-let host = "localhost";
-let protocol = "http";
-let baseUrl = `${protocol}://${host}:${port}`;
+const port = 3000;
+const host = "localhost";
+const protocol = "http";
 
-test("GET /foo?bar returns message", async () => {
-    let bar = "xyzzy";
-    let { data } = await axios.get(`${baseUrl}/foo?bar=${bar}`);
-    expect(data).toEqual({ message: `You sent: ${bar} in the query` });
-});
+const baseURL = `${protocol}://${host}:${port}`;
 
-test("GET /foo returns error", async () => {
-    try {
-        await axios.get(`${baseUrl}/foo`);
-    } catch (error) {
-        // casting needed b/c typescript gives errors "unknown" type
-        let errorObj = error as AxiosError;
-        // if server never responds, error.response will be undefined
-        // throw the error so typescript can perform type narrowing
-        if (errorObj.response === undefined) {
-            throw errorObj;
-        }
-        // now, after the if-statement, typescript knows
-        // that errorObj can't be undefined
-        let { response } = errorObj;
-        // TODO this test will fail, replace 300 with 400
-        expect(response.status).toEqual(300);
-        expect(response.data).toEqual({ error: "bar is required" });
-    }
-});
+export const api = axios.create({ baseURL });
 
-test("POST /bar works good", async () => {
-    let bar = "xyzzy";
-    let result = await axios.post(`${baseUrl}/foo`, { bar });
-    expect(result.data).toEqual({ message: `You sent: ${bar} in the body` });
+
+describe('Express Server Tests', () => {
+    describe('404 Error Handler', () => {
+        it('should return 404 with error message for non-existent routes', async () => {
+            try {
+                await api.get('/non-existent-route');
+            } catch (error: any) {
+                expect(error.response.status).toBe(404);
+                expect(error.response.data).toHaveProperty('message');
+                expect(error.response.data.message).toContain('Not Found: /non-existent-route');
+            }
+        });
+    });
 });

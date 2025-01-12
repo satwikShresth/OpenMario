@@ -2,6 +2,7 @@
     "include": ["src/**/*"],
     "compilerOptions": {
         "outDir": "out",
+        "skipLibCheck": true,
 
         // enable top-level await and import/export syntax
         "target": "es2017",
