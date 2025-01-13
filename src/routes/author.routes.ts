@@ -1,4 +1,3 @@
-//TODO: adding query for selection for GET
 import { NextFunction, Request, Response, Router } from 'express';
 import { db } from '#db';
 import { authors } from '#db/schema.js';
