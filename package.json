@@ -11,6 +11,13 @@
     "db:seed": "node ./out/db/seed/index.js"
   },
   "type": "module",
+  "imports": {
+    "#/*": "./out/*",
+    "#routes": "./out/routes/index.js",
+    "#utils/*": "./out/utils/*",
+    "#db/*": "./out/db/*",
+    "#db": "./out/db/index.js"
+  },
   "dependencies": {
     "@libsql/client": "^0.14.0",
     "better-sqlite3": "^11.7.2",

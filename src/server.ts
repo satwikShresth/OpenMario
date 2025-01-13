@@ -1,5 +1,5 @@
 import express, { Request, Response, NextFunction } from "express";
-import routes from "./routes/index.js";
+import routes from "#routes";
 import morgan from 'morgan';
 
 const port = 3000;

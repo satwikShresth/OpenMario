@@ -1,8 +1,10 @@
+//TODO: adding tests for query for selection for GET
+//TODO: adding tests for params style GET,DELETE,PUT endpoints
 import { AxiosError } from "axios";
-import { authors } from "../db/schema.js";
+import { authors } from "#db/schema.js";
 import { eq } from "drizzle-orm";
-import { db } from "../db/index.js";
-import { Author } from "../db/types.js";
+import { db } from "#db/index.js";
+import { Author } from "#db/types.js";
 import { api } from "../server.test.js";
 
 const endpoint = `/api/authors`

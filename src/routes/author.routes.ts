@@ -1,9 +1,10 @@
+//TODO: adding query for selection for GET
 import { NextFunction, Request, Response, Router } from 'express';
-import { db } from '../db/index.js';
-import { authors } from '../db/schema.js';
+import { db } from '#db';
+import { authors } from '#db/schema.js';
 import { z } from 'zod';
-import { AuthorCreate, AuthorCreateSchema, AuthorUpdateSchema } from '../db/types.js';
-import { formatZodError } from '../utils/formatter.js';
+import { AuthorCreate, AuthorCreateSchema, AuthorUpdateSchema } from '#db/types.js';
+import { formatZodError } from '#utils/formatter.js';
 import { eq } from 'drizzle-orm';
 
 interface RequestParamsId extends Request {
