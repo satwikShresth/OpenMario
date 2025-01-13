@@ -4,7 +4,10 @@ import { authors, books } from './schema.js';
 
 //validators
 export const AuthorSchema = createSelectSchema(authors)
-export const AuthorCreateSchema = createInsertSchema(authors);
+export const AuthorCreateSchema = createInsertSchema(authors, {
+    name: (schema) => schema.min(1, { message: "Name cannot be empty" }).max(100),
+    bio: (schema) => schema.max(1000),
+});
 export const AuthorUpdateSchema = createUpdateSchema(authors);
 
 export const BookSchema = createSelectSchema(books)
