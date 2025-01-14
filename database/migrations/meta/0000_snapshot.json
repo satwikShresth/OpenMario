@@ -1,7 +1,7 @@
 {
   "version": "6",
   "dialect": "sqlite",
-  "id": "f842f536-e5a9-4eb6-8777-5379c962e07a",
+  "id": "c8d532ec-a12b-422f-a3ab-be19358037b2",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "authors": {
@@ -18,7 +18,7 @@
           "name": "name",
           "type": "text",
           "primaryKey": false,
-          "notNull": false,
+          "notNull": true,
           "autoincrement": false
         },
         "bio": {
@@ -29,7 +29,15 @@
           "autoincrement": false
         }
       },
-      "indexes": {},
+      "indexes": {
+        "authors_name_unique": {
+          "name": "authors_name_unique",
+          "columns": [
+            "name"
+          ],
+          "isUnique": true
+        }
+      },
       "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {},
@@ -49,28 +57,28 @@
           "name": "author_id",
           "type": "integer",
           "primaryKey": false,
-          "notNull": false,
+          "notNull": true,
           "autoincrement": false
         },
         "title": {
           "name": "title",
           "type": "text",
           "primaryKey": false,
-          "notNull": false,
+          "notNull": true,
           "autoincrement": false
         },
         "pub_year": {
           "name": "pub_year",
-          "type": "text",
+          "type": "text(4)",
           "primaryKey": false,
-          "notNull": false,
+          "notNull": true,
           "autoincrement": false
         },
         "genre": {
           "name": "genre",
           "type": "text",
           "primaryKey": false,
-          "notNull": false,
+          "notNull": true,
           "autoincrement": false
         }
       },

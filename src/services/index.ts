@@ -1,4 +1,4 @@
-import { BookService } from "./books.service.js";
-import { db } from "../db/index.js";
+import { BookService } from './books.service.ts';
+import { db } from '#db/index.ts';
 
-export const bookService = new BookService(db) 
+export const bookService = new BookService(db);

@@ -1,5 +1,5 @@
-import { database } from "../db/index.js";
+import { database } from '#db/index.ts';
 
 export class Service {
-    constructor(protected db: database) { }
+   constructor(protected db: database) {}
 }
