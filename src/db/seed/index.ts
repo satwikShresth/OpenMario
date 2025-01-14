@@ -1,5 +1,5 @@
-import { db } from '#db/index.ts';
-import { authors, books } from '#db/schema.ts';
+import { db } from '#/db/index.ts';
+import { authors, books } from '#/db/schema.ts';
 
 try {
    await db.insert(authors).values({
