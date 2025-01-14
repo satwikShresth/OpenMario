@@ -4,12 +4,13 @@ import {
    createUpdateSchema,
 } from 'drizzle-zod';
 import { z } from 'zod';
-import { authors, books, VALID_GENRES } from '#db/schema.ts';
+import { authors, books, VALID_GENRES } from '#/db/schema.ts';
 
 const currentYear = new Date().getFullYear();
 
 const name = (schema: z.ZodString) =>
-   schema.trim()
+   schema
+      .trim()
       .min(1, { message: 'Name cannot be empty' })
       .max(100, { message: 'Name must be less than 100 characters' })
       .regex(/^[a-zA-Z\s\-'\p{L}\p{M}]+$/u, {
@@ -30,7 +31,7 @@ const title = (schema: z.ZodString) =>
       .min(1, { message: 'Title cannot be empty' })
       .max(200, { message: 'Title must be less than 200 characters' });
 
-const pub_year = (schema: z.ZodString) =>
+export const pub_year = (schema: z.ZodString) =>
    schema
       .trim()
       .regex(/^\d{4}$/, {
@@ -38,9 +39,9 @@ const pub_year = (schema: z.ZodString) =>
       })
       .refine((year) => {
          const yearNum = parseInt(year);
-         return yearNum >= 1000 && yearNum <= currentYear;
+         return yearNum >= 0 && yearNum <= currentYear;
       }, {
-         message: `Publication year must be between 1000 and ${currentYear}`,
+         message: `Publication year must be between 0 and ${currentYear}`,
       });
 
 const genre = (schema: z.ZodString) =>
@@ -68,12 +69,18 @@ export const BookCreateSchema = createInsertSchema(books, {
    title,
    pub_year,
    genre,
+}).extend({
+   author_name: name(z.string()),
+   author_bio: bio(z.string()).optional(),
 }).strict();
 
 export const BookUpdateSchema = createUpdateSchema(books, {
    title,
    pub_year,
    genre,
+}).extend({
+   author_name: name(z.string()).optional(),
+   author_bio: bio(z.string()).optional(),
 }).strict();
 
 export const AuthorResponseSchema = AuthorSchema.extend({
@@ -93,4 +100,3 @@ export type BookCreate = z.infer<typeof BookCreateSchema>;
 export type BookUpdate = z.infer<typeof BookUpdateSchema>;
 export type AuthorResponse = z.infer<typeof AuthorResponseSchema>;
 export type BookResponse = z.infer<typeof BookResponseSchema>;
-

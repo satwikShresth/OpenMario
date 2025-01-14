@@ -148,7 +148,7 @@ describe('Author API', () => {
                await api.get(`${endpoint}/invalid`);
             } catch (error: any) {
                expect(error.response.status).toBe(400);
-               expect(error.response.data).toHaveProperty('type', 'params');
+               expect(error.response.data).toHaveProperty('type', 'Params');
             }
          });
 
@@ -283,7 +283,7 @@ describe('Author API', () => {
                }
                const { response } = errorObj;
                expect(response.status).toEqual(400);
-               expect(response.data).toHaveProperty('type', 'body');
+               expect(response.data).toHaveProperty('type', 'Body');
                expect(response.data).toHaveProperty('errors');
             }
             // Verify no authors were created
@@ -381,7 +381,7 @@ describe('Author API', () => {
             await api.put(`${endpoint}/${testAuthor[0].id}`, invalidUpdate);
          } catch (error: any) {
             expect(error.response.status).toBe(400);
-            expect(error.response.data).toHaveProperty('type', 'body');
+            expect(error.response.data).toHaveProperty('type', 'Body');
          }
       });
 
@@ -424,7 +424,7 @@ describe('Author API', () => {
             await api.delete(`${endpoint}/invalid-id`);
          } catch (error: any) {
             expect(error.response.status).toBe(400);
-            expect(error.response.data).toHaveProperty('type', 'params');
+            expect(error.response.data).toHaveProperty('type', 'Params');
          }
       });
    });
