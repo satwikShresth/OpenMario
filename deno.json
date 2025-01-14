@@ -31,14 +31,16 @@
    },
    "tasks": {
       "setup": "rm -f database.db && sqlite3 database.db < ./database/migrations/0000_inital.sql",
-      "start": "deno -A src/server.js",
+      "build": "deno check src",
+      "start": "deno -A src/server.ts",
       "watch": "deno -A --watch src/server.ts",
+      "test": "deno test -A",
       "dev": "deno task watch",
       "db:migrate": "deno run  -A npm:drizzle-kit migrate ",
       "db:migrate:generate": "deno run -A npm:drizzle-kit generate --name ",
       "db:migrate:push": "deno run -A npm:drizzle-kit push --force",
-      "db:seed": "deno run --env-file=../.env -A",
-      "db:studio": "deno run --env-file=../.env -A npm:drizzle-kit studio --config=./config/drizzle.config.ts",
+      "db:seed": "deno run -A",
+      "db:studio": "deno run -A npm:drizzle-kit studio",
       "format": "deno fmt --watch src"
    },
   "nodeModulesDir": "auto"

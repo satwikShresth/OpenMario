@@ -16,7 +16,7 @@ const testAuthors = [
    { name: 'Sarah Wilson', bio: 'Romance novelist from Paris' },
 ];
 
-describe('Author API', () => {
+describe('Authors API', () => {
    beforeEach(async () => {
       await db.delete(authors);
    });
