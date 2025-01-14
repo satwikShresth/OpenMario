@@ -12,13 +12,18 @@ const zodValidator =
       const result = await schema.safeParseAsync(req[method]);
 
       if (!result.success) {
+         console.log(formatZodError(result.error).error);
          return res.status(400).send({
             type: method,
             errors: formatZodError(result.error).error,
          });
       }
 
-      req[method] = result.data;
+      if (req.validated === undefined) {
+         req.validated = {};
+      }
+
+      req.validated[method] = result.data;
       next();
    };
 

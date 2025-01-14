@@ -69,6 +69,7 @@ export const BookCreateSchema = createInsertSchema(books, {
    title,
    pub_year,
    genre,
+   author_id: (schema) => schema.optional(),
 }).extend({
    author_name: name(z.string()),
    author_bio: bio(z.string()).optional(),

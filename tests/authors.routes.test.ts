@@ -195,7 +195,7 @@ describe('Author API', () => {
             await api.get(`${endpoint}/invalid-id`);
          } catch (error: any) {
             expect(error.response.status).toBe(400);
-            expect(error.response.data).toHaveProperty('type', 'Params');
+            expect(error.response.data).toHaveProperty('type', 'params');
          }
       });
    });

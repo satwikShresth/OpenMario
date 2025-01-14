@@ -17,27 +17,32 @@ import { and, eq } from 'drizzle-orm';
 import { BookUpdateSchema } from '#/db/types.ts';
 import { BookUpdate } from '#/db/types.ts';
 
-const checkCreateAuthor = async (author_name: string, author_bio: string) => {
-   const existingAuthor = await db
-      .select({ id: authors.id })
-      .from(authors)
-      .where(eq(authors.name, author_name))
-      .get();
-
-   if (!existingAuthor) {
-      const newAuthor = await db
-         .insert(authors)
-         .values({
-            name: author_name,
-            bio: author_bio,
-         })
-         .returning({ id: authors.id })
+const checkCreateAuthor = async (
+   author_name: string,
+   author_bio: string | null | undefined,
+) => {
+   if (author_name) {
+      const existingAuthor = await db
+         .select({ id: authors.id })
+         .from(authors)
+         .where(eq(authors.name, author_name))
          .get();
 
-      return newAuthor.id;
-   }
+      if (!existingAuthor) {
+         const newAuthor = await db
+            .insert(authors)
+            .values({
+               name: author_name,
+               bio: author_bio === undefined ? null : author_bio,
+            })
+            .returning({ id: authors.id })
+            .get();
 
-   return existingAuthor.id;
+         return newAuthor.id;
+      }
+
+      return existingAuthor.id;
+   }
 };
 
 export default () => {
@@ -47,7 +52,7 @@ export default () => {
       .get(
          zodQueryValidator(BookQuerySchema),
          async (req: Request, res: Response) => {
-            const queries = req.query as BookQuery;
+            const queries = req?.validated?.query as BookQuery;
 
             const queryResult = await db
                .select()
@@ -61,12 +66,11 @@ export default () => {
       .post(
          zodBodyValidator(BookCreateSchema),
          async (req: Request, res: Response) => {
-            const insertData = req.body as BookCreate;
-
-            const author_id = await checkCreateAuthor(
+            const insertData = req?.validated?.body as BookCreate;
+            const author_id = (await checkCreateAuthor(
                insertData.author_name,
-               insertData.author_bio!,
-            );
+               insertData.author_bio,
+            ))!;
 
             const newBook = await db
                .insert(books)
@@ -85,7 +89,7 @@ export default () => {
    router.route('/:id')
       .all(zodParamsValidator(paramsIdSchema))
       .get(async (req: RequestParamsId, res: Response) => {
-         const validatedId = req?.params?.id!;
+         const validatedId = req?.validated?.params?.id!;
 
          const result = await db
             .select()
@@ -101,8 +105,8 @@ export default () => {
       .put(
          zodBodyValidator(BookUpdateSchema),
          async (req: RequestParamsId, res: Response) => {
-            const validatedId = req?.params?.id!;
-            const updateData = req?.body! as BookUpdate;
+            const validatedId = req?.validated?.params?.id!;
+            const updateData = req?.validated?.body! as BookUpdate;
 
             const author_id = await checkCreateAuthor(
                updateData.author_name!,
@@ -112,10 +116,14 @@ export default () => {
             const updatedAuthor = await db
                .update(books)
                .set({
-                  title: updateData.title!,
-                  pub_year: updateData.pub_year!,
-                  genre: updateData.genre!,
-                  author_id,
+                  ...Object.fromEntries(
+                     Object.entries({
+                        title: updateData.title!,
+                        pub_year: updateData.pub_year!,
+                        genre: updateData.genre!,
+                        author_id,
+                     }).filter(([_, value]) => value !== undefined),
+                  ),
                })
                .where(eq(books.id, validatedId))
                .returning();
@@ -124,9 +132,11 @@ export default () => {
          },
       )
       .delete(async (req: RequestParamsId, res: Response) => {
+         const validatedId = req?.validated?.params?.id!;
+
          const result = await db
             .delete(books)
-            .where(eq(books.id, req.validatedId!))
+            .where(eq(books.id, validatedId!))
             .returning({ deleted_id: books.id });
 
          res.json(result);

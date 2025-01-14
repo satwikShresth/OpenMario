@@ -8,7 +8,20 @@ const protocol = 'http';
 export const app = express();
 
 app.use(express.json());
-app.use(morgan(':method :url :status'));
+
+////Debug
+//morgan.token('body', (req: Request) => JSON.stringify(req.body));
+//morgan.token('query', (req: Request) => JSON.stringify(req.query));
+//app.use(
+//   morgan(
+//      ':method :url :status :response-time ms\n{\nbody: :body\nquery: :query\n}',
+//   ),
+//);
+////Debug
+
+//Non Debug
+app.use(morgan(':method :url :status :response-time ms'));
+//Non Debug
 app.use('/api/', routes());
 
 app.use((req: Request, res: Response, next: NextFunction) => {

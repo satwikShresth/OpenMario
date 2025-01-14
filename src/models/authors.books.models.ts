@@ -1,5 +1,4 @@
 import { z } from 'zod';
-import { AuthorUpdate } from '#/db/types.ts';
 import { Request } from 'express';
 import { eq, like } from 'drizzle-orm';
 import { authors, books, VALID_GENRES } from '#/db/schema.ts';
@@ -8,8 +7,11 @@ export interface RequestParamsId extends Request {
    params: {
       id: number;
    };
-   body?: AuthorUpdate;
-   validatedId?: number;
+   validated?: {
+      body?: any;
+      params?: any;
+      query?: any;
+   };
 }
 
 export const paramsIdSchema = z.object({

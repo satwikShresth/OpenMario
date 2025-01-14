@@ -26,7 +26,7 @@ export default () => {
       .get(
          zodQueryValidator(AuthorQuerySchema),
          async (req: Request, res: Response) => {
-            const queries = req.query as AuthorQuery;
+            const queries = req?.validated.query as AuthorQuery;
 
             const queryResult = await db
                .select()
@@ -40,7 +40,7 @@ export default () => {
       .post(
          zodBodyValidator(AuthorCreateSchema),
          async (req: Request, res: Response) => {
-            const insertValues = req.body as AuthorCreate;
+            const insertValues = req?.validated.body as AuthorCreate;
 
             const newAuthor = await db
                .insert(authors)
@@ -54,7 +54,7 @@ export default () => {
    router.route('/:id')
       .all(zodParamsValidator(paramsIdSchema))
       .get(async (req: RequestParamsId, res: Response) => {
-         const validatedId = req?.params?.id!;
+         const validatedId = req?.validated?.params?.id!;
 
          const result = await db
             .select()
@@ -70,8 +70,8 @@ export default () => {
       .put(
          zodBodyValidator(AuthorUpdateSchema),
          async (req: RequestParamsId, res: Response) => {
-            const validatedId = req?.params?.id!;
-            const updateData = req?.body!;
+            const validatedId = req?.validated?.params?.id!;
+            const updateData = req?.validated?.body!;
 
             const updatedAuthor = await db
                .update(authors)
@@ -83,9 +83,11 @@ export default () => {
          },
       )
       .delete(async (req: RequestParamsId, res: Response) => {
+         const validatedId = req?.validated?.params?.id!;
+
          const result = await db
             .delete(authors)
-            .where(eq(authors.id, req.validatedId!))
+            .where(eq(authors.id, validatedId!))
             .returning({ deleted_id: authors.id });
 
          res.json(result);

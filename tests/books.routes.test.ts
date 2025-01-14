@@ -2,143 +2,165 @@ import { api } from './index.ts';
 import { expect } from 'jsr:@std/expect';
 import { afterAll, beforeEach, describe, it } from 'jsr:@std/testing/bdd';
 import { AxiosError } from 'axios';
-import { authors } from '#/db/schema.ts';
+import { authors, books } from '#/db/schema.ts';
 import { eq } from 'drizzle-orm';
 import { db } from '#/db/index.ts';
-import { Author } from '#/db/types.ts';
+import { Book, BookCreate } from '#/db/types.ts';
 
-const endpoint = `/api/authors`;
+const endpoint = `/api/books`;
 
-const testAuthors = [
-   { name: 'John Smith', bio: 'Mystery writer from London' },
-   { name: 'Jane Doe', bio: 'Science fiction author' },
-   { name: 'John Doe', bio: 'Technical writer' },
-   { name: 'Sarah Wilson', bio: 'Romance novelist from Paris' },
+const testAuthor = {
+   name: 'Test Author',
+   bio: 'Test author bio',
+};
+
+const testBooks = [
+   {
+      title: 'Test Book 1',
+      pub_year: '2020',
+      genre: 'Fiction',
+      author_name: 'Test Author',
+      author_bio: 'Test author bio',
+   },
+   {
+      title: 'Test Book 2',
+      pub_year: '2021',
+      genre: 'Mystery',
+      author_name: 'Test Author',
+      author_bio: 'Test author bio',
+   },
+   {
+      title: 'Test Book 3',
+      pub_year: '2022',
+      genre: 'Science Fiction',
+      author_name: 'Test Author',
+      author_bio: 'Test author bio',
+   },
 ];
 
-describe('Author API', () => {
+describe('Books API', () => {
    beforeEach(async () => {
+      await db.delete(books);
       await db.delete(authors);
    });
 
    afterAll(async () => {
+      await db.delete(books);
       await db.delete(authors);
    });
 
-   describe('GET /api/authors', () => {
+   describe('GET /api/books', () => {
       describe('Basic retrieval', () => {
-         it('returns empty array when no authors exist', async () => {
+         it('returns empty array when no books exist', async () => {
             const { data } = await api.get(endpoint);
             expect(data).toEqual([]);
          });
 
-         it('retrieves single author when database has one entry', async () => {
-            const testAuthor = await db.insert(authors).values({
-               name: 'J.K. Rowling',
-               bio: 'British author',
+         it('retrieves single book when database has one entry', async () => {
+            const author = await db.insert(authors).values(testAuthor)
+               .returning();
+            const testBook = await db.insert(books).values({
+               title: 'Test Book',
+               pub_year: '2023',
+               genre: 'Fiction',
+               author_id: author[0].id,
             }).returning();
 
             const { data } = await api.get(endpoint);
             expect(data).toEqual(expect.arrayContaining([
                expect.objectContaining({
                   id: expect.any(Number),
-                  name: testAuthor[0].name,
-                  bio: testAuthor[0].bio,
+                  title: testBook[0].title,
+                  pub_year: testBook[0].pub_year,
+                  genre: testBook[0].genre,
+                  author_id: author[0].id,
                }),
             ]));
             expect(data[0].id).toBeGreaterThan(0);
          });
 
-         it('returns multiple authors in correct order', async () => {
-            const testAuthors = await db.insert(authors).values([
-               { name: 'Author 1', bio: 'Bio 1' },
-               { name: 'Author 2', bio: 'Bio 2' },
-               { name: 'Author 3', bio: 'Bio 3' },
-            ]).returning();
+         it('returns multiple books in correct order', async () => {
+            const author = await db.insert(authors).values(testAuthor)
+               .returning();
+            const insertedBooks = await db.insert(books).values(
+               testBooks.map((book) => ({
+                  title: book.title,
+                  pub_year: book.pub_year,
+                  genre: book.genre,
+                  author_id: author[0].id,
+               })),
+            ).returning();
 
             const { data } = await api.get(endpoint);
             expect(data).toHaveLength(3);
             expect(data).toEqual(expect.arrayContaining(
-               testAuthors.map((author) =>
+               insertedBooks.map((book) =>
                   expect.objectContaining({
                      id: expect.any(Number),
-                     name: author.name,
-                     bio: author.bio,
+                     title: book.title,
+                     pub_year: book.pub_year,
+                     genre: book.genre,
+                     author_id: author[0].id,
                   })
                ),
             ));
-            data.forEach((author: Author) => {
-               expect(author.id).toBeGreaterThan(0);
+            data.forEach((book: Book) => {
+               expect(book.id).toBeGreaterThan(0);
             });
          });
       });
 
       describe('Filtering', () => {
          beforeEach(async () => {
-            await db.insert(authors).values(testAuthors);
+            const author = await db.insert(authors).values(testAuthor)
+               .returning();
+            await db.insert(books).values(
+               testBooks.map((book) => ({
+                  title: book.title,
+                  pub_year: book.pub_year,
+                  genre: book.genre,
+                  author_id: author[0].id,
+               })),
+            );
          });
 
-         it('filters authors by name query parameter', async () => {
+         it('filters books by title query parameter', async () => {
             const { data } = await api.get(endpoint, {
-               params: { name: 'John' },
+               params: { title: 'Book 1' },
             });
-            expect(data).toHaveLength(2);
+            expect(data).toHaveLength(1);
             expect(
-               data.every((author: Author) =>
-                  author.name.toLowerCase().includes('john')
+               data.every((book: Book) =>
+                  book.title.toLowerCase().includes('book 1')
                ),
             ).toBe(true);
          });
 
-         it('filters authors by bio query parameter', async () => {
+         it('filters books by genre query parameter', async () => {
             const { data } = await api.get(endpoint, {
-               params: { bio: 'writer' },
+               params: { genre: 'Fiction' },
             });
-            expect(data).toHaveLength(2);
+            expect(data).toHaveLength(1);
             expect(
-               data.every((author: Author) =>
-                  author?.bio?.toLowerCase()?.includes('writer')
-               ),
+               data.every((book: Book) => book.genre === 'Fiction'),
             ).toBe(true);
          });
 
-         it('filters authors by multiple query parameters', async () => {
+         it('filters books by pub_year query parameter', async () => {
             const { data } = await api.get(endpoint, {
-               params: { name: 'John', bio: 'writer' },
+               params: { pub_year: '2020' },
             });
+            expect(data).toHaveLength(1);
             expect(
-               data.every((author: Author) =>
-                  author.name.toLowerCase().includes('john') &&
-                  author?.bio?.toLowerCase()?.includes('writer')
-               ),
+               data.every((book: Book) => book.pub_year === '2020'),
             ).toBe(true);
          });
 
          it('returns empty array for non-matching search', async () => {
             const { data } = await api.get(endpoint, {
-               params: { name: 'NonExistent' },
+               params: { title: 'NonExistent' },
             });
             expect(data).toHaveLength(0);
-         });
-
-         it('handles partial name matches', async () => {
-            const { data } = await api.get(endpoint, {
-               params: { name: 'Jo' },
-            });
-            expect(data.length).toBeGreaterThan(0);
-            expect(
-               data.every((author: Author) =>
-                  author.name.toLowerCase().includes('jo')
-               ),
-            ).toBe(true);
-         });
-
-         it('returns all authors when query parameter is invalid', async () => {
-            const { data } = await api.get(endpoint, {
-               params: { unknown: 'value' },
-            });
-            expect(Array.isArray(data)).toBe(true);
-            expect(data).toHaveLength(testAuthors.length);
          });
       });
 
@@ -148,7 +170,7 @@ describe('Author API', () => {
                await api.get(`${endpoint}/invalid`);
             } catch (error: any) {
                expect(error.response.status).toBe(400);
-               expect(error.response.data).toHaveProperty('type', 'Params');
+               expect(error.response.data).toHaveProperty('type', 'params');
             }
          });
 
@@ -162,112 +184,53 @@ describe('Author API', () => {
       });
    });
 
-   describe('GET /api/authors/:id', () => {
-      it('successfully retrieves an author by ID', async () => {
-         const testAuthor = await db.insert(authors).values({
-            name: 'J.K. Rowling',
-            bio: 'British author',
-         }).returning();
-
-         const { data } = await api.get(`${endpoint}/${testAuthor[0].id}`);
-         expect(Array.isArray(data)).toBe(true);
-         expect(data[0]).toMatchObject({
-            id: testAuthor[0].id,
-            name: testAuthor[0].name,
-            bio: testAuthor[0].bio,
-         });
-      });
-
-      it('returns 404 for non-existent author ID', async () => {
-         try {
-            await api.get(`${endpoint}/999999`);
-         } catch (error: any) {
-            expect(error.response.status).toBe(404);
-            expect(error.response.data).toHaveProperty(
-               'detail',
-               'Author not found',
-            );
-         }
-      });
-
-      it('returns 400 for invalid ID format', async () => {
-         try {
-            await api.get(`${endpoint}/invalid-id`);
-         } catch (error: any) {
-            expect(error.response.status).toBe(400);
-            expect(error.response.data).toHaveProperty('type', 'Params');
-         }
-      });
-   });
-
-   describe('POST /api/authors', () => {
+   describe('POST /api/books', () => {
       describe('Successful creation', () => {
-         it('creates new author with complete data', async () => {
-            const newAuthor = {
-               name: 'Stephen King',
-               bio: 'Master of horror',
+         it('creates new book with complete data and new author', async () => {
+            const newBook: Partial<BookCreate> = {
+               title: 'New Book',
+               pub_year: '2023',
+               genre: 'Fiction',
+               author_name: 'New Author',
+               author_bio: 'New author bio',
             };
-            const { data, status } = await api.post(endpoint, newAuthor);
+
+            const { data, status } = await api.post(endpoint, newBook);
             expect(status).toEqual(201);
             expect(Array.isArray(data)).toBe(true);
             expect(data[0]).toMatchObject({
-               ...newAuthor,
+               title: newBook.title,
+               pub_year: newBook.pub_year,
+               genre: newBook.genre,
                id: expect.any(Number),
+               author_id: expect.any(Number),
             });
-            expect(data[0].id).toBeGreaterThan(0);
 
+            // Verify author was created
             const dbAuthor = await db.select().from(authors).where(
-               eq(authors.name, 'Stephen King'),
+               eq(authors.name, newBook.author_name!),
             );
-            expect(dbAuthor[0]).toMatchObject({
-               ...newAuthor,
-               id: data[0].id,
-            });
+            expect(dbAuthor).toHaveLength(1);
+            expect(dbAuthor[0].bio).toBe(newBook.author_bio);
          });
 
-         it('handles empty bio field by setting it to null', async () => {
-            const authorWithEmptyBio = {
-               name: 'John Doe',
-               bio: '',
+         it('creates new book with existing author', async () => {
+            const existingAuthor = await db.insert(authors).values(testAuthor)
+               .returning();
+            const newBook: Partial<BookCreate> = {
+               title: 'New Book',
+               pub_year: '2023',
+               genre: 'Fiction',
+               author_name: testAuthor.name,
+               author_bio: testAuthor.bio,
             };
-            const { data, status } = await api.post(
-               endpoint,
-               authorWithEmptyBio,
-            );
-            expect(status).toEqual(201);
+
+            const { data } = await api.post(endpoint, newBook);
             expect(data[0]).toMatchObject({
-               name: authorWithEmptyBio.name,
-               bio: null,
-               id: expect.any(Number),
-            });
-
-            const dbAuthor = await db.select().from(authors).where(
-               eq(authors.name, 'John Doe'),
-            );
-            expect(dbAuthor[0]).toMatchObject({ ...data[0] });
-         });
-
-         it('handles special characters in name and bio', async () => {
-            const authorWithSpecialChars = {
-               name: "José María O'Connor Smith",
-               bio: 'Bio with symbols @#$%',
-            };
-            const { data, status } = await api.post(
-               endpoint,
-               authorWithSpecialChars,
-            );
-            expect(status).toEqual(201);
-            expect(data[0]).toMatchObject({
-               ...authorWithSpecialChars,
-               id: expect.any(Number),
-            });
-
-            const dbAuthor = await db.select().from(authors).where(
-               eq(authors.name, authorWithSpecialChars.name),
-            );
-            expect(dbAuthor[0]).toMatchObject({
-               ...authorWithSpecialChars,
-               id: data[0].id,
+               title: newBook.title,
+               pub_year: newBook.pub_year,
+               genre: newBook.genre,
+               author_id: existingAuthor[0].id,
             });
          });
       });
@@ -281,137 +244,131 @@ describe('Author API', () => {
                if (errorObj.response === undefined) {
                   throw errorObj;
                }
-               const { response } = errorObj;
-               expect(response.status).toEqual(400);
-               expect(response.data).toHaveProperty('type', 'Body');
-               expect(response.data).toHaveProperty('errors');
+               expect(errorObj.response.status).toEqual(400);
+               expect(errorObj.response.data).toHaveProperty('type', 'body');
             }
-            // Verify no authors were created
-            const dbAuthors = await db.select().from(authors);
-            const matchingAuthors = dbAuthors.filter((author) =>
-               Object.entries(invalidCase).every(([key, value]) =>
-                  author[key as keyof typeof author] === value
-               )
-            );
-            expect(matchingAuthors).toHaveLength(0);
          };
 
-         it('returns error for missing name field', async () => {
-            await testInvalidCases({ bio: 'Missing name field' });
+         it('returns error for missing title', async () => {
+            await testInvalidCases({
+               pub_year: '2023',
+               genre: 'Fiction',
+               author_name: 'Test Author',
+            });
          });
 
-         it('rejects empty name field', async () => {
-            await testInvalidCases({ name: '', bio: 'Some bio' });
+         it('returns error for invalid genre', async () => {
+            await testInvalidCases({
+               title: 'Test Book',
+               pub_year: '2023',
+               genre: 'InvalidGenre',
+               author_name: 'Test Author',
+            });
          });
 
-         it('rejects requests with missing required fields', async () => {
-            const invalidCases = [
-               {},
-               { name: null },
-               { name: undefined },
-               { bio: 'Just a bio' },
-            ];
-            for (const invalidCase of invalidCases) {
-               await testInvalidCases(invalidCase);
-            }
+         it('returns error for invalid publication year', async () => {
+            await testInvalidCases({
+               title: 'Test Book',
+               pub_year: '999999',
+               genre: 'Fiction',
+               author_name: 'Test Author',
+            });
+         });
+
+         it('returns error for missing author name', async () => {
+            await testInvalidCases({
+               title: 'Test Book',
+               pub_year: '2023',
+               genre: 'Fiction',
+            });
          });
       });
    });
 
-   describe('PUT /api/authors/:id', () => {
-      let testAuthor: Author[];
+   describe('PUT /api/books/:id', () => {
+      let testBook: Book[];
 
       beforeEach(async () => {
-         testAuthor = await db.insert(authors).values({
-            name: 'Original Name',
-            bio: 'Original bio',
+         const author = await db.insert(authors).values(testAuthor).returning();
+         testBook = await db.insert(books).values({
+            title: 'Original Title',
+            pub_year: '2023',
+            genre: 'Fiction',
+            author_id: author[0].id,
          }).returning();
       });
 
-      it('successfully updates an existing author', async () => {
+      it('successfully updates an existing book', async () => {
          const updateData = {
-            name: 'Updated Name',
-            bio: 'Updated bio',
+            title: 'Updated Title',
+            pub_year: '2022',
+            genre: 'Mystery',
+            author_name: 'Updated Author',
+            author_bio: 'Updated bio',
          };
 
          const { data } = await api.put(
-            `${endpoint}/${testAuthor[0].id}`,
+            `${endpoint}/${testBook[0].id}`,
             updateData,
          );
 
          expect(Array.isArray(data)).toBe(true);
          expect(data[0]).toMatchObject({
-            id: testAuthor[0].id,
-            ...updateData,
-         });
-
-         const dbAuthor = await db
-            .select()
-            .from(authors)
-            .where(eq(authors.id, testAuthor[0].id));
-         expect(dbAuthor[0]).toMatchObject({
-            id: testAuthor[0].id,
-            ...updateData,
+            id: testBook[0].id,
+            title: updateData.title,
+            pub_year: updateData.pub_year,
+            genre: updateData.genre,
          });
       });
 
       it('handles partial updates correctly', async () => {
          const partialUpdate = {
-            bio: 'Updated bio only',
+            title: 'Updated Title Only',
          };
 
          const { data } = await api.put(
-            `${endpoint}/${testAuthor[0].id}`,
+            `${endpoint}/${testBook[0].id}`,
             partialUpdate,
          );
 
          expect(data[0]).toMatchObject({
-            id: testAuthor[0].id,
-            name: testAuthor[0].name,
-            bio: partialUpdate.bio,
+            id: testBook[0].id,
+            title: partialUpdate.title,
+            pub_year: testBook[0].pub_year,
+            genre: testBook[0].genre,
          });
       });
 
-      it('validates updated name format', async () => {
-         const invalidUpdate = {
-            name: '123Invalid@Name',
-         };
-
+      it('returns 404 for updating non-existent book', async () => {
          try {
-            await api.put(`${endpoint}/${testAuthor[0].id}`, invalidUpdate);
-         } catch (error: any) {
-            expect(error.response.status).toBe(400);
-            expect(error.response.data).toHaveProperty('type', 'Body');
-         }
-      });
-
-      it('returns 404 for updating non-existent author', async () => {
-         try {
-            await api.put(`${endpoint}/999999`, { name: 'New Name' });
+            await api.put(`${endpoint}/999999`, { title: 'New Title' });
          } catch (error: any) {
             expect(error.response.status).toBe(404);
          }
       });
    });
 
-   describe('DELETE /api/authors/:id', () => {
-      it('successfully deletes an existing author', async () => {
-         const testAuthor = await db.insert(authors).values({
-            name: 'To Be Deleted',
-            bio: 'Soon to be gone',
+   describe('DELETE /api/books/:id', () => {
+      it('successfully deletes an existing book', async () => {
+         const author = await db.insert(authors).values(testAuthor).returning();
+         const testBook = await db.insert(books).values({
+            title: 'To Be Deleted',
+            pub_year: '2023',
+            genre: 'Fiction',
+            author_id: author[0].id,
          }).returning();
 
-         const { data } = await api.delete(`${endpoint}/${testAuthor[0].id}`);
-         expect(data[0]).toHaveProperty('deleted_id', testAuthor[0].id);
+         const { data } = await api.delete(`${endpoint}/${testBook[0].id}`);
+         expect(data[0]).toHaveProperty('deleted_id', testBook[0].id);
 
-         const dbAuthor = await db
+         const dbBook = await db
             .select()
-            .from(authors)
-            .where(eq(authors.id, testAuthor[0].id));
-         expect(dbAuthor).toHaveLength(0);
+            .from(books)
+            .where(eq(books.id, testBook[0].id));
+         expect(dbBook).toHaveLength(0);
       });
 
-      it('returns 404 for deleting non-existent author', async () => {
+      it('returns 404 for deleting non-existent book', async () => {
          try {
             await api.delete(`${endpoint}/999999`);
          } catch (error: any) {
@@ -424,8 +381,9 @@ describe('Author API', () => {
             await api.delete(`${endpoint}/invalid-id`);
          } catch (error: any) {
             expect(error.response.status).toBe(400);
-            expect(error.response.data).toHaveProperty('type', 'Params');
+            expect(error.response.data).toHaveProperty('type', 'params');
          }
       });
    });
 });
+
