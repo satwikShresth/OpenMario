@@ -1,7 +1,5 @@
 # Homework 1: REST Api for sqlite db interactions
 
----
-
 ## Step 1: Installing Deno
 
 Install Deno because this project uses deno as its runtime, I took prior permission from Prof. Long for this, here is the link to do it if you havent
