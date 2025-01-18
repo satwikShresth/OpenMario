@@ -3,8 +3,8 @@ import {
    AuthorCreateSchema,
    AuthorSchema,
    AuthorUpdateSchema,
-   BaseAuthorQuerySchema,
-   paramsIdSchema,
+   BaseAuthorQuerySchema as AuthorQuery,
+   paramsIdSchema as ParamsId,
 } from '#models';
 import { z } from 'zod';
 
@@ -12,8 +12,6 @@ export default (registry: OpenAPIRegistry, path: string) => {
    const Author = registry.register('Author', AuthorSchema);
    const AuthorCreate = registry.register('AuthorCreate', AuthorCreateSchema);
    const AuthorUpdate = registry.register('AuthorUpdate', AuthorUpdateSchema);
-   const AuthorQuery = registry.register('AuthorQuery', BaseAuthorQuerySchema);
-   const ParamsId = registry.register('ParamsId', paramsIdSchema);
 
    registry.registerPath({
       method: 'get',

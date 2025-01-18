@@ -19,3 +19,5 @@ export const paramsIdSchema = z.object({
       z.number().positive(),
    ),
 });
+
+export type ParamsId = z.infer<typeof paramsIdSchema>;

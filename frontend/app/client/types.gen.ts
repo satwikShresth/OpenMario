@@ -25,20 +25,6 @@ export type AuthorCreate = {
 };
 
 /**
- * Schema for querying authors with various filters
- */
-export type AuthorQuery = {
-    /**
-     * Search by author name (partial match)
-     */
-    name?: string;
-    /**
-     * Search within author biography (partial match)
-     */
-    bio?: string;
-};
-
-/**
  * Schema for updating an existing author record
  */
 export type AuthorUpdate = {
@@ -98,24 +84,6 @@ export type BookCreate = {
 export type genre = 'Fiction' | 'Non-Fiction' | 'Mystery' | 'Science Fiction' | 'Fantasy' | 'Romance' | 'Thriller' | 'Horror' | 'Biography' | 'History' | 'Science' | 'Poetry' | 'Drama' | 'Children';
 
 /**
- * Schema for querying books with various filters
- */
-export type BookQuery = {
-    /**
-     * Search by book title (partial match)
-     */
-    title?: string;
-    /**
-     * Filter by genre
-     */
-    genre?: 'Fiction' | 'Non-Fiction' | 'Mystery' | 'Science Fiction' | 'Fantasy' | 'Romance' | 'Thriller' | 'Horror' | 'Biography' | 'History' | 'Science' | 'Poetry' | 'Drama' | 'Children';
-    /**
-     * Filter by publication year
-     */
-    pub_year?: string;
-};
-
-/**
  * Schema for updating an existing book record
  */
 export type BookUpdate = {
@@ -141,10 +109,6 @@ export type BookUpdate = {
      * Updated biography of the author
      */
     author_bio?: (string) | null;
-};
-
-export type ParamsId = {
-    id: number;
 };
 
 export type GetAuthorsData = {

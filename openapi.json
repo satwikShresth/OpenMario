@@ -190,58 +190,6 @@
             "description": "Schema for updating an existing book record",
             "title": "BookUpdate"
          },
-         "BookQuery": {
-            "type": "object",
-            "properties": {
-               "title": {
-                  "type": "string",
-                  "description": "Search by book title (partial match)",
-                  "example": "Gatsby"
-               },
-               "genre": {
-                  "type": "string",
-                  "description": "Filter by genre",
-                  "example": "Fiction",
-                  "enum": [
-                     "Fiction",
-                     "Non-Fiction",
-                     "Mystery",
-                     "Science Fiction",
-                     "Fantasy",
-                     "Romance",
-                     "Thriller",
-                     "Horror",
-                     "Biography",
-                     "History",
-                     "Science",
-                     "Poetry",
-                     "Drama",
-                     "Children"
-                  ]
-               },
-               "pub_year": {
-                  "type": "string",
-                  "pattern": "^\\d{4}$",
-                  "description": "Filter by publication year",
-                  "example": "2023"
-               }
-            },
-            "description": "Schema for querying books with various filters",
-            "title": "BookQuery"
-         },
-         "ParamsId": {
-            "type": "object",
-            "properties": {
-               "id": {
-                  "type": "number",
-                  "minimum": 0,
-                  "exclusiveMinimum": true
-               }
-            },
-            "required": [
-               "id"
-            ]
-         },
          "Author": {
             "type": "object",
             "properties": {
@@ -324,23 +272,6 @@
             "additionalProperties": false,
             "description": "Schema for updating an existing author record",
             "title": "AuthorUpdate"
-         },
-         "AuthorQuery": {
-            "type": "object",
-            "properties": {
-               "name": {
-                  "type": "string",
-                  "description": "Search by author name (partial match)",
-                  "example": "Jane"
-               },
-               "bio": {
-                  "type": "string",
-                  "description": "Search within author biography (partial match)",
-                  "example": "award-winning"
-               }
-            },
-            "description": "Schema for querying authors with various filters",
-            "title": "AuthorQuery"
          }
       },
       "parameters": {}

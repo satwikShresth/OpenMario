@@ -1,18 +1,16 @@
 import { OpenAPIRegistry } from '@asteasolutions/zod-to-openapi';
 import {
-   BaseBookQuerySchema,
+   BaseBookQuerySchema as BookQuery,
    BookCreateSchema,
    BookSchema,
    BookUpdateSchema,
-   paramsIdSchema,
+   paramsIdSchema as ParamsId,
 } from '#models';
 
 export default (registry: OpenAPIRegistry, path: string) => {
    const Book = registry.register('Book', BookSchema);
    const BookCreate = registry.register('BookCreate', BookCreateSchema);
    const BookUpdate = registry.register('BookUpdate', BookUpdateSchema);
-   const BookQuery = registry.register('BookQuery', BaseBookQuerySchema);
-   const ParamsId = registry.register('ParamsId', paramsIdSchema);
 
    registry.registerPath({
       method: 'get',

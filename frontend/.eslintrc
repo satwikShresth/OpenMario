@@ -1,0 +1,36 @@
+{
+  "env": {
+    "browser": true,
+"node": true
+  },
+  "extends": [
+    "eslint:recommended"
+  ],
+  "parserOptions": {
+    "ecmaVersion": 12,
+    "sourceType": "module"
+  },
+  "rules": {
+    "no-var": "error",                 // Enforce the use of let/const instead of var
+    "eqeqeq": ["error", "always"],     // Prefer === over ==
+    "no-redeclare": "error",           // Avoid variable names that overshadow keywords
+    "no-unused-vars": ["warn"],        // Prevent unused variables but warn instead of error
+    "no-duplicate-imports": "error",   // Prevent importing the same module multiple times
+    "no-implicit-globals": "error",    // Disallow variable declarations in the global scope
+    "camelcase": "warn",               // Enforce camelCase naming
+    "max-len": ["warn", { "code": 100 }],  // Warn when lines exceed 100 characters
+    "complexity": ["warn", { "max": 10 }], // Warn if functions are too complex
+    "consistent-return": "error",      // Enforce consistent return statements
+    "curly": ["error", "all"],         // Enforce curly braces around blocks
+    "prefer-const": "error",           // Prefer const declarations for variables that are never reassigned
+    "prefer-template": "warn",         // Encourage the use of template literals instead of string concatenation
+    "no-extra-semi": "error",          // Disallow unnecessary semicolons
+    "quotes": ["error", "single"],     // Enforce the use of single quotes
+    "indent": ["error", 3],            // Enforce 2-space indentation
+    "semi": ["error", "always"],       // Enforce semicolons at the end of statements
+    "object-shorthand": ["warn", "always"], // Encourage object shorthand where possible
+    "no-else-return": "warn"           // Suggest avoiding else after return
+  }
+}
+
+

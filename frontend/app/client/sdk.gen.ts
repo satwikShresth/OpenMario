@@ -24,7 +24,7 @@ export class AuthorsService {
             }
         });
     }
-    
+
     /**
      * Create an author
      * @param data The data for the request.
@@ -40,7 +40,7 @@ export class AuthorsService {
             mediaType: 'application/json'
         });
     }
-    
+
     /**
      * Get author by id
      * @param data The data for the request.
@@ -60,7 +60,7 @@ export class AuthorsService {
             }
         });
     }
-    
+
     /**
      * Update an author
      * @param data The data for the request.
@@ -83,7 +83,7 @@ export class AuthorsService {
             }
         });
     }
-    
+
     /**
      * Delete an author
      * @param data The data for the request.
@@ -103,7 +103,7 @@ export class AuthorsService {
             }
         });
     }
-    
+
 }
 
 export class BooksService {
@@ -127,7 +127,7 @@ export class BooksService {
             }
         });
     }
-    
+
     /**
      * Create a new book
      * @param data The data for the request.
@@ -146,7 +146,7 @@ export class BooksService {
             }
         });
     }
-    
+
     /**
      * Get a book by its ID
      * @param data The data for the request.
@@ -166,7 +166,7 @@ export class BooksService {
             }
         });
     }
-    
+
     /**
      * Update an existing book
      * @param data The data for the request.
@@ -190,7 +190,7 @@ export class BooksService {
             }
         });
     }
-    
+
     /**
      * Delete a book
      * @param data The data for the request.
@@ -210,5 +210,5 @@ export class BooksService {
             }
         });
     }
-    
+
 }
