@@ -3,6 +3,12 @@ import { useState, useEffect } from 'react';
 import { AuthorsService } from '#client/sdk.gen';
 import type { Author } from "#client/types.gen";
 
+export function meta({ }: Route.MetaArgs) {
+  return [
+    { title: "Authors" },
+    { name: "description", content: "Database interaction for Authors table" },
+  ];
+}
 
 export default () => {
   const [authors, setAuthors] = useState<Author[]>([]);
@@ -56,6 +62,7 @@ export default () => {
           </div>
         ))}
       </div>
+      {message}
     </div>
   );
 };

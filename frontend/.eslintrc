@@ -32,5 +32,3 @@
     "no-else-return": "warn"           // Suggest avoiding else after return
   }
 }
-
-
