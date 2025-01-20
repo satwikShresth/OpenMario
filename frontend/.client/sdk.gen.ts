@@ -2,9 +2,8 @@
 
 import { createClient, createConfig, type Options } from '@hey-api/client-axios';
 import type { GetBooksData, GetBooksResponse, PostBooksData, PostBooksResponse, DeleteBooksByIdData, DeleteBooksByIdResponse, GetBooksByIdData, GetBooksByIdResponse, PutBooksByIdData, PutBooksByIdResponse, GetAuthorsData, GetAuthorsResponse, PostAuthorsData, PostAuthorsResponse, DeleteAuthorsByIdData, DeleteAuthorsByIdResponse, GetAuthorsByIdData, GetAuthorsByIdResponse, PutAuthorsByIdData, PutAuthorsByIdResponse } from './types.gen';
-import { zGetBooksResponse, zPostBooksResponse, zDeleteBooksByIdResponse, zGetBooksByIdResponse, zPutBooksByIdResponse, zGetAuthorsResponse, zPostAuthorsResponse, zDeleteAuthorsByIdResponse, zGetAuthorsByIdResponse, zPutAuthorsByIdResponse } from './zod.gen';
 
-export const client = createClient(createConfig());
+export const client = createClient(createConfig({ baseURL: "/api" }));
 
 export class BooksService {
     /**
@@ -12,9 +11,6 @@ export class BooksService {
      */
     public static getBooks<ThrowOnError extends boolean = false>(options?: Options<GetBooksData, ThrowOnError>) {
         return (options?.client ?? client).get<GetBooksResponse, unknown, ThrowOnError>({
-            responseValidator: async (data) => {
-                return await zGetBooksResponse.parseAsync(data);
-            },
             url: '/books',
             ...options
         });
@@ -25,9 +21,6 @@ export class BooksService {
      */
     public static postBooks<ThrowOnError extends boolean = false>(options?: Options<PostBooksData, ThrowOnError>) {
         return (options?.client ?? client).post<PostBooksResponse, unknown, ThrowOnError>({
-            responseValidator: async (data) => {
-                return await zPostBooksResponse.parseAsync(data);
-            },
             url: '/books',
             ...options,
             headers: {
@@ -42,9 +35,6 @@ export class BooksService {
      */
     public static deleteBooksById<ThrowOnError extends boolean = false>(options: Options<DeleteBooksByIdData, ThrowOnError>) {
         return (options?.client ?? client).delete<DeleteBooksByIdResponse, unknown, ThrowOnError>({
-            responseValidator: async (data) => {
-                return await zDeleteBooksByIdResponse.parseAsync(data);
-            },
             url: '/books/{id}',
             ...options
         });
@@ -55,9 +45,6 @@ export class BooksService {
      */
     public static getBooksById<ThrowOnError extends boolean = false>(options: Options<GetBooksByIdData, ThrowOnError>) {
         return (options?.client ?? client).get<GetBooksByIdResponse, unknown, ThrowOnError>({
-            responseValidator: async (data) => {
-                return await zGetBooksByIdResponse.parseAsync(data);
-            },
             url: '/books/{id}',
             ...options
         });
@@ -68,9 +55,6 @@ export class BooksService {
      */
     public static putBooksById<ThrowOnError extends boolean = false>(options: Options<PutBooksByIdData, ThrowOnError>) {
         return (options?.client ?? client).put<PutBooksByIdResponse, unknown, ThrowOnError>({
-            responseValidator: async (data) => {
-                return await zPutBooksByIdResponse.parseAsync(data);
-            },
             url: '/books/{id}',
             ...options,
             headers: {
@@ -88,9 +72,6 @@ export class AuthorsService {
      */
     public static getAuthors<ThrowOnError extends boolean = false>(options?: Options<GetAuthorsData, ThrowOnError>) {
         return (options?.client ?? client).get<GetAuthorsResponse, unknown, ThrowOnError>({
-            responseValidator: async (data) => {
-                return await zGetAuthorsResponse.parseAsync(data);
-            },
             url: '/authors',
             ...options
         });
@@ -101,9 +82,6 @@ export class AuthorsService {
      */
     public static postAuthors<ThrowOnError extends boolean = false>(options?: Options<PostAuthorsData, ThrowOnError>) {
         return (options?.client ?? client).post<PostAuthorsResponse, unknown, ThrowOnError>({
-            responseValidator: async (data) => {
-                return await zPostAuthorsResponse.parseAsync(data);
-            },
             url: '/authors',
             ...options,
             headers: {
@@ -118,9 +96,6 @@ export class AuthorsService {
      */
     public static deleteAuthorsById<ThrowOnError extends boolean = false>(options: Options<DeleteAuthorsByIdData, ThrowOnError>) {
         return (options?.client ?? client).delete<DeleteAuthorsByIdResponse, unknown, ThrowOnError>({
-            responseValidator: async (data) => {
-                return await zDeleteAuthorsByIdResponse.parseAsync(data);
-            },
             url: '/authors/{id}',
             ...options
         });
@@ -131,9 +106,6 @@ export class AuthorsService {
      */
     public static getAuthorsById<ThrowOnError extends boolean = false>(options: Options<GetAuthorsByIdData, ThrowOnError>) {
         return (options?.client ?? client).get<GetAuthorsByIdResponse, unknown, ThrowOnError>({
-            responseValidator: async (data) => {
-                return await zGetAuthorsByIdResponse.parseAsync(data);
-            },
             url: '/authors/{id}',
             ...options
         });
@@ -144,9 +116,6 @@ export class AuthorsService {
      */
     public static putAuthorsById<ThrowOnError extends boolean = false>(options: Options<PutAuthorsByIdData, ThrowOnError>) {
         return (options?.client ?? client).put<PutAuthorsByIdResponse, unknown, ThrowOnError>({
-            responseValidator: async (data) => {
-                return await zPutAuthorsByIdResponse.parseAsync(data);
-            },
             url: '/authors/{id}',
             ...options,
             headers: {

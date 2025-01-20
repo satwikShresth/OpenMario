@@ -9,7 +9,6 @@ export default defineConfig({
     {
       name: "@hey-api/sdk",
       asClass: true,
-      validator: "zod",
       operationId: true,
       //methodNameBuilder: (operation) => {
       // @ts-ignore
