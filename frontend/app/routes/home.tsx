@@ -57,15 +57,15 @@ export default () => {
 
         <div className="mb-8">
           <h3 className="text-xl font-semibold mb-4">Books</h3>
-          <div className="overflow-x-auto">
-            <table className="min-w-full border border-gray-200">
+          <div className="overflow-x-auto rounded">
+            <table className="min-w-full border-[3px] border border-gray-200 rounded-lg">
               <thead className="bg-gray-100">
                 <tr>
-                  <th className="px-6 py-3 text-left text-sm font-medium text-gray-700">ID</th>
-                  <th className="px-6 py-3 text-left text-sm font-medium text-gray-700">Title</th>
-                  <th className="px-6 py-3 text-left text-sm font-medium text-gray-700">Author</th>
-                  <th className="px-6 py-3 text-left text-sm font-medium text-gray-700">Publication Year</th>
-                  <th className="px-6 py-3 text-left text-sm font-medium text-gray-700">Genre</th>
+                  <th className="px-6 py-3 text-left text-sm font-medium text-gray-900">ID</th>
+                  <th className="px-6 py-3 text-left text-sm font-medium text-gray-900">Title</th>
+                  <th className="px-6 py-3 text-left text-sm font-medium text-gray-900">Author</th>
+                  <th className="px-6 py-3 text-left text-sm font-medium text-gray-900">Publication Year</th>
+                  <th className="px-6 py-3 text-left text-sm font-medium text-gray-900">Genre</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200">
@@ -85,18 +85,18 @@ export default () => {
 
         <div>
           <h3 className="text-xl font-semibold mb-4">Authors</h3>
-          <div className="overflow-x-auto">
-            <table className="min-w-full border border-gray-200">
+          <div className="overflow-x-auto rounded">
+            <table className="min-w-full border-[3px] border-gray-200 rounded-lg">
               <thead className="bg-gray-100">
-                <tr>
-                  <th className="px-6 py-3 text-left text-sm font-medium text-gray-700">ID</th>
-                  <th className="px-6 py-3 text-left text-sm font-medium text-gray-700">Name</th>
-                  <th className="px-6 py-3 text-left text-sm font-medium text-gray-700">Biography</th>
+                <tr className='rounded-lg'>
+                  <th className="px-6 py-3 text-left text-sm font-medium text-gray-900">ID</th>
+                  <th className="px-6 py-3 text-left text-sm font-medium text-gray-900">Name</th>
+                  <th className="px-6 py-3 text-left text-sm font-medium text-gray-900">Biography</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200">
                 {authors.map((author) => (
-                  <tr key={author.id} className="hover:bg-gray-800 text-white">
+                  <tr key={author.id} className="hover:bg-gray-800 text-white rounded">
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-white">{author.id}</td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-white">{author.name}</td>
                     <td className="px-6 py-4 text-sm text-white">
