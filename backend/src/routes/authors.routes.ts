@@ -1,5 +1,5 @@
 import { Request, Response, Router } from 'express';
-import { db } from '#/db/index.ts';
+import { db } from '#db';
 import { authors } from '#/db/schema.ts';
 import { and, eq } from 'drizzle-orm';
 import {

@@ -1,6 +1,6 @@
 //routes/books.routes.ts
 import { Request, Response, Router } from 'express';
-import { db } from '#/db/index.ts';
+import { db } from '#db';
 import { authors, books } from '#/db/schema.ts';
 import {
    BookCreate,

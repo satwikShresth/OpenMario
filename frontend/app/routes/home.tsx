@@ -1,45 +1,60 @@
-import { useEffect, useState } from 'react';
-import { BooksService, AuthorsService, type Book, type Author } from '#client';
+import { useRef, useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import { getBooksOptions, getAuthorsOptions } from '#client';
+import { useDebounce } from 'use-debounce';
+
 
 export default () => {
-  const [books, setBooks] = useState<Book[]>([]);
-  const [authors, setAuthors] = useState<Author[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [bookSearch, setBookSearch] = useState('');
+  const [authorSearch, setAuthorSearch] = useState('');
+  const [DbookSearch] = useDebounce(bookSearch, 500);
+  const [DauthorSearch] = useDebounce(authorSearch, 500);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setLoading(true);
-        const [booksResponse, authorsResponse] = await Promise.all([
-          BooksService.getBooks(),
-          AuthorsService.getAuthors()
-        ]);
 
-        setBooks(booksResponse.data!);
-        setAuthors(authorsResponse.data!);
-        setLoading(false);
-      } catch (err) {
-        setError('Failed to fetch data');
-        setLoading(false);
+  const bookInputRef = useRef<HTMLInputElement>(null);
+  const authorInputRef = useRef<HTMLInputElement>(null);
+
+  const {
+    data: books = [],
+    isLoading: booksLoading,
+    error: booksError,
+  } = useQuery({
+    ...getBooksOptions({
+      query: {
+        title: DbookSearch
       }
-    };
+    }),
+    enabled: true
+  });
 
-    fetchData();
-  }, []);
+  const {
+    data: authors = [],
+    isLoading: authorsLoading,
+    error: authorsError,
+  } = useQuery({
+    ...getAuthorsOptions({
+      query: {
+        name: DauthorSearch
+      }
+    }),
+    enabled: true
+  });
 
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center p-8">
-        <div className="text-lg">Loading...</div>
-      </div>
-    );
-  }
+  const loading = booksLoading || authorsLoading;
+  const error = booksError || authorsError;
+
+  const handleBookSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setBookSearch(e.target.value);
+  };
+
+  const handleAuthorSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setAuthorSearch(e.target.value);
+  };
 
   if (error) {
     return (
       <div className="p-4 text-red-500">
-        {error}
+        Failed to fetch data
       </div>
     );
   }
@@ -55,7 +70,20 @@ export default () => {
         <h2 className="text-2xl font-bold mb-6">Library Data</h2>
 
         <div className="mb-8">
-          <h3 className="text-xl font-semibold mb-4">Books</h3>
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-xl font-semibold">Books</h3>
+            <div className="relative">
+              <input
+                ref={bookInputRef}
+                type="text"
+                placeholder="Search books by title"
+                value={bookSearch}
+                onChange={handleBookSearch}
+                className="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+          </div>
+
           <div className="overflow-x-auto rounded">
             <table className="min-w-full border-[3px] border-gray-200 rounded-lg">
               <thead className="bg-gray-100">
@@ -83,11 +111,24 @@ export default () => {
         </div>
 
         <div>
-          <h3 className="text-xl font-semibold mb-4">Authors</h3>
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-xl font-semibold">Authors</h3>
+            <div className="relative">
+              <input
+                ref={authorInputRef}
+                type="text"
+                placeholder="Search authors by name"
+                value={authorSearch}
+                onChange={handleAuthorSearch}
+                className="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+          </div>
+
           <div className="overflow-x-auto rounded">
             <table className="min-w-full border-[3px] border-gray-200 rounded-lg">
               <thead className="bg-gray-100">
-                <tr className='rounded-lg'>
+                <tr className="rounded-lg">
                   <th className="px-6 py-3 text-left text-sm font-medium text-gray-900">ID</th>
                   <th className="px-6 py-3 text-left text-sm font-medium text-gray-900">Name</th>
                   <th className="px-6 py-3 text-left text-sm font-medium text-gray-900">Biography</th>
