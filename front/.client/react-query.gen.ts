@@ -2,8 +2,8 @@
 
 import type { Options } from '@hey-api/client-axios';
 import { queryOptions, type UseMutationOptions, type DefaultError } from '@tanstack/react-query';
-import type { GetBooksData, PostBooksData, PostBooksResponse, DeleteBooksByIdData, DeleteBooksByIdResponse, GetBooksByIdData, PutBooksByIdData, PutBooksByIdResponse, GetAuthorsData, PostAuthorsData, PostAuthorsResponse, DeleteAuthorsByIdData, DeleteAuthorsByIdResponse, GetAuthorsByIdData, PutAuthorsByIdData, PutAuthorsByIdResponse } from '../types.gen';
-import { BooksService, AuthorsService, client } from '../sdk.gen';
+import type { GetBooksData, PostBooksData, PostBooksResponse, DeleteBooksByIdData, DeleteBooksByIdResponse, GetBooksByIdData, PutBooksByIdData, PutBooksByIdResponse, GetAuthorsData, PostAuthorsData, PostAuthorsResponse, DeleteAuthorsByIdData, DeleteAuthorsByIdResponse, GetAuthorsByIdData, PutAuthorsByIdData, PutAuthorsByIdResponse } from './types.gen';
+import { BooksService, AuthorsService, client } from './sdk.gen';
 import type { AxiosError } from 'axios';
 
 type QueryKey<TOptions extends Options> = [

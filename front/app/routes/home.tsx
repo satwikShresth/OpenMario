@@ -1,7 +1,7 @@
 import { useRef, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { getBooksOptions, getAuthorsOptions } from '#client';
 import { useDebounce } from 'use-debounce';
+import { getBooksOptions, getAuthorsOptions } from '#client/react-query.gen';
 
 
 export default () => {

@@ -35,6 +35,7 @@
    },
    "tasks": {
       "setup": "rm -f database.db && sqlite3 database.db < ./database/migrations/0000_inital.sql",
+      "seed": "deno -A src/db/seed/index.ts",
       "build": "deno check src",
       "start": "deno -A src/server.ts",
       "watch": "deno -A --watch src/server.ts",

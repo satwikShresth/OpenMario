@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useMutation } from '@tanstack/react-query';
-import { postAuthorsMutation, type AuthorCreate } from '#client';
+import type { AuthorCreate } from '#client/types.gen';
+import { postAuthorsMutation } from '#client/react-query.gen';
 
 interface ErrorData {
   name?: string | null;

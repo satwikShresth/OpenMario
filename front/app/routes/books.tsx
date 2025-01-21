@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { useMutation } from '@tanstack/react-query';
-import { postBooksMutation, BookCreateSchema, type BookCreate } from '#client';
+import type { BookCreate } from '#client/types.gen';
+import { BookCreateSchema } from '#client/schemas.gen';
+import { postBooksMutation } from '#client/react-query.gen';
 
 interface ErrorData {
   title?: string | null;
