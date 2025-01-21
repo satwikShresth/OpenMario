@@ -6,6 +6,11 @@ export default defineConfig({
   output: ".client",
   plugins: [
     ...defaultPlugins,
+
+    {
+      name: '@hey-api/schemas',
+      type: 'json',
+    },
     {
       name: "@hey-api/sdk",
       asClass: true,
