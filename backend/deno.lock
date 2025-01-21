@@ -24,6 +24,7 @@
     "npm:drizzle-orm@~0.38.3": "0.38.3_@libsql+client@0.14.0",
     "npm:drizzle-zod@~0.6.1": "0.6.1_drizzle-orm@0.38.3__@libsql+client@0.14.0_zod@3.24.1_@libsql+client@0.14.0",
     "npm:express@5.0.0": "5.0.0",
+    "npm:expresso@*": "0.9.2",
     "npm:morgan@^1.10.0": "1.10.0",
     "npm:zod@^3.24.1": "3.24.1"
   },
@@ -758,6 +759,9 @@
         "utils-merge",
         "vary"
       ]
+    },
+    "expresso@0.9.2": {
+      "integrity": "sha512-DmI2WpITEQHMl/HUZejTByJjiSHWKwuWDpIIslDsI4ln/iZdwmnDDy7ZQ5bbdpOrjk59eQyQmdvlp2suml4ZhA=="
     },
     "fetch-blob@3.2.0": {
       "integrity": "sha512-7yAQpD2UMJzLi1Dqv7qFYnPbaPx7ZfFK6PiIxQ4PfkGPyNyl2Ugx+a/umUonmKqjhM4DnfbMvdX6otXq83soQQ==",

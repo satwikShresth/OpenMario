@@ -13,3 +13,5 @@ CREATE TABLE `books` (
 	`genre` text NOT NULL,
 	FOREIGN KEY (`author_id`) REFERENCES `authors`(`id`) ON UPDATE no action ON DELETE no action
 );
+--> statement-breakpoint
+CREATE UNIQUE INDEX `unique_book_idx` ON `books` (`author_id`,`genre`,`pub_year`,`title`);

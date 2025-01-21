@@ -1,7 +1,7 @@
 {
   "version": "6",
   "dialect": "sqlite",
-  "id": "c8d532ec-a12b-422f-a3ab-be19358037b2",
+  "id": "fb67cd83-25c9-4c1b-b957-c0c4870944f1",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "authors": {
@@ -82,7 +82,18 @@
           "autoincrement": false
         }
       },
-      "indexes": {},
+      "indexes": {
+        "unique_book_idx": {
+          "name": "unique_book_idx",
+          "columns": [
+            "author_id",
+            "genre",
+            "pub_year",
+            "title"
+          ],
+          "isUnique": true
+        }
+      },
       "foreignKeys": {
         "books_author_id_authors_id_fk": {
           "name": "books_author_id_authors_id_fk",

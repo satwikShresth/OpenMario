@@ -1,66 +1,61 @@
 import { useState } from 'react';
-import { AuthorsService } from '#client/sdk.gen';
-import type { AuthorCreate } from "#client/types.gen";
+import { useMutation } from '@tanstack/react-query';
+import { postAuthorsMutation, type AuthorCreate } from '#client';
 
-export default () => {
+interface ErrorData {
+  name?: string | null;
+  bio?: string | null;
+}
+
+export default function AuthorForm() {
   const [formData, setFormData] = useState<AuthorCreate>({
     name: '',
-    bio: null
+    bio: ''
   });
-  const [errors, setErrors] = useState<{ name?: string | null, bio?: string | null }>({ name: null, bio: null });
-  const [status, setStatus] = useState('');
+  const [errors, setErrors] = useState<ErrorData>({ name: null, bio: null });
 
-  const validateForm = () => {
-    const newErrors: Record<string, string> = {};
-    if (!formData.name.trim()) {
-      newErrors.name = 'Name is required';
-    }
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
+  const mutation = useMutation(postAuthorsMutation());
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({
       ...prev,
-      [name]: value === '' ? null : value
+      [name]: value
     }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (validateForm()) {
-      try {
-        setStatus('Submitting...');
-        const response = await AuthorsService.postAuthors<true>({
-          body: formData,
-          throwOnError: true
-        });
+    try {
+      const submissionData = {
+        ...formData,
+        bio: formData?.bio?.trim() || null
+      };
 
-        if (response.data) {
-          setStatus('Author created successfully!');
-          setFormData({ name: '', bio: null });
-        }
+      await mutation.mutateAsync(
+        { body: submissionData, throwOnError: true }
+      );
 
-      } catch (error: any) {
-        let errorMessage = 'Error creating author. Please try again.';
+      setFormData({ name: '', bio: '' });
+      setErrors({});
+    } catch (error: any) {
+      let errorMessage = 'Error creating author. Please try again.';
 
-        if (error.response?.status === 400 && error.response?.data?.errors?.details) {
-          setErrors(
-            Object.fromEntries(
-              error.response.data.errors.details.map(({ field, message }: { field: string; message: string }) => [field, message])
-            )
-          );
-        } else if (error.response?.status === 409) {
-          errorMessage = 'An author with this name already exists.';
-        } else {
-          setErrors({});
-          errorMessage = 'An unexpected error occurred. Please try again.';
-        }
-
-        setStatus(errorMessage);
-        console.error('Submission error:', error);
+      if (error.response?.status === 400 && error.response?.data?.errors?.details) {
+        const newErrors = Object.fromEntries(
+          error.response.data.errors.details.map(
+            ({ field, message }: { field: string; message: string }) => [field, message]
+          )
+        );
+        setErrors(newErrors);
+      } else if (error.response?.status === 409) {
+        errorMessage = 'An author with this name already exists.';
+        setErrors({});
+      } else {
+        setErrors({});
       }
+
+      console.error('Submission error:', error);
     }
   };
 
@@ -94,7 +89,7 @@ export default () => {
           <textarea
             id="bio"
             name="bio"
-            value={formData.bio || ''}
+            value={formData?.bio!}
             onChange={handleChange}
             rows={4}
             className="w-full p-2 rounded bg-gray-700 text-white"
@@ -105,23 +100,25 @@ export default () => {
         <button
           type="submit"
           className="w-full bg-blue-600 text-white p-2 rounded hover:bg-blue-700 disabled:opacity-50"
+          disabled={mutation.isPending}
         >
-          Create Author
+          {mutation.isPending ? 'Creating...' : 'Create Author'}
         </button>
 
-        {status && (
-          <div
-            className={`p-3 rounded ${status.includes('successfully')
-              ? 'bg-green-900 text-green-200'
-              : status === 'Submitting...'
-                ? 'bg-gray-800 text-gray-200'
-                : 'bg-red-900 text-red-200'
-              }`}
-          >
-            {status}
+        {mutation.isSuccess && (
+          <div className="p-3 rounded bg-green-900 text-green-200">
+            Author created successfully!
+          </div>
+        )}
+
+        {mutation.isError && (
+          <div className="p-3 rounded bg-red-900 text-red-200">
+            {mutation.error?.response?.status === 409
+              ? 'An author with this name already exists.'
+              : 'Error creating author. Please try again.'}
           </div>
         )}
       </form>
     </div>
   );
-};
+}

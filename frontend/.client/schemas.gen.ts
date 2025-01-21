@@ -24,9 +24,7 @@ export const BookSchema = {
             type: 'string'
         }
     },
-    required: ['id', 'author_id', 'title', 'pub_year', 'genre'],
-    description: 'A book record with all its properties',
-    title: 'Book'
+    required: ['id', 'author_id', 'title', 'pub_year', 'genre']
 } as const;
 
 export const BookCreateSchema = {
@@ -46,20 +44,17 @@ export const BookCreateSchema = {
             type: 'string',
             minLength: 1,
             maxLength: 200,
-            description: 'The title of the book',
             example: 'The Great Gatsby'
         },
         pub_year: {
             type: 'string',
             maxLength: 4,
             pattern: '^\\d{4}$',
-            description: 'The year the book was published',
             example: '2023'
         },
         genre: {
             type: 'string',
             minLength: 1,
-            description: 'The genre of the book',
             example: 'Fiction',
             enum: ['Fiction', 'Non-Fiction', 'Mystery', 'Science Fiction', 'Fantasy', 'Romance', 'Thriller', 'Horror', 'Biography', 'History', 'Science', 'Poetry', 'Drama', 'Children']
         },
@@ -68,21 +63,17 @@ export const BookCreateSchema = {
             minLength: 1,
             maxLength: 100,
             pattern: "^[a-zA-Z\\s\\-'\\p{L}\\p{M}]+$",
-            description: "The name of the book's author",
             example: 'John Doe'
         },
         author_bio: {
             type: 'string',
             nullable: true,
             maxLength: 1000,
-            description: 'Optional biography of the author',
             example: 'An accomplished writer with multiple bestsellers'
         }
     },
     required: ['title', 'pub_year', 'genre', 'author_name'],
-    additionalProperties: false,
-    description: 'Schema for creating a new book record',
-    title: 'BookCreate'
+    additionalProperties: false
 } as const;
 
 export const BookUpdateSchema = {
@@ -102,20 +93,17 @@ export const BookUpdateSchema = {
             type: 'string',
             minLength: 1,
             maxLength: 200,
-            description: 'The title of the book',
             example: 'The Great Gatsby'
         },
         pub_year: {
             type: 'string',
             maxLength: 4,
             pattern: '^\\d{4}$',
-            description: 'The year the book was published',
             example: '2023'
         },
         genre: {
             type: 'string',
             minLength: 1,
-            description: 'The genre of the book',
             example: 'Fiction',
             enum: ['Fiction', 'Non-Fiction', 'Mystery', 'Science Fiction', 'Fantasy', 'Romance', 'Thriller', 'Horror', 'Biography', 'History', 'Science', 'Poetry', 'Drama', 'Children']
         },
@@ -124,20 +112,16 @@ export const BookUpdateSchema = {
             minLength: 1,
             maxLength: 100,
             pattern: "^[a-zA-Z\\s\\-'\\p{L}\\p{M}]+$",
-            description: "The updated name of the book's author",
             example: 'Jane Smith'
         },
         author_bio: {
             type: 'string',
             nullable: true,
             maxLength: 1000,
-            description: 'Updated biography of the author',
             example: 'Award-winning author of contemporary fiction'
         }
     },
-    additionalProperties: false,
-    description: 'Schema for updating an existing book record',
-    title: 'BookUpdate'
+    additionalProperties: false
 } as const;
 
 export const AuthorSchema = {
@@ -156,9 +140,7 @@ export const AuthorSchema = {
             nullable: true
         }
     },
-    required: ['id', 'name', 'bio'],
-    description: 'Complete author record with all properties',
-    title: 'Author'
+    required: ['id', 'name', 'bio']
 } as const;
 
 export const AuthorCreateSchema = {
@@ -174,21 +156,17 @@ export const AuthorCreateSchema = {
             minLength: 1,
             maxLength: 100,
             pattern: "^[a-zA-Z\\s\\-'\\p{L}\\p{M}]+$",
-            description: "Author's full name",
             example: 'Jane Austen'
         },
         bio: {
             type: 'string',
             nullable: true,
             maxLength: 1000,
-            description: "Author's biographical information",
             example: 'A renowned author known for her works in classic literature'
         }
     },
     required: ['name'],
-    additionalProperties: false,
-    description: 'Schema for creating a new author record',
-    title: 'AuthorCreate'
+    additionalProperties: false
 } as const;
 
 export const AuthorUpdateSchema = {
@@ -204,18 +182,14 @@ export const AuthorUpdateSchema = {
             minLength: 1,
             maxLength: 100,
             pattern: "^[a-zA-Z\\s\\-'\\p{L}\\p{M}]+$",
-            description: "Author's full name",
             example: 'Jane Austen'
         },
         bio: {
             type: 'string',
             nullable: true,
             maxLength: 1000,
-            description: "Author's biographical information",
             example: 'A renowned author known for her works in classic literature'
         }
     },
-    additionalProperties: false,
-    description: 'Schema for updating an existing author record',
-    title: 'AuthorUpdate'
+    additionalProperties: false
 } as const;

@@ -40,16 +40,12 @@ export default () => {
          zodBodyValidator(AuthorCreateSchema),
          async (req: Request, res: Response) => {
             const insertValues = req?.validated.body as AuthorCreate;
-            let newAuthor;
 
-            try {
-               newAuthor = await db
-                  .insert(authors)
-                  .values(insertValues)
-                  .returning();
-            } catch (error) {
-               return res.status(409).json({});
-            }
+            const newAuthor = await db
+               .insert(authors)
+               .values(insertValues)
+               .returning()
+               .catch((_error) => res.status(409).json({}));
 
             res.status(201).json(newAuthor);
          },

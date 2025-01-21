@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
-import { BooksService, AuthorsService } from '#client/sdk.gen';
-import type { Book, Author } from '#client/types.gen';
+import { BooksService, AuthorsService, type Book, type Author } from '#client';
 
 export default () => {
   const [books, setBooks] = useState<Book[]>([]);
@@ -58,7 +57,7 @@ export default () => {
         <div className="mb-8">
           <h3 className="text-xl font-semibold mb-4">Books</h3>
           <div className="overflow-x-auto rounded">
-            <table className="min-w-full border-[3px] border border-gray-200 rounded-lg">
+            <table className="min-w-full border-[3px] border-gray-200 rounded-lg">
               <thead className="bg-gray-100">
                 <tr>
                   <th className="px-6 py-3 text-left text-sm font-medium text-gray-900">ID</th>

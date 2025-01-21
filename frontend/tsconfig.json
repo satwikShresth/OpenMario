@@ -16,7 +16,7 @@
     "baseUrl": ".",
     "paths": {
       "#/*": ["./app/*"],
-      "#client/*": ["./.client/*"]
+      "#client": ["./.client/index.ts"]
     },
     "esModuleInterop": true,
     "verbatimModuleSyntax": true,

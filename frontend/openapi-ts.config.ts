@@ -6,10 +6,10 @@ export default defineConfig({
   output: ".client",
   plugins: [
     ...defaultPlugins,
-
+    '@tanstack/react-query',
     {
       name: '@hey-api/schemas',
-      type: 'json',
+      type: "form",
     },
     {
       name: "@hey-api/sdk",

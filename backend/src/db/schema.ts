@@ -1,4 +1,4 @@
-import { integer, sqliteTable, text } from 'drizzle-orm/sqlite-core';
+import { integer, sqliteTable, text, unique } from 'drizzle-orm/sqlite-core';
 
 export const VALID_GENRES: string[] = [
    'Fiction',
@@ -33,4 +33,11 @@ export const books = sqliteTable('books', {
       .notNull(),
    genre: text('genre')
       .notNull(),
-});
+}, (table) => ({
+   unique_book_idx: unique('unique_book_idx').on(
+      table.author_id,
+      table.genre,
+      table.pub_year,
+      table.title,
+   ),
+}));

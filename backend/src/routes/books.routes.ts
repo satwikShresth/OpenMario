@@ -82,7 +82,8 @@ export default () => {
                   genre: insertData.genre!,
                   author_id,
                })
-               .returning();
+               .returning()
+               .catch((_error) => res.status(409).json({}));
 
             res.status(201).json(newBook);
          },
