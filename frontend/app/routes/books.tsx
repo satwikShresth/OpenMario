@@ -144,7 +144,7 @@ export default () => {
           )}
         </div>
 
-        <div className="space-y-2">
+        <div className="space-y-4">
           <label htmlFor="genre" className="block text-gray-200">
             Genre
           </label>
@@ -153,7 +153,7 @@ export default () => {
             name="genre"
             value={formData.genre}
             onChange={handleChange}
-            className="w-full p-2 rounded bg-gray-700 text-white"
+            className="w-full h-9 rounded bg-gray-700 text-white"
           >
             {GENRES?.map(genre => (
               <option key={genre} value={genre}>

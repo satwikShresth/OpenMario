@@ -16,7 +16,7 @@ export default () => {
 
   const {
     data: books = [],
-    isLoading: booksLoading,
+    isLoading: _booksLoading,
     error: booksError,
   } = useQuery({
     ...getBooksOptions({
@@ -29,7 +29,7 @@ export default () => {
 
   const {
     data: authors = [],
-    isLoading: authorsLoading,
+    isLoading: _authorsLoading,
     error: authorsError,
   } = useQuery({
     ...getAuthorsOptions({
@@ -40,7 +40,6 @@ export default () => {
     enabled: true
   });
 
-  const loading = booksLoading || authorsLoading;
   const error = booksError || authorsError;
 
   const handleBookSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
