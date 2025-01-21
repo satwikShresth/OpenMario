@@ -14,8 +14,12 @@ Commands are exaclty same as of npm
 
 ```bash
 
-# git clone <your-repo>
-# cd <your-repo>
+# Common
+git clone <your-repo>
+cd <your-repo>
+
+
+# npm command required
 # npm i # install dependencies
 # npm run setup # set up your SQLite database
 # npm run build # compile your server
@@ -24,10 +28,10 @@ Commands are exaclty same as of npm
 # in another terminal...
 # npm run test # run your tests
 
-
-git clone <your-repo>
-cd <your-repo>
+# Since this project is build using deno
 deno install # install dependencies
+
+# using task command is recommened, but also works with run
 deno task setup # set up your SQLite database
 deno task build # TS checks your server Since deno can directly run a .ts file
 deno task seed # I have added some seed data so that we are able to search nicely
