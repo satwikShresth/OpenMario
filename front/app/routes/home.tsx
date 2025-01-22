@@ -1,22 +1,39 @@
 import { useRef, useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useDebounce } from 'use-debounce';
-import { getBooksOptions, getAuthorsOptions } from '#client/react-query.gen';
+import {
+  getBooksOptions,
+  getAuthorsOptions,
+  deleteBooksByIdMutation,
+  deleteAuthorsByIdMutation,
+  getAuthorsQueryKey,
+  getBooksQueryKey
+} from '#client/react-query.gen';
+import { createColumnHelper } from '@tanstack/react-table';
+import {
+  Typography,
+  Box,
+  IconButton
+} from '@mui/material';
+import { X } from 'lucide-react';
+import type { Book, Author } from '#client/types.gen';
+import { TableSection } from '#/components/Table';
+import type { AxiosError } from 'axios';
 
 
-export default () => {
+export default function LibraryData() {
+  const queryClient = useQueryClient();
   const [bookSearch, setBookSearch] = useState('');
   const [authorSearch, setAuthorSearch] = useState('');
   const [DbookSearch] = useDebounce(bookSearch, 500);
   const [DauthorSearch] = useDebounce(authorSearch, 500);
-
 
   const bookInputRef = useRef<HTMLInputElement>(null);
   const authorInputRef = useRef<HTMLInputElement>(null);
 
   const {
     data: books = [],
-    isLoading: _booksLoading,
+    isLoading: booksLoading,
     error: booksError,
   } = useQuery({
     ...getBooksOptions({
@@ -29,7 +46,7 @@ export default () => {
 
   const {
     data: authors = [],
-    isLoading: _authorsLoading,
+    isLoading: authorsLoading,
     error: authorsError,
   } = useQuery({
     ...getAuthorsOptions({
@@ -40,116 +57,173 @@ export default () => {
     enabled: true
   });
 
+  const deleteBookMutation = useMutation({
+    ...deleteBooksByIdMutation(),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: getBooksQueryKey()
+      });
+    },
+    onError: (error) => {
+      window.alert(error?.response?.data.message! ?? 'Failed to delete book');
+    }
+  });
+
+  const deleteAuthorMutation = useMutation({
+    ...deleteAuthorsByIdMutation(),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: getAuthorsQueryKey()
+      });
+    },
+    onError: (error) => {
+      window.alert(error?.response?.data.message! ?? 'Failed to delete author');
+    }
+  });
+
+  const handleDeleteBook = (bookId: number) => {
+    if (window.confirm('Are you sure you want to delete this book?')) {
+      deleteBookMutation.mutate({
+        path: {
+          id: bookId
+        }
+      });
+    }
+  };
+
+  const handleDeleteAuthor = (authorId: number) => {
+    if (window.confirm('Are you sure you want to delete this author?')) {
+      deleteAuthorMutation.mutate({
+        path: {
+          id: authorId
+        }
+      });
+    }
+  };
+
+  const columnHelper = createColumnHelper<Book>();
+
+  const bookColumns = [
+    columnHelper.accessor('id', {
+      header: 'ID',
+      cell: info => info.getValue()
+    }),
+    columnHelper.accessor('title', {
+      header: 'Title',
+      cell: info => info.getValue()
+    }),
+    columnHelper.accessor('author_id', {
+      header: 'Author',
+      cell: info => {
+        const author = authors.find(a => a.id === info.getValue());
+        return author ? author.name : 'Unknown Author';
+      }
+    }),
+    columnHelper.accessor('pub_year', {
+      header: 'Publication Year',
+      cell: info => info.getValue()
+    }),
+    columnHelper.accessor('genre', {
+      header: 'Genre',
+      cell: info => info.getValue()
+    }),
+    columnHelper.display({
+      id: 'actions',
+      header: 'Actions',
+      cell: props => (
+        <IconButton
+          onClick={() => handleDeleteBook(props.row.original.id)}
+          size="small"
+          sx={{
+            color: 'white',
+            '&:hover': {
+              color: 'error.main',
+              bgcolor: 'rgba(211, 47, 47, 0.04)'
+            }
+          }}
+        >
+          <X />
+        </IconButton>
+      )
+    })
+  ];
+
+  const authorColumnHelper = createColumnHelper<Author>();
+
+  const authorColumns = [
+    authorColumnHelper.accessor('id', {
+      header: 'ID',
+      cell: info => info.getValue()
+    }),
+    authorColumnHelper.accessor('name', {
+      header: 'Name',
+      cell: info => info.getValue()
+    }),
+    authorColumnHelper.accessor('bio', {
+      header: 'Biography',
+      cell: info => info.getValue() || 'No biography available'
+    }),
+    authorColumnHelper.display({
+      id: 'actions',
+      header: 'Actions',
+      cell: props => (
+        <IconButton
+          onClick={() => handleDeleteAuthor(props.row.original.id)}
+          size="small"
+          sx={{
+            color: 'white',
+            '&:hover': {
+              color: 'error.main',
+              bgcolor: 'rgba(211, 47, 47, 0.04)'
+            }
+          }}
+        >
+          <X />
+        </IconButton>
+      )
+    })
+  ];
+
   const error = booksError || authorsError;
-
-  const handleBookSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setBookSearch(e.target.value);
-  };
-
-  const handleAuthorSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setAuthorSearch(e.target.value);
-  };
-
   if (error) {
     return (
-      <div className="p-4 text-red-500">
+      <Box sx={{ p: 2, color: 'error.main' }}>
         Failed to fetch data
-      </div>
+      </Box>
     );
   }
 
-  const getAuthorNameById = (authorId: number) => {
-    const author = authors.find(a => a.id === authorId);
-    return author ? author.name : 'Unknown Author';
-  };
-
   return (
-    <div className="p-6 space-y-8">
-      <h2 className="text-2xl font-bold mb-6">Library Data</h2>
+    <Box sx={{ p: 3 }}>
+      <Typography variant="h4" gutterBottom sx={{ color: 'white' }}>
+        Library Data
+      </Typography>
 
-      <div className='flex justify-center max-w-full min-w-[70%]'>
-        <div>
-          <div className="mb-8">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-xl font-semibold">Books</h3>
-              <div className="relative w-1/4">
-                <input
-                  ref={bookInputRef}
-                  type="text"
-                  placeholder="Search books by title"
-                  value={bookSearch}
-                  onChange={handleBookSearch}
-                  className="px-4 py-2 border w-full rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-ellipsis"
-                />
-              </div>
-            </div>
+      <Box sx={{ maxWidth: '80%', minWidth: '60%', mx: 'auto' }}>
+        <Box sx={{ mb: 4 }}>
+          <TableSection<Book>
+            title="Books"
+            data={books}
+            columns={bookColumns}
+            searchValue={bookSearch}
+            onSearchChange={(e) => setBookSearch(e.target.value)}
+            searchPlaceholder="Search books by title"
+            inputRef={bookInputRef}
+            isLoading={booksLoading}
+          />
+        </Box>
 
-            <div className="overflow-x-auto rounded">
-              <table className="border-[3px] border-gray-200 rounded-lg">
-                <thead className="bg-gray-100">
-                  <tr>
-                    <th className="px-6 py-3 text-left text-sm font-medium text-gray-900">ID</th>
-                    <th className="px-6 py-3 text-left text-sm font-medium text-gray-900">Title</th>
-                    <th className="px-6 py-3 text-left text-sm font-medium text-gray-900">Author</th>
-                    <th className="px-6 py-3 text-left text-sm font-medium text-gray-900">Publication Year</th>
-                    <th className="px-6 py-3 text-left text-sm font-medium text-gray-900">Genre</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-gray-200">
-                  {books.map((book) => (
-                    <tr key={book.id} className="hover:bg-gray-800 text-white">
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-white">{book.id}</td>
-                      <td className="px-6 py-4 text-sm text-white">{book.title}</td>
-                      <td className="px-6 py-4 text-sm text-white">{getAuthorNameById(book.author_id)}</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-white">{book.pub_year}</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-white">{book.genre}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
-
-          <div>
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-xl font-semibold">Authors</h3>
-              <div className="relative w-1/4">
-                <input
-                  ref={authorInputRef}
-                  type="text"
-                  placeholder="Search authors by name"
-                  value={authorSearch}
-                  onChange={handleAuthorSearch}
-                  className="px-4 py-2 border w-full rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-ellipsis"
-                />
-              </div>
-            </div>
-
-            <div className="overflow-x-auto rounded">
-              <table className="min-w-full border-[3px] border-gray-200 rounded-lg">
-                <thead className="bg-gray-100">
-                  <tr className="rounded-lg">
-                    <th className="px-6 py-3 text-left text-sm font-medium text-gray-900">ID</th>
-                    <th className="px-6 py-3 text-left text-sm font-medium text-gray-900">Name</th>
-                    <th className="px-6 py-3 text-left text-sm font-medium text-gray-900">Biography</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-gray-200">
-                  {authors.map((author) => (
-                    <tr key={author.id} className="hover:bg-gray-800 text-white rounded">
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-white">{author.id}</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-white">{author.name}</td>
-                      <td className="px-6 py-4 text-sm text-white">
-                        {author.bio || 'No biography available'}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+        <TableSection<Author>
+          title="Authors"
+          data={authors}
+          columns={authorColumns}
+          searchValue={authorSearch}
+          onSearchChange={(e) => setAuthorSearch(e.target.value)}
+          searchPlaceholder="Search authors by name"
+          inputRef={authorInputRef}
+          isLoading={authorsLoading}
+        />
+      </Box>
+    </Box>
   );
-};
+}
