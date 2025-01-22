@@ -27,13 +27,13 @@ export default () => {
          async (req: Request, res: Response) => {
             const queries = req?.validated.query as AuthorQuery;
 
-            const queryResult = await db
+            return await db
                .select()
                .from(authors)
                .where(queries.length > 0 ? and(...queries) : undefined)
-               .all();
-
-            res.status(200).json(queryResult);
+               .all()
+               .then((result) => res.status(200).json(result))
+               .catch(({ message }) => res.status(409).json({ message }));
          },
       )
       .post(
@@ -41,13 +41,12 @@ export default () => {
          async (req: Request, res: Response) => {
             const insertValues = req?.validated.body as AuthorCreate;
 
-            const newAuthor = await db
+            return await db
                .insert(authors)
                .values(insertValues)
                .returning()
-               .catch((_error) => res.status(409).json({}));
-
-            res.status(201).json(newAuthor);
+               .then((result) => res.status(201).json(result))
+               .catch(({ message }) => res.status(409).json({ message }));
          },
       );
 
@@ -56,16 +55,16 @@ export default () => {
       .get(async (req: RequestParamsId, res: Response) => {
          const validatedId = req?.validated?.params?.id!;
 
-         const result = await db
+         return await db
             .select()
             .from(authors)
-            .where(eq(authors.id, validatedId!));
-
-         if (!result) {
-            return res.status(404).json({ detail: 'Author not found' });
-         }
-
-         res.json(result);
+            .where(eq(authors.id, validatedId!))
+            .then((result) =>
+               !result
+                  ? res.status(404).json({ detail: 'Author not found' })
+                  : res.status(200).json(result)
+            )
+            .catch(({ message }) => res.status(409).json({ message }));
       })
       .put(
          zodBodyValidator(AuthorUpdateSchema),
@@ -73,24 +72,23 @@ export default () => {
             const validatedId = req?.validated?.params?.id!;
             const updateData = req?.validated?.body!;
 
-            const updatedAuthor = await db
+            return await db
                .update(authors)
                .set(updateData)
                .where(eq(authors.id, validatedId))
-               .returning();
-
-            res.json(updatedAuthor);
+               .returning()
+               .then((result) => res.status(200).json(result))
+               .catch(({ message }) => res.status(409).json({ message }));
          },
       )
       .delete(async (req: RequestParamsId, res: Response) => {
          const validatedId = req?.validated?.params?.id!;
-
-         const result = await db
+         return await db
             .delete(authors)
             .where(eq(authors.id, validatedId!))
-            .returning({ deleted_id: authors.id });
-
-         res.json(result);
+            .returning({ deleted_id: authors.id })
+            .then((result) => res.status(200).json(result))
+            .catch(({ message }) => res.status(409).json({ message }));
       });
 
    return router;

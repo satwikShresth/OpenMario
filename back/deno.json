@@ -17,6 +17,7 @@
     "drizzle-zod": "npm:drizzle-zod@^0.6.1",
     "express": "npm:express@5.0.0",
     "morgan": "npm:morgan@^1.10.0",
+    "swagger-ui-express": "npm:swagger-ui-express@^5.0.1",
     "zod": "npm:zod@^3.24.1",
     "#/": "./src/",
     "#db": "./src/db/index.ts",

@@ -56,13 +56,13 @@ export default () => {
          async (req: Request, res: Response) => {
             const queries = req?.validated?.query as BookQuery;
 
-            const queryResult = await db
+            return await db
                .select()
                .from(books)
                .where(queries.length > 0 ? and(...queries) : undefined)
-               .all();
-
-            res.status(200).json(queryResult);
+               .all()
+               .then((result) => res.status(200).json(result))
+               .catch(({ message }) => res.status(409).json({ message }));
          },
       )
       .post(
@@ -74,7 +74,7 @@ export default () => {
                insertData.author_bio,
             ))!;
 
-            const newBook = await db
+            return await db
                .insert(books)
                .values({
                   title: insertData.title!,
@@ -83,9 +83,8 @@ export default () => {
                   author_id,
                })
                .returning()
-               .catch((_error) => res.status(409).json({}));
-
-            res.status(201).json(newBook);
+               .then((result) => res.status(201).json(result))
+               .catch(({ message }) => res.status(409).json({ message }));
          },
       );
 
@@ -94,16 +93,16 @@ export default () => {
       .get(async (req: RequestParamsId, res: Response) => {
          const validatedId = req?.validated?.params?.id!;
 
-         const result = await db
+         return await db
             .select()
             .from(books)
-            .where(eq(books.id, validatedId!));
-
-         if (!result) {
-            return res.status(404).json({ detail: 'Author not found' });
-         }
-
-         res.json(result);
+            .where(eq(books.id, validatedId!))
+            .then((result) =>
+               !result
+                  ? res.status(404).json({ detail: 'Book not found' })
+                  : res.status(200).json(result)
+            )
+            .catch(({ message }) => res.status(409).json({ message }));
       })
       .put(
          zodBodyValidator(BookUpdateSchema),
@@ -116,7 +115,7 @@ export default () => {
                updateData.author_bio!,
             );
 
-            const updatedAuthor = await db
+            return await db
                .update(books)
                .set({
                   ...Object.fromEntries(
@@ -129,20 +128,20 @@ export default () => {
                   ),
                })
                .where(eq(books.id, validatedId))
-               .returning();
-
-            res.json(updatedAuthor);
+               .returning()
+               .then((result) => res.status(200).json(result))
+               .catch(({ message }) => res.status(409).json({ message }));
          },
       )
       .delete(async (req: RequestParamsId, res: Response) => {
          const validatedId = req?.validated?.params?.id!;
 
-         const result = await db
+         return await db
             .delete(books)
             .where(eq(books.id, validatedId!))
-            .returning({ deleted_id: books.id });
-
-         res.json(result);
+            .returning({ deleted_id: books.id })
+            .then((result) => res.status(200).json(result))
+            .catch(({ message }) => res.status(409).json({ message }));
       });
    return router;
 };
