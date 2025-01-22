@@ -1,4 +1,5 @@
 import express, { NextFunction, Request, Response } from 'express';
+import { debugMiddlewares } from '#utils';
 import morgan from 'morgan';
 import routes from '#routes';
 
@@ -9,19 +10,10 @@ export const app = express();
 
 app.use(express.json());
 
-//Debug
-morgan.token('body', (req: Request) => JSON.stringify(req.body));
-morgan.token('query', (req: Request) => JSON.stringify(req.query));
-app.use(
-   morgan(
-      ':method :url :status :response-time ms\n{\nbody: :body\nquery: :query\n}',
-   ),
-);
-//Debug
+app.use(morgan(':method :url :status :response-time ms'));
 
-////Non Debug
-//app.use(morgan(':method :url :status :response-time ms'));
-////Non Debug
+//debugMiddlewares(app);
+
 app.use('/api/', routes());
 
 app.use((req: Request, res: Response, next: NextFunction) => {

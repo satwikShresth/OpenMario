@@ -56,6 +56,7 @@ export default (registry: OpenAPIRegistry, path: string) => {
                },
             },
          },
+         409: { description: 'Author already exists!' },
       },
    });
 
@@ -128,6 +129,7 @@ export default (registry: OpenAPIRegistry, path: string) => {
             },
          },
          404: { description: 'Not found' },
+         409: { description: 'Author is a dependency, cannot be deleted!' },
       },
    });
 };
