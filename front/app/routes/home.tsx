@@ -1,229 +1,196 @@
-import { useRef, useState } from 'react';
+import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useDebounce } from 'use-debounce';
-import {
-  getBooksOptions,
-  getAuthorsOptions,
-  deleteBooksByIdMutation,
-  deleteAuthorsByIdMutation,
-  getAuthorsQueryKey,
-  getBooksQueryKey
-} from '#client/react-query.gen';
-import { createColumnHelper } from '@tanstack/react-table';
-import {
-  Typography,
-  Box,
-  IconButton
-} from '@mui/material';
-import { X } from 'lucide-react';
-import type { Book, Author } from '#client/types.gen';
-import { TableSection } from '#/components/Table';
-import type { AxiosError } from 'axios';
+import { getBooksOptions, getAuthorsOptions, putAuthorsByIdMutation, putBooksByIdMutation, getBooksQueryKey, getAuthorsQueryKey } from '#client/react-query.gen';
+import { DataGrid, type GridRowModel } from '@mui/x-data-grid';
+import { TextField, Typography, Box, Paper } from '@mui/material';
+import type { Author, Book } from '#client/types.gen';
 
-
-export default function LibraryData() {
-  const queryClient = useQueryClient();
+export default () => {
   const [bookSearch, setBookSearch] = useState('');
   const [authorSearch, setAuthorSearch] = useState('');
   const [DbookSearch] = useDebounce(bookSearch, 500);
   const [DauthorSearch] = useDebounce(authorSearch, 500);
-
-  const bookInputRef = useRef<HTMLInputElement>(null);
-  const authorInputRef = useRef<HTMLInputElement>(null);
+  const queryClient = useQueryClient();
 
   const {
     data: books = [],
-    isLoading: booksLoading,
     error: booksError,
   } = useQuery({
-    ...getBooksOptions({
-      query: {
-        title: DbookSearch
-      }
-    }),
+    ...getBooksOptions({ query: { title: DbookSearch } }),
     enabled: true
   });
 
   const {
     data: authors = [],
-    isLoading: authorsLoading,
     error: authorsError,
   } = useQuery({
-    ...getAuthorsOptions({
-      query: {
-        name: DauthorSearch
-      }
-    }),
+    ...getAuthorsOptions({ query: { name: DauthorSearch } }),
     enabled: true
   });
 
-  const deleteBookMutation = useMutation({
-    ...deleteBooksByIdMutation(),
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: getBooksQueryKey()
-      });
-    },
-    onError: (error) => {
-      window.alert(error?.response?.data.message! ?? 'Failed to delete book');
-    }
-  });
-
-  const deleteAuthorMutation = useMutation({
-    ...deleteAuthorsByIdMutation(),
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: getAuthorsQueryKey()
-      });
-    },
-    onError: (error) => {
-      window.alert(error?.response?.data.message! ?? 'Failed to delete author');
-    }
-  });
-
-  const handleDeleteBook = (bookId: number) => {
-    if (window.confirm('Are you sure you want to delete this book?')) {
-      deleteBookMutation.mutate({
-        path: {
-          id: bookId
-        }
-      });
-    }
-  };
-
-  const handleDeleteAuthor = (authorId: number) => {
-    if (window.confirm('Are you sure you want to delete this author?')) {
-      deleteAuthorMutation.mutate({
-        path: {
-          id: authorId
-        }
-      });
-    }
-  };
-
-  const columnHelper = createColumnHelper<Book>();
-
-  const bookColumns = [
-    columnHelper.accessor('id', {
-      header: 'ID',
-      cell: info => info.getValue()
-    }),
-    columnHelper.accessor('title', {
-      header: 'Title',
-      cell: info => info.getValue()
-    }),
-    columnHelper.accessor('author_id', {
-      header: 'Author',
-      cell: info => {
-        const author = authors.find(a => a.id === info.getValue());
-        return author ? author.name : 'Unknown Author';
-      }
-    }),
-    columnHelper.accessor('pub_year', {
-      header: 'Publication Year',
-      cell: info => info.getValue()
-    }),
-    columnHelper.accessor('genre', {
-      header: 'Genre',
-      cell: info => info.getValue()
-    }),
-    columnHelper.display({
-      id: 'actions',
-      header: 'Actions',
-      cell: props => (
-        <IconButton
-          onClick={() => handleDeleteBook(props.row.original.id)}
-          size="small"
-          sx={{
-            color: 'white',
-            '&:hover': {
-              color: 'error.main',
-              bgcolor: 'rgba(211, 47, 47, 0.04)'
-            }
-          }}
-        >
-          <X />
-        </IconButton>
-      )
-    })
-  ];
-
-  const authorColumnHelper = createColumnHelper<Author>();
-
-  const authorColumns = [
-    authorColumnHelper.accessor('id', {
-      header: 'ID',
-      cell: info => info.getValue()
-    }),
-    authorColumnHelper.accessor('name', {
-      header: 'Name',
-      cell: info => info.getValue()
-    }),
-    authorColumnHelper.accessor('bio', {
-      header: 'Biography',
-      cell: info => info.getValue() || 'No biography available'
-    }),
-    authorColumnHelper.display({
-      id: 'actions',
-      header: 'Actions',
-      cell: props => (
-        <IconButton
-          onClick={() => handleDeleteAuthor(props.row.original.id)}
-          size="small"
-          sx={{
-            color: 'white',
-            '&:hover': {
-              color: 'error.main',
-              bgcolor: 'rgba(211, 47, 47, 0.04)'
-            }
-          }}
-        >
-          <X />
-        </IconButton>
-      )
-    })
-  ];
-
   const error = booksError || authorsError;
+
   if (error) {
     return (
-      <Box sx={{ p: 2, color: 'error.main' }}>
+      <Box p={2} color="error.main">
         Failed to fetch data
       </Box>
     );
   }
 
+  const updateBookMutation = useMutation(putBooksByIdMutation());
+  const updateAuthorMutation = useMutation(putAuthorsByIdMutation());
+
+
+  const handleBookEdit = (newRow: GridRowModel<Book>) => {
+    updateBookMutation.mutateAsync({
+      path: { id: newRow.id },
+      //@ts-ignore
+      body: { id: newRow.id, title: newRow.title, genre: newRow.genre, pub_year: newRow.pub_year },
+      throwOnError: true
+    },
+      {
+        onError: (error) => {
+          window.alert(`Error updating Book`); console.error(error)
+        }
+      },
+    )
+      .catch((error) => console.error(`Error: ${error}`))
+      .finally(() => {
+        queryClient.invalidateQueries({ queryKey: getAuthorsQueryKey({ query: { name: DauthorSearch } }) })
+        queryClient.invalidateQueries({ queryKey: getBooksQueryKey({ query: { title: DbookSearch } }) })
+      });
+
+    return newRow;
+  };
+
+  const handleAuthorEdit = (newRow: GridRowModel<Author>) => {
+    updateAuthorMutation.mutateAsync({
+      path: { id: newRow.id },
+      body: newRow,
+      throwOnError: true
+    },
+      {
+        onError: (error) => {
+          window.alert(`Error updating Author`); console.error(error)
+        }
+      },
+    )
+      .catch((error) => console.error(`Error: ${error}`))
+      .finally(() => {
+        queryClient.invalidateQueries({ queryKey: getAuthorsQueryKey({ query: { name: DauthorSearch } }) })
+        queryClient.invalidateQueries({ queryKey: getBooksQueryKey({ query: { title: DbookSearch } }) })
+      });
+
+    return newRow;
+  };
+
+  const bookColumns = [
+    { field: 'title', headerName: 'Title', flex: 1, editable: true },
+    { field: 'author_name', headerName: 'Author', flex: 1 },
+    { field: 'pub_year', headerName: 'Publication Year', width: 150, editable: true },
+    { field: 'genre', headerName: 'Genre', width: 130, editable: true }
+  ];
+
+  const authorColumns = [
+    { field: 'name', headerName: 'Name', flex: 1, editable: true },
+    { field: 'bio', headerName: 'Biography', flex: 2, editable: true }
+  ];
+
   return (
-    <Box sx={{ p: 3 }}>
-      <Typography variant="h4" gutterBottom sx={{ color: 'white' }}>
+    <Box p={4} sx={{ height: '100vh' }}>
+      <Typography variant="h4" fontWeight="bold" mb={4}>
         Library Data
       </Typography>
 
-      <Box sx={{ maxWidth: '80%', minWidth: '60%', mx: 'auto' }}>
-        <Box sx={{ mb: 4 }}>
-          <TableSection<Book>
-            title="Books"
-            data={books}
+      <Box display="flex" flexDirection="column" gap={4} sx={{ width: '70%', mx: "auto", backgroundColor: 'transparent' }}>
+        <Paper elevation={3} sx={{ p: 3 }}>
+          <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
+            <Typography variant="h5">Books</Typography>
+            <TextField
+              placeholder="Search books by title"
+              value={bookSearch}
+              onChange={(e) => setBookSearch(e.target.value)}
+              size="small"
+              sx={{ width: '25%' }}
+            />
+          </Box>
+          <DataGrid
+            rows={books}
             columns={bookColumns}
-            searchValue={bookSearch}
-            onSearchChange={(e) => setBookSearch(e.target.value)}
-            searchPlaceholder="Search books by title"
-            inputRef={bookInputRef}
-            isLoading={booksLoading}
+            getRowId={(row) => row.id || `${row.title}-${row.author_id}`}
+            autoHeight
+            pageSizeOptions={[5, 10, 25]}
+            editMode="row"
+            processRowUpdate={handleBookEdit}
+            initialState={{
+              pagination: { paginationModel: { pageSize: 5 } },
+            }}
+            sx={{
+              border: '1px solid white',
+              color: 'white',
+              '& .MuiDataGrid-cell': {
+                color: 'black',
+                borderBottom: '1px solid rgba(255, 255, 255, 0.4)'
+              },
+              '& .MuiDataGrid-columnHeaders': {
+                backgroundColor: 'white',
+                color: 'black',
+                borderBottom: '2px solid rgba(255, 255, 255, 0.8)'
+              },
+              '& .MuiDataGrid-row': {
+                '&:hover': {
+                  backgroundColor: 'rgba(255, 255, 255, 0.08)'
+                }
+              }
+            }}
           />
-        </Box>
+        </Paper>
 
-        <TableSection<Author>
-          title="Authors"
-          data={authors}
-          columns={authorColumns}
-          searchValue={authorSearch}
-          onSearchChange={(e) => setAuthorSearch(e.target.value)}
-          searchPlaceholder="Search authors by name"
-          inputRef={authorInputRef}
-          isLoading={authorsLoading}
-        />
+        <Paper elevation={3} sx={{ p: 3 }}>
+          <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
+            <Typography variant="h5">Authors</Typography>
+            <TextField
+              placeholder="Search authors by name"
+              value={authorSearch}
+              onChange={(e) => setAuthorSearch(e.target.value)}
+              size="small"
+              sx={{ width: '25%' }}
+            />
+          </Box>
+          <DataGrid
+            rows={authors}
+            getRowId={(row) => row.id || row.name}
+            columns={authorColumns}
+            autoHeight
+            pageSizeOptions={[5, 10, 25]}
+            editMode="row"
+            processRowUpdate={handleAuthorEdit}
+            initialState={{
+              pagination: { paginationModel: { pageSize: 5 } },
+            }}
+            sx={{
+              border: '1px solid white',
+              color: 'white',
+              '& .MuiDataGrid-cell': {
+                color: 'black',
+                borderBottom: '1px solid rgba(255, 255, 255, 0.4)'
+              },
+              '& .MuiDataGrid-columnHeaders': {
+                backgroundColor: 'white',
+                color: 'black',
+                borderBottom: '2px solid rgba(255, 255, 255, 0.8)'
+              },
+              '& .MuiDataGrid-row': {
+                '&:hover': {
+                  backgroundColor: 'rgba(255, 255, 255, 0.08)'
+                }
+              }
+            }}
+          />
+        </Paper>
       </Box>
     </Box>
   );
-}
+};

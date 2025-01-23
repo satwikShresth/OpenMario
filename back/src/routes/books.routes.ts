@@ -28,7 +28,13 @@ const checkCreateAuthor = async (
          .select({ id: authors.id })
          .from(authors)
          .where(eq(authors.name, author_name))
-         .get();
+         .get()
+         .catch(
+            ({ message }) => {
+               console.error(`Unexpected Error: ${message}`);
+               return null;
+            },
+         );
 
       if (!existingAuthor) {
          const newAuthor = await db
@@ -38,12 +44,18 @@ const checkCreateAuthor = async (
                bio: author_bio === undefined ? null : author_bio,
             })
             .returning({ id: authors.id })
-            .get();
+            .get()
+            .catch(
+               ({ message }) => {
+                  console.error(`Unexpected Error: ${message}`);
+                  return null;
+               },
+            );
 
-         return newAuthor.id;
+         return newAuthor?.id;
       }
 
-      return existingAuthor.id;
+      return existingAuthor?.id;
    }
 };
 
@@ -57,8 +69,16 @@ export default () => {
             const queries = req?.validated?.query as BookQuery;
 
             return await db
-               .select()
+               .select({
+                  id: books.id,
+                  title: books.title,
+                  pub_year: books.pub_year,
+                  genre: books.genre,
+                  author_name: authors.name,
+                  author_id: books.author_id,
+               })
                .from(books)
+               .innerJoin(authors, eq(books.author_id, authors.id))
                .where(queries.length > 0 ? and(...queries) : undefined)
                .all()
                .then((result) => res.status(200).json(result))
@@ -69,10 +89,11 @@ export default () => {
          zodBodyValidator(BookCreateSchema),
          async (req: Request, res: Response) => {
             const insertData = req?.validated?.body as BookCreate;
-            const author_id = (await checkCreateAuthor(
+
+            const author_id = await checkCreateAuthor(
                insertData.author_name,
                insertData.author_bio,
-            ))!;
+            );
 
             return await db
                .insert(books)
@@ -80,7 +101,7 @@ export default () => {
                   title: insertData.title!,
                   pub_year: insertData.pub_year!,
                   genre: insertData.genre!,
-                  author_id,
+                  author_id: author_id!,
                })
                .returning()
                .then((result) => res.status(201).json(result))

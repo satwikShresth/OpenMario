@@ -10,9 +10,9 @@ export const app = express();
 
 app.use(express.json());
 
-app.use(morgan(':method :url :status :response-time ms'));
+//app.use(morgan(':method :url :status :response-time ms'));
 
-//debugMiddlewares(app);
+debugMiddlewares(app);
 
 app.use('/api/', (_req, _res, next) => setTimeout(next, 500), routes());
 

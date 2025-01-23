@@ -340,7 +340,29 @@
                         "schema": {
                            "type": "array",
                            "items": {
-                              "$ref": "#/components/schemas/Book"
+                              "allOf": [
+                                 {
+                                    "$ref": "#/components/schemas/Book"
+                                 },
+                                 {
+                                    "type": "object",
+                                    "properties": {
+                                       "name": {
+                                          "type": "string",
+                                          "minLength": 1,
+                                          "maxLength": 100,
+                                          "pattern": "^[a-zA-Z\\s\\-'\\p{L}\\p{M}]+$",
+                                          "description": "Author's full name",
+                                          "example": "Jane Austen"
+                                       }
+                                    },
+                                    "required": [
+                                       "name"
+                                    ]
+                                 }
+                              ],
+                              "description": "A book record with all its properties",
+                              "title": "Book"
                            }
                         }
                      }
@@ -553,6 +575,9 @@
                         }
                      }
                   }
+               },
+               "409": {
+                  "description": "Author already exists!"
                }
             }
          }
@@ -673,6 +698,9 @@
                },
                "404": {
                   "description": "Not found"
+               },
+               "409": {
+                  "description": "Author is a dependency, cannot be deleted!"
                }
             }
          }
