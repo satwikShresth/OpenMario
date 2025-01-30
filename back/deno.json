@@ -42,6 +42,7 @@
       "watch": "deno -A --watch src/server.ts",
       "test": "deno test -A",
       "dev": "deno task watch",
+      "gen:openapi": "deno -A ./openapi/index.ts ../openapi.json",
       "db:migrate": "deno run  -A npm:drizzle-kit migrate ",
       "db:migrate:generate": "deno run -A npm:drizzle-kit generate --name ",
       "db:migrate:push": "deno run -A npm:drizzle-kit push --force",

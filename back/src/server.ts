@@ -10,11 +10,11 @@ export const app = express();
 
 app.use(express.json());
 
-app.use(morgan(':method :url :status :response-time ms'));
+//app.use(morgan(':method :url :status :response-time ms'));
 
-//debugMiddlewares(app);
+debugMiddlewares(app);
 
-app.use('/api/', routes());
+app.use('/api/', (_req, _res, next) => setTimeout(next, 500), routes());
 
 app.use((req: Request, res: Response, next: NextFunction) => {
    const error = new Error(`Not Found: ${req.originalUrl}`);

@@ -53,7 +53,7 @@ const genre = (schema: z.ZodString) =>
          enum: VALID_GENRES,
       });
 
-export const BookSchema = createSelectSchema(books).extend({}).openapi({
+export const BookSchema = createSelectSchema(books).openapi({
    title: 'Book',
    description: 'A book record with all its properties',
 });

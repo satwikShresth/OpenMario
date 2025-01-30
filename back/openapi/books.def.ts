@@ -4,8 +4,10 @@ import {
    BookCreateSchema,
    BookSchema,
    BookUpdateSchema,
+   name,
    paramsIdSchema as ParamsId,
 } from '#models';
+import { z } from 'zod';
 
 export default (registry: OpenAPIRegistry, path: string) => {
    const Book = registry.register('Book', BookSchema);
@@ -25,7 +27,7 @@ export default (registry: OpenAPIRegistry, path: string) => {
             description: 'List of books matching the criteria',
             content: {
                'application/json': {
-                  schema: Book.array(),
+                  schema: Book.extend({ name: name(z.string()) }).array(),
                },
             },
          },
