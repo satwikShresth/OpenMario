@@ -4,11 +4,22 @@ import {
 } from '@asteasolutions/zod-to-openapi';
 import bookDef from './books.def.ts';
 import authorDef from './authors.def.ts';
-import { stringify } from '@std/yaml';
+import authDef from './auth.def.ts';
 
 export const registry = new OpenAPIRegistry();
-bookDef(registry, '/books');
-authorDef(registry, '/authors');
+const bearerAuth = registry.registerComponent(
+   'securitySchemes',
+   'bearerAuth',
+   {
+      type: 'http',
+      scheme: 'bearer',
+      bearerFormat: 'JWT',
+   },
+);
+
+authDef(registry, '/auth', bearerAuth);
+bookDef(registry, '/books', bearerAuth);
+authorDef(registry, '/authors', bearerAuth);
 
 export const generateOpenAPI = (registry: OpenAPIRegistry) => {
    const generator = new OpenApiGeneratorV3(registry.definitions);

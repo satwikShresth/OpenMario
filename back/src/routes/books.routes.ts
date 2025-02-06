@@ -1,5 +1,5 @@
 //routes/books.routes.ts
-import { Request, Response, Router } from 'express';
+import { Response, Router } from 'express';
 import { db } from '#db';
 import { authors, books } from '#/db/schema.ts';
 import {
@@ -22,6 +22,7 @@ import { and, eq } from 'drizzle-orm';
 const checkCreateAuthor = async (
    author_name: string,
    author_bio: string | null | undefined,
+   user_id: number,
 ) => {
    if (author_name) {
       const existingAuthor = await db
@@ -42,6 +43,7 @@ const checkCreateAuthor = async (
             .values({
                name: author_name,
                bio: author_bio === undefined ? null : author_bio,
+               user_id,
             })
             .returning({ id: authors.id })
             .get()
@@ -65,7 +67,7 @@ export default () => {
    router.route('/')
       .get(
          zodQueryValidator(BookQuerySchema),
-         async (req: Request, res: Response) => {
+         async (req: RequestParamsId, res: Response) => {
             const queries = req?.validated?.query as BookQuery;
 
             return await db
@@ -87,12 +89,13 @@ export default () => {
       )
       .post(
          zodBodyValidator(BookCreateSchema),
-         async (req: Request, res: Response) => {
+         async (req: RequestParamsId, res: Response) => {
             const insertData = req?.validated?.body as BookCreate;
 
             const author_id = await checkCreateAuthor(
                insertData.author_name,
                insertData.author_bio,
+               req?.auth?.user_id!,
             );
 
             return await db
@@ -102,6 +105,7 @@ export default () => {
                   pub_year: insertData.pub_year!,
                   genre: insertData.genre!,
                   author_id: author_id!,
+                  user_id: req?.auth?.user_id!,
                })
                .returning()
                .then((result) => res.status(201).json(result))
@@ -111,20 +115,22 @@ export default () => {
 
    router.route('/:id')
       .all(zodParamsValidator(paramsIdSchema))
-      .get(async (req: RequestParamsId, res: Response) => {
-         const validatedId = req?.validated?.params?.id!;
+      .get(
+         async (req: RequestParamsId, res: Response) => {
+            const validatedId = req?.validated?.params?.id!;
 
-         return await db
-            .select()
-            .from(books)
-            .where(eq(books.id, validatedId!))
-            .then((result) =>
-               !result
-                  ? res.status(404).json({ detail: 'Book not found' })
-                  : res.status(200).json(result)
-            )
-            .catch(({ message }) => res.status(409).json({ message }));
-      })
+            return await db
+               .select()
+               .from(books)
+               .where(eq(books.id, validatedId!))
+               .then((result) =>
+                  !result
+                     ? res.status(404).json({ detail: 'Book not found' })
+                     : res.status(200).json(result)
+               )
+               .catch(({ message }) => res.status(409).json({ message }));
+         },
+      )
       .put(
          zodBodyValidator(BookUpdateSchema),
          async (req: RequestParamsId, res: Response) => {
@@ -134,6 +140,7 @@ export default () => {
             const author_id = await checkCreateAuthor(
                updateData.author_name!,
                updateData.author_bio!,
+               req?.auth?.user_id!,
             );
 
             return await db
@@ -154,15 +161,17 @@ export default () => {
                .catch(({ message }) => res.status(409).json({ message }));
          },
       )
-      .delete(async (req: RequestParamsId, res: Response) => {
-         const validatedId = req?.validated?.params?.id!;
+      .delete(
+         async (req: RequestParamsId, res: Response) => {
+            const validatedId = req?.validated?.params?.id!;
 
-         return await db
-            .delete(books)
-            .where(eq(books.id, validatedId!))
-            .returning({ deleted_id: books.id })
-            .then((result) => res.status(200).json(result))
-            .catch(({ message }) => res.status(409).json({ message }));
-      });
+            return await db
+               .delete(books)
+               .where(eq(books.id, validatedId!))
+               .returning({ deleted_id: books.id })
+               .then((result) => res.status(200).json(result))
+               .catch(({ message }) => res.status(409).json({ message }));
+         },
+      );
    return router;
 };

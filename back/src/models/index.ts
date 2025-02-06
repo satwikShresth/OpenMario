@@ -1,9 +1,13 @@
 import { z } from 'zod';
+import { Request } from 'express-jwt';
+import { JwtPayload } from '#/models/auth.models.ts';
 export * from './authors.models.ts';
 export * from './books.models.ts';
+export * from './auth.models.ts';
 
-export interface RequestParamsId extends Request {
-   params: {
+export type RequestParamsId = Request & {
+   auth?: JwtPayload;
+   params?: {
       id: number;
    };
    validated?: {
@@ -11,7 +15,7 @@ export interface RequestParamsId extends Request {
       params?: any;
       query?: any;
    };
-}
+};
 
 export const paramsIdSchema = z.object({
    id: z.preprocess(

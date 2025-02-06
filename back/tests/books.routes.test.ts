@@ -1,13 +1,26 @@
 import { api } from './index.ts';
 import { expect } from 'jsr:@std/expect';
-import { afterAll, beforeEach, describe, it } from 'jsr:@std/testing/bdd';
+import {
+   afterAll,
+   afterEach,
+   beforeEach,
+   describe,
+   it,
+} from 'jsr:@std/testing/bdd';
 import { AxiosError } from 'axios';
-import { authors, books } from '#/db/schema.ts';
+import { authors, books, revoked, users } from '#/db/schema.ts';
 import { eq } from 'drizzle-orm';
-import { db } from '#/db/index.ts';
+import { db } from '#db';
 import { Book, BookCreate } from '#models';
+import { hash } from 'argon2';
 
 const endpoint = `/api/books`;
+const authEndpoint = '/api';
+
+const testUser = {
+   username: 'testuser',
+   password: 'Test123!@#',
+};
 
 const testAuthor = {
    name: 'Test Author',
@@ -39,14 +52,43 @@ const testBooks = [
 ];
 
 describe('Books API', () => {
+   let accessToken: string;
+   let user_id: number;
+
    beforeEach(async () => {
+      // Clean up databases
       await db.delete(books);
       await db.delete(authors);
+      await db.delete(users);
+      await db.delete(revoked);
+
+      // Create test user
+      const hashedPassword = await hash(testUser.password);
+      const returnedValue = await db
+         .insert(users)
+         .values({
+            username: testUser.username,
+            password: hashedPassword,
+         })
+         .returning();
+
+      user_id = returnedValue[0].id;
+
+      // Login and get token
+      const { data } = await api.post(`${authEndpoint}/access-token`, testUser);
+      accessToken = data.access_token;
+      api.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`;
+   });
+
+   afterEach(() => {
+      delete api.defaults.headers.common['Authorization'];
    });
 
    afterAll(async () => {
       await db.delete(books);
       await db.delete(authors);
+      await db.delete(users);
+      await db.delete(revoked);
    });
 
    describe('GET /api/books', () => {
@@ -57,13 +99,17 @@ describe('Books API', () => {
          });
 
          it('retrieves single book when database has one entry', async () => {
-            const author = await db.insert(authors).values(testAuthor)
+            const author = await db.insert(authors).values({
+               ...testAuthor,
+               user_id,
+            })
                .returning();
             const testBook = await db.insert(books).values({
                title: 'Test Book',
                pub_year: '2023',
                genre: 'Fiction',
                author_id: author[0].id,
+               user_id,
             }).returning();
 
             const { data } = await api.get(endpoint);
@@ -80,7 +126,10 @@ describe('Books API', () => {
          });
 
          it('returns multiple books in correct order', async () => {
-            const author = await db.insert(authors).values(testAuthor)
+            const author = await db.insert(authors).values({
+               ...testAuthor,
+               user_id,
+            })
                .returning();
             const insertedBooks = await db.insert(books).values(
                testBooks.map((book) => ({
@@ -88,6 +137,7 @@ describe('Books API', () => {
                   pub_year: book.pub_year,
                   genre: book.genre,
                   author_id: author[0].id,
+                  user_id,
                })),
             ).returning();
 
@@ -112,7 +162,10 @@ describe('Books API', () => {
 
       describe('Filtering', () => {
          beforeEach(async () => {
-            const author = await db.insert(authors).values(testAuthor)
+            const author = await db.insert(authors).values({
+               ...testAuthor,
+               user_id,
+            })
                .returning();
             await db.insert(books).values(
                testBooks.map((book) => ({
@@ -120,6 +173,7 @@ describe('Books API', () => {
                   pub_year: book.pub_year,
                   genre: book.genre,
                   author_id: author[0].id,
+                  user_id,
                })),
             );
          });
@@ -193,6 +247,7 @@ describe('Books API', () => {
                genre: 'Fiction',
                author_name: 'New Author',
                author_bio: 'New author bio',
+               user_id,
             };
 
             const { data, status } = await api.post(endpoint, newBook);
@@ -202,6 +257,7 @@ describe('Books API', () => {
                title: newBook.title,
                pub_year: newBook.pub_year,
                genre: newBook.genre,
+               user_id: expect.any(Number),
                id: expect.any(Number),
                author_id: expect.any(Number),
             });
@@ -215,7 +271,10 @@ describe('Books API', () => {
          });
 
          it('creates new book with existing author', async () => {
-            const existingAuthor = await db.insert(authors).values(testAuthor)
+            const existingAuthor = await db.insert(authors).values({
+               ...testAuthor,
+               user_id,
+            })
                .returning();
             const newBook: Partial<BookCreate> = {
                title: 'New Book',
@@ -223,6 +282,7 @@ describe('Books API', () => {
                genre: 'Fiction',
                author_name: testAuthor.name,
                author_bio: testAuthor.bio,
+               user_id,
             };
 
             const { data } = await api.post(endpoint, newBook);
@@ -289,12 +349,16 @@ describe('Books API', () => {
       let testBook: Book[];
 
       beforeEach(async () => {
-         const author = await db.insert(authors).values(testAuthor).returning();
+         const author = await db.insert(authors).values({
+            ...testAuthor,
+            user_id,
+         }).returning();
          testBook = await db.insert(books).values({
             title: 'Original Title',
             pub_year: '2023',
             genre: 'Fiction',
             author_id: author[0].id,
+            user_id,
          }).returning();
       });
 
@@ -350,12 +414,16 @@ describe('Books API', () => {
 
    describe('DELETE /api/books/:id', () => {
       it('successfully deletes an existing book', async () => {
-         const author = await db.insert(authors).values(testAuthor).returning();
+         const author = await db.insert(authors).values({
+            ...testAuthor,
+            user_id,
+         }).returning();
          const testBook = await db.insert(books).values({
             title: 'To Be Deleted',
             pub_year: '2023',
             genre: 'Fiction',
             author_id: author[0].id,
+            user_id,
          }).returning();
 
          const { data } = await api.delete(`${endpoint}/${testBook[0].id}`);

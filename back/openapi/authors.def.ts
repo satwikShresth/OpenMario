@@ -8,7 +8,11 @@ import {
 } from '#models';
 import { z } from 'zod';
 
-export default (registry: OpenAPIRegistry, path: string) => {
+export default (
+   registry: OpenAPIRegistry,
+   path: string,
+   auth: { name: string; ref: { $ref: string } },
+) => {
    const Author = registry.register('Author', AuthorSchema);
    const AuthorCreate = registry.register('AuthorCreate', AuthorCreateSchema);
    const AuthorUpdate = registry.register('AuthorUpdate', AuthorUpdateSchema);
@@ -17,6 +21,7 @@ export default (registry: OpenAPIRegistry, path: string) => {
       method: 'get',
       path,
       description: 'Get all authors',
+      security: [{ [auth.name]: [] }],
       tags: ['Authors'],
       request: {
          query: AuthorQuery,
@@ -37,6 +42,7 @@ export default (registry: OpenAPIRegistry, path: string) => {
       method: 'post',
       path,
       description: 'Create an author',
+      security: [{ [auth.name]: [] }],
       tags: ['Authors'],
       request: {
          body: {
@@ -64,6 +70,7 @@ export default (registry: OpenAPIRegistry, path: string) => {
       method: 'get',
       path: path + '/{id}',
       description: 'Get author by id',
+      security: [{ [auth.name]: [] }],
       tags: ['Authors'],
       request: {
          params: ParamsId,
@@ -81,6 +88,7 @@ export default (registry: OpenAPIRegistry, path: string) => {
       method: 'put',
       path: path + '/{id}',
       description: 'Update an author',
+      security: [{ [auth.name]: [] }],
       tags: ['Authors'],
       request: {
          params: ParamsId,
@@ -108,6 +116,7 @@ export default (registry: OpenAPIRegistry, path: string) => {
    registry.registerPath({
       method: 'delete',
       path: path + '/{id}',
+      security: [{ [auth.name]: [] }],
       description: 'Delete an author',
       tags: ['Authors'],
       request: {

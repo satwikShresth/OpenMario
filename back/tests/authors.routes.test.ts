@@ -1,13 +1,25 @@
 import { api } from './index.ts';
 import { expect } from 'jsr:@std/expect';
-import { afterAll, beforeEach, describe, it } from 'jsr:@std/testing/bdd';
+import {
+   afterAll,
+   afterEach,
+   beforeEach,
+   describe,
+   it,
+} from 'jsr:@std/testing/bdd';
 import { AxiosError } from 'axios';
-import { authors } from '#/db/schema.ts';
+import { authors, books, revoked, users } from '#/db/schema.ts';
 import { eq } from 'drizzle-orm';
-import { db } from '#/db/index.ts';
+import { db } from '#db';
 import { Author } from '#models';
+import { hash } from 'argon2';
 
 const endpoint = `/api/authors`;
+const authEndpoint = `/api`;
+const testUser = {
+   username: 'testuser',
+   password: 'Test123!@#',
+};
 
 const testAuthors = [
    { name: 'John Smith', bio: 'Mystery writer from London' },
@@ -17,12 +29,40 @@ const testAuthors = [
 ];
 
 describe('Authors API', () => {
+   let accessToken: string;
+   let user_id: number;
+
    beforeEach(async () => {
+      await db.delete(books);
       await db.delete(authors);
+      await db.delete(users);
+      await db.delete(revoked);
+
+      const hashedPassword = await hash(testUser.password);
+      const returnedValue = await db
+         .insert(users)
+         .values({
+            username: testUser.username,
+            password: hashedPassword,
+         })
+         .returning();
+
+      user_id = returnedValue[0].id;
+
+      const { data } = await api.post(`${authEndpoint}/access-token`, testUser);
+      accessToken = data.access_token;
+      api.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`;
+   });
+
+   afterEach(() => {
+      delete api.defaults.headers.common['Authorization'];
    });
 
    afterAll(async () => {
+      await db.delete(books);
       await db.delete(authors);
+      await db.delete(users);
+      await db.delete(revoked);
    });
 
    describe('GET /api/authors', () => {
@@ -36,6 +76,7 @@ describe('Authors API', () => {
             const testAuthor = await db.insert(authors).values({
                name: 'J.K. Rowling',
                bio: 'British author',
+               user_id,
             }).returning();
 
             const { data } = await api.get(endpoint);
@@ -51,9 +92,9 @@ describe('Authors API', () => {
 
          it('returns multiple authors in correct order', async () => {
             const testAuthors = await db.insert(authors).values([
-               { name: 'Author 1', bio: 'Bio 1' },
-               { name: 'Author 2', bio: 'Bio 2' },
-               { name: 'Author 3', bio: 'Bio 3' },
+               { name: 'Author 1', bio: 'Bio 1', user_id },
+               { name: 'Author 2', bio: 'Bio 2', user_id },
+               { name: 'Author 3', bio: 'Bio 3', user_id },
             ]).returning();
 
             const { data } = await api.get(endpoint);
@@ -75,7 +116,9 @@ describe('Authors API', () => {
 
       describe('Filtering', () => {
          beforeEach(async () => {
-            await db.insert(authors).values(testAuthors);
+            await db.insert(authors).values(
+               testAuthors.map((item) => ({ ...item, user_id })),
+            );
          });
 
          it('filters authors by name query parameter', async () => {
@@ -167,6 +210,7 @@ describe('Authors API', () => {
          const testAuthor = await db.insert(authors).values({
             name: 'J.K. Rowling',
             bio: 'British author',
+            user_id,
          }).returning();
 
          const { data } = await api.get(`${endpoint}/${testAuthor[0].id}`);
@@ -206,6 +250,7 @@ describe('Authors API', () => {
             const newAuthor = {
                name: 'Stephen King',
                bio: 'Master of horror',
+               user_id,
             };
             const { data, status } = await api.post(endpoint, newAuthor);
             expect(status).toEqual(201);
@@ -229,6 +274,7 @@ describe('Authors API', () => {
             const authorWithEmptyBio = {
                name: 'John Doe',
                bio: '',
+               user_id,
             };
             const { data, status } = await api.post(
                endpoint,
@@ -239,6 +285,7 @@ describe('Authors API', () => {
                name: authorWithEmptyBio.name,
                bio: null,
                id: expect.any(Number),
+               user_id: expect.any(Number),
             });
 
             const dbAuthor = await db.select().from(authors).where(
@@ -251,6 +298,7 @@ describe('Authors API', () => {
             const authorWithSpecialChars = {
                name: "José María O'Connor Smith",
                bio: 'Bio with symbols @#$%',
+               user_id,
             };
             const { data, status } = await api.post(
                endpoint,
@@ -325,6 +373,7 @@ describe('Authors API', () => {
          testAuthor = await db.insert(authors).values({
             name: 'Original Name',
             bio: 'Original bio',
+            user_id,
          }).returning();
       });
 
@@ -399,6 +448,7 @@ describe('Authors API', () => {
          const testAuthor = await db.insert(authors).values({
             name: 'To Be Deleted',
             bio: 'Soon to be gone',
+            user_id,
          }).returning();
 
          const { data } = await api.delete(`${endpoint}/${testAuthor[0].id}`);

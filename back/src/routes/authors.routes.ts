@@ -1,4 +1,4 @@
-import { Request, Response, Router } from 'express';
+import { Response, Router } from 'express';
 import { db } from '#db';
 import { authors } from '#/db/schema.ts';
 import { and, eq } from 'drizzle-orm';
@@ -24,8 +24,8 @@ export default () => {
    router.route('/')
       .get(
          zodQueryValidator(AuthorQuerySchema),
-         async (req: Request, res: Response) => {
-            const queries = req?.validated.query as AuthorQuery;
+         async (req: RequestParamsId, res: Response) => {
+            const queries = req?.validated?.query as AuthorQuery;
 
             return await db
                .select()
@@ -38,12 +38,12 @@ export default () => {
       )
       .post(
          zodBodyValidator(AuthorCreateSchema),
-         async (req: Request, res: Response) => {
-            const insertValues = req?.validated.body as AuthorCreate;
+         async (req: RequestParamsId, res: Response) => {
+            const insertValues = req?.validated?.body as AuthorCreate;
 
             return await db
                .insert(authors)
-               .values(insertValues)
+               .values({ ...insertValues, user_id: req?.auth?.user_id! })
                .returning()
                .then((result) => res.status(201).json(result))
                .catch(({ message }) => res.status(409).json({ message }));
