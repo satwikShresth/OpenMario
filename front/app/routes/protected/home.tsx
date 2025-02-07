@@ -80,7 +80,7 @@ export default () => {
   return (
     <Box p={4} sx={{ height: '100vh' }}>
       <Typography variant="h4" fontWeight="bold" mb={4}>
-        Hello {user && user.username}
+        Hello {user && (user.username[0].toUpperCase() + user.username.substr(1, user.username.length))}
       </Typography>
 
       <Box
