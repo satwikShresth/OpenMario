@@ -24,11 +24,10 @@ const AuthValidator = ({ children }: { children: React.ReactNode }) => {
   });
 
   useEffect(() => {
-    // Only validate if there's no user data
     if (!user) {
       validateMutation.mutate({});
     }
-  }, []); // Remove user from dependencies
+  }, []);
 
   return <>{children}</>;
 };
