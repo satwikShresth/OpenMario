@@ -229,7 +229,7 @@ describe('Authors API', () => {
             expect(error.response.status).toBe(404);
             expect(error.response.data).toHaveProperty(
                'detail',
-               'Author not found',
+               'Item not found',
             );
          }
       });

@@ -13,6 +13,7 @@ import {
    RequestParamsId,
 } from '#models';
 import {
+   validateOwner,
    zodBodyValidator,
    zodParamsValidator,
    zodQueryValidator,
@@ -114,7 +115,10 @@ export default () => {
       );
 
    router.route('/:id')
-      .all(zodParamsValidator(paramsIdSchema))
+      .all(
+         zodParamsValidator(paramsIdSchema),
+         validateOwner(books),
+      )
       .get(
          async (req: RequestParamsId, res: Response) => {
             const validatedId = req?.validated?.params?.id!;

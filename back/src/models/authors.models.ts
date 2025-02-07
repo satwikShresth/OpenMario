@@ -7,6 +7,7 @@ import { z } from 'zod';
 import { authors } from '#/db/schema.ts';
 import { like } from 'drizzle-orm/expressions';
 import { extendZodWithOpenApi } from '@asteasolutions/zod-to-openapi';
+import { Schema } from 'zod';
 
 extendZodWithOpenApi(z);
 
@@ -36,7 +37,6 @@ export const bio = (schema: z.ZodString) =>
       });
 
 export const AuthorSchema = createSelectSchema(authors)
-   .extend({})
    .openapi({
       title: 'Author',
       description: 'Complete author record with all properties',
@@ -45,6 +45,7 @@ export const AuthorSchema = createSelectSchema(authors)
 export const AuthorCreateSchema = createInsertSchema(authors, {
    name,
    bio,
+   user_id: (schema) => schema.optional(),
 })
    .strict()
    .openapi({
@@ -55,6 +56,7 @@ export const AuthorCreateSchema = createInsertSchema(authors, {
 export const AuthorUpdateSchema = createUpdateSchema(authors, {
    name,
    bio,
+   user_id: (schema) => schema.optional(),
 })
    .strict()
    .openapi({

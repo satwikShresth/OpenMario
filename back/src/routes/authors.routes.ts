@@ -13,6 +13,7 @@ import {
 } from '#models';
 
 import {
+   validateOwner,
    zodBodyValidator,
    zodParamsValidator,
    zodQueryValidator,
@@ -51,7 +52,10 @@ export default () => {
       );
 
    router.route('/:id')
-      .all(zodParamsValidator(paramsIdSchema))
+      .all(
+         zodParamsValidator(paramsIdSchema),
+         validateOwner(authors),
+      )
       .get(async (req: RequestParamsId, res: Response) => {
          const validatedId = req?.validated?.params?.id!;
 
@@ -69,6 +73,7 @@ export default () => {
       .put(
          zodBodyValidator(AuthorUpdateSchema),
          async (req: RequestParamsId, res: Response) => {
+            console.log('reaching');
             const validatedId = req?.validated?.params?.id!;
             const updateData = req?.validated?.body!;
 
