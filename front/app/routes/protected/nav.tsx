@@ -24,10 +24,10 @@ export default () => {
           <NavLink to="/" end className={navLinkClasses}>
             Home
           </NavLink>
-          <NavLink to="/books" className={navLinkClasses}>
+          <NavLink to="/book" className={navLinkClasses}>
             Books
           </NavLink>
-          <NavLink to="/authors" className={navLinkClasses}>
+          <NavLink to="/author" className={navLinkClasses}>
             Authors
           </NavLink>
         </div>

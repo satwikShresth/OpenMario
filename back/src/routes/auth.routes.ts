@@ -5,7 +5,7 @@ import { db } from '#db';
 import { RequestParamsId, UserCreate, UserCreateSchema } from '#models';
 import { revoked, users } from '#/db/schema.ts';
 import { eq } from 'drizzle-orm';
-import { verify } from 'argon2';
+import { hash, verify } from 'argon2';
 import { sign } from 'jsonwebtoken';
 import { randomUUID } from 'node:crypto';
 
@@ -37,7 +37,10 @@ export default () => {
 
          return await db
             .insert(users)
-            .values(insertValue)
+            .values({
+               username: insertValue.username,
+               password: await hash(insertValue.password),
+            })
             .returning()
             .then((result) => res.status(201).json(result))
             .catch(({ message }) => res.status(409).json({ message }));
@@ -52,15 +55,16 @@ export default () => {
          res: Response,
       ): Promise<Response> => {
          const { username, password } = req?.validated?.body as UserCreate;
-         console.log(username, password);
 
          return await db
             .select({ id: users.id, password: users.password })
             .from(users)
             .where(eq(users.username, username))
             .then((users) => users[0])
-            .then(async (user) =>
-               await verify(user.password, password)
+            .then(async (user) => {
+               console.log(password);
+               console.log(user.password);
+               return await verify(user.password, password)
                   ? res
                      .status(200)
                      .json({
@@ -80,8 +84,8 @@ export default () => {
                      .status(401)
                      .json({
                         message: 'Invalid Username or Password',
-                     })
-            )
+                     });
+            })
             .catch(({ message }) => {
                console.log(message);
                return res.status(409).json({ message });
@@ -90,7 +94,7 @@ export default () => {
    );
 
    router.post(
-      '/test-token',
+      '/me',
       (req: Request, res: Response): Promise<Response> =>
          res
             .status(200)

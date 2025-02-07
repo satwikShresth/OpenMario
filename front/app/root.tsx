@@ -9,8 +9,8 @@ import {
 
 import type { Route } from "./+types/root";
 import stylesheet from "./app.css?url";
-import NavBar from "./nav";
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { SnackbarProvider } from 'notistack';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -45,7 +45,6 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Links />
       </head>
       <body>
-        <NavBar />
         {children}
         <ScrollRestoration />
         <Scripts />
@@ -57,7 +56,9 @@ export function Layout({ children }: { children: React.ReactNode }) {
 export default function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <Outlet />
+      <SnackbarProvider maxSnack={3} anchorOrigin={{ vertical: "bottom", horizontal: "right" }}>
+        <Outlet />
+      </SnackbarProvider>
     </QueryClientProvider>
   );
 }

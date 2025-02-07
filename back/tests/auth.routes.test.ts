@@ -191,7 +191,7 @@ describe('Authentication API', () => {
          expect(data).toHaveProperty('message', 'Jwt token revoked');
 
          try {
-            await api.post(`${endpoint}/test-token`);
+            await api.post(`${endpoint}/me`);
          } catch (error) {
             const axiosError = error as AxiosError;
             expect(axiosError.response?.status).toBe(401);
@@ -199,8 +199,8 @@ describe('Authentication API', () => {
       });
    });
 
-   describe('POST /test-token', () => {
-      const testTokenEndpoint = `${endpoint}/test-token`;
+   describe('POST /me', () => {
+      const testTokenEndpoint = `${endpoint}/me`;
       let accessToken: string;
 
       beforeEach(async () => {

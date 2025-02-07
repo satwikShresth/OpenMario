@@ -3,10 +3,28 @@
 /**
  * A book record with all its properties
  */
+export type User = {
+    id: number;
+    username: string;
+    password: string;
+};
+
+/**
+ * Schema for creating a new book record
+ */
+export type UserCreate = {
+    id?: number;
+    username: string;
+    password: string;
+};
+
+/**
+ * A book record with all its properties
+ */
 export type Book = {
     id: number;
+    user_id: number;
     author_id: number;
-    author_name: string;
     title: string;
     pub_year: string;
     genre: string;
@@ -17,6 +35,7 @@ export type Book = {
  */
 export type BookCreate = {
     id?: number;
+    user_id?: number;
     author_id?: number;
     /**
      * The title of the book
@@ -45,6 +64,7 @@ export type BookCreate = {
  */
 export type BookUpdate = {
     id?: number;
+    user_id?: number;
     author_id?: number;
     /**
      * The title of the book
@@ -73,6 +93,7 @@ export type BookUpdate = {
  */
 export type Author = {
     id: number;
+    user_id: number;
     name: string;
     bio: string | null;
 };
@@ -82,6 +103,7 @@ export type Author = {
  */
 export type AuthorCreate = {
     id?: number;
+    user_id?: number;
     /**
      * Author's full name
      */
@@ -97,6 +119,7 @@ export type AuthorCreate = {
  */
 export type AuthorUpdate = {
     id?: number;
+    user_id?: number;
     /**
      * Author's full name
      */
@@ -106,6 +129,106 @@ export type AuthorUpdate = {
      */
     bio?: string | null;
 };
+
+export type PostAuthSignupData = {
+    body?: UserCreate;
+    path?: never;
+    query?: never;
+    url: '/signup';
+};
+
+export type PostAuthSignupErrors = {
+    /**
+     * Username already exists
+     */
+    409: unknown;
+};
+
+export type PostAuthSignupResponses = {
+    /**
+     * User created successfully
+     */
+    201: User;
+};
+
+export type PostAuthSignupResponse = PostAuthSignupResponses[keyof PostAuthSignupResponses];
+
+export type PostAuthMeData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/me';
+};
+
+export type PostAuthMeErrors = {
+    /**
+     * Invalid token
+     */
+    401: unknown;
+};
+
+export type PostAuthMeResponses = {
+    /**
+     * Decoded Token
+     */
+    200: User;
+};
+
+export type PostAuthMeResponse = PostAuthMeResponses[keyof PostAuthMeResponses];
+
+export type PostAuthLogoutData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/logout';
+};
+
+export type PostAuthLogoutErrors = {
+    /**
+     * Invalid token
+     */
+    401: unknown;
+};
+
+export type PostAuthLogoutResponses = {
+    /**
+     * Successfully logged out
+     */
+    200: unknown;
+};
+
+export type PostAuthAccessTokenData = {
+    body?: User;
+    path?: never;
+    query?: never;
+    url: '/access-token';
+};
+
+export type PostAuthAccessTokenErrors = {
+    /**
+     * Invalid credentials
+     */
+    401: unknown;
+    /**
+     * Username not found
+     */
+    404: unknown;
+};
+
+export type PostAuthAccessTokenResponses = {
+    /**
+     * Authentication response with user data and JWT token
+     */
+    200: {
+        type: string;
+        /**
+         * JWT Bearer token
+         */
+        access_token: string;
+    };
+};
+
+export type PostAuthAccessTokenResponse = PostAuthAccessTokenResponses[keyof PostAuthAccessTokenResponses];
 
 export type GetBooksData = {
     body?: never;
@@ -129,9 +252,14 @@ export type GetBooksData = {
 
 export type GetBooksResponses = {
     /**
-     * List of books matching the criteria
+     * A book record with all its properties
      */
-    200: Array<Book>;
+    200: Array<Book & {
+        /**
+         * Author's full name
+         */
+        name: string;
+    }>;
 };
 
 export type GetBooksResponse = GetBooksResponses[keyof GetBooksResponses];
@@ -270,6 +398,13 @@ export type PostAuthorsData = {
     url: '/authors';
 };
 
+export type PostAuthorsErrors = {
+    /**
+     * Author already exists!
+     */
+    409: unknown;
+};
+
 export type PostAuthorsResponses = {
     /**
      * Created
@@ -293,6 +428,10 @@ export type DeleteAuthorsByIdErrors = {
      * Not found
      */
     404: unknown;
+    /**
+     * Author is a dependency, cannot be deleted!
+     */
+    409: unknown;
 };
 
 export type DeleteAuthorsByIdResponses = {

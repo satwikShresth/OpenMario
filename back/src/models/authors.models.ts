@@ -45,7 +45,7 @@ export const AuthorSchema = createSelectSchema(authors)
 export const AuthorCreateSchema = createInsertSchema(authors, {
    name,
    bio,
-   user_id: (schema) => schema.optional(),
+   user_id: (schema) => schema.nonnegative().optional(),
 })
    .strict()
    .openapi({
@@ -56,7 +56,7 @@ export const AuthorCreateSchema = createInsertSchema(authors, {
 export const AuthorUpdateSchema = createUpdateSchema(authors, {
    name,
    bio,
-   user_id: (schema) => schema.optional(),
+   user_id: (schema) => schema.nonnegative().optional(),
 })
    .strict()
    .openapi({

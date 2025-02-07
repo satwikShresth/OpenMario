@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { useQuery, useMutation } from '@tanstack/react-query';
 import { useDebounce } from 'use-debounce';
 import {
@@ -13,13 +13,17 @@ import {
 } from '#client/react-query.gen';
 import { Typography, Box } from '@mui/material';
 import { BookCreateSchema } from "#client/schemas.gen";
-import DataTable from '../component/table';
+import DataTable from '../../component/table';
+import { StoreProvider, useUserStore } from '../../hooks/useUserContext'
 
 export default () => {
+  const { user } = useUserStore()
   const [bookSearch, setBookSearch] = useState('');
   const [authorSearch, setAuthorSearch] = useState('');
   const [DbookSearch] = useDebounce(bookSearch, 500);
   const [DauthorSearch] = useDebounce(authorSearch, 500);
+
+  console.log(user)
 
   const {
     data: books = [],
@@ -76,7 +80,7 @@ export default () => {
   return (
     <Box p={4} sx={{ height: '100vh' }}>
       <Typography variant="h4" fontWeight="bold" mb={4}>
-        Library Data
+        Hello {user && user.username}
       </Typography>
 
       <Box

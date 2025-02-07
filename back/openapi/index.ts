@@ -17,7 +17,7 @@ const bearerAuth = registry.registerComponent(
    },
 );
 
-authDef(registry, '/auth', bearerAuth);
+authDef(registry, '', bearerAuth);
 bookDef(registry, '/books', bearerAuth);
 authorDef(registry, '/authors', bearerAuth);
 

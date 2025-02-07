@@ -39,6 +39,25 @@ export default (
 
    registry.registerPath({
       method: 'post',
+      path: path + '/me',
+      security: [{ [auth.name]: [] }],
+      description: 'Logout user and invalidate tokens',
+      tags: ['Authentication'],
+      responses: {
+         200: {
+            description: 'Decoded Token',
+            content: {
+               'application/json': {
+                  schema: User,
+               },
+            },
+         },
+         401: { description: 'Invalid token' },
+      },
+   });
+
+   registry.registerPath({
+      method: 'post',
       path: path + '/logout',
       security: [{ [auth.name]: [] }],
       description: 'Logout user and invalidate tokens',
@@ -51,7 +70,7 @@ export default (
 
    registry.registerPath({
       method: 'post',
-      path: path + '/authorize',
+      path: path + '/access-token',
       description: 'Authorize user credentials',
       tags: ['Authentication'],
       request: {
