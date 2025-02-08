@@ -3,6 +3,13 @@
 /**
  * A book record with all its properties
  */
+export type JWTUser = {
+    user_id?: number;
+    username?: string;
+};
+/**
+ * A book record with all its properties
+ */
 export type User = {
     id: number;
     username: string;

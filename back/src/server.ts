@@ -23,6 +23,7 @@ app.use(
    expressjwt({
       secret: 'Your-Secreat-Here',
       algorithms: ['HS256'],
+      credentialsRequired: false,
       isRevoked: async (_req: Request, token): Promise<boolean> => {
          return await db
             .select()

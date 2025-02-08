@@ -14,6 +14,7 @@ import {
 
 import {
    validateOwner,
+   validateUser,
    zodBodyValidator,
    zodParamsValidator,
    zodQueryValidator,
@@ -38,6 +39,7 @@ export default () => {
          },
       )
       .post(
+         validateUser,
          zodBodyValidator(AuthorCreateSchema),
          async (req: RequestParamsId, res: Response) => {
             const insertValues = req?.validated?.body as AuthorCreate;
@@ -53,6 +55,7 @@ export default () => {
 
    router.route('/:id')
       .all(
+         validateUser,
          zodParamsValidator(paramsIdSchema),
          validateOwner(authors),
       )

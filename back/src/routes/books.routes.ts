@@ -14,6 +14,7 @@ import {
 } from '#models';
 import {
    validateOwner,
+   validateUser,
    zodBodyValidator,
    zodParamsValidator,
    zodQueryValidator,
@@ -79,6 +80,7 @@ export default () => {
                   genre: books.genre,
                   author_name: authors.name,
                   author_id: books.author_id,
+                  user_id: books.user_id,
                })
                .from(books)
                .innerJoin(authors, eq(books.author_id, authors.id))
@@ -89,6 +91,7 @@ export default () => {
          },
       )
       .post(
+         validateUser,
          zodBodyValidator(BookCreateSchema),
          async (req: RequestParamsId, res: Response) => {
             const insertData = req?.validated?.body as BookCreate;
@@ -116,6 +119,7 @@ export default () => {
 
    router.route('/:id')
       .all(
+         validateUser,
          zodParamsValidator(paramsIdSchema),
          validateOwner(books),
       )

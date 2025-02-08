@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   Box,
   Button,
@@ -11,20 +11,42 @@ import {
   Typography,
 } from '@mui/material';
 import { Eye, EyeOff } from 'lucide-react';
+import { useSnackbar } from 'notistack';
+import { useAuth } from '../../hooks/useAuth';
 
-const Login = () => {
+interface FormData {
+  username: string;
+  password: string;
+  confirm_password: string;
+}
+
+export default () => {
+  const { register, error, resetError } = useAuth();
   const [showPassword, setShowPassword] = useState(false);
-  const [formData, setFormData] = useState({
+  const { enqueueSnackbar } = useSnackbar();
+  const [formData, setFormData] = useState<FormData>({
     username: '',
-    password: ''
+    password: '',
+    confirm_password: ''
   });
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Form submitted:', formData);
+    resetError();
+
+    if (formData.password !== formData.confirm_password) {
+      enqueueSnackbar("Passwords don't match", { variant: "error" });
+      return;
+    }
+
+    register({ username: formData.username, password: formData.password });
   };
 
-  const handleChange = (e) => {
+  useEffect(() => {
+    if (error) enqueueSnackbar(error, { variant: "error" });
+  }, [error, enqueueSnackbar]);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({
       ...prev,
@@ -61,9 +83,22 @@ const Login = () => {
           flexDirection: 'column',
           alignItems: 'center',
           justifyContent: 'center',
-          gap: 2
+          gap: 2,
+          position: 'relative'
         }}
       >
+        <Link
+          href="/"
+          sx={{
+            color: 'white',
+            '&:hover': {
+              color: 'primary.light',
+            }
+          }}
+        >
+          Back to Home
+        </Link>
+
         <Box component="form" onSubmit={handleSubmit} sx={{ width: '100%' }}>
           <FormControl fullWidth sx={{ mb: 2 }}>
             <TextField
@@ -76,7 +111,6 @@ const Login = () => {
               sx={textFieldStyle}
             />
           </FormControl>
-
           <FormControl fullWidth sx={{ mb: 2 }}>
             <TextField
               name="password"
@@ -93,6 +127,7 @@ const Login = () => {
                       onClick={() => setShowPassword(!showPassword)}
                       edge="end"
                       sx={{ color: 'rgba(255, 255, 255, 0.7)' }}
+                      type="button"
                     >
                       {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
                     </IconButton>
@@ -101,8 +136,6 @@ const Login = () => {
               }}
             />
           </FormControl>
-
-
           <FormControl fullWidth sx={{ mb: 2 }}>
             <TextField
               name="confirm_password"
@@ -119,6 +152,7 @@ const Login = () => {
                       onClick={() => setShowPassword(!showPassword)}
                       edge="end"
                       sx={{ color: 'rgba(255, 255, 255, 0.7)' }}
+                      type="button"
                     >
                       {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
                     </IconButton>
@@ -127,19 +161,30 @@ const Login = () => {
               }}
             />
           </FormControl>
-
           <Button
             type="submit"
             fullWidth
             variant="contained"
             sx={{ mb: 2 }}
           >
-            Sign UP
+            Sign Up
           </Button>
+          <Typography align="center" sx={{ color: 'white' }}>
+            Already have an account?{' '}
+            <Link
+              href="/login"
+              sx={{
+                color: 'primary.main',
+                '&:hover': {
+                  color: 'primary.light',
+                }
+              }}
+            >
+              Log in
+            </Link>
+          </Typography>
         </Box>
       </Box>
     </Container>
   );
 };
-
-export default Login;

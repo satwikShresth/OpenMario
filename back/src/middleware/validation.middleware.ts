@@ -49,6 +49,8 @@ async (
 ) => {
    const current_user_id = req?.auth?.user_id!;
    const item_id = req.validated?.params?.id!;
+   console.log(current_user_id);
+   console.log(item_id);
 
    return await db
       .select({ user_id: table?.user_id! })
@@ -61,7 +63,26 @@ async (
                ? next()
                : res.status(401).json({ message: 'Unauthorized Access' }),
       )
-      .catch(({ message }) =>
-         res.status(404).json({ message, detail: `Item not found` })
-      );
+      .catch(({ message }) => {
+         console.log(message);
+         res.status(404).json({ message, detail: `Item not found` });
+      });
 };
+
+export const validateNotLoggedIn = (
+   req: RequestParamsId,
+   res: Response,
+   next: NextFunction,
+) =>
+   (req?.auth)
+      ? res.status(401).json({ message: 'Unauthorized Access' })
+      : next();
+
+export const validateUser = (
+   req: RequestParamsId,
+   res: Response,
+   next: NextFunction,
+) =>
+   (req?.auth)
+      ? next()
+      : res.status(401).json({ message: 'Unauthorized Access' });

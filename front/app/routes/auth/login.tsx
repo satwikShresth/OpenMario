@@ -9,10 +9,9 @@ import {
   Link,
   TextField,
   Typography,
-  Alert,
 } from '@mui/material';
-import { Eye, EyeOff } from 'lucide-react';
-import { useSnackbar, type VariantType } from 'notistack';
+import { Eye, EyeOff, ArrowLeft } from 'lucide-react';
+import { useSnackbar } from 'notistack';
 import { useAuth } from '../../hooks/useAuth';
 
 export default () => {
@@ -23,7 +22,6 @@ export default () => {
     username: '',
     password: ''
   });
-
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -70,9 +68,22 @@ export default () => {
           flexDirection: 'column',
           alignItems: 'center',
           justifyContent: 'center',
-          gap: 2
+          gap: 2,
+          position: 'relative'
         }}
       >
+        <Link
+          href="/"
+          sx={{
+            color: 'white',
+            '&:hover': {
+              color: 'primary.light',
+            }
+          }}
+        >
+          Back to Home
+        </Link>
+
         <Box component="form" onSubmit={handleSubmit} sx={{ width: '100%' }}>
           <FormControl fullWidth sx={{ mb: 2 }}>
             <TextField
@@ -121,7 +132,7 @@ export default () => {
           <Typography align="center" sx={{ color: 'white' }}>
             Don't have an account?{' '}
             <Link
-              href="/signup"
+              href="/register"
               sx={{
                 color: 'primary.main',
                 '&:hover': {

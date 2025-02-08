@@ -11,19 +11,15 @@ import {
   deleteBooksByIdMutation,
   deleteAuthorsByIdMutation
 } from '#client/react-query.gen';
-import { Typography, Box } from '@mui/material';
+import { Box } from '@mui/material';
 import { BookCreateSchema } from "#client/schemas.gen";
 import DataTable from '../../component/table';
-import { useUserStore } from '../../hooks/useUserContext'
 
 export default () => {
-  const { user } = useUserStore()
   const [bookSearch, setBookSearch] = useState('');
   const [authorSearch, setAuthorSearch] = useState('');
   const [DbookSearch] = useDebounce(bookSearch, 500);
   const [DauthorSearch] = useDebounce(authorSearch, 500);
-
-  console.log(user)
 
   const {
     data: books = [],
@@ -79,10 +75,6 @@ export default () => {
 
   return (
     <Box p={4} sx={{ height: '100vh' }}>
-      <Typography variant="h4" fontWeight="bold" mb={4}>
-        Hello {user && (user.username[0].toUpperCase() + user.username.substr(1, user.username.length))}
-      </Typography>
-
       <Box
         display="flex"
         flexDirection="column"

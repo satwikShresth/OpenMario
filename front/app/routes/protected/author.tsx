@@ -2,13 +2,15 @@ import { useState } from 'react';
 import { useMutation } from '@tanstack/react-query';
 import type { AuthorCreate } from '#client/types.gen';
 import { postAuthorsMutation } from '#client/react-query.gen';
+import { isLoggedIn, isLoggedInRedirector } from '#/hooks/useAuth';
+import { Navigate } from 'react-router';
 
 interface ErrorData {
   name?: string | null;
   bio?: string | null;
 }
 
-export default function AuthorForm() {
+export default () => isLoggedInRedirector(() => {
   const [formData, setFormData] = useState<AuthorCreate>({
     name: '',
     bio: ''
@@ -121,5 +123,5 @@ export default function AuthorForm() {
         )}
       </form>
     </div>
-  );
-}
+  )
+})

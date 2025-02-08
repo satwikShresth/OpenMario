@@ -3,6 +3,8 @@ import { useMutation } from '@tanstack/react-query';
 import type { BookCreate } from '#client/types.gen';
 import { BookCreateSchema } from '#client/schemas.gen';
 import { postBooksMutation } from '#client/react-query.gen';
+import { isLoggedIn, isLoggedInRedirector } from '#/hooks/useAuth';
+import { Navigate } from 'react-router';
 
 interface ErrorData {
   title?: string | null;
@@ -12,7 +14,9 @@ interface ErrorData {
   author_bio?: string | null;
 }
 
-export default () => {
+
+
+export default () => isLoggedInRedirector(() => {
   const [formData, setFormData] = useState<BookCreate>({
     title: '',
     pub_year: '',
@@ -209,4 +213,4 @@ export default () => {
       </form>
     </div>
   );
-};
+})

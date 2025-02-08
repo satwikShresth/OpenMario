@@ -1,10 +1,17 @@
 import { createContext, useContext, useRef } from 'react'
 import { createStore, useStore } from 'zustand'
 
+/**
+ * A book record with all its properties
+ */
+export type JWTUser = {
+  user_id?: number;
+  username?: string;
+};
 
 type Store = {
-  user: any;
-  setUser: (user: any) => void;
+  user?: JWTUser | null;
+  setUser: (user: JWTUser) => void;
   clearUser: () => void;
 }
 

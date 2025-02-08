@@ -1,11 +1,12 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { useNavigate } from 'react-router';
-import { postAuthMeOptions, postAuthMeMutation, postAuthSignupMutation, postAuthLogoutMutation, postAuthAccessTokenMutation } from '#client/react-query.gen';
+import { Navigate, useNavigate } from 'react-router';
+import { postAuthMeOptions, postAuthSignupMutation, postAuthLogoutMutation, postAuthAccessTokenMutation } from '#client/react-query.gen';
 
 
 export const isLoggedIn = () => localStorage.getItem('access_token') !== null;
 export const clearToken = () => localStorage.removeItem('access_token');
+export const isLoggedInRedirector = (fn: () => {}) => isLoggedIn() ? fn() : Navigate({ to: '/', replace: true })
 
 export const useAuth = () => {
   const [error, setError] = useState('');
@@ -22,7 +23,7 @@ export const useAuth = () => {
   const logoutMutation = useMutation(postAuthLogoutMutation());
 
 
-  const signup = (data: any) => {
+  const register = (data: any) => {
     signUpMutation.mutateAsync({
       body: data,
       throwOnError: true
@@ -67,7 +68,7 @@ export const useAuth = () => {
       .finally(() => {
         localStorage.removeItem('access_token');
         queryClient.removeQueries({ queryKey: ['currentUser'] });
-        navigate('/login');
+        navigate('/');
       });
   };
 
@@ -75,7 +76,7 @@ export const useAuth = () => {
     user,
     isLoading,
     error,
-    signup,
+    register,
     login,
     logout,
     resetError: () => setError('')

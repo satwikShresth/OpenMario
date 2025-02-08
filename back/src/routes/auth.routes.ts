@@ -1,6 +1,10 @@
 import { Response, Router } from 'express';
 import { Request } from 'express-jwt';
-import { zodBodyValidator } from '#/middleware/validation.middleware.ts';
+import {
+   validateNotLoggedIn,
+   validateUser,
+   zodBodyValidator,
+} from '#/middleware/validation.middleware.ts';
 import { db } from '#db';
 import { RequestParamsId, UserCreate, UserCreateSchema } from '#models';
 import { revoked, users } from '#/db/schema.ts';
@@ -14,6 +18,7 @@ export default () => {
 
    router.post(
       '/logout',
+      validateUser,
       async (req: Request, res: Response): Promise<Response> => {
          console.log(req.auth);
          return await db
@@ -31,6 +36,7 @@ export default () => {
 
    router.post(
       '/signup',
+      validateNotLoggedIn,
       zodBodyValidator(UserCreateSchema),
       async (req: RequestParamsId, res: Response): Promise<Response> => {
          const insertValue = req?.validated?.body as UserCreate;
@@ -38,7 +44,7 @@ export default () => {
          return await db
             .insert(users)
             .values({
-               username: insertValue.username,
+               username: insertValue.username.trim().toLowerCase(),
                password: await hash(insertValue.password),
             })
             .returning()
@@ -49,6 +55,7 @@ export default () => {
 
    router.post(
       '/access-token',
+      validateNotLoggedIn,
       zodBodyValidator(UserCreateSchema),
       async (
          req: RequestParamsId,
@@ -95,6 +102,7 @@ export default () => {
 
    router.post(
       '/me',
+      validateUser,
       (req: Request, res: Response): Promise<Response> =>
          res
             .status(200)
