@@ -1,7 +1,8 @@
 import { db } from '#db';
-import { authors, books } from '#/db/schema.ts';
+import { authors, books, users } from '#/db/schema.ts';
 import * as csv from 'jsr:@std/csv';
 import * as path from 'jsr:@std/path';
+import { hash } from 'argon2';
 
 async function seedDatabase() {
    try {
@@ -25,8 +26,19 @@ async function seedDatabase() {
          strip: true,
       });
 
-      await db.insert(authors).values(parsedAuthors!);
-      await db.insert(books).values(parsedBooks!);
+      await db
+         .insert(users)
+         .values({ id: 1, username: 'satwik', password: await hash('Pass123') })
+         .returning();
+
+      await db.insert(authors).values(
+         parsedAuthors
+            .map((val) => ({ ...val, user_id: 1 })),
+      );
+      await db.insert(books).values(
+         parsedBooks
+            .map((val) => ({ ...val, user_id: 1 })),
+      );
 
       console.log('Seed data inserted successfully');
    } catch (error) {
@@ -36,4 +48,3 @@ async function seedDatabase() {
 }
 
 seedDatabase();
-

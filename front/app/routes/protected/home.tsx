@@ -11,9 +11,9 @@ import {
   deleteBooksByIdMutation,
   deleteAuthorsByIdMutation
 } from '#client/react-query.gen';
-import { Typography, Box } from '@mui/material';
+import { Box } from '@mui/material';
 import { BookCreateSchema } from "#client/schemas.gen";
-import DataTable from '../component/table';
+import DataTable from '../../component/table';
 
 export default () => {
   const [bookSearch, setBookSearch] = useState('');
@@ -75,10 +75,6 @@ export default () => {
 
   return (
     <Box p={4} sx={{ height: '100vh' }}>
-      <Typography variant="h4" fontWeight="bold" mb={4}>
-        Library Data
-      </Typography>
-
       <Box
         display="flex"
         flexDirection="column"

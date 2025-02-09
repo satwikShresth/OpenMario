@@ -12,6 +12,8 @@ import {
 } from '@mui/x-data-grid';
 import { TextField, Typography, Box, Paper } from '@mui/material';
 import { Pencil as EditIcon, Save as SaveIcon, X as CancelIcon, CircleX as DeleteIcon } from 'lucide-react';
+import { useUserStore } from '#/hooks/useUserContext';
+import { useSnackbar } from 'notistack';
 
 interface DataTableProps<T> {
   title: string;
@@ -36,7 +38,9 @@ export default function DataTable<T>({
   deleteMutation,
   queryKeys
 }: DataTableProps<T>) {
+  const { enqueueSnackbar } = useSnackbar();
   const [rowModesModel, setRowModesModel] = useState<GridRowModesModel>({});
+  const { user } = useUserStore()
   const queryClient = useQueryClient();
 
   const handleRowEditStop: GridEventListener<'rowEditStop'> = (params, event) => {
@@ -67,7 +71,7 @@ export default function DataTable<T>({
     })
       .catch((error: Error) => {
         console.error(error);
-        window.alert('Error deleting the item');
+        enqueueSnackbar("Failed to delete the row", { variant: "error" })
       })
       .finally(() => {
         queryKeys.forEach((queryKey) => {
@@ -85,7 +89,7 @@ export default function DataTable<T>({
     })
       .catch((error: Error) => {
         console.error(error);
-        window.alert('Error updating the row');
+        enqueueSnackbar("Failed to edit the row", { variant: "error" })
       })
       .finally(() => {
         queryKeys.forEach((queryKey) => {
@@ -99,46 +103,50 @@ export default function DataTable<T>({
   const actions = {
     field: 'actions',
     type: 'actions',
-    headerName: 'Actions',
+    headerName: '',
     width: 100,
     cellClassName: 'actions',
     getActions: ({ id }: { id: number }) => {
       const isInEditMode = rowModesModel[id]?.mode === GridRowModes.Edit;
 
-      if (isInEditMode) {
+      if (user && Number(rows[id - 1]?.user_id!)! === Number(user?.user_id!)!) {
+        if (isInEditMode) {
+          return [
+            <GridActionsCellItem
+              icon={<SaveIcon />}
+              label="Save"
+              sx={{ color: 'primary.main' }}
+              onClick={handleSaveClick(id)}
+            />,
+            <GridActionsCellItem
+              icon={<CancelIcon />}
+              label="Cancel"
+              className="textPrimary"
+              onClick={handleCancelClick(id)}
+              color="inherit"
+            />,
+          ];
+        }
+
         return [
           <GridActionsCellItem
-            icon={<SaveIcon />}
-            label="Save"
-            sx={{ color: 'primary.main' }}
-            onClick={handleSaveClick(id)}
+            icon={<EditIcon />}
+            label="Edit"
+            className="textPrimary"
+            onClick={handleEditClick(id)}
+            color="inherit"
           />,
           <GridActionsCellItem
-            icon={<CancelIcon />}
-            label="Cancel"
+            icon={<DeleteIcon />}
+            label="Delete"
             className="textPrimary"
-            onClick={handleCancelClick(id)}
+            onClick={handleDeleteClick(id)}
             color="inherit"
           />,
         ];
       }
 
-      return [
-        <GridActionsCellItem
-          icon={<EditIcon />}
-          label="Edit"
-          className="textPrimary"
-          onClick={handleEditClick(id)}
-          color="inherit"
-        />,
-        <GridActionsCellItem
-          icon={<DeleteIcon />}
-          label="Delete"
-          className="textPrimary"
-          onClick={handleDeleteClick(id)}
-          color="inherit"
-        />,
-      ];
+      return [];
     },
   };
 

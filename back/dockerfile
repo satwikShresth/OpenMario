@@ -1,0 +1,12 @@
+FROM denoland/deno:alpine
+
+WORKDIR /app
+
+RUN apk add --no-cache sqlite sqlite-dev libstdc++ npm python3 make gcc g++
+
+ENV LD_LIBRARY_PATH /usr/lib:/usr/local/lib
+
+COPY . /app/
+
+COPY ./entrypoint.sh /app/
+RUN chmod +x /app/entrypoint.sh

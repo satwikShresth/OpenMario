@@ -63,6 +63,7 @@ export const BookCreateSchema = createInsertSchema(books, {
    pub_year,
    genre,
    author_id: (schema) => schema.optional(),
+   user_id: (schema) => schema.nonnegative().optional(),
 })
    .extend({
       author_name: name(z.string()).openapi({
@@ -84,6 +85,7 @@ export const BookUpdateSchema = createUpdateSchema(books, {
    title,
    pub_year,
    genre,
+   user_id: (schema) => schema.nonnegative().optional(),
 })
    .extend({
       author_name: name(z.string()).optional().openapi({

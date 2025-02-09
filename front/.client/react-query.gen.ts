@@ -2,9 +2,9 @@
 
 import type { Options } from '@hey-api/client-axios';
 import { queryOptions, type UseMutationOptions, type DefaultError } from '@tanstack/react-query';
-import type { GetBooksData, PostBooksData, PostBooksResponse, DeleteBooksByIdData, DeleteBooksByIdResponse, GetBooksByIdData, PutBooksByIdData, PutBooksByIdResponse, GetAuthorsData, PostAuthorsData, PostAuthorsResponse, DeleteAuthorsByIdData, DeleteAuthorsByIdResponse, GetAuthorsByIdData, PutAuthorsByIdData, PutAuthorsByIdResponse } from './types.gen';
-import { BooksService, AuthorsService, client } from './sdk.gen';
+import type { PostAuthSignupData, PostAuthSignupResponse, PostAuthMeData, PostAuthMeResponse, PostAuthLogoutData, PostAuthAccessTokenData, PostAuthAccessTokenResponse, GetBooksData, PostBooksData, PostBooksResponse, DeleteBooksByIdData, DeleteBooksByIdResponse, GetBooksByIdData, PutBooksByIdData, PutBooksByIdResponse, GetAuthorsData, PostAuthorsData, PostAuthorsResponse, DeleteAuthorsByIdData, DeleteAuthorsByIdResponse, GetAuthorsByIdData, PutAuthorsByIdData, PutAuthorsByIdResponse } from './types.gen';
 import type { AxiosError } from 'axios';
+import { AuthenticationService, BooksService, AuthorsService, client } from './sdk.gen';
 
 type QueryKey<TOptions extends Options> = [
     Pick<TOptions, 'baseURL' | 'body' | 'headers' | 'path' | 'query'> & {
@@ -31,6 +31,138 @@ const createQueryKey = <TOptions extends Options>(id: string, options?: TOptions
         params.query = options.query;
     }
     return params;
+};
+
+export const postAuthSignupQueryKey = (options?: Options<PostAuthSignupData>) => [
+    createQueryKey('postAuthSignup', options)
+];
+
+export const postAuthSignupOptions = (options?: Options<PostAuthSignupData>) => {
+    return queryOptions({
+        queryFn: async ({ queryKey, signal }) => {
+            const { data } = await AuthenticationService.postAuthSignup({
+                ...options,
+                ...queryKey[0],
+                signal,
+                throwOnError: true
+            });
+            return data;
+        },
+        queryKey: postAuthSignupQueryKey(options)
+    });
+};
+
+export const postAuthSignupMutation = (options?: Partial<Options<PostAuthSignupData>>) => {
+    const mutationOptions: UseMutationOptions<PostAuthSignupResponse, AxiosError<DefaultError>, Options<PostAuthSignupData>> = {
+        mutationFn: async (localOptions) => {
+            const { data } = await AuthenticationService.postAuthSignup({
+                ...options,
+                ...localOptions,
+                throwOnError: true
+            });
+            return data;
+        }
+    };
+    return mutationOptions;
+};
+
+export const postAuthMeQueryKey = (options?: Options<PostAuthMeData>) => [
+    createQueryKey('postAuthMe', options)
+];
+
+export const postAuthMeOptions = (options?: Options<PostAuthMeData>) => {
+    return queryOptions({
+        queryFn: async ({ queryKey, signal }) => {
+            const { data } = await AuthenticationService.postAuthMe({
+                ...options,
+                ...queryKey[0],
+                signal,
+                throwOnError: true
+            });
+            return data;
+        },
+        queryKey: postAuthMeQueryKey(options)
+    });
+};
+
+export const postAuthMeMutation = (options?: Partial<Options<PostAuthMeData>>) => {
+    const mutationOptions: UseMutationOptions<PostAuthMeResponse, AxiosError<DefaultError>, Options<PostAuthMeData>> = {
+        mutationFn: async (localOptions) => {
+            const { data } = await AuthenticationService.postAuthMe({
+                ...options,
+                ...localOptions,
+                throwOnError: true
+            });
+            return data;
+        }
+    };
+    return mutationOptions;
+};
+
+export const postAuthLogoutQueryKey = (options?: Options<PostAuthLogoutData>) => [
+    createQueryKey('postAuthLogout', options)
+];
+
+export const postAuthLogoutOptions = (options?: Options<PostAuthLogoutData>) => {
+    return queryOptions({
+        queryFn: async ({ queryKey, signal }) => {
+            const { data } = await AuthenticationService.postAuthLogout({
+                ...options,
+                ...queryKey[0],
+                signal,
+                throwOnError: true
+            });
+            return data;
+        },
+        queryKey: postAuthLogoutQueryKey(options)
+    });
+};
+
+export const postAuthLogoutMutation = (options?: Partial<Options<PostAuthLogoutData>>) => {
+    const mutationOptions: UseMutationOptions<unknown, AxiosError<DefaultError>, Options<PostAuthLogoutData>> = {
+        mutationFn: async (localOptions) => {
+            const { data } = await AuthenticationService.postAuthLogout({
+                ...options,
+                ...localOptions,
+                throwOnError: true
+            });
+            return data;
+        }
+    };
+    return mutationOptions;
+};
+
+export const postAuthAccessTokenQueryKey = (options?: Options<PostAuthAccessTokenData>) => [
+    createQueryKey('postAuthAccessToken', options)
+];
+
+export const postAuthAccessTokenOptions = (options?: Options<PostAuthAccessTokenData>) => {
+    return queryOptions({
+        queryFn: async ({ queryKey, signal }) => {
+            const { data } = await AuthenticationService.postAuthAccessToken({
+                ...options,
+                ...queryKey[0],
+                signal,
+                throwOnError: true
+            });
+            return data;
+        },
+        queryKey: postAuthAccessTokenQueryKey(options)
+    });
+};
+
+export const postAuthAccessTokenMutation = (options?: Partial<Options<PostAuthAccessTokenData>>) => {
+    const mutationOptions: UseMutationOptions<PostAuthAccessTokenResponse, AxiosError<DefaultError>, Options<PostAuthAccessTokenData>> = {
+        mutationFn: async (localOptions) => {
+            const { data } = await AuthenticationService.postAuthAccessToken({
+                ...options,
+                ...localOptions,
+                throwOnError: true
+            });
+            return data;
+        }
+    };
+    return mutationOptions;
 };
 
 export const getBooksQueryKey = (options?: Options<GetBooksData>) => [

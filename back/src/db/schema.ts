@@ -17,27 +17,44 @@ export const VALID_GENRES: string[] = [
    'Children',
 ] as const;
 
+export const revoked = sqliteTable('revoked', {
+   id: integer({ mode: 'number' }).primaryKey({ autoIncrement: true }),
+   signature: text().notNull(),
+});
+
 export const authors = sqliteTable('authors', {
-   id: integer('id', { mode: 'number' }).primaryKey({ autoIncrement: true }),
-   name: text('name').notNull().unique(),
-   bio: text('bio'),
+   id: integer({ mode: 'number' }).primaryKey({ autoIncrement: true }),
+   user_id: integer({ mode: 'number' })
+      .references(() => users.id)
+      .notNull(),
+   name: text().notNull().unique(),
+   bio: text(),
+});
+
+export const users = sqliteTable('users', {
+   id: integer({ mode: 'number' }).primaryKey({ autoIncrement: true }),
+   username: text().notNull().unique(),
+   password: text().notNull(),
 });
 
 export const books = sqliteTable('books', {
-   id: integer('id', { mode: 'number' }).primaryKey({ autoIncrement: true }),
-   author_id: integer('author_id', { mode: 'number' })
+   id: integer({ mode: 'number' }).primaryKey({ autoIncrement: true }),
+   user_id: integer({ mode: 'number' })
+      .references(() => users.id)
+      .notNull(),
+   author_id: integer({ mode: 'number' })
       .references(() => authors.id)
       .notNull(),
-   title: text('title').notNull(),
-   pub_year: text('pub_year', { length: 4 })
+   title: text().notNull(),
+   pub_year: text({ length: 4 })
       .notNull(),
-   genre: text('genre')
+   genre: text()
       .notNull(),
-}, (table) => ({
-   unique_book_idx: unique('unique_book_idx').on(
+}, (table) => [
+   unique('unique_book_idx').on(
       table.author_id,
       table.genre,
       table.pub_year,
       table.title,
    ),
-}));
+]);

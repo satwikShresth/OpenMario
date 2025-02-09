@@ -9,7 +9,11 @@ import {
 } from '#models';
 import { z } from 'zod';
 
-export default (registry: OpenAPIRegistry, path: string) => {
+export default (
+   registry: OpenAPIRegistry,
+   path: string,
+   auth: { name: string; ref: { $ref: string } },
+) => {
    const Book = registry.register('Book', BookSchema);
    const BookCreate = registry.register('BookCreate', BookCreateSchema);
    const BookUpdate = registry.register('BookUpdate', BookUpdateSchema);
@@ -18,6 +22,7 @@ export default (registry: OpenAPIRegistry, path: string) => {
       method: 'get',
       path,
       description: 'Get all books with optional filtering',
+      security: [{ [auth.name]: [] }],
       tags: ['Books'],
       request: {
          query: BookQuery,
@@ -39,6 +44,7 @@ export default (registry: OpenAPIRegistry, path: string) => {
       method: 'post',
       path,
       description: 'Create a new book',
+      security: [{ [auth.name]: [] }],
       tags: ['Books'],
       request: {
          body: {
@@ -68,6 +74,7 @@ export default (registry: OpenAPIRegistry, path: string) => {
    registry.registerPath({
       method: 'get',
       path: path + '/{id}',
+      security: [{ [auth.name]: [] }],
       description: 'Get a book by its ID',
       tags: ['Books'],
       request: {
@@ -92,6 +99,7 @@ export default (registry: OpenAPIRegistry, path: string) => {
    registry.registerPath({
       method: 'put',
       path: path + '/{id}',
+      security: [{ [auth.name]: [] }],
       description: 'Update an existing book',
       tags: ['Books'],
       request: {
@@ -127,6 +135,7 @@ export default (registry: OpenAPIRegistry, path: string) => {
       method: 'delete',
       path: path + '/{id}',
       description: 'Delete a book',
+      security: [{ [auth.name]: [] }],
       tags: ['Books'],
       request: {
          params: ParamsId,
