@@ -66,7 +66,7 @@ export default () => {
          return await db
             .select({ id: users.id, password: users.password })
             .from(users)
-            .where(eq(users.username, username))
+            .where(eq(users.username, username.trim().toLowerCase()))
             .then((users) => users[0])
             .then(async (user) => {
                console.log(password);

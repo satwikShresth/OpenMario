@@ -1,25 +1,24 @@
 import express, { NextFunction, Request, Response } from 'express';
 import { expressjwt, Request as JWTRequest } from 'express-jwt';
-import { debugMiddlewares } from '#utils';
-//import morgan from 'morgan';
+//import { debugMiddlewares } from '#utils';
+import morgan from 'morgan';
 import routes from '#routes';
 import { db } from '#db';
 import { revoked } from '#/db/schema.ts';
 import { eq } from 'drizzle-orm';
 
 const port = 3000;
-const host = 'localhost';
+const host = '0.0.0.0';
 const protocol = 'http';
 export const app = express();
 
 app.use(express.json());
+app.use(morgan(':method :url :status :response-time ms'));
 
-//app.use(morgan(':method :url :status :response-time ms'));
-
-debugMiddlewares(app);
+//debugMiddlewares(app);
 
 app.use(
-   '/api',
+   '/v1',
    expressjwt({
       secret: 'Your-Secreat-Here',
       algorithms: ['HS256'],

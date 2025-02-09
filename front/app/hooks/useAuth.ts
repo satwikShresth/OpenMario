@@ -32,7 +32,7 @@ export const useAuth = () => {
         navigate('/login');
       })
       .catch((error) => {
-        setError(error.response?.status === 409 ? 'Username already exists' : 'Failed to create account');
+        setError(error.response?.status === 409 ? 'Username already exists' : error?.response?.data?.errors?.details[0]?.message || "Failed to create account");
         console.error('Signup error:', error);
       })
       .finally(() => {

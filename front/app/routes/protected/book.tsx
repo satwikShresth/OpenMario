@@ -3,8 +3,7 @@ import { useMutation } from '@tanstack/react-query';
 import type { BookCreate } from '#client/types.gen';
 import { BookCreateSchema } from '#client/schemas.gen';
 import { postBooksMutation } from '#client/react-query.gen';
-import { isLoggedIn, isLoggedInRedirector } from '#/hooks/useAuth';
-import { Navigate } from 'react-router';
+import { isLoggedInRedirector } from '#/hooks/useAuth';
 
 interface ErrorData {
   title?: string | null;

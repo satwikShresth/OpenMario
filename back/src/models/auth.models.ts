@@ -18,11 +18,11 @@ export const UserCreateSchema = createInsertSchema(users, {
          .max(255, 'Full name cannot exceed 255 characters.'),
    password: (schema) =>
       schema
-         .min(4, 'Password must be at least 8 characters long.')
-         .max(40, 'Password cannot be more than 40 characters long.')
-         .regex(/[A-Z]/, 'Password must contain at least one uppercase letter.')
-         .regex(/[a-z]/, 'Password must contain at least one lowercase letter.')
-         .regex(/\d/, 'Password must contain at least one number.'),
+         .min(4, 'Password must be at least 4 characters long.')
+         .max(40, 'Password cannot be more than 40 characters long.'),
+   //.regex(/[A-Z]/, 'Password must contain at least one uppercase letter.')
+   //.regex(/[a-z]/, 'Password must contain at least one lowercase letter.')
+   //.regex(/\d/, 'Password must contain at least one number.'),
 })
    .strict()
    .openapi({

@@ -2,8 +2,7 @@ import { useState } from 'react';
 import { useMutation } from '@tanstack/react-query';
 import type { AuthorCreate } from '#client/types.gen';
 import { postAuthorsMutation } from '#client/react-query.gen';
-import { isLoggedIn, isLoggedInRedirector } from '#/hooks/useAuth';
-import { Navigate } from 'react-router';
+import { isLoggedInRedirector } from '#/hooks/useAuth';
 
 interface ErrorData {
   name?: string | null;
