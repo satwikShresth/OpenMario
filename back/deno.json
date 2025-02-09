@@ -18,6 +18,8 @@
     "drizzle-zod": "npm:drizzle-zod@^0.6.1",
     "express": "npm:express@5.0.0",
     "express-jwt": "npm:express-jwt@^8.5.1",
+    "express-rate-limit": "npm:express-rate-limit@^7.5.0",
+    "helmet": "npm:helmet@^8.0.0",
     "jsonwebtoken": "npm:jsonwebtoken@^9.0.2",
     "morgan": "npm:morgan@^1.10.0",
     "swagger-ui-express": "npm:swagger-ui-express@^5.0.1",

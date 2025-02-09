@@ -31,8 +31,10 @@
     "npm:drizzle-orm@~0.38.3": "0.38.3_@libsql+client@0.14.0",
     "npm:drizzle-zod@~0.6.1": "0.6.1_drizzle-orm@0.38.3__@libsql+client@0.14.0_zod@3.24.1_@libsql+client@0.14.0",
     "npm:express-jwt@^8.5.1": "8.5.1",
+    "npm:express-rate-limit@^7.5.0": "7.5.0_express@5.0.0",
     "npm:express@5.0.0": "5.0.0",
     "npm:expresso@*": "0.9.2",
+    "npm:helmet@8": "8.0.0",
     "npm:jsonwebtoken@^9.0.2": "9.0.2",
     "npm:morgan@^1.10.0": "1.10.0",
     "npm:swagger-ui-express@^5.0.1": "5.0.1_express@5.0.0",
@@ -796,6 +798,12 @@
         "jsonwebtoken"
       ]
     },
+    "express-rate-limit@7.5.0_express@5.0.0": {
+      "integrity": "sha512-eB5zbQh5h+VenMPM3fh+nw1YExi5nMr6HUCR62ELSP11huvxm/Uir1H1QEyTkk5QX6A58pX6NmaTMceKZ0Eodg==",
+      "dependencies": [
+        "express"
+      ]
+    },
     "express-unless@2.1.3": {
       "integrity": "sha512-wj4tLMyCVYuIIKHGt0FhCtIViBcwzWejX0EjNxveAa6dG+0XBCQhMbx+PnkLkFCxLC69qoFrxds4pIyL88inaQ=="
     },
@@ -938,6 +946,9 @@
       "dependencies": [
         "function-bind"
       ]
+    },
+    "helmet@8.0.0": {
+      "integrity": "sha512-VyusHLEIIO5mjQPUI1wpOAEu+wl6Q0998jzTxqUYGE45xCIcAxy3MsbEK/yyJUJ3ADeMoB6MornPH6GMWAf+Pw=="
     },
     "http-errors@2.0.0": {
       "integrity": "sha512-FtwrG/euBzaEjYeRqOgly7G0qviiXoJWnvEH2Z1plBdXgbyjv34pHTSb9zoeHMyDy33+DWy5Wt9Wo+TURtOYSQ==",
@@ -1472,7 +1483,9 @@
       "npm:drizzle-orm@~0.38.3",
       "npm:drizzle-zod@~0.6.1",
       "npm:express-jwt@^8.5.1",
+      "npm:express-rate-limit@^7.5.0",
       "npm:express@5.0.0",
+      "npm:helmet@8",
       "npm:jsonwebtoken@^9.0.2",
       "npm:morgan@^1.10.0",
       "npm:swagger-ui-express@^5.0.1",
