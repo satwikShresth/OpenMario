@@ -14,6 +14,10 @@ export const UserCreateSchema = createInsertSchema(users, {
    username: (schema) =>
       schema
          .trim()
+         .regex(/^[a-zA-Z\s\-'\p{L}\p{M}]+$/u, {
+            message:
+               'Name can only contain letters, spaces, hyphens, apostrophes, and periods',
+         })
          .min(4, 'Full name cannot be less than 4 characters.')
          .max(255, 'Full name cannot exceed 255 characters.'),
    password: (schema) =>

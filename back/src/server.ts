@@ -6,7 +6,6 @@ import morgan from 'morgan';
 import routes from '#routes';
 import { db } from '#db';
 import { revoked } from '#/db/schema.ts';
-import rateLimit from 'express-rate-limit';
 import { eq } from 'drizzle-orm';
 
 const port = 3000;
@@ -19,17 +18,9 @@ app.use(morgan(':method :url :status :response-time ms'));
 app.use(helmet());
 
 //debugMiddlewares(app);
-const generalLimiter = rateLimit({
-   windowMs: 15 * 60 * 1000, // 15 minutes
-   max: 100, // Limit each IP to 100 requests per windowMs
-   message: 'Too many requests from this IP, please try again later',
-   standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
-   legacyHeaders: false, // Disable the `X-RateLimit-*` headers
-});
 
 app.use(
    '/v1',
-   generalLimiter,
    expressjwt({
       secret: 'Your-Secreat-Here',
       algorithms: ['HS256'],
