@@ -5,7 +5,7 @@ services:
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf:ro
     ports:
-      - "1002:80"
+      - "3000:3000"
     depends_on:
       - backend
       - frontend

@@ -1,4 +1,12 @@
-# Homework 1: REST Api for sqlite db interactions and React frontend
+# Homework 4
+
+## The Easy Way if you have docker
+
+```
+#Exposes it at localhost:3000
+docker compse up --build
+```
+
 
 ## Step 1: Installing Deno and npm
 
