@@ -16,6 +16,10 @@ const currentYear = new Date().getFullYear();
 const title = (schema: z.ZodString) =>
    schema
       .trim()
+      .regex(/^[a-zA-Z\s\-'\p{L}\p{M}]+$/u, {
+         message:
+            'Name can only contain letters, spaces, hyphens, apostrophes, and periods',
+      })
       .min(1, { message: 'Title cannot be empty' })
       .max(200, { message: 'Title must be less than 200 characters' })
       .openapi({

@@ -13,18 +13,25 @@ services:
       - internal
 
   backend:
+    image: ss5278/satwik-cs478-homework:backend
+
     build:
       context: ./back
       dockerfile: dockerfile
+      platforms:
+        - linux/amd64
     container_name: backend
     networks:
       - internal
     entrypoint: ["/app/entrypoint.sh"]
 
   frontend:
+    image: ss5278/satwik-cs478-homework:frontend
     build:
       context: ./front
       dockerfile: dockerfile
+      platforms:
+        - linux/amd64
     container_name: frontend
     networks:
       - internal

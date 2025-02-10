@@ -28,6 +28,10 @@ export const name = (schema: z.ZodString) =>
 export const bio = (schema: z.ZodString) =>
    schema
       .trim()
+      .regex(/^[a-zA-Z\s\-'\p{L}\p{M}]+$/u, {
+         message:
+            'Name can only contain letters, spaces, hyphens, apostrophes, and periods',
+      })
       .max(1000, { message: 'Bio must be less than 1000 characters' })
       .nullable()
       .transform((val) => val === '' ? null : val)
