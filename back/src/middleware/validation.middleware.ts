@@ -2,8 +2,6 @@ import { z } from 'zod';
 import { NextFunction, Request, Response } from 'express';
 import { formatZodError } from '#utils';
 import { RequestParamsId } from '#models';
-import { SQLiteTable } from 'drizzle-orm/sqlite-core/table';
-import { SQLiteTableWithColumns } from 'drizzle-orm/sqlite-core';
 import { db } from '#db';
 import { eq } from 'drizzle-orm';
 

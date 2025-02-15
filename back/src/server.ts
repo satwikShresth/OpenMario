@@ -1,6 +1,5 @@
 import express, { NextFunction, Request, Response } from 'express';
 import { expressjwt, Request as JWTRequest } from 'express-jwt';
-import helmet from 'helmet';
 //import { debugMiddlewares } from '#utils';
 import morgan from 'morgan';
 import routes from '#routes';
@@ -15,7 +14,6 @@ export const app = express();
 
 app.use(express.json());
 app.use(morgan(':method :url :status :response-time ms'));
-app.use(helmet());
 
 //debugMiddlewares(app);
 

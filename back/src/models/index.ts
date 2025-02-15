@@ -1,9 +1,6 @@
 import { z } from 'zod';
 import { Request } from 'express-jwt';
 import { JwtPayload } from '#/models/auth.models.ts';
-export * from './authors.models.ts';
-export * from './books.models.ts';
-export * from './auth.models.ts';
 
 export type RequestParamsId = Request & {
    auth?: JwtPayload;

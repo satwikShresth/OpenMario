@@ -1,7 +1,5 @@
 import { Router } from 'express';
-import booksRoutes from './books.routes.ts';
 import authRoutes from './auth.routes.ts';
-import authorsRoutes from './authors.routes.ts';
 import rateLimit from 'express-rate-limit';
 
 const apiLimiter = rateLimit({
@@ -32,8 +30,6 @@ export default () => {
    const router = Router();
 
    router.use('/', apiLimiter, authRoutes());
-   router.use('/books', genLimiter, booksRoutes());
-   router.use('/authors', genLimiter2, authorsRoutes());
 
    return router;
 };

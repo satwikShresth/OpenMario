@@ -1,5 +1,4 @@
 import { OpenAPIRegistry } from '@asteasolutions/zod-to-openapi';
-import { UserCreateSchema, UserSchema } from '#models';
 import { z } from 'zod';
 
 export default (

@@ -1,12 +1,15 @@
-import * as url from 'node:url';
-import { drizzle } from 'drizzle-orm/libsql';
-import { LibSQLDatabase } from 'drizzle-orm/libsql';
-import { createClient } from '@libsql/client/sqlite3';
+import { drizzle } from 'drizzle-orm/node-postgres';
+import pg from 'pg';
+export * from '#/db/schema.ts';
 
-const __dirname = url.fileURLToPath(new URL('../..', import.meta.url));
-const dbfile: string = `file:${__dirname}database.db`;
+const client = new pg.Pool({
+   host: Deno.env.get('ENV') ? Deno.env.get('POSTGRES_SERVER') : 'localhost',
+   database: Deno.env.get('POSTGRES_DB'),
+   password: Deno.env.get('POSTGRES_PASSWORD'),
+   port: Deno.env.get('POSTGRES_PORT'),
+   user: Deno.env.get('POSTGRES_USER'),
+   min: 2,
+   max: 10,
+});
 
-const client = createClient({ url: dbfile });
-
-export type database = LibSQLDatabase<Record<string, never>>;
-export const db = drizzle(client);
+export const db = drizzle({ client });
