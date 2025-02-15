@@ -8,8 +8,8 @@ import {
 } from '#/db/schema.ts';
 import { name } from '#/models/position.models.ts';
 import { work_hours, year } from '#/models/submissions.models.ts';
-import * as undergrad from './undergradute.model.ts';
-import * as grad from './graduate.model.ts';
+import * as undergrad from '#/db/undergraduate.data.ts';
+import * as grad from '#/db/graduate.data.ts';
 import { amount } from '#/models/compensation.models.ts';
 
 extendZodWithOpenApi(z);

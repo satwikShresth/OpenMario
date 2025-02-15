@@ -22,3 +22,9 @@ export const paramsIdSchema = z.object({
 });
 
 export type ParamsId = z.infer<typeof paramsIdSchema>;
+export * from '#/models/submission_aggregate.models.ts';
+export * from '#/models/compensation.models.ts';
+export * from '#/models/enums.models.ts';
+export * from '#/models/auth.models.ts';
+export * from '#/models/submissions.models.ts';
+export * from '#/models/position.models.ts';
