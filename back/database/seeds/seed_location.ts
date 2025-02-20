@@ -1,9 +1,7 @@
-import { schema } from "../schema/mod.ts";
+import { location  } from "../../src/db/schema.ts";
+import { db } from "../../src/db/index.ts";
 import { parse } from "jsr:@std/csv";
 import { join } from "jsr:@std/path";
-import { db } from "../mod.ts";
-
-const location = schema.location;
 
 export async function seedLocation() {
   try {
@@ -20,7 +18,7 @@ export async function seedLocation() {
 
     // Prepare the data for insertion
     const locationData = records.map((record) => ({
-      stateId: record.STATE_CODE,
+      state_code: record.STATE_CODE,
       state: record.STATE_NAME,
       city: record.CITY,
     }));
@@ -32,7 +30,7 @@ export async function seedLocation() {
 
       await db.insert(location)
         .values(batch)
-        .onConflictDoNothing({ target: [location.state, location.city] });
+        .onConflictDoNothing({ target: [location.state_code,location.state, location.city] });
 
       console.log(`Inserted batch ${Math.floor(i / batchSize) + 1}`);
     }

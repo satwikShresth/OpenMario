@@ -1,5 +1,5 @@
 import { drizzle } from 'drizzle-orm/node-postgres';
-import pg from 'pg';
+import pg from 'npm:pg';
 export * from '#/db/schema.ts';
 
 const client = new pg.Pool({

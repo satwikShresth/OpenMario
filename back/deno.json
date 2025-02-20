@@ -32,29 +32,35 @@
     "#routes": "./src/routes/index.ts",
   },
   "fmt": {
-      "useTabs": false,
-      "indentWidth": 3,
-      "semiColons": true,
-      "singleQuote": true,
-      "proseWrap": "preserve",
-      "include": ["./src/", "./openapi/","./tests/", "*.ts"],
-      "exclude": ["src/static"]
-   },
-   "tasks": {
-      "setup": "rm -f database.db && sqlite3 database.db < ./database/migrations/0000_inital.sql",
-      "seed": "deno -A src/db/seed/index.ts",
-      "build": "deno check src",
-      "start": "deno run -A src/server.ts",
-      "watch": "deno -A --watch src/server.ts",
-      "test": "deno test -A",
-      "dev": "deno task watch",
-      "gen:openapi": "deno -A ./openapi/index.ts ../openapi.json",
-      "db:migrate": "deno run  -A npm:drizzle-kit migrate ",
-      "db:migrate:generate": "deno run -A npm:drizzle-kit generate --name ",
-      "db:migrate:push": "deno run -A npm:drizzle-kit push --force",
-      "db:seed": "deno run -A",
-      "db:studio": "deno run -A npm:drizzle-kit studio",
-      "format": "deno fmt --watch src"
-   },
+    "useTabs": false,
+    "indentWidth": 3,
+    "semiColons": true,
+    "singleQuote": true,
+    "lineWidth": 150,
+    "proseWrap": "preserve",
+    "include": ["./src/", "./openapi/","./tests/", "*.ts"],
+    "exclude": ["src/static"]
+  },
+  "tasks": {
+    "db:migrate": "deno run --env-file=../.env -A npm:drizzle-kit migrate",
+    "db:migrate:generate": "deno run --env-file=../.env -A npm:drizzle-kit generate --name ",
+    "db:migrate:push": "deno run -A npm:drizzle-kit push --force",
+    "start": "deno run -A src/server.ts",
+    "dev:db:migrate:push": "deno run --env-file=../.env -A npm:drizzle-kit push --force",
+    "dev:seed": "deno run --env-file=../.env -A ./database/seeds/seed.ts",
+    "build": "deno check src",
+    "watch": "deno -A --env-file=../.env --watch src/server.ts",
+    "dev": {
+      "dependencies": ["dev:db:migrate:push", "dev:seed","watch"]
+    },
+    "test": "deno test -A",
+    "gen:openapi": "deno -A ./openapi/index.ts ../openapi.json",
+    "db:migrate": "deno run  -A npm:drizzle-kit migrate ",
+    "db:migrate:generate": "deno run -A npm:drizzle-kit generate --name ",
+    "db:migrate:push": "deno run -A npm:drizzle-kit push --force",
+    "db:seed": "deno run -A ./database/seeds/seed.ts",
+    "db:studio": "deno run -A npm:drizzle-kit studio",
+    "format": "deno fmt --watch src"
+  },
   "nodeModulesDir": "auto"
 }

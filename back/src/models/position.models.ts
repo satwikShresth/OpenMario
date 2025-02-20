@@ -1,23 +1,19 @@
 import { z } from 'zod';
 import { extendZodWithOpenApi } from '@asteasolutions/zod-to-openapi';
 import { company, position } from '#/db/schema.ts';
-import {
-   createInsertSchema,
-   createSelectSchema,
-   createUpdateSchema,
-} from 'drizzle-zod';
+import { createInsertSchema, createSelectSchema, createUpdateSchema } from 'drizzle-zod';
 
 extendZodWithOpenApi(z);
 
-export const name = (schema: z.ZodString) =>
+export const name = (schema: any) =>
    schema
       .trim()
       .min(3, { message: 'Name must be more than 3 characters' })
       .max(100, { message: 'Name must be less than 100 characters' })
-      .regex(/^[a-zA-Z\s\-'\p{L}\p{M}]+$/u, {
-         message:
-            'Name can only contain letters, spaces, hyphens, apostrophes, and periods',
-      });
+      .regex(
+         /^[a-zA-Z\s\-'\p{L}\p{M}]+$/u,
+         { message: 'Name can only contain letters, spaces, hyphens, apostrophes, and periods' },
+      );
 
 export const CompanySchema = createSelectSchema(company);
 export type Company = z.infer<typeof CompanySchema>;

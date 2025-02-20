@@ -15,15 +15,10 @@ export type RequestParamsId = Request & {
 };
 
 export const paramsIdSchema = z.object({
-   id: z.preprocess(
-      (val) => Number(val),
-      z.number().positive(),
-   ),
+   id: z.preprocess((val) => Number(val), z.number().positive()),
 });
 
 export type ParamsId = z.infer<typeof paramsIdSchema>;
-export * from '#/models/submission_aggregate.models.ts';
-export * from '#/models/compensation.models.ts';
 export * from '#/models/enums.models.ts';
 export * from '#/models/auth.models.ts';
 export * from '#/models/submissions.models.ts';

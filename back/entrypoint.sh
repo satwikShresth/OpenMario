@@ -1,11 +1,10 @@
 #!/bin/sh
 
-deno install --allow-scripts
-deno task setup
-deno task seed
+deno task db:migrate:push
+deno task db:seed
 
-if [ "${ENV}" = "development" ]; then 
-  deno task dev
-else
-  deno task start
-fi
+# if [ "${ENV}" = "development" ]; then 
+  deno task watch
+# else
+#   deno task start
+# fi

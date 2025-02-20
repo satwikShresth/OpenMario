@@ -1,7 +1,6 @@
 import { join } from "jsr:@std/path";
-import { db } from "db";
-import { programLevelType } from "../schema/enums.ts";
-import { major, minor } from "../schema/table.ts";
+import { program_level,major, minor  } from "../../src/db/schema.ts";
+import { db } from "../../src/db/index.ts";
 
 async function parseFile(filename: string): Promise<string[]> {
   const content = await Deno.readTextFile(filename);
@@ -20,15 +19,15 @@ export async function seedMajorsMinors() {
 
     const majorData: {
       name: string;
-      programLevel: typeof programLevelType;
+      program_level:  string;
     }[] = [
       ...gMajors.map((name) => ({
         name: name.trim(),
-        programLevel: "Graduate" as const,
+        program_level: "Graduate" as const,
       })),
       ...ugMajors.map((name) => ({
         name: name.trim(),
-        programLevel: "Undergraduate" as const,
+        program_level: "Undergraduate" as const,
       })),
     ];
 
@@ -38,15 +37,15 @@ export async function seedMajorsMinors() {
 
     const minorData: {
       name: string;
-      programLevel: typeof programLevelType;
+      program_level: string;
     }[] = [
       ...gMinors.map((name) => ({
         name: name.trim(),
-        programLevel: "Graduate" as const,
+        program_level: "Graduate" as const,
       })),
       ...ugMinors.map((name) => ({
         name: name.trim(),
-        programLevel: "Undergraduate" as const,
+        program_level: "Undergraduate" as const,
       })),
     ];
 

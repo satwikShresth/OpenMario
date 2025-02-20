@@ -1,6 +1,6 @@
-import { db } from "../mod.ts";
 import { join } from "jsr:@std/path";
-import { company, position } from "../schema/table.ts";
+import { company, position  } from "../../src/db/schema.ts";
+import { db } from "../../src/db/index.ts";
 import { eq } from "drizzle-orm";
 
 export async function seedComapnyPositions() {
@@ -43,9 +43,9 @@ export async function seedComapnyPositions() {
 
     // Insert positions
     for (const [companyName, positions] of Object.entries(companyData)) {
-      const companyId = companyIds.get(companyName);
+      const company_id = companyIds.get(companyName);
 
-      if (!companyId) {
+      if (!company_id) {
         console.warn(
           `Company ID not found for ${companyName}, skipping positions`,
         );
@@ -53,7 +53,7 @@ export async function seedComapnyPositions() {
       }
 
       const positionValues = positions.map((pos) => ({
-        companyId,
+        company_id,
         name: pos.position,
       }));
 
@@ -65,7 +65,7 @@ export async function seedComapnyPositions() {
         await db.insert(position)
           .values(batch)
           .onConflictDoNothing({
-            target: [position.companyId, position.name],
+            target: [position.company_id, position.name],
           });
 
         console.log(
