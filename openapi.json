@@ -1,980 +1,2002 @@
 {
-   "openapi": "3.0.0",
-   "info": {
-      "title": "Book Management API",
-      "version": "1.0.0",
-      "description": "API for managing books and authors"
-   },
-   "servers": [
-      {
-         "url": "http://localhost:3000/api"
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Coop Salary Board API",
+    "description": "API for collection coop salaries anonymously",
+    "termsOfService": "",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:{port}/{basePath}",
+      "description": "The Development API server",
+      "variables": {
+        "port": {
+          "default": "3000"
+        },
+        "basePath": {
+          "default": "v1"
+        }
       }
-   ],
-   "components": {
-      "securitySchemes": {
-         "bearerAuth": {
-            "type": "http",
-            "scheme": "bearer",
-            "bearerFormat": "JWT"
-         }
+    }
+  ],
+  "components": {
+    "schemas": {
+      "JwtPayload": {
+        "type": "object",
+        "properties": {
+          "user_id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Unique identifier for the user",
+            "example": "123e4567-e89b-12d3-a456-426614174000"
+          },
+          "username": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 50,
+            "description": "Username of the authenticated user",
+            "example": "john_doe"
+          },
+          "iat": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Issued at timestamp (in seconds since Unix epoch)",
+            "example": 1620000000
+          }
+        },
+        "required": [
+          "user_id",
+          "username",
+          "iat"
+        ],
+        "description": "Schema for JWT payload containing user authentication information",
+        "title": "JSON Web Token",
+        "example": {
+          "user_id": "123e4567-e89b-12d3-a456-426614174000",
+          "username": "john_doe",
+          "iat": 1620000000
+        }
       },
-      "schemas": {
-         "User": {
-            "type": "object",
-            "properties": {
-               "id": {
-                  "type": "integer",
-                  "minimum": -9007199254740991,
-                  "maximum": 9007199254740991
-               },
-               "username": {
-                  "type": "string"
-               },
-               "password": {
-                  "type": "string"
-               }
-            },
-            "required": [
-               "id",
-               "username",
-               "password"
-            ],
-            "description": "A book record with all its properties",
-            "title": "User"
-         },
-         "UserCreate": {
-            "type": "object",
-            "properties": {
-               "id": {
-                  "type": "integer",
-                  "minimum": -9007199254740991,
-                  "maximum": 9007199254740991
-               },
-               "username": {
+      "Major": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "program_level": {
+            "type": "string",
+            "enum": [
+              "Undergraduate",
+              "Graduate"
+            ]
+          },
+          "name": {
+            "type": "string",
+            "maxLength": 255
+          }
+        },
+        "required": [
+          "id",
+          "program_level",
+          "name"
+        ]
+      },
+      "Minor": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "program_level": {
+            "type": "string",
+            "enum": [
+              "Undergraduate",
+              "Graduate"
+            ]
+          },
+          "name": {
+            "type": "string",
+            "maxLength": 255
+          }
+        },
+        "required": [
+          "id",
+          "program_level",
+          "name"
+        ]
+      },
+      "Location": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "state_code": {
+            "type": "string",
+            "maxLength": 3
+          },
+          "state": {
+            "type": "string",
+            "maxLength": 100
+          },
+          "city": {
+            "type": "string",
+            "maxLength": 100
+          }
+        },
+        "required": [
+          "id",
+          "state_code",
+          "state",
+          "city"
+        ]
+      },
+      "CoopYear": {
+        "type": "string",
+        "enum": [
+          "1st",
+          "2nd",
+          "3rd"
+        ]
+      },
+      "CoopCycle": {
+        "type": "string",
+        "enum": [
+          "Fall/Winter",
+          "Winter/Spring",
+          "Spring/Summer",
+          "Summer/Fall"
+        ]
+      },
+      "ProgramLevel": {
+        "type": "string",
+        "enum": [
+          "Undergraduate",
+          "Graduate"
+        ]
+      },
+      "Company": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string",
+            "maxLength": 255
+          }
+        },
+        "required": [
+          "id",
+          "name"
+        ]
+      },
+      "CompanyInsert": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 100,
+            "pattern": "^[a-zA-Z\\s\\-'\\p{L}\\p{M}]+$"
+          }
+        },
+        "required": [
+          "name"
+        ]
+      },
+      "CompanyUpdate": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 100,
+            "pattern": "^[a-zA-Z\\s\\-'\\p{L}\\p{M}]+$"
+          }
+        }
+      },
+      "Position": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "company_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string",
+            "maxLength": 255
+          }
+        },
+        "required": [
+          "id",
+          "company_id",
+          "name"
+        ]
+      },
+      "PositionInsert": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "company_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 100,
+            "pattern": "^[a-zA-Z\\s\\-'\\p{L}\\p{M}]+$"
+          }
+        },
+        "required": [
+          "company_id",
+          "name"
+        ]
+      },
+      "PositionUpdate": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "company_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 100,
+            "pattern": "^[a-zA-Z\\s\\-'\\p{L}\\p{M}]+$"
+          }
+        }
+      },
+      "User": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "is_verified": {
+            "type": "boolean"
+          },
+          "username": {
+            "type": "string",
+            "minLength": 4,
+            "maxLength": 25,
+            "pattern": "^[a-zA-Z\\s\\-'\\p{L}\\p{M}]+$"
+          },
+          "password": {
+            "type": "string",
+            "minLength": 4,
+            "maxLength": 25
+          }
+        },
+        "required": [
+          "id",
+          "is_verified",
+          "username",
+          "password"
+        ]
+      },
+      "UserInsert": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "is_verified": {
+            "type": "boolean"
+          },
+          "username": {
+            "type": "string",
+            "minLength": 4,
+            "maxLength": 25,
+            "pattern": "^[a-zA-Z\\s\\-'\\p{L}\\p{M}]+$"
+          },
+          "password": {
+            "type": "string",
+            "minLength": 4,
+            "maxLength": 25
+          }
+        },
+        "required": [
+          "username",
+          "password"
+        ]
+      },
+      "UserUpdate": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "is_verified": {
+            "type": "boolean"
+          },
+          "username": {
+            "type": "string",
+            "minLength": 4,
+            "maxLength": 25,
+            "pattern": "^[a-zA-Z\\s\\-'\\p{L}\\p{M}]+$"
+          },
+          "password": {
+            "type": "string",
+            "minLength": 4,
+            "maxLength": 25
+          }
+        }
+      },
+      "ProfileMajor": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "user_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "major_id": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "required": [
+          "id",
+          "user_id",
+          "major_id"
+        ]
+      },
+      "ProfileMajorInsert": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "user_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "major_id": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "required": [
+          "user_id",
+          "major_id"
+        ]
+      },
+      "ProfileMajorUpdate": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "user_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "major_id": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      },
+      "ProfileMinor": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "user_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "minor_id": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "required": [
+          "id",
+          "user_id",
+          "minor_id"
+        ]
+      },
+      "ProfileMinorInsert": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "user_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "minor_id": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "required": [
+          "user_id",
+          "minor_id"
+        ]
+      },
+      "ProfileMinorUpdate": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "user_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "minor_id": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      },
+      "Submission": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "position_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "location_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "program_level": {
+            "type": "string",
+            "enum": [
+              "Undergraduate",
+              "Graduate"
+            ]
+          },
+          "work_hours": {
+            "type": "integer",
+            "minimum": -2147483648,
+            "maximum": 2147483647
+          },
+          "coop_cycle": {
+            "type": "string",
+            "enum": [
+              "Fall/Winter",
+              "Winter/Spring",
+              "Spring/Summer",
+              "Summer/Fall"
+            ]
+          },
+          "coop_year": {
+            "type": "string",
+            "enum": [
+              "1st",
+              "2nd",
+              "3rd"
+            ]
+          },
+          "year": {
+            "type": "integer",
+            "minimum": -2147483648,
+            "maximum": 2147483647
+          },
+          "compensation": {
+            "type": "integer",
+            "nullable": true,
+            "minimum": -2147483648,
+            "maximum": 2147483647
+          },
+          "other_compensation": {
+            "type": "string",
+            "nullable": true,
+            "maxLength": 255
+          },
+          "details": {
+            "type": "string",
+            "nullable": true,
+            "maxLength": 255
+          },
+          "owner_id": {
+            "type": "string",
+            "nullable": true,
+            "format": "uuid"
+          },
+          "created_at": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "position_id",
+          "location_id",
+          "program_level",
+          "work_hours",
+          "coop_cycle",
+          "coop_year",
+          "year",
+          "compensation",
+          "other_compensation",
+          "details",
+          "owner_id",
+          "created_at"
+        ]
+      },
+      "SubmissionAggregate": {
+        "type": "object",
+        "properties": {
+          "positions": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "company": {
                   "type": "string",
-                  "minLength": 4,
-                  "maxLength": 255
-               },
-               "password": {
-                  "type": "string",
-                  "minLength": 4,
-                  "maxLength": 40,
-                  "pattern": "[A-Z]"
-               }
-            },
-            "required": [
-               "username",
-               "password"
-            ],
-            "additionalProperties": false,
-            "description": "Schema for creating a new book record",
-            "title": "UserCreate"
-         },
-         "Book": {
-            "type": "object",
-            "properties": {
-               "id": {
-                  "type": "integer",
-                  "minimum": -9007199254740991,
-                  "maximum": 9007199254740991
-               },
-               "user_id": {
-                  "type": "integer",
-                  "minimum": -9007199254740991,
-                  "maximum": 9007199254740991
-               },
-               "author_id": {
-                  "type": "integer",
-                  "minimum": -9007199254740991,
-                  "maximum": 9007199254740991
-               },
-               "title": {
-                  "type": "string"
-               },
-               "pub_year": {
-                  "type": "string",
-                  "maxLength": 4
-               },
-               "genre": {
-                  "type": "string"
-               }
-            },
-            "required": [
-               "id",
-               "user_id",
-               "author_id",
-               "title",
-               "pub_year",
-               "genre"
-            ],
-            "description": "A book record with all its properties",
-            "title": "Book"
-         },
-         "BookCreate": {
-            "type": "object",
-            "properties": {
-               "id": {
-                  "type": "integer",
-                  "minimum": -9007199254740991,
-                  "maximum": 9007199254740991
-               },
-               "user_id": {
-                  "type": "integer",
-                  "minimum": 0,
-                  "maximum": 9007199254740991
-               },
-               "author_id": {
-                  "type": "integer",
-                  "minimum": -9007199254740991,
-                  "maximum": 9007199254740991
-               },
-               "title": {
-                  "type": "string",
-                  "minLength": 1,
-                  "maxLength": 200,
-                  "description": "The title of the book",
-                  "example": "The Great Gatsby"
-               },
-               "pub_year": {
-                  "type": "string",
-                  "maxLength": 4,
-                  "pattern": "^\\d{4}$",
-                  "description": "The year the book was published",
-                  "example": "2023"
-               },
-               "genre": {
-                  "type": "string",
-                  "minLength": 1,
-                  "description": "The genre of the book",
-                  "example": "Fiction",
-                  "enum": [
-                     "Fiction",
-                     "Non-Fiction",
-                     "Mystery",
-                     "Science Fiction",
-                     "Fantasy",
-                     "Romance",
-                     "Thriller",
-                     "Horror",
-                     "Biography",
-                     "History",
-                     "Science",
-                     "Poetry",
-                     "Drama",
-                     "Children"
-                  ]
-               },
-               "author_name": {
-                  "type": "string",
-                  "minLength": 1,
+                  "minLength": 3,
                   "maxLength": 100,
                   "pattern": "^[a-zA-Z\\s\\-'\\p{L}\\p{M}]+$",
-                  "description": "The name of the book's author",
-                  "example": "John Doe"
-               },
-               "author_bio": {
+                  "description": "Name of the company offering the position",
+                  "example": "Acme Corporation"
+                },
+                "position": {
                   "type": "string",
-                  "nullable": true,
-                  "maxLength": 1000,
-                  "description": "Optional biography of the author",
-                  "example": "An accomplished writer with multiple bestsellers"
-               }
-            },
-            "required": [
-               "title",
-               "pub_year",
-               "genre",
-               "author_name"
-            ],
-            "additionalProperties": false,
-            "description": "Schema for creating a new book record",
-            "title": "BookCreate"
-         },
-         "BookUpdate": {
-            "type": "object",
-            "properties": {
-               "id": {
-                  "type": "integer",
-                  "minimum": -9007199254740991,
-                  "maximum": 9007199254740991
-               },
-               "user_id": {
-                  "type": "integer",
-                  "minimum": 0,
-                  "maximum": 9007199254740991
-               },
-               "author_id": {
-                  "type": "integer",
-                  "minimum": -9007199254740991,
-                  "maximum": 9007199254740991
-               },
-               "title": {
-                  "type": "string",
-                  "minLength": 1,
-                  "maxLength": 200,
-                  "description": "The title of the book",
-                  "example": "The Great Gatsby"
-               },
-               "pub_year": {
-                  "type": "string",
-                  "maxLength": 4,
-                  "pattern": "^\\d{4}$",
-                  "description": "The year the book was published",
-                  "example": "2023"
-               },
-               "genre": {
-                  "type": "string",
-                  "minLength": 1,
-                  "description": "The genre of the book",
-                  "example": "Fiction",
-                  "enum": [
-                     "Fiction",
-                     "Non-Fiction",
-                     "Mystery",
-                     "Science Fiction",
-                     "Fantasy",
-                     "Romance",
-                     "Thriller",
-                     "Horror",
-                     "Biography",
-                     "History",
-                     "Science",
-                     "Poetry",
-                     "Drama",
-                     "Children"
-                  ]
-               },
-               "author_name": {
-                  "type": "string",
-                  "minLength": 1,
+                  "minLength": 3,
                   "maxLength": 100,
                   "pattern": "^[a-zA-Z\\s\\-'\\p{L}\\p{M}]+$",
-                  "description": "The updated name of the book's author",
-                  "example": "Jane Smith"
-               },
-               "author_bio": {
+                  "description": "Title of the position",
+                  "example": "Senior Software Engineer"
+                },
+                "location": {
                   "type": "string",
-                  "nullable": true,
-                  "maxLength": 1000,
-                  "description": "Updated biography of the author",
-                  "example": "Award-winning author of contemporary fiction"
-               }
-            },
-            "additionalProperties": false,
-            "description": "Schema for updating an existing book record",
-            "title": "BookUpdate"
-         },
-         "Author": {
-            "type": "object",
-            "properties": {
-               "id": {
-                  "type": "integer",
-                  "minimum": -9007199254740991,
-                  "maximum": 9007199254740991
-               },
-               "user_id": {
-                  "type": "integer",
-                  "minimum": -9007199254740991,
-                  "maximum": 9007199254740991
-               },
-               "name": {
-                  "type": "string"
-               },
-               "bio": {
-                  "type": "string",
-                  "nullable": true
-               }
-            },
-            "required": [
-               "id",
-               "user_id",
-               "name",
-               "bio"
-            ],
-            "description": "Complete author record with all properties",
-            "title": "Author"
-         },
-         "AuthorCreate": {
-            "type": "object",
-            "properties": {
-               "id": {
-                  "type": "integer",
-                  "minimum": -9007199254740991,
-                  "maximum": 9007199254740991
-               },
-               "user_id": {
+                  "pattern": "^[A-Za-z\\s.-]+,\\s*[A-Z]{2}$",
+                  "description": "Location in City, State format (US only)",
+                  "example": "Boston, MA"
+                },
+                "work_hours": {
                   "type": "integer",
                   "minimum": 0,
-                  "maximum": 9007199254740991
-               },
-               "name": {
-                  "type": "string",
-                  "minLength": 1,
-                  "maxLength": 100,
-                  "pattern": "^[a-zA-Z\\s\\-'\\p{L}\\p{M}]+$",
-                  "description": "Author's full name",
-                  "example": "Jane Austen"
-               },
-               "bio": {
-                  "type": "string",
-                  "nullable": true,
-                  "maxLength": 1000,
-                  "description": "Author's biographical information",
-                  "example": "A renowned author known for her works in classic literature"
-               }
-            },
-            "required": [
-               "name"
-            ],
-            "additionalProperties": false,
-            "description": "Schema for creating a new author record",
-            "title": "AuthorCreate"
-         },
-         "AuthorUpdate": {
-            "type": "object",
-            "properties": {
-               "id": {
-                  "type": "integer",
-                  "minimum": -9007199254740991,
-                  "maximum": 9007199254740991
-               },
-               "user_id": {
+                  "maximum": 168,
+                  "description": "Weekly work hours",
+                  "example": 40
+                },
+                "compensation": {
                   "type": "integer",
                   "minimum": 0,
-                  "maximum": 9007199254740991
-               },
-               "name": {
+                  "description": "Base compensation amount",
+                  "example": 120000
+                },
+                "other_compensation": {
                   "type": "string",
-                  "minLength": 1,
-                  "maxLength": 100,
-                  "pattern": "^[a-zA-Z\\s\\-'\\p{L}\\p{M}]+$",
-                  "description": "Author's full name",
-                  "example": "Jane Austen"
-               },
-               "bio": {
+                  "maxLength": 255,
+                  "description": "Additional compensation details (bonuses, equity, etc.)",
+                  "example": "Annual bonus up to 15%, stock options vesting over 4 years"
+                },
+                "details": {
                   "type": "string",
-                  "nullable": true,
-                  "maxLength": 1000,
-                  "description": "Author's biographical information",
-                  "example": "A renowned author known for her works in classic literature"
-               }
+                  "maxLength": 255,
+                  "description": "Additional position details and requirements",
+                  "example": "Remote work available, requires occasional travel, 5+ years experience preferred"
+                }
+              },
+              "required": [
+                "company",
+                "position",
+                "location",
+                "work_hours",
+                "compensation",
+                "other_compensation",
+                "details"
+              ],
+              "description": "Comprehensive information about a job position including company, location, compensation, and other details",
+              "title": "Position Information",
+              "example": {
+                "company": "Acme Corporation",
+                "position": "Senior Software Engineer",
+                "location": "Boston, MA",
+                "work_hours": 40,
+                "compensation": 120000,
+                "other_compensation": "Annual bonus up to 15%, stock options vesting over 4 years",
+                "details": "Remote work available, requires occasional travel, 5+ years experience preferred"
+              }
             },
-            "additionalProperties": false,
-            "description": "Schema for updating an existing author record",
-            "title": "AuthorUpdate"
-         }
-      },
-      "parameters": {}
-   },
-   "paths": {
-      "/signup": {
-         "post": {
-            "description": "Register a new user",
-            "tags": [
-               "Authentication"
-            ],
-            "requestBody": {
-               "content": {
-                  "application/json": {
-                     "schema": {
-                        "$ref": "#/components/schemas/UserCreate"
-                     }
-                  }
-               }
+            "minItems": 1
+          },
+          "year": {
+            "type": "integer",
+            "minimum": 2005
+          },
+          "coop_year": {
+            "type": "string",
+            "enum": [
+              "1st",
+              "2nd",
+              "3rd"
+            ]
+          },
+          "coop_cycle": {
+            "type": "string",
+            "enum": [
+              "Fall/Winter",
+              "Winter/Spring",
+              "Spring/Summer",
+              "Summer/Fall"
+            ]
+          },
+          "program_level": {
+            "type": "string",
+            "enum": [
+              "Undergraduate",
+              "Graduate"
+            ]
+          },
+          "majors": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "Accounting (BSBA)",
+                "Air Force ROTC",
+                "Animation & Visual Effects (BS)",
+                "Architectural Engineering (BSAE)",
+                "Architectural Studies (BS)",
+                "Architecture (BArch)",
+                "Army ROTC",
+                "Art History (BA)",
+                "Art History (BS)",
+                "Behavioral Economics, Business and Organizations (BS)",
+                "Biological Sciences (BS)",
+                "Biomedical Engineering (BS)",
+                "Business (General) (BSBA)",
+                "Business Undeclared",
+                "Business and Engineering (BSBAE)",
+                "Business Analytics (BSBA)",
+                "Business Administration (BSBA)",
+                "Business Law (BSBA)",
+                "Chemical Engineering (BSCHE)",
+                "Chemistry (BA)",
+                "Chemistry (BS)",
+                "Chemistry-Biochemistry Concentration (BS)",
+                "Civil Engineering (BSCIV)",
+                "Communication (BA)",
+                "Computer Engineering (BSCE)",
+                "Computer Science (BACS)",
+                "Computer Science (BSCS)",
+                "Computing and Security Technology (BSCST)",
+                "Construction Management (BSCMGT)",
+                "Criminology and Justice Studies (BS)",
+                "Culinary Arts & Science (BSCAS)",
+                "Custom-Designed Major (BS)",
+                "Dance (BS)",
+                "Dance - Part-time Professional (BS)",
+                "Data Science (BS)",
+                "Digital Media and Virtual Production (BS)",
+                "Economic Analysis (BAECON)",
+                "Economics (BSECON)",
+                "Economics and Business (BS)",
+                "Economics and Data Science (BSECDS)",
+                "Economics and Mathematics (BS)",
+                "Economics and Public Health (BS)",
+                "Educational Studies & Innovation (BS)",
+                "Education: Non-Certification (BS)",
+                "Electrical Engineering (BSEE)",
+                "Elementary Education (BS)",
+                "Engineering (BSE)",
+                "Engineering Technology (BSET)",
+                "Engineering Undeclared",
+                "English, Literary Studies Concentration (BA)",
+                "English, Writing Concentration (BA)",
+                "English, Secondary Education Concentration (BA)",
+                "Entertainment and Arts Management (BS)",
+                "Entrepreneurship and Innovation (BA)",
+                "Entrepreneurship & Innovation 3-year Option (BA)",
+                "Environmental Engineering (BSENE)",
+                "Environmental Science (BS)",
+                "Environmental Studies and Sustainability (BA)",
+                "Esport Business (BSBA)",
+                "Exercise Science (BS)",
+                "Fashion Design (BS)",
+                "Fashion Industry & Merchandising (BS)",
+                "Film & Television (BS)",
+                "Finance (BSBA)",
+                "First Year Exploratory Studies (Non-degree)",
+                "Game Design & Production (BS)",
+                "General Business (BSBA)",
+                "General Humanities and Social Sciences (Undeclared)",
+                "Global Public Health (BA)",
+                "Global Studies (BA) ",
+                "Graphic Design (BS)",
+                "Health Data Analytics (BS)",
+                "Health Sciences (BS)",
+                "Health Services Administration (BS)",
+                "History (BA)",
+                "Hospitality Management (BSHM)",
+                "Human Development and Counseling (BS)",
+                "Information Systems (BS)",
+                "Interdisciplinary Professional Studies (BS)",
+                "International Business (BSBA)",
+                "Interior Design (BS)",
+                "Law (BA)",
+                "Learning Sciences, Experience Design, and Technology",
+                "Management Information Systems (BSBA)",
+                "Marketing (BSBA)",
+                "Materials Science and Engineering (BSMSE)",
+                "Mathematical Statistics (BS)",
+                "Mathematics (BA)",
+                "Mathematics (BS)",
+                "Mechanical Engineering & Mechanics (BSME)",
+                "Music Industry (BS)",
+                "Navy ROTC",
+                "Neuroscience (BS)",
+                "Nursing (BSN)",
+                "Nursing: RN-MSN Bridge Program",
+                "Nutrition and Foods (BS)",
+                "Operations and Supply Chain Management (BSBA)",
+                "Organizational Management (co-major) (BSBA)",
+                "Philosophy (BA)",
+                "Philosophy, Politics and Economics (BA)",
+                "Photography (BS)",
+                "Physics (BS)",
+                "Political Science (BA)",
+                "Product Design (BS)",
+                "Psychology (BS)",
+                "Public Health (BS)",
+                "Real Estate Management and Development (BSBA)",
+                "ROTC (Air Force, Army, Navy)",
+                "Science (Undeclared)",
+                "Screenwriting and Playwriting (BS)",
+                "Sociology (BA)",
+                "Software Engineering (BS)",
+                "Special Education (PK-12) (BS)",
+                "Sport Business (BSBA)",
+                "Sustainability and Innovation (BS)",
+                "Teacher Education (BS)",
+                "Technology Innovation Management (co-major) (BS)",
+                "User Experience and Interaction Design (BS)",
+                "Westphal Studies Program (BS)",
+                "Academic Medicine (MS) ",
+                "Accounting (MS)",
+                "Accounting Analytics (MBA)",
+                "Addictions Counseling (MS) ",
+                "American Legal Practice (LLM)",
+                "Applied Behavior Analysis (MS)",
+                "Applied Behavior Analysis and Special Education (MS)",
+                "Applied Cognitive and Brain Sciences (PhD)",
+                "Applied Learning, Leadership and Innovation (EdS)",
+                "Architectural Engineering (MSAE)",
+                "Architectural Engineering (PhD)",
+                "Art Therapy and Counseling (MA)",
+                "Artificial Intelligence and Machine Learning (MSAIML)",
+                "Arts Administration (MS)",
+                "Biochemistry of Health & Disease (MS)",
+                "Biochemistry of Health & Disease (PhD)",
+                "Bioinformatics (MS)",
+                "Biological Sciences (MS: College of Arts and Sciences)",
+                "Biological Sciences (PhD: College of Arts and Sciences)",
+                "Biomedical Engineering (MS: School of Biomedical Engineering, Science and Health Systems)",
+                "Biomedical Engineering (PhD: School of Biomedical Engineering, Science and Health Systems)",
+                "Biomedical Science (MS: School of Biomedical Engineering, Science and Health Systems)",
+                "Biomedical Science (PhD: School of Biomedical Engineering, Science and Health Systems)",
+                "Biomedical Studies (MS)",
+                "Biomedicine and Business (MS)",
+                "Biomedicine and Cell & Gene Therapy (MS)",
+                "Biomedicine and Digital Media (MS)",
+                "Biomedicine and Entrepreneurship (MS)",
+                "Biomedicine and Law (MS)",
+                "Biostatistics (MS)",
+                "Biostatistics (PhD)",
+                "Biotechnology (MS)",
+                "Business Administration (DBA)",
+                "Business Administration (PhD)",
+                "Business Analytics (MBA)",
+                "Business Analytics (MS)",
+                "Business Customized (MBA)",
+                "Business Information Technology (MSBIT)",
+                "Cancer Biology (MS)",
+                "Chemical Engineering (MS)",
+                "Chemical Engineering (PhD)",
+                "Chemistry (MS)",
+                "Chemistry (PhD)",
+                "Civil Engineering (MSCE)",
+                "Civil Engineering (PhD)",
+                "Clinical Research for Health Professionals (MS)",
+                "Clinical Research Organization & Management (MS)",
+                "Communication, Culture and Media (MS)",
+                "Communication, Culture and Media (PhD)",
+                "Community Health and Prevention (MPH)",
+                "Community Health and Prevention (PhD)",
+                "Complementary and Integrative Health (MS)",
+                "Computer Engineering (MS)",
+                "Computer Engineering (PhD)",
+                "Computer Security and Privacy (MS)",
+                "Computer Science (MSCS)",
+                "Computer Science (PhD)",
+                "Construction Management (MS)",
+                "Corporate Sustainability and Social Impact (MBA)",
+                "Couple and Family Therapy (DCFT)",
+                "Couple and Family Therapy (PhD)",
+                "Creative Arts in Therapy (PhD)",
+                "Creative Education and Entrepreneurship (MS)",
+                "Creative Writing (MFA)",
+                "Creativity and Innovation (MS)",
+                "Culinary & Food Science (MS)",
+                "Cyber Law and Data Privacy (LLM) ",
+                "Cyber Law and Data Privacy (LLM) ",
+                "Cybersecurity (MS)",
+                "Dance/Movement Therapy and Counseling (MA)",
+                "Data Science (MS)",
+                "Design (MS)",
+                "Digital Marketing Technology (MSM)",
+                "Digital Media (MS)",
+                "Digital Media (PhD)",
+                "Drexel Pathway to Medical School (MS)",
+                "Drug Discovery and Development (MS)",
+                "Ecology, Evolution, and Earth Systems (MS)",
+                "Ecology, Evolution, and Earth Systems (PhD)",
+                "Economics (MBA)",
+                "Economics (MSECON)",
+                "Economics (PhD)",
+                "Economics and Computer Science (MSECCS)",
+                "Education (PhD)",
+                "Education Improvement and Transformation (MS)",
+                "Educational Administration (MS)",
+                "Educational Leadership and Management (EdD)",
+                "Effective Leadership (MBA)",
+                "Electrical Engineering (MS)",
+                "Electrical Engineering (PhD)",
+                "Engineering (ME)",
+                "Engineering Management (MS)",
+                "Engineering Technology (MS) ",
+                "Entrepreneurship and Innovation (MS)",
+                "Environmental and Occupational Health (MPH)",
+                "Environmental and Occupational Health (PhD)",
+                "Environmental and Occupational Health Sciences (MS)",
+                "Environmental Engineering (MS)",
+                "Environmental Engineering (PhD)",
+                "Environmental Policy (MSEP)",
+                "Epidemiology (MS)",
+                "Epidemiology (MPH)",
+                "Epidemiology (PhD)",
+                "Family/Individual Across the Lifespan Nurse Practitioner (MSN)",
+                "Family/Individual Across the Lifespan with Emergency Specialization (MSN)",
+                "Family Therapy (MFT)",
+                "Fashion Design (MS)",
+                "Finance (MBA)",
+                "General Business (MBA)",
+                "Global Financial Regulation (LLM) ",
+                "Global Financial Regulation (LLM) ",
+                "Global Health (MS)",
+                "Global Health (MPH)",
+                "Health and Rehabilitation Sciences (MS)",
+                "Health and Rehabilitation Sciences (PhD)",
+                "Health Administration (MHA)",
+                "Health Care and Pharmaceutical Compliance (LLM) ",
+                "Health Care and Pharmaceutical Compliance (LLM) ",
+                "Health Management and Policy (MPH)",
+                "Health Sciences (DHSc) ",
+                "Health Services Research and Policy (PhD)",
+                "Healthcare Simulation (MS) ",
+                "Higher Education Leadership (MS)",
+                "Histotechnology (MS)",
+                "Human Nutrition (MS)",
+                "Human-Computer Interaction and User Experience (MS)",
+                "Human Resource Development (MS)",
+                "Immunology (MS)",
+                "Infection Prevention and Control (MS)",
+                "Infectious Disease (MS)",
+                "Information Science (PhD)",
+                "Information Systems (MSIS)",
+                "Integrated Biomedical Engineering and Business (MS)",
+                "Intensive Medical Sciences (MS)",
+                "Interdisciplinary Health Sciences (MS)",
+                "Interior Architecture (MS)",
+                "Interior Architecture and Design (MS)",
+                "International Commercial Law (LLM)",
+                "Internet of Things (MS)",
+                "Juris Doctor (JD)",
+                "Laboratory Animal Science (MLAS)",
+                "Law (JD)",
+                "Law (JD) / Public Health (MPH)",
+                "Learning Technologies (MS)",
+                "Legal Studies (MLS) ",
+                "Legal Studies (MLS) ",
+                "Library and Information Science (MSLIS)",
+                "Machine Learning Engineering (MSMLE)",
+                "Marketing (MBA)",
+                "Marketing Leadership (MSM)",
+                "Marketing Technology and Analytics (MBA)",
+                "Marketing Technology and Analytics (MSM)",
+                "Materials Science and Engineering (MS)",
+                "Materials Science and Engineering (PhD)",
+                "Mathematics (MS)",
+                "Mathematics (PhD)",
+                "Mechanical Engineering and Mechanics (MS)",
+                "Mechanical Engineering and Mechanics (PhD)",
+                "Medical Science (MS)",
+                "Medical Science (MD/MS)",
+                "Medicine (MD)",
+                "Medicine (MD) / PhD",
+                "Microbiology and Immunology (MS)",
+                "Microbiology and Immunology (PhD)",
+                "Molecular Basis of Cancer (MS)",
+                "Molecular and Cell Biology and Genetics (MS)",
+                "Molecular and Cell Biology and Genetics (PhD)",
+                "Molecular Medicine (MS)",
+                "Music Therapy and Counseling (MA)",
+                "Nanomaterials (MS)",
+                "Neuroscience (MS)",
+                "Neuroscience (PhD)",
+                "Nonprofit Management: Public, Professional & Social Sectors (MS)",
+                "Nurse Anesthesia (DNP)",
+                "Nurse Practitioner (DNP)",
+                "Nursing - Advanced Role (MSN)",
+                "Clinical Nurse Leader ",
+                "Healthcare Simulation ",
+                "Nursing Education",
+                "Nursing Leadership and Health Systems Management",
+                "MSN-Bridge Program",
+                "Nursing - Nurse Practitioner (MSN)",
+                "Adult-Gerontology Acute Care Nurse Practitioner",
+                "Adult-Gerontology Primary Care Nurse Practitioner",
+                "Family/Individual Across the Life Span Nurse Practitioner",
+                "Pediatric Acute Care Nurse Practitioner",
+                "Pediatric Primary Care Nurse Practitioner",
+                "Pediatric Acute Care and Pediatric Primary Care Dual Option Nurse Practitioner",
+                "Public Health Nursing",
+                "Psychiatric Mental Health Nurse Practitioner",
+                "Women's Health/Gender Related Nurse Practitioner",
+                "Nursing: MSN/PhD joint degree (MSN/PhD)",
+                "Nursing (PhD)",
+                "Nursing Leadership in Health Systems Management (MSN)",
+                "Business Administration (MBA)",
+                "Nursing Practice (DNP)",
+                "Nutrition and Dietetics (MS)",
+                "Nutrition Sciences (PhD)",
+                "Pathologists' Assistant (MS)",
+                "Peace Engineering (MS)",
+                "Pharmacology & Physiology (MS)",
+                "Pharmacology & Physiology (PhD)",
+                "Physical Therapy (DPT)",
+                "Physician Assistant (MHS)",
+                "Physics (MS)",
+                "Physics (PhD)",
+                "Professional Studies (MS)",
+                "Project Management (MBA)",
+                "Psychology (MS)",
+                "Psychology: Applied Cognitive and Brain Sciences (PhD)",
+                "Psychology: Clinical Psychology (PhD)",
+                "Public Health - Executive Program (MPH)",
+                "Public Policy (MS)",
+                "Public Policy (MS) / Juris Doctor (JD)",
+                "Publishing (MA) ",
+                "Quality, Safety and Risk Management in Health Care (MS)",
+                "Quality, Safety and Risk Management in Health Care (MSN)",
+                "Rehabilitation Sciences (MHS) ",
+                "Retail & Merchandising (MS)",
+                "Robotics and Autonomy (MS)",
+                "School Psychology (EdS)",
+                "Science, Technology, and Society (MS) ",
+                "Software Engineering (MSSE)",
+                "Special Education (MS)",
+                "Sport Business (MS)",
+                "Strategic and Digital Communication (MS)",
+                "Strategic Technology & Innovation Management (MBA)",
+                "Supply Chain Management & Logistics (MBA)",
+                "Supply Chain Management and Logistics (MS) ",
+                "Systems Engineering (MS)",
+                "Teaching, Learning and Curriculum (MS)",
+                "Television & Media Management (MS)",
+                "Television & Media Management (MS) / Business Administration (MBA)",
+                "Trial Advocacy and Dispute Resolution (LLM)",
+                "Undergraduate STEM Education (MS)",
+                "Urban Health (MPH)",
+                "Urban Strategy (MS)"
+              ]
             },
-            "responses": {
-               "201": {
-                  "description": "User created successfully",
-                  "content": {
-                     "application/json": {
-                        "schema": {
-                           "$ref": "#/components/schemas/User"
-                        }
-                     }
-                  }
-               },
-               "409": {
-                  "description": "Username already exists"
-               }
-            }
-         }
-      },
-      "/me": {
-         "post": {
-            "security": [
-               {
-                  "bearerAuth": []
-               }
-            ],
-            "description": "Logout user and invalidate tokens",
-            "tags": [
-               "Authentication"
-            ],
-            "responses": {
-               "200": {
-                  "description": "Decoded Token",
-                  "content": {
-                     "application/json": {
-                        "schema": {
-                           "$ref": "#/components/schemas/User"
-                        }
-                     }
-                  }
-               },
-               "401": {
-                  "description": "Invalid token"
-               }
-            }
-         }
-      },
-      "/logout": {
-         "post": {
-            "security": [
-               {
-                  "bearerAuth": []
-               }
-            ],
-            "description": "Logout user and invalidate tokens",
-            "tags": [
-               "Authentication"
-            ],
-            "responses": {
-               "200": {
-                  "description": "Successfully logged out"
-               },
-               "401": {
-                  "description": "Invalid token"
-               }
-            }
-         }
-      },
-      "/access-token": {
-         "post": {
-            "description": "Authorize user credentials",
-            "tags": [
-               "Authentication"
-            ],
-            "requestBody": {
-               "content": {
-                  "application/json": {
-                     "schema": {
-                        "$ref": "#/components/schemas/User"
-                     }
-                  }
-               }
+            "minItems": 1
+          },
+          "minors": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "Accounting",
+                "Actuarial Science",
+                "Africana Studies",
+                "Animation and Visual Effects",
+                "Architectural Engineering",
+                "Architecture",
+                "Art History",
+                "Artificial Intelligence and Learning",
+                "Asian Studies",
+                "Astrophysics",
+                "Behavioral Economics and Business",
+                "Biochemistry",
+                "Bioinformatics",
+                "Biological Sciences",
+                "Biophysics",
+                "Bioscience and Society",
+                "Business Administration",
+                "Business Analytics",
+                "Business Consulting",
+                "Business Law",
+                "Chemical Engineering",
+                "Chemistry",
+                "Client Development and Customer Service",
+                "Climate Change",
+                "Communication",
+                "Computer Engineering",
+                "Computer Science",
+                "Computing Technology",
+                "Construction Management",
+                "Corporate Entrepreneurship",
+                "Crime Analysis and Digital Investigations",
+                "Criminal Justice",
+                "Culinary Arts",
+                "Dance",
+                "Data Science",
+                "DragonsTeach Certification Minor",
+                "DragonsTeach Middle Years Minor",
+                "DragonsTeach Middle Years Certification Minor",
+                "Ecology",
+                "Economics",
+                "Econometrics and Data Analytics",
+                "Education",
+                "Electrical Engineering",
+                "Engineering Leadership",
+                "Engineering Management",
+                "Engineering Policy Analysis",
+                "English",
+                "Entertainment & Arts Management",
+                "Entrepreneurship and Innovation",
+                "Environmental Engineering",
+                "Environmental Public Health",
+                "Environmental Sociology",
+                "Environmental Studies",
+                "Epidemiology",
+                "Esports",
+                "European Studies",
+                "Exercise Science",
+                "Film & Television Production",
+                "Film & Television Studies",
+                "Film Studies",
+                "Finance",
+                "Financial Technology",
+                "Fine Arts",
+                "Food Science",
+                "Food Studies",
+                "French",
+                "Game Design and Production",
+                "Gender and Sexuality Studies",
+                "Geoscience",
+                "Global Engineering",
+                "Global Public Health",
+                "Global Studies",
+                "Graphic Design",
+                "Green Energy and Sustainability",
+                "Health and Social Justice",
+                "Health Data Analytics",
+                "Health Services Administration",
+                "History",
+                "History of Capitalism",
+                "Hospitality Management",
+                "Human Computer Interaction",
+                "Immune Engineering",
+                "Information Systems",
+                "Interdisciplinary Problem Solving",
+                "International Business",
+                "Japanese",
+                "Jazz and African-American Music",
+                "Jewish Studies",
+                "Justice Studies",
+                "Law",
+                "Linguistics",
+                "Management Information Systems",
+                "Marketing",
+                "Materials Science and Engineering",
+                "Mathematics",
+                "Mechanical Engineering and Mechanics",
+                "Medical Sociology",
+                "Merchandising",
+                "Middle East and North Africa Studies",
+                "Military Science",
+                "Music",
+                "Music Performance",
+                "Music Theory and Composition",
+                "Neuroscience",
+                "Nonprofit Communication",
+                "Nutrition",
+                "Operations and Supply Chain Management",
+                "Organizational Management",
+                "Performing Arts",
+                "Philosophy",
+                "Photography",
+                "Physics",
+                "Playwriting",
+                "Poetry, Biblio and Expressive Writing Facilitation",
+                "Politics",
+                "Product Design",
+                "Project Management",
+                "Psychiatric Rehabilitation",
+                "Psychology",
+                "Public Health",
+                "Real Estate Management and Development",
+                "Religious Studies",
+                "Robotics and Automation",
+                "Science, Technology and Society",
+                "Screenwriting",
+                "Security Technology",
+                "Social Entrepreneurship",
+                "Sociology",
+                "Software Engineering",
+                "Somatics",
+                "Spanish",
+                "Sport Coaching Leadership",
+                "Sport Management",
+                "Sport Regulation & Compliance",
+                "STEM Education",
+                "Sustainability in the Built Environment",
+                "Systems Engineering",
+                "Technology Innovation Management",
+                "Theatre",
+                "User Experience and Interaction Design",
+                "Virtual Reality & Immersive Media",
+                "War and Society",
+                "Writing",
+                "Accounting",
+                "Arts Administration",
+                "Arts in Public Health",
+                "Bioinformatics",
+                "Biostatistics",
+                "Business",
+                "Business Analytics",
+                "Business Analytics Management",
+                "Change Leadership & Strategy",
+                "Clinical Research Organization and Management",
+                "Communication",
+                "Communication, Culture and Media",
+                "Complementary and Integrative Therapies (Advanced Study)",
+                "Computational Engineering",
+                "Computer Science",
+                "Creativity and Innovation",
+                "Digital Media",
+                "Digital Supply Chain Management",
+                "Drug Discovery and Development",
+                "Economic Data Analysis",
+                "Economics",
+                "Entrepreneurship and Innovation",
+                "Environmental and Occupational Health",
+                "Environmental Epidemiology",
+                "Finance",
+                "Global Health",
+                "Global and International Education",
+                "Health Administration",
+                "Healthcare Simulation",
+                "Higher Education Leadership",
+                "Human-Computer Interaction and User Experience",
+                "Infectious Disease and Population Health",
+                "Interdisciplinary Team-Oriented Creativity",
+                "Latino and Immigrant Health",
+                "Law",
+                "Leadership and Teams",
+                "Lesbian, Gay, Bisexual and Transgender (LGBT) Health",
+                "Marketing",
+                "Maternal and Child Health",
+                "Mind, Brain & Learning",
+                "Museum Leadership",
+                "Nonprofit Management: Public, Professional and Social Sectors",
+                "Nursing Education",
+                "Nursing Leadership in Health Systems Management",
+                "Operations Research",
+                "Pediatric Engineering",
+                "Pre-veterinary",
+                "Professional Studies",
+                "Program Monitoring and Evaluation",
+                "Project Management",
+                "Public Health Emergency Preparedness",
+                "Public Policy",
+                "Quality, Safety and Risk Management in Healthcare",
+                "Retail and Merchandising",
+                "Sport Management",
+                "Substance Use and Misuse",
+                "Sustainable Operations Management",
+                "Taxation",
+                "Undergraduate STEM Education",
+                "Urban Health"
+              ]
             },
-            "responses": {
-               "200": {
-                  "description": "Authorization successful",
-                  "content": {
-                     "application/json": {
-                        "schema": {
-                           "type": "object",
-                           "properties": {
-                              "type": {
-                                 "type": "string"
-                              },
-                              "token": {
-                                 "type": "string",
-                                 "description": "JWT Bearer token"
-                              }
-                           },
-                           "required": [
-                              "type",
-                              "token"
-                           ],
-                           "description": "Authentication response with user data and JWT token",
-                           "title": "AuthResponse"
-                        }
-                     }
-                  }
-               },
-               "401": {
-                  "description": "Invalid credentials"
-               },
-               "404": {
-                  "description": "Username not found"
-               }
-            }
-         }
+            "default": []
+          }
+        },
+        "required": [
+          "positions",
+          "year",
+          "coop_year",
+          "coop_cycle",
+          "program_level",
+          "majors"
+        ]
       },
-      "/books": {
-         "get": {
-            "description": "Get all books with optional filtering",
-            "security": [
-               {
-                  "bearerAuth": []
-               }
-            ],
-            "tags": [
-               "Books"
-            ],
-            "parameters": [
-               {
-                  "schema": {
-                     "type": "string",
-                     "description": "Search by book title (partial match)",
-                     "example": "Gatsby"
-                  },
-                  "required": false,
-                  "name": "title",
-                  "in": "query"
-               },
-               {
-                  "schema": {
-                     "type": "string",
-                     "description": "Filter by genre",
-                     "example": "Fiction",
-                     "enum": [
-                        "Fiction",
-                        "Non-Fiction",
-                        "Mystery",
-                        "Science Fiction",
-                        "Fantasy",
-                        "Romance",
-                        "Thriller",
-                        "Horror",
-                        "Biography",
-                        "History",
-                        "Science",
-                        "Poetry",
-                        "Drama",
-                        "Children"
-                     ]
-                  },
-                  "required": false,
-                  "name": "genre",
-                  "in": "query"
-               },
-               {
-                  "schema": {
-                     "type": "string",
-                     "pattern": "^\\d{4}$",
-                     "description": "Filter by publication year",
-                     "example": "2023"
-                  },
-                  "required": false,
-                  "name": "pub_year",
-                  "in": "query"
-               }
-            ],
-            "responses": {
-               "200": {
-                  "description": "List of books matching the criteria",
-                  "content": {
-                     "application/json": {
-                        "schema": {
-                           "type": "array",
-                           "items": {
-                              "allOf": [
-                                 {
-                                    "$ref": "#/components/schemas/Book"
-                                 },
-                                 {
-                                    "type": "object",
-                                    "properties": {
-                                       "name": {
-                                          "type": "string",
-                                          "minLength": 1,
-                                          "maxLength": 100,
-                                          "pattern": "^[a-zA-Z\\s\\-'\\p{L}\\p{M}]+$",
-                                          "description": "Author's full name",
-                                          "example": "Jane Austen"
-                                       }
-                                    },
-                                    "required": [
-                                       "name"
-                                    ]
-                                 }
-                              ],
-                              "description": "A book record with all its properties",
-                              "title": "Book"
-                           }
-                        }
-                     }
-                  }
-               }
-            }
-         },
-         "post": {
-            "description": "Create a new book",
-            "security": [
-               {
-                  "bearerAuth": []
-               }
-            ],
-            "tags": [
-               "Books"
-            ],
-            "requestBody": {
-               "content": {
-                  "application/json": {
-                     "schema": {
-                        "$ref": "#/components/schemas/BookCreate"
-                     }
-                  }
-               }
-            },
-            "responses": {
-               "201": {
-                  "description": "Book created successfully",
-                  "content": {
-                     "application/json": {
-                        "schema": {
-                           "$ref": "#/components/schemas/Book"
-                        }
-                     }
-                  }
-               },
-               "400": {
-                  "description": "Invalid request body"
-               }
-            }
-         }
+      "SubmissionInsert": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "position_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "location_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "program_level": {
+            "type": "string",
+            "enum": [
+              "Undergraduate",
+              "Graduate"
+            ]
+          },
+          "work_hours": {
+            "type": "integer",
+            "minimum": 5,
+            "maximum": 60,
+            "description": "Expected Work Hours",
+            "example": 40
+          },
+          "coop_cycle": {
+            "type": "string",
+            "enum": [
+              "Fall/Winter",
+              "Winter/Spring",
+              "Spring/Summer",
+              "Summer/Fall"
+            ]
+          },
+          "coop_year": {
+            "type": "string",
+            "enum": [
+              "1st",
+              "2nd",
+              "3rd"
+            ]
+          },
+          "year": {
+            "type": "integer",
+            "minimum": 2005,
+            "maximum": 2147483647,
+            "description": "Submission Year",
+            "example": 2025
+          },
+          "compensation": {
+            "type": "integer",
+            "nullable": true,
+            "minimum": 0,
+            "maximum": 2147483647,
+            "description": "Compensation amount",
+            "example": 100
+          },
+          "other_compensation": {
+            "type": "string",
+            "nullable": true,
+            "maxLength": 255
+          },
+          "details": {
+            "type": "string",
+            "nullable": true,
+            "maxLength": 255
+          },
+          "owner_id": {
+            "type": "string",
+            "nullable": true,
+            "format": "uuid"
+          },
+          "created_at": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "position_id",
+          "location_id",
+          "program_level",
+          "coop_cycle",
+          "coop_year",
+          "year"
+        ]
       },
-      "/books/{id}": {
-         "get": {
-            "security": [
-               {
-                  "bearerAuth": []
-               }
-            ],
-            "description": "Get a book by its ID",
-            "tags": [
-               "Books"
-            ],
-            "parameters": [
-               {
-                  "schema": {
-                     "type": "number",
-                     "minimum": 0,
-                     "exclusiveMinimum": true
-                  },
-                  "required": true,
-                  "name": "id",
-                  "in": "path"
-               }
-            ],
-            "responses": {
-               "200": {
-                  "description": "Book details",
-                  "content": {
-                     "application/json": {
-                        "schema": {
-                           "$ref": "#/components/schemas/Book"
-                        }
-                     }
-                  }
-               },
-               "404": {
-                  "description": "Book not found"
-               }
-            }
-         },
-         "put": {
-            "security": [
-               {
-                  "bearerAuth": []
-               }
-            ],
-            "description": "Update an existing book",
-            "tags": [
-               "Books"
-            ],
-            "parameters": [
-               {
-                  "schema": {
-                     "type": "number",
-                     "minimum": 0,
-                     "exclusiveMinimum": true
-                  },
-                  "required": true,
-                  "name": "id",
-                  "in": "path"
-               }
-            ],
-            "requestBody": {
-               "content": {
-                  "application/json": {
-                     "schema": {
-                        "$ref": "#/components/schemas/BookUpdate"
-                     }
-                  }
-               }
-            },
-            "responses": {
-               "200": {
-                  "description": "Book updated successfully",
-                  "content": {
-                     "application/json": {
-                        "schema": {
-                           "$ref": "#/components/schemas/Book"
-                        }
-                     }
-                  }
-               },
-               "400": {
-                  "description": "Invalid request body"
-               },
-               "404": {
-                  "description": "Book not found"
-               }
-            }
-         },
-         "delete": {
-            "description": "Delete a book",
-            "security": [
-               {
-                  "bearerAuth": []
-               }
-            ],
-            "tags": [
-               "Books"
-            ],
-            "parameters": [
-               {
-                  "schema": {
-                     "type": "number",
-                     "minimum": 0,
-                     "exclusiveMinimum": true
-                  },
-                  "required": true,
-                  "name": "id",
-                  "in": "path"
-               }
-            ],
-            "responses": {
-               "204": {
-                  "description": "Book deleted successfully"
-               },
-               "404": {
-                  "description": "Book not found"
-               }
-            }
-         }
+      "SubmissionUpdate": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "position_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "location_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "program_level": {
+            "type": "string",
+            "enum": [
+              "Undergraduate",
+              "Graduate"
+            ]
+          },
+          "work_hours": {
+            "type": "integer",
+            "minimum": 5,
+            "maximum": 60,
+            "description": "Expected Work Hours",
+            "example": 40
+          },
+          "coop_cycle": {
+            "type": "string",
+            "enum": [
+              "Fall/Winter",
+              "Winter/Spring",
+              "Spring/Summer",
+              "Summer/Fall"
+            ]
+          },
+          "coop_year": {
+            "type": "string",
+            "enum": [
+              "1st",
+              "2nd",
+              "3rd"
+            ]
+          },
+          "year": {
+            "type": "integer",
+            "minimum": 2005,
+            "maximum": 2147483647,
+            "description": "Submission Year",
+            "example": 2025
+          },
+          "compensation": {
+            "type": "integer",
+            "nullable": true,
+            "minimum": 0,
+            "maximum": 2147483647,
+            "description": "Compensation amount",
+            "example": 100
+          },
+          "other_compensation": {
+            "type": "string",
+            "nullable": true,
+            "maxLength": 255
+          },
+          "details": {
+            "type": "string",
+            "nullable": true,
+            "maxLength": 255
+          },
+          "owner_id": {
+            "type": "string",
+            "nullable": true,
+            "format": "uuid"
+          },
+          "created_at": {
+            "type": "string"
+          }
+        }
       },
-      "/authors": {
-         "get": {
-            "description": "Get all authors",
-            "security": [
-               {
-                  "bearerAuth": []
-               }
-            ],
-            "tags": [
-               "Authors"
-            ],
-            "parameters": [
-               {
-                  "schema": {
-                     "type": "string",
-                     "description": "Search by author name (partial match)",
-                     "example": "Jane"
-                  },
-                  "required": false,
-                  "name": "name",
-                  "in": "query"
-               },
-               {
-                  "schema": {
-                     "type": "string",
-                     "description": "Search within author biography (partial match)",
-                     "example": "award-winning"
-                  },
-                  "required": false,
-                  "name": "bio",
-                  "in": "query"
-               }
-            ],
-            "responses": {
-               "200": {
-                  "description": "Success",
-                  "content": {
-                     "application/json": {
-                        "schema": {
-                           "type": "array",
-                           "items": {
-                              "$ref": "#/components/schemas/Author"
-                           }
-                        }
-                     }
-                  }
-               }
-            }
-         },
-         "post": {
-            "description": "Create an author",
-            "security": [
-               {
-                  "bearerAuth": []
-               }
-            ],
-            "tags": [
-               "Authors"
-            ],
-            "requestBody": {
-               "content": {
-                  "application/json": {
-                     "schema": {
-                        "$ref": "#/components/schemas/AuthorCreate"
-                     }
-                  }
-               }
-            },
-            "responses": {
-               "201": {
-                  "description": "Created",
-                  "content": {
-                     "application/json": {
-                        "schema": {
-                           "$ref": "#/components/schemas/Author"
-                        }
-                     }
-                  }
-               },
-               "409": {
-                  "description": "Author already exists!"
-               }
-            }
-         }
+      "SubmissionQuery": {
+        "type": "object",
+        "properties": {
+          "company": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 100,
+            "pattern": "^[a-zA-Z\\s\\-'\\p{L}\\p{M}]+$"
+          },
+          "position": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 100,
+            "pattern": "^[a-zA-Z\\s\\-'\\p{L}\\p{M}]+$"
+          },
+          "location": {
+            "type": "string",
+            "pattern": "^[A-Za-z\\s.-]+,\\s*[A-Z]{2}$"
+          },
+          "year": {
+            "type": "integer",
+            "minimum": 2005
+          },
+          "coop_year": {
+            "type": "string",
+            "enum": [
+              "1st",
+              "2nd",
+              "3rd"
+            ]
+          },
+          "coop_cycle": {
+            "type": "string",
+            "enum": [
+              "Fall/Winter",
+              "Winter/Spring",
+              "Spring/Summer",
+              "Summer/Fall"
+            ]
+          },
+          "program_level": {
+            "type": "string",
+            "enum": [
+              "Undergraduate",
+              "Graduate"
+            ]
+          },
+          "skip": {
+            "type": "integer",
+            "nullable": true,
+            "minimum": 0,
+            "maximum": null
+          },
+          "limit": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 1000
+          }
+        }
       },
-      "/authors/{id}": {
-         "get": {
-            "description": "Get author by id",
-            "security": [
-               {
-                  "bearerAuth": []
-               }
-            ],
-            "tags": [
-               "Authors"
-            ],
-            "parameters": [
-               {
-                  "schema": {
-                     "type": "number",
-                     "minimum": 0,
-                     "exclusiveMinimum": true
-                  },
-                  "required": true,
-                  "name": "id",
-                  "in": "path"
-               }
-            ],
-            "responses": {
-               "200": {
-                  "description": "Success",
-                  "content": {
-                     "application/json": {
-                        "schema": {
-                           "$ref": "#/components/schemas/Author"
-                        }
-                     }
-                  }
-               },
-               "404": {
-                  "description": "Not found"
-               }
-            }
-         },
-         "put": {
-            "description": "Update an author",
-            "security": [
-               {
-                  "bearerAuth": []
-               }
-            ],
-            "tags": [
-               "Authors"
-            ],
-            "parameters": [
-               {
-                  "schema": {
-                     "type": "number",
-                     "minimum": 0,
-                     "exclusiveMinimum": true
-                  },
-                  "required": true,
-                  "name": "id",
-                  "in": "path"
-               }
-            ],
-            "requestBody": {
-               "content": {
-                  "application/json": {
-                     "schema": {
-                        "$ref": "#/components/schemas/AuthorUpdate"
-                     }
-                  }
-               }
-            },
-            "responses": {
-               "200": {
-                  "description": "Success",
-                  "content": {
-                     "application/json": {
-                        "schema": {
-                           "$ref": "#/components/schemas/Author"
-                        }
-                     }
-                  }
-               },
-               "404": {
-                  "description": "Not found"
-               }
-            }
-         },
-         "delete": {
-            "security": [
-               {
-                  "bearerAuth": []
-               }
-            ],
-            "description": "Delete an author",
-            "tags": [
-               "Authors"
-            ],
-            "parameters": [
-               {
-                  "schema": {
-                     "type": "number",
-                     "minimum": 0,
-                     "exclusiveMinimum": true
-                  },
-                  "required": true,
-                  "name": "id",
-                  "in": "path"
-               }
-            ],
-            "responses": {
-               "200": {
-                  "description": "Success",
-                  "content": {
-                     "application/json": {
-                        "schema": {
-                           "type": "object",
-                           "properties": {
-                              "deleted_id": {
-                                 "type": "number"
-                              }
-                           },
-                           "required": [
-                              "deleted_id"
-                           ],
-                           "description": "Response containing the ID of the deleted author",
-                           "title": "DeletedAuthor"
-                        }
-                     }
-                  }
-               },
-               "404": {
-                  "description": "Not found"
-               },
-               "409": {
-                  "description": "Author is a dependency, cannot be deleted!"
-               }
-            }
-         }
+      "SubmissionResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "year": {
+            "type": "number"
+          },
+          "coop_year": {
+            "type": "number"
+          },
+          "coop_cycle": {
+            "type": "string"
+          },
+          "program_level": {
+            "type": "string"
+          },
+          "work_hours": {
+            "type": "number"
+          },
+          "compensation": {
+            "type": "number"
+          },
+          "other_compensation": {
+            "type": "string"
+          },
+          "details": {
+            "type": "string"
+          },
+          "position": {
+            "type": "string"
+          },
+          "company": {
+            "type": "string"
+          },
+          "location_city": {
+            "type": "string"
+          },
+          "location_state": {
+            "type": "string"
+          },
+          "location_state_code": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "year",
+          "coop_year",
+          "coop_cycle",
+          "program_level",
+          "work_hours",
+          "compensation",
+          "other_compensation",
+          "details",
+          "position",
+          "company",
+          "location_city",
+          "location_state",
+          "location_state_code"
+        ]
       }
-   }
+    },
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
+    "parameters": {
+
+    }
+  },
+  "paths": {
+    "/autocomplete/company": {
+      "get": {
+        "deprecated": false,
+        "summary": "Search for companies by name with fuzzy matching",
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "List of matching company names",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "examples": {
+                  "example1": {
+                    "summary": "Example success response",
+                    "value": [
+                      "Apple Inc",
+                      "Apple Technologies",
+                      "Appleseed Solutions"
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Error response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                },
+                "examples": {
+                  "example2": {
+                    "summary": "Example error response",
+                    "value": {
+                      "message": "Database query failed"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "comp",
+            "in": "query",
+            "description": "Search parameters for company name",
+            "required": true,
+            "deprecated": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "tags": [
+          "Search"
+        ]
+      }
+    },
+    "/autocomplete/position": {
+      "get": {
+        "deprecated": false,
+        "summary": "Search for positions within a specific company",
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "List of matching position titles",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "examples": {
+                  "example1": {
+                    "summary": "Example success response",
+                    "value": [
+                      "Software Engineer",
+                      "Senior Software Engineer",
+                      "Software Engineering Intern"
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Error response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                },
+                "examples": {
+                  "example2": {
+                    "summary": "Example error response",
+                    "value": {
+                      "message": "Database query failed"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "comp",
+            "in": "query",
+            "description": "Company name and optional position search term",
+            "required": true,
+            "deprecated": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "pos",
+            "in": "query",
+            "description": "Company name and optional position search term",
+            "required": true,
+            "deprecated": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "tags": [
+          "Search"
+        ]
+      }
+    },
+    "/autocomplete/location": {
+      "get": {
+        "deprecated": false,
+        "summary": "Search for locations with fuzzy matching across city, state, and state code",
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "List of matching locations in \"City, State_Code\" format",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "examples": {
+                  "example1": {
+                    "summary": "Example success response",
+                    "value": [
+                      "Boston, MA",
+                      "Cambridge, MA",
+                      "Waltham, MA"
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Error response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                },
+                "examples": {
+                  "example2": {
+                    "summary": "Example error response",
+                    "value": {
+                      "message": "Database query failed"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "loc",
+            "in": "query",
+            "description": "Search parameters for location",
+            "required": true,
+            "deprecated": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "tags": [
+          "Search"
+        ]
+      }
+    },
+    "/submissions": {
+      "get": {
+        "deprecated": false,
+        "summary": "Retrieve co-op submission records with pagination and filtering",
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "Success response with paginated submissions",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SubmissionResponse"
+                  }
+                },
+                "examples": {
+                  "example1": {
+                    "summary": "Example success response",
+                    "value": {
+                      "skip": 0,
+                      "limit": 100,
+                      "data": [
+                        {
+                          "id": "123e4567-e89b-12d3-a456-426614174000",
+                          "year": 2024,
+                          "coop_year": "1st",
+                          "coop_cycle": "Fall/Winter",
+                          "program_level": "Undergraduate",
+                          "work_hours": 40,
+                          "compensation": 45000,
+                          "other_compensation": "Housing stipend",
+                          "details": "Full-stack development role",
+                          "company": "Tech Corp",
+                          "position": "Software Engineer",
+                          "location_city": "Boston",
+                          "location_state": "Massachusetts",
+                          "location_state_code": "MA"
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Error response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                },
+                "examples": {
+                  "example2": {
+                    "summary": "Example error response",
+                    "value": {
+                      "message": "Failed to retrieve submissions"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "company",
+            "in": "query",
+            "description": "Query prarmer for filtering submission using company",
+            "required": false,
+            "deprecated": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "position",
+            "in": "query",
+            "description": "Query prarmer for filtering submission using position",
+            "required": false,
+            "deprecated": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "location",
+            "in": "query",
+            "description": "Query prarmer for filtering submission using location",
+            "required": false,
+            "deprecated": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "year",
+            "in": "query",
+            "description": "Query prarmer for filtering submission using year",
+            "required": false,
+            "deprecated": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "coop_year",
+            "in": "query",
+            "description": "Query prarmer for filtering submission using coop_year",
+            "required": false,
+            "deprecated": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "coop_cycle",
+            "in": "query",
+            "description": "Query prarmer for filtering submission using coop_cycle",
+            "required": false,
+            "deprecated": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "program_level",
+            "in": "query",
+            "description": "Query prarmer for filtering submission using program_level",
+            "required": false,
+            "deprecated": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "skip",
+            "in": "query",
+            "description": "Query prarmer for offeset",
+            "required": false,
+            "deprecated": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Query prarmer for limit",
+            "required": false,
+            "deprecated": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "tags": [
+          "Submissions"
+        ]
+      },
+      "post": {
+        "deprecated": false,
+        "summary": "Create new co-op submission(s)",
+        "security": [],
+        "responses": {
+          "201": {
+            "description": "Successfully created submission",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                },
+                "examples": {
+                  "example1": {
+                    "summary": "Success response example",
+                    "value": {
+                      "message": "Added positions successfully"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Error response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                },
+                "examples": {
+                  "example2": {
+                    "summary": "Error response example",
+                    "value": {
+                      "message": "Failed to add positions",
+                      "detail": "Company or Position does not exist"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "parameters": [],
+        "tags": [
+          "Submissions"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SubmissionAggregate"
+              }
+            }
+          },
+          "description": "Submission data",
+          "required": true
+        }
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "Search",
+      "description": ""
+    },
+    {
+      "name": "Submissions",
+      "description": ""
+    }
+  ]
 }

@@ -17,6 +17,7 @@
     "drizzle-orm": "npm:drizzle-orm@^0.38.3",
     "drizzle-zod": "npm:drizzle-zod@^0.6.1",
     "express": "npm:express@5.0.0",
+    "express-jsdoc-swagger": "npm:express-jsdoc-swagger@^1.8.0",
     "express-jwt": "npm:express-jwt@^8.5.1",
     "express-rate-limit": "npm:express-rate-limit@^7.5.0",
     "helmet": "npm:helmet@^8.0.0",

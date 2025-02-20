@@ -15,6 +15,47 @@ import { and, eq } from 'drizzle-orm';
 export default () => {
    const router = Router();
 
+   /**
+    * GET /submissions
+    * @summary Retrieve co-op submission records with pagination and filtering
+    * @tags Submissions
+    * @param {string} company.query - Query prarmer for filtering submission using company
+    * @param {string} position.query - Query prarmer for filtering submission using position
+    * @param {string} location.query - Query prarmer for filtering submission using location
+    * @param {string} year.query - Query prarmer for filtering submission using year
+    * @param {string} coop_year.query - Query prarmer for filtering submission using coop_year
+    * @param {string} coop_cycle.query - Query prarmer for filtering submission using coop_cycle
+    * @param {string} program_level.query - Query prarmer for filtering submission using program_level
+    * @param {string} skip.query - Query prarmer for offeset
+    * @param {string} limit.query - Query prarmer for limit
+    * @return {array<SubmissionResponse>} 200 - Success response with paginated submissions
+    * @example response - 200 - Example success response
+    * {
+    *   "skip": 0,
+    *   "limit": 100,
+    *   "data": [{
+    *     "id": "123e4567-e89b-12d3-a456-426614174000",
+    *     "year": 2024,
+    *     "coop_year": "1st",
+    *     "coop_cycle": "Fall/Winter",
+    *     "program_level": "Undergraduate",
+    *     "work_hours": 40,
+    *     "compensation": 45000,
+    *     "other_compensation": "Housing stipend",
+    *     "details": "Full-stack development role",
+    *     "company": "Tech Corp",
+    *     "position": "Software Engineer",
+    *     "location_city": "Boston",
+    *     "location_state": "Massachusetts",
+    *     "location_state_code": "MA"
+    *   }]
+    * }
+    * @return {object} 409 - Error response
+    * @example response - 409 - Example error response
+    * {
+    *   "message": "Failed to retrieve submissions"
+    * }
+    */
    router.route('/')
       .get(
          zodQueryValidator(SubmissionQuerySchema),
@@ -48,6 +89,23 @@ export default () => {
                .catch(({ message }) => res.status(409).json({ message }));
          },
       )
+      /**
+       * POST /submissions
+       * @summary Create new co-op submission(s)
+       * @tags Submissions
+       * @param {SubmissionAggregate} request.body.required - Submission data
+       * @return {object} 201 - Successfully created submission
+       * @example response - 201 - Success response example
+       * {
+       *   "message": "Added positions successfully"
+       * }
+       * @return {object} 409 - Error response
+       * @example response - 409 - Error response example
+       * {
+       *   "message": "Failed to add positions",
+       *   "detail": "Company or Position does not exist"
+       * }
+       */
       .post(
          zodBodyValidator(SubmissionAggregateSchema),
          async (req: RequestParamsId, res: Response) => {

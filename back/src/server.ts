@@ -4,6 +4,7 @@ import { debugMiddlewares } from '#utils';
 //import morgan from 'morgan';
 //import { expressjwt } from 'express-jwt';
 import routes from '#routes';
+import { generateOpenAPI, options, registry } from '../openapi/index.ts';
 //import { db } from '#db';
 //import { revoked } from '#/db/schema.ts';
 //import { eq } from 'drizzle-orm';
@@ -11,7 +12,7 @@ import routes from '#routes';
 const port = 3000;
 const host = '0.0.0.0';
 const protocol = 'http';
-export const app = express();
+const app = express();
 
 app.use(express.json());
 //app.use(morgan(':method :url :status :response-time ms'));
@@ -19,7 +20,7 @@ app.use(express.json());
 debugMiddlewares(app);
 
 app.use(
-   '/api/v1',
+   '/v1',
    //expressjwt({
    //   secret: 'Your-Secreat-Here',
    //   algorithms: ['HS256'],

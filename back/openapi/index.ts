@@ -1,38 +1,51 @@
-import {
-   OpenApiGeneratorV3,
-   OpenAPIRegistry,
-} from '@asteasolutions/zod-to-openapi';
-
-import submissionDef from './submission.def.ts';
+import { OpenApiGeneratorV3, OpenAPIRegistry } from '@asteasolutions/zod-to-openapi';
+import registerComponents from './components.ts';
+import expressJSDocSwagger from 'express-jsdoc-swagger';
 
 export const registry = new OpenAPIRegistry();
-//const bearerAuth = registry.registerComponent(
-//   'securitySchemes',
-//   'bearerAuth',
-//   {
-//      type: 'http',
-//      scheme: 'bearer',
-//      bearerFormat: 'JWT',
-//   },
-//);
 
-submissionDef(registry, '/submission');
+export const options = {
+   openapi: '3.0.0',
+   info: {
+      title: 'Coop Salary Board API',
+      version: '1.0.0',
+      description: 'API for collection coop salaries anonymously',
+   },
+   servers: [
+      {
+         url: 'http://localhost:{port}/{basePath}',
+         description: 'The Development API server',
+         'variables': {
+            port: {
+               default: '3000',
+            },
+            basePath: {
+               default: 'v1',
+            },
+         },
+      },
+   ],
+};
+
+//Auth Schemas
+registry.registerComponent(
+   'securitySchemes',
+   'bearerAuth',
+   {
+      type: 'http',
+      scheme: 'bearer',
+      bearerFormat: 'JWT',
+   },
+);
+
+registerComponents(registry);
 
 export const generateOpenAPI = (registry: OpenAPIRegistry) => {
    const generator = new OpenApiGeneratorV3(registry.definitions);
 
-   return generator.generateDocument({
-      openapi: '3.0.0',
-      info: {
-         title: 'Book Management API',
-         version: '1.0.0',
-         description: 'API for managing books and authors',
-      },
-      servers: [{ url: 'http://localhost:3000/api' }],
-   });
+   return generator.generateDocument(options);
 };
 
-await Deno.writeTextFile(
-   Deno.args[0],
-   JSON.stringify(generateOpenAPI(registry), null, 3),
-);
+//await Deno.writeTextFile(
+//   Deno.args[0],
+//);

@@ -7,23 +7,23 @@ import { useMutation } from "@tanstack/react-query";
 import { StoreProvider, useUserStore } from '../../hooks/useUserContext';
 
 const AuthValidator = ({ children }: { children: React.ReactNode }) => {
-  const { user, setUser, clearUser } = useUserStore();
-  const validateMutation = useMutation(postAuthMeMutation());
-
-  useEffect(() => {
-    if (!user) {
-      validateMutation.mutateAsync({ throwOnError: true })
-        .then((response) => {
-          setUser(response);
-        })
-        .catch((error) => {
-          console.error(error);
-          clearUser();
-          clearToken();
-          Navigate({ to: "/login", replace: true })
-        })
-    }
-  }, []);
+  //const { user, setUser, clearUser } = useUserStore();
+  //const validateMutation = useMutation(postAuthMeMutation());
+  //
+  //useEffect(() => {
+  //  if (!user) {
+  //    validateMutation.mutateAsync({ throwOnError: true })
+  //      .then((response) => {
+  //        setUser(response);
+  //      })
+  //      .catch((error) => {
+  //        console.error(error);
+  //        clearUser();
+  //        clearToken();
+  //        Navigate({ to: "/login", replace: true })
+  //      })
+  //  }
+  //}, []);
 
   return <>{children}</>;
 };

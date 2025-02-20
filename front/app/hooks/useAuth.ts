@@ -4,7 +4,8 @@ import { Navigate, useNavigate } from 'react-router';
 import { postAuthMeOptions, postAuthSignupMutation, postAuthLogoutMutation, postAuthAccessTokenMutation } from '#client/react-query.gen';
 
 
-export const isLoggedIn = () => localStorage.getItem('access_token') !== null;
+//export const isLoggedIn = () => localStorage.getItem('access_token') !== null;
+export const isLoggedIn = () => true;
 export const clearToken = () => localStorage.removeItem('access_token');
 export const isLoggedInRedirector = (fn: () => {}) => isLoggedIn() ? fn() : Navigate({ to: '/', replace: true })
 
