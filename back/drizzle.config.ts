@@ -8,7 +8,7 @@ export default defineConfig({
       schema: 'public',
    },
    dbCredentials: {
-      host: Deno.env.get('POSTGRES_SERVER'),
+      host: 'localhost' || Deno.env.get('POSTGRES_SERVER'),
       database: Deno.env.get('POSTGRES_DB'),
       password: Deno.env.get('POSTGRES_PASSWORD'),
       port: Number(Deno.env.get('POSTGRES_PORT')),
