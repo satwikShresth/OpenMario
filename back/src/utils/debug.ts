@@ -2,7 +2,30 @@
 import { Request } from 'express';
 import morgan from 'morgan';
 import expressJSDocSwagger from 'express-jsdoc-swagger';
-import { generateOpenAPI, options, registry } from '../../openapi/index.ts';
+import generateOpenAPIComponents from '#/utils/openapi.ts';
+
+const options = {
+   openapi: '3.0.0',
+   info: {
+      title: 'Coop Salary Board API',
+      version: '1.0.0',
+      description: 'API for collection coop salaries anonymously',
+   },
+   servers: [
+      {
+         url: 'http://localhost:{port}/{basePath}',
+         description: 'The Development API server',
+         'variables': {
+            port: {
+               default: '3000',
+            },
+            basePath: {
+               default: 'v1',
+            },
+         },
+      },
+   ],
+};
 
 export const debugMiddlewares = (app: any) => {
    morgan.token('body', (req: Request) => JSON.stringify(req.body));
@@ -13,6 +36,7 @@ export const debugMiddlewares = (app: any) => {
       ),
    );
 
+   //@ts-ignore: Because this libarary does not have good typiung support
    expressJSDocSwagger(app)({
       ...options,
       baseDir: Deno.cwd(),
@@ -21,7 +45,5 @@ export const debugMiddlewares = (app: any) => {
       exposeSwaggerUI: true,
       exposeApiDocs: true,
       apiDocsPath: '/v1/openapi.json',
-   }, generateOpenAPI(registry));
-
-   //app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(OPENAPI_SPECS));
+   }, generateOpenAPIComponents(options));
 };

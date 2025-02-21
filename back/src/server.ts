@@ -1,13 +1,8 @@
 import express, { NextFunction, Request, Response } from 'express';
-//import { expressjwt, Request as JWTRequest } from 'express-jwt';
 import { debugMiddlewares } from '#utils';
 //import morgan from 'morgan';
 //import { expressjwt } from 'express-jwt';
 import routes from '#routes';
-import { generateOpenAPI, options, registry } from '../openapi/index.ts';
-//import { db } from '#db';
-//import { revoked } from '#/db/schema.ts';
-//import { eq } from 'drizzle-orm';
 
 const port = 3000;
 const host = '0.0.0.0';

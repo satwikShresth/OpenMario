@@ -1,7 +1,20 @@
+import { OpenApiGeneratorV3, OpenAPIRegistry } from '@asteasolutions/zod-to-openapi';
 import * as schemas from '#models';
-import { OpenAPIRegistry } from '@asteasolutions/zod-to-openapi';
 
-export default (registry: OpenAPIRegistry) => {
+export default (options: any) => {
+   const registry = new OpenAPIRegistry();
+
+   //Auth Schemas
+   registry.registerComponent(
+      'securitySchemes',
+      'bearerAuth',
+      {
+         type: 'http',
+         scheme: 'bearer',
+         bearerFormat: 'JWT',
+      },
+   );
+
    registry.register('JwtPayload', schemas.JwtPayload);
 
    //enums Schemas
@@ -43,4 +56,8 @@ export default (registry: OpenAPIRegistry) => {
 
    //Submission Responses Schemas
    registry.register('SubmissionResponse', schemas.SubmissionResponseSchema);
+
+   const generator = new OpenApiGeneratorV3(registry.definitions);
+
+   return generator.generateDocument(options);
 };
