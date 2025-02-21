@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { extendZodWithOpenApi } from '@asteasolutions/zod-to-openapi';
-import { and, eq, like } from 'drizzle-orm';
+import { and, Column, eq, like, SQL, sql } from 'drizzle-orm';
 import * as undergrad from '#/db/undergraduate.data.ts';
 import * as grad from '#/db/graduate.data.ts';
 import { company, coop_cycle, coop_year, location, position, program_level, submission } from '#db';
@@ -42,37 +42,69 @@ export const parseOptionalInt = (name: string, min: number, max?: number) =>
       .max(max ?? Infinity, max ? `${name} cannot exceed ${max}` : '')
       .optional();
 
+const ensureArray = <T extends z.ZodTypeAny>(schema: T) =>
+   z.preprocess(
+      (val) => (Array.isArray(val) ? val : [val]),
+      z.array(schema),
+   );
+
 export const SubmissionQuerySchema = z.object({
-   company: name(z.string()).optional(),
-   position: name(z.string()).optional(),
-   location: z.string().regex(/^[A-Za-z\s.-]+,\s*[A-Z]{2}$/).optional(),
-   year: z.preprocess((year) => Number(year), year(z.number())).optional(),
-   coop_year: z.enum(coop_year).optional(),
-   coop_cycle: z.enum(coop_cycle).optional(),
+   company: ensureArray(name(z.string())).optional(),
+   position: ensureArray(name(z.string())).optional(),
+   location: ensureArray(z.string().regex(/^[A-Za-z\s.-]+,\s*[A-Z]{2}$/)).optional(),
+   year: ensureArray(z.preprocess((year) => Number(year), z.number())).optional(),
+   coop_year: ensureArray(z.enum(coop_year)).optional(),
+   coop_cycle: ensureArray(z.enum(coop_cycle)).optional(),
    program_level: z.enum(program_level).optional(),
    skip: parseOptionalInt('Skip', 0),
    limit: parseOptionalInt('Limit', 1, 1000),
 });
+export const querySQL = (column: Column, matchValue?: string) =>
+   matchValue &&
+   sql`(
+    to_tsvector('english', ${column}) @@ to_tsquery('english', ${
+      matchValue
+         .trim()
+         .split(/\s+/)
+         .map((term) => `${term}:*`)
+         .join(' & ')
+   })
+    OR ${column} % ${matchValue.trim()}
+    OR ${column} ILIKE ${matchValue.trim().toLowerCase().split('').join('%') + '%'}
+  )`;
+
+export const orderSQL = (column: Column, matchValue?: string) =>
+   matchValue &&
+   sql`(
+    (CASE WHEN lower(${column}) ILIKE ${
+      matchValue
+         .trim()
+         .toLowerCase()
+         .split('')
+         .reduce((pattern, char, idx) => idx === 0 ? char + '%' : pattern + ' ' + char + '%', '')
+   } THEN 1 ELSE 0 END) * 10000
+    + similarity(${column}, ${matchValue.trim()})
+  ) DESC`;
 
 export const SubmissionQuery = SubmissionQuerySchema
    .transform(
-      (query) => ({
-         queries: [
-            query?.company ? like(company.name, `%${query.company.trim()}%`) : undefined,
-            query?.position ? like(position.name, `%${query.position.trim()}%`) : undefined,
-            query?.location
-               ? and(
-                  like(location.city, `%${query.location.split(',')[0].trim()}%`),
-                  like(location.state, `%${query.location.split(',')[1].trim()}%`),
+      (query): { query?: (SQL | undefined | string)[]; skip?: number; limit?: number } => ({
+         query: [
+            ...(query?.company?.map((company_) => eq(company.name, company_)) || []),
+            ...(query?.position?.map((position_) => querySQL(position.name, position_)) || []),
+            ...(query?.location?.map((loc) =>
+               and(
+                  eq(location.city, loc.split(', ')[0]),
+                  eq(location.state_code, loc.split(', ')[1]),
                )
-               : undefined,
-            query?.year ? eq(submission.year, query?.year!) : undefined,
-            query?.coop_year ? eq(submission.coop_year, query?.coop_year!) : undefined,
-            query?.coop_cycle ? eq(submission.coop_cycle, query?.coop_cycle!) : undefined,
-            query?.program_level ? eq(submission.program_level, query?.program_level!) : undefined,
+            ) || []),
+            ...(query?.year?.map((year) => eq(submission.year, year)) || []),
+            ...(query?.coop_year?.map((coop_year) => eq(submission.coop_year, coop_year)) || []),
+            ...(query?.coop_cycle?.map((coop_cycle) => eq(submission.coop_cycle, coop_cycle)) || []),
+            query?.program_level && eq(submission.program_level, query.program_level),
          ],
-         skip: query?.skip!,
-         limit: query?.limit!,
+         skip: query?.skip ?? 0,
+         limit: query?.limit ?? 10,
       }),
    );
 

@@ -54,7 +54,7 @@
     "dev": {
       "dependencies": ["dev:db:migrate:push", "dev:seed","watch"]
     },
-    "test": "deno test -A",
+    "test": "deno test -A --env-file=../.env",
     "gen:openapi": "deno -A ./openapi/index.ts ../openapi.json",
     "db:migrate": "deno run  -A npm:drizzle-kit migrate ",
     "db:migrate:generate": "deno run -A npm:drizzle-kit generate --name ",

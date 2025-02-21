@@ -10,7 +10,7 @@ describe('Basic Express Middleware Tests:', () => {
          expect(error.response.status).toBe(404);
          expect(error.response.data).toHaveProperty('message');
          expect(error.response.data.message).toContain(
-            'Not Found: /api/v1/non-existent-route',
+            'Not Found: /v1/non-existent-route',
          );
       }
    });

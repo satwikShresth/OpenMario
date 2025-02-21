@@ -19,12 +19,12 @@ export default () => {
     * GET /submissions
     * @summary Retrieve co-op submission records with pagination and filtering
     * @tags Submissions
-    * @param {string} company.query - Query prarmer for filtering submission using company
-    * @param {string} position.query - Query prarmer for filtering submission using position
-    * @param {string} location.query - Query prarmer for filtering submission using location
-    * @param {string} year.query - Query prarmer for filtering submission using year
-    * @param {string} coop_year.query - Query prarmer for filtering submission using coop_year
-    * @param {string} coop_cycle.query - Query prarmer for filtering submission using coop_cycle
+    * @param {array<string>} company.query - Query prarmer for filtering submission using company
+    * @param {array<string>} position.query - Query prarmer for filtering submission using position
+    * @param {array<string>} location.query - Query prarmer for filtering submission using location
+    * @param {array<string>} year.query - Query prarmer for filtering submission using year
+    * @param {array<string>} coop_year.query - Query prarmer for filtering submission using coop_year
+    * @param {array<string>} coop_cycle.query - Query prarmer for filtering submission using coop_cycle
     * @param {string} program_level.query - Query prarmer for filtering submission using program_level
     * @param {string} skip.query - Query prarmer for offeset
     * @param {string} limit.query - Query prarmer for limit
@@ -58,9 +58,9 @@ export default () => {
     */
    router.route('/')
       .get(
-         zodQueryValidator(SubmissionQuerySchema),
+         zodQueryValidator(SubmissionQuery),
          async (req: RequestParamsId, res: Response) => {
-            const { skip = 0, limit = 100, queries } = req?.validated?.query as SubmissionQuery;
+            const { skip, limit, query } = req?.validated?.query as SubmissionQuery;
             return await db
                .select({
                   id: submission.id,
@@ -82,9 +82,9 @@ export default () => {
                .innerJoin(position, eq(submission.position_id, position.id))
                .innerJoin(location, eq(submission.location_id, location.id))
                .innerJoin(company, eq(position.company_id, company.id))
-               .where(and(...queries))
-               .offset(skip)
-               .limit(limit)
+               .where(and(...(query?.filter(Boolean) || [])))
+               .offset(skip!)
+               .limit(limit!)
                .then((data) => res.status(200).json({ skip, limit, data }))
                .catch(({ message }) => res.status(409).json({ message }));
          },

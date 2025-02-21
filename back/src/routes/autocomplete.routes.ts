@@ -1,42 +1,15 @@
 import { Request, Response, Router } from 'express';
-import { and, Column, eq, or, sql } from 'drizzle-orm';
+import { and, eq, or, sql } from 'drizzle-orm';
 import { zodQueryValidator } from '#/middleware/validation.middleware.ts';
 import { company, db, location, position } from '#db';
 import { z } from 'zod';
-import { RequestParamsId } from '#models';
+import { orderSQL, querySQL, RequestParamsId } from '#models';
 
 const queryStringPreprocess = () =>
    z.preprocess(
       (name) => String(name).trim().replace(/[^a-zA-Z\s]/g, ''),
       z.string({ required_error: 'Need to have a query' }).min(3, 'Should have minimum 3 characters'),
    );
-
-const querySQL = (column: Column, matchValue?: string) =>
-   matchValue &&
-   sql`(
-    to_tsvector('english', ${column}) @@ to_tsquery('english', ${
-      matchValue
-         .trim()
-         .split(/\s+/)
-         .map((term) => `${term}:*`)
-         .join(' & ')
-   })
-    OR ${column} % ${matchValue.trim()}
-    OR ${column} ILIKE ${matchValue.trim().toLowerCase().split('').join('%') + '%'}
-  )`;
-
-const orderSQL = (column: Column, matchValue?: string) =>
-   matchValue &&
-   sql`(
-    (CASE WHEN lower(${column}) ILIKE ${
-      matchValue
-         .trim()
-         .toLowerCase()
-         .split('')
-         .reduce((pattern, char, idx) => idx === 0 ? char + '%' : pattern + ' ' + char + '%', '')
-   } THEN 1 ELSE 0 END) * 10000
-    + similarity(${column}, ${matchValue.trim()})
-  ) DESC`;
 
 export default () => {
    const router = Router();
@@ -79,7 +52,7 @@ export default () => {
             .where(query)
             .orderBy(order)
             .then((results) => res.status(200).json(results.map((item) => item.name)))
-            .catch(({ message }) => res.staus(409).json({ message }));
+            .catch(({ message }) => res.status(409).json({ message }));
       },
    );
 
