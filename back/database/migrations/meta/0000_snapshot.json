@@ -1,5 +1,5 @@
 {
-  "id": "09e8ffc4-f350-44eb-8052-9275fa009c0e",
+  "id": "f6864e37-137e-44c9-aae9-eb971acac187",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -227,13 +227,6 @@
       "name": "profile_major",
       "schema": "",
       "columns": {
-        "id": {
-          "name": "id",
-          "type": "uuid",
-          "primaryKey": true,
-          "notNull": true,
-          "default": "gen_random_uuid()"
-        },
         "user_id": {
           "name": "user_id",
           "type": "uuid",
@@ -276,17 +269,16 @@
           "onUpdate": "no action"
         }
       },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {
-        "profile_major_user_id_major_id_unique": {
-          "name": "profile_major_user_id_major_id_unique",
-          "nullsNotDistinct": false,
+      "compositePrimaryKeys": {
+        "profile_major_user_id_major_id_pk": {
+          "name": "profile_major_user_id_major_id_pk",
           "columns": [
             "user_id",
             "major_id"
           ]
         }
       },
+      "uniqueConstraints": {},
       "policies": {},
       "checkConstraints": {},
       "isRLSEnabled": false
@@ -295,13 +287,6 @@
       "name": "profile_minor",
       "schema": "",
       "columns": {
-        "id": {
-          "name": "id",
-          "type": "uuid",
-          "primaryKey": true,
-          "notNull": true,
-          "default": "gen_random_uuid()"
-        },
         "user_id": {
           "name": "user_id",
           "type": "uuid",
@@ -344,17 +329,16 @@
           "onUpdate": "no action"
         }
       },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {
-        "profile_minor_user_id_minor_id_unique": {
-          "name": "profile_minor_user_id_minor_id_unique",
-          "nullsNotDistinct": false,
+      "compositePrimaryKeys": {
+        "profile_minor_user_id_minor_id_pk": {
+          "name": "profile_minor_user_id_minor_id_pk",
           "columns": [
             "user_id",
             "minor_id"
           ]
         }
       },
+      "uniqueConstraints": {},
       "policies": {},
       "checkConstraints": {},
       "isRLSEnabled": false

@@ -355,10 +355,6 @@
       "ProfileMajor": {
         "type": "object",
         "properties": {
-          "id": {
-            "type": "string",
-            "format": "uuid"
-          },
           "user_id": {
             "type": "string",
             "format": "uuid"
@@ -369,7 +365,6 @@
           }
         },
         "required": [
-          "id",
           "user_id",
           "major_id"
         ]
@@ -377,10 +372,6 @@
       "ProfileMajorInsert": {
         "type": "object",
         "properties": {
-          "id": {
-            "type": "string",
-            "format": "uuid"
-          },
           "user_id": {
             "type": "string",
             "format": "uuid"
@@ -398,10 +389,6 @@
       "ProfileMajorUpdate": {
         "type": "object",
         "properties": {
-          "id": {
-            "type": "string",
-            "format": "uuid"
-          },
           "user_id": {
             "type": "string",
             "format": "uuid"
@@ -415,10 +402,6 @@
       "ProfileMinor": {
         "type": "object",
         "properties": {
-          "id": {
-            "type": "string",
-            "format": "uuid"
-          },
           "user_id": {
             "type": "string",
             "format": "uuid"
@@ -429,7 +412,6 @@
           }
         },
         "required": [
-          "id",
           "user_id",
           "minor_id"
         ]
@@ -437,10 +419,6 @@
       "ProfileMinorInsert": {
         "type": "object",
         "properties": {
-          "id": {
-            "type": "string",
-            "format": "uuid"
-          },
           "user_id": {
             "type": "string",
             "format": "uuid"
@@ -458,10 +436,6 @@
       "ProfileMinorUpdate": {
         "type": "object",
         "properties": {
-          "id": {
-            "type": "string",
-            "format": "uuid"
-          },
           "user_id": {
             "type": "string",
             "format": "uuid"
@@ -1430,41 +1404,60 @@
         "type": "object",
         "properties": {
           "company": {
-            "type": "string",
-            "minLength": 3,
-            "maxLength": 100,
-            "pattern": "^[a-zA-Z\\s\\-'\\p{L}\\p{M}]+$"
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 3,
+              "maxLength": 100,
+              "pattern": "^[a-zA-Z\\s\\-'\\p{L}\\p{M}]+$"
+            }
           },
           "position": {
-            "type": "string",
-            "minLength": 3,
-            "maxLength": 100,
-            "pattern": "^[a-zA-Z\\s\\-'\\p{L}\\p{M}]+$"
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 3,
+              "maxLength": 100,
+              "pattern": "^[a-zA-Z\\s\\-'\\p{L}\\p{M}]+$"
+            }
           },
           "location": {
-            "type": "string",
-            "pattern": "^[A-Za-z\\s.-]+,\\s*[A-Z]{2}$"
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "^[A-Za-z\\s.-]+,\\s*[A-Z]{2}$"
+            }
           },
           "year": {
-            "type": "integer",
-            "minimum": 2005
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "type": "number",
+              "nullable": true
+            }
           },
           "coop_year": {
-            "type": "string",
-            "enum": [
-              "1st",
-              "2nd",
-              "3rd"
-            ]
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "1st",
+                "2nd",
+                "3rd"
+              ]
+            }
           },
           "coop_cycle": {
-            "type": "string",
-            "enum": [
-              "Fall/Winter",
-              "Winter/Spring",
-              "Spring/Summer",
-              "Summer/Fall"
-            ]
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "Fall/Winter",
+                "Winter/Spring",
+                "Spring/Summer",
+                "Summer/Fall"
+              ]
+            }
           },
           "program_level": {
             "type": "string",
@@ -1477,7 +1470,6 @@
             "type": "integer",
             "nullable": true,
             "minimum": 0,
-            "maximum": null
           },
           "limit": {
             "type": "integer",
@@ -1550,16 +1542,6 @@
         ]
       }
     },
-    "securitySchemes": {
-      "bearerAuth": {
-        "type": "http",
-        "scheme": "bearer",
-        "bearerFormat": "JWT"
-      }
-    },
-    "parameters": {
-
-    }
   },
   "paths": {
     "/autocomplete/company": {
@@ -1840,7 +1822,10 @@
             "required": false,
             "deprecated": false,
             "schema": {
-              "type": "string"
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
             }
           },
           {
@@ -1850,7 +1835,10 @@
             "required": false,
             "deprecated": false,
             "schema": {
-              "type": "string"
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
             }
           },
           {
@@ -1860,7 +1848,10 @@
             "required": false,
             "deprecated": false,
             "schema": {
-              "type": "string"
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
             }
           },
           {
@@ -1870,7 +1861,10 @@
             "required": false,
             "deprecated": false,
             "schema": {
-              "type": "string"
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
             }
           },
           {
@@ -1880,7 +1874,10 @@
             "required": false,
             "deprecated": false,
             "schema": {
-              "type": "string"
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
             }
           },
           {
@@ -1890,7 +1887,10 @@
             "required": false,
             "deprecated": false,
             "schema": {
-              "type": "string"
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
             }
           },
           {

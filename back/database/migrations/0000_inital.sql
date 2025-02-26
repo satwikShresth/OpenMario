@@ -37,17 +37,15 @@ CREATE TABLE "position" (
 );
 --> statement-breakpoint
 CREATE TABLE "profile_major" (
-	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"user_id" uuid NOT NULL,
 	"major_id" uuid NOT NULL,
-	CONSTRAINT "profile_major_user_id_major_id_unique" UNIQUE("user_id","major_id")
+	CONSTRAINT "profile_major_user_id_major_id_pk" PRIMARY KEY("user_id","major_id")
 );
 --> statement-breakpoint
 CREATE TABLE "profile_minor" (
-	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"user_id" uuid NOT NULL,
 	"minor_id" uuid NOT NULL,
-	CONSTRAINT "profile_minor_user_id_minor_id_unique" UNIQUE("user_id","minor_id")
+	CONSTRAINT "profile_minor_user_id_minor_id_pk" PRIMARY KEY("user_id","minor_id")
 );
 --> statement-breakpoint
 CREATE TABLE "submission" (

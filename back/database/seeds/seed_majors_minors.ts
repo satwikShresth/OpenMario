@@ -1,5 +1,5 @@
 import { join } from "jsr:@std/path";
-import { program_level,major, minor  } from "../../src/db/schema.ts";
+import { major, minor  } from "../../src/db/schema.ts";
 import { db } from "../../src/db/index.ts";
 
 async function parseFile(filename: string): Promise<string[]> {

@@ -7,13 +7,26 @@ export default (options: any) => {
    //Auth Schemas
    registry.registerComponent(
       'securitySchemes',
-      'bearerAuth',
+      'OAuth2Password',
       {
-         type: 'http',
-         scheme: 'bearer',
-         bearerFormat: 'JWT',
+         type: 'oauth2',
+         description: 'Using OAuth2 for password validation flow of generating jwt',
+         flows: {
+            password: {
+               tokenUrl: '/v1/token',
+            },
+         },
       },
    );
+   //
+   //components:
+   //  securitySchemes:
+   //    oAuth2Password:
+   //      type: oauth2
+   //      description: See https://developers.getbase.com/docs/rest/articles/oauth2/requests
+   //      flows:
+   //        password:
+   //          tokenUrl: https://api.getbase.com/oauth2/token
 
    registry.register('JwtPayload', schemas.JwtPayload);
 

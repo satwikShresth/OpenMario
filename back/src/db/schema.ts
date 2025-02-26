@@ -1,4 +1,4 @@
-import { boolean, integer, pgEnum, pgTable, timestamp, unique, uuid, varchar } from 'drizzle-orm/pg-core';
+import { boolean, integer, pgEnum, pgTable, primaryKey, timestamp, unique, uuid, varchar } from 'drizzle-orm/pg-core';
 
 export const program_level = ['Undergraduate', 'Graduate'] as const;
 export const coop_cycle = ['Fall/Winter', 'Winter/Spring', 'Spring/Summer', 'Summer/Fall'] as const;
@@ -73,24 +73,22 @@ export const users = pgTable('user', {
 export const profile_major = pgTable(
    'profile_major',
    {
-      id: uuid().defaultRandom().primaryKey(),
       user_id: uuid().notNull().references(() => users.id, { onDelete: 'cascade' }),
       major_id: uuid().notNull().references(() => major.id, { onDelete: 'cascade' }),
    },
    (table) => [
-      unique().on(table.user_id, table.major_id),
+      primaryKey({ columns: [table.user_id, table.major_id] }),
    ],
 );
 
 export const profile_minor = pgTable(
    'profile_minor',
    {
-      id: uuid().defaultRandom().primaryKey(),
       user_id: uuid().notNull().references(() => users.id, { onDelete: 'cascade' }),
       minor_id: uuid().notNull().references(() => minor.id, { onDelete: 'cascade' }),
    },
    (table) => [
-      unique().on(table.user_id, table.minor_id),
+      primaryKey({ columns: [table.user_id, table.minor_id] }),
    ],
 );
 

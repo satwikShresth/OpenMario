@@ -1,10 +1,10 @@
 import { Navigate, Outlet } from "react-router";
 import Nav from "./nav";
-import { isLoggedIn, clearToken } from '../../hooks/useAuth';
+//import { isLoggedIn, clearToken } from '../../hooks/useAuth';
 import React, { useEffect, Suspense } from "react";
-import { postAuthMeMutation } from "#client/react-query.gen";
+//import { postAuthMeMutation } from "#client/react-query.gen";
 import { useMutation } from "@tanstack/react-query";
-import { StoreProvider, useUserStore } from '../../hooks/useUserContext';
+//import { StoreProvider, useUserStore } from '../../hooks/useUserContext';
 
 const AuthValidator = ({ children }: { children: React.ReactNode }) => {
   //const { user, setUser, clearUser } = useUserStore();
@@ -29,26 +29,29 @@ const AuthValidator = ({ children }: { children: React.ReactNode }) => {
 };
 
 export const ProtectRoute = ({ children }: { children: React.ReactNode }) =>
-  isLoggedIn()
-    ? (
-      <StoreProvider>
-        <Suspense fallback={<div>Loading...</div>}>
-          <AuthValidator>
-            {children}
-          </AuthValidator>
-        </Suspense>
-      </StoreProvider>
-    )
-    : (
-      <StoreProvider>
+  //isLoggedIn()
+  //  ? (
+  //    <StoreProvider>
+  //      <Suspense fallback={<div>Loading...</div>}>
+  //        <AuthValidator>
+  //          {children}
+  //        </AuthValidator>
+  //      </Suspense>
+  //    </StoreProvider>
+  //  )
+  //  : 
+    (
+      //<StoreProvider>
         {children}
-      </StoreProvider>
+      //</StoreProvider>
     )
 
 
 export default () => (
-  <ProtectRoute>
+  //<ProtectRoute>
+  <>
     <Nav />
     <Outlet />
-  </ProtectRoute>
+  </>
+  //</ProtectRoute>
 )

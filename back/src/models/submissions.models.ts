@@ -88,21 +88,16 @@ export const orderSQL = (column: Column, matchValue?: string) =>
 
 export const SubmissionQuery = SubmissionQuerySchema
    .transform(
-      (query): { query?: (SQL | undefined | string)[]; skip?: number; limit?: number } => ({
+      (query): { query?: SQL[]; skip?: number; limit?: number } => ({
          query: [
             ...(query?.company?.map((company_) => eq(company.name, company_)) || []),
-            ...(query?.position?.map((position_) => querySQL(position.name, position_)) || []),
-            ...(query?.location?.map((loc) =>
-               and(
-                  eq(location.city, loc.split(', ')[0]),
-                  eq(location.state_code, loc.split(', ')[1]),
-               )
-            ) || []),
+            ...(query?.position?.map((position_) => querySQL(position.name, position_)).filter((q): q is SQL => !!q) || []),
+            ...(query?.location?.map((loc) => and(eq(location.city, loc.split(', ')[0]), eq(location.state_code, loc.split(', ')[1]))) || []),
             ...(query?.year?.map((year) => eq(submission.year, year)) || []),
             ...(query?.coop_year?.map((coop_year) => eq(submission.coop_year, coop_year)) || []),
             ...(query?.coop_cycle?.map((coop_cycle) => eq(submission.coop_cycle, coop_cycle)) || []),
-            query?.program_level && eq(submission.program_level, query.program_level),
-         ],
+            ...(query?.program_level ? [eq(submission.program_level, query.program_level)] : []),
+         ].filter((condition): condition is SQL => !!condition),
          skip: query?.skip ?? 0,
          limit: query?.limit ?? 10,
       }),

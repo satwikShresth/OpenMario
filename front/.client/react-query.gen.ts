@@ -2,8 +2,8 @@
 
 import type { Options } from '@hey-api/client-axios';
 import { queryOptions, type UseMutationOptions } from '@tanstack/react-query';
-import type { GetAutocompleteCompanyData, GetAutocompletePositionData, GetAutocompleteLocationData, GetSubmissionsData, PostSubmissionsData, PostSubmissionsError, PostSubmissionsResponse } from '../types.gen';
-import { SearchService, SubmissionsService, client } from '../sdk.gen';
+import type { GetAutocompleteCompanyData, GetAutocompletePositionData, GetAutocompleteLocationData, GetSubmissionsData, PostSubmissionsData, PostSubmissionsError, PostSubmissionsResponse } from './types.gen';
+import { SearchService, SubmissionsService, client } from './sdk.gen';
 import type { AxiosError } from 'axios';
 
 type QueryKey<TOptions extends Options> = [

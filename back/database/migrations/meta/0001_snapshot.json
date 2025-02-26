@@ -1,6 +1,6 @@
 {
-  "id": "13332ed7-7b17-4c67-a27e-bfb406fdc3d2",
-  "prevId": "09e8ffc4-f350-44eb-8052-9275fa009c0e",
+  "id": "f010390a-42dc-406b-b672-489b14bcd186",
+  "prevId": "f6864e37-137e-44c9-aae9-eb971acac187",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -227,13 +227,6 @@
       "name": "profile_major",
       "schema": "",
       "columns": {
-        "id": {
-          "name": "id",
-          "type": "uuid",
-          "primaryKey": true,
-          "notNull": true,
-          "default": "gen_random_uuid()"
-        },
         "user_id": {
           "name": "user_id",
           "type": "uuid",
@@ -276,17 +269,16 @@
           "onDelete": "cascade"
         }
       },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {
-        "profile_major_user_id_major_id_unique": {
-          "name": "profile_major_user_id_major_id_unique",
+      "compositePrimaryKeys": {
+        "profile_major_user_id_major_id_pk": {
+          "name": "profile_major_user_id_major_id_pk",
           "columns": [
             "user_id",
             "major_id"
-          ],
-          "nullsNotDistinct": false
+          ]
         }
       },
+      "uniqueConstraints": {},
       "policies": {},
       "checkConstraints": {},
       "isRLSEnabled": false
@@ -295,13 +287,6 @@
       "name": "profile_minor",
       "schema": "",
       "columns": {
-        "id": {
-          "name": "id",
-          "type": "uuid",
-          "primaryKey": true,
-          "notNull": true,
-          "default": "gen_random_uuid()"
-        },
         "user_id": {
           "name": "user_id",
           "type": "uuid",
@@ -344,17 +329,16 @@
           "onDelete": "cascade"
         }
       },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {
-        "profile_minor_user_id_minor_id_unique": {
-          "name": "profile_minor_user_id_minor_id_unique",
+      "compositePrimaryKeys": {
+        "profile_minor_user_id_minor_id_pk": {
+          "name": "profile_minor_user_id_minor_id_pk",
           "columns": [
             "user_id",
             "minor_id"
-          ],
-          "nullsNotDistinct": false
+          ]
         }
       },
+      "uniqueConstraints": {},
       "policies": {},
       "checkConstraints": {},
       "isRLSEnabled": false

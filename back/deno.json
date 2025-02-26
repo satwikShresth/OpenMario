@@ -45,6 +45,7 @@
   "tasks": {
     "db:migrate": "deno run --env-file=../.env -A npm:drizzle-kit migrate",
     "db:migrate:generate": "deno run --env-file=../.env -A npm:drizzle-kit generate --name ",
+    "db:migrate:generate:custom": "deno run --env-file=../.env -A npm:drizzle-kit generate --custom --name=",
     "db:migrate:push": "deno run -A npm:drizzle-kit up --force",
     "start": "deno run -A src/server.ts",
     "dev:db:migrate:push": "deno run --env-file=../.env -A npm:drizzle-kit migrate",
@@ -56,9 +57,6 @@
     },
     "test": "deno test -A --env-file=../.env",
     "gen:openapi": "deno -A ./openapi/index.ts ../openapi.json",
-    "db:migrate": "deno run  -A npm:drizzle-kit migrate ",
-    "db:migrate:generate": "deno run -A npm:drizzle-kit generate --name ",
-    "db:migrate:push": "deno run -A npm:drizzle-kit push --force",
     "db:seed": "deno run -A ./database/seeds/seed.ts",
     "db:studio": "deno run --env-file=../.env -A npm:drizzle-kit studio",
     "format": "deno fmt --watch src"
