@@ -29,22 +29,22 @@ const AuthValidator = ({ children }: { children: React.ReactNode }) => {
 };
 
 export const ProtectRoute = ({ children }: { children: React.ReactNode }) =>
-  //isLoggedIn()
-  //  ? (
-  //    <StoreProvider>
-  //      <Suspense fallback={<div>Loading...</div>}>
-  //        <AuthValidator>
-  //          {children}
-  //        </AuthValidator>
-  //      </Suspense>
-  //    </StoreProvider>
-  //  )
-  //  : 
-    (
-      //<StoreProvider>
-        {children}
-      //</StoreProvider>
-    )
+//isLoggedIn()
+//  ? (
+//    <StoreProvider>
+//      <Suspense fallback={<div>Loading...</div>}>
+//        <AuthValidator>
+//          {children}
+//        </AuthValidator>
+//      </Suspense>
+//    </StoreProvider>
+//  )
+//  : 
+(
+  //<StoreProvider>
+  { children }
+  //</StoreProvider>
+)
 
 
 export default () => (
@@ -53,5 +53,5 @@ export default () => (
     <Nav />
     <Outlet />
   </>
-  //</ProtectRoute>
+  //</ProtectRoute >
 )

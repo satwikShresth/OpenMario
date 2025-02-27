@@ -134,9 +134,9 @@ export type ProfileMinorUpdate = {
 };
 
 export type Submission = {
-    id: string;
-    position_id: string;
-    location_id: string;
+    company: string;
+    position: string;
+    location: string;
     program_level: 'Undergraduate' | 'Graduate';
     work_hours: number;
     coop_cycle: 'Fall/Winter' | 'Winter/Spring' | 'Spring/Summer' | 'Summer/Fall';
@@ -145,8 +145,6 @@ export type Submission = {
     compensation: number | null;
     other_compensation: string | null;
     details: string | null;
-    owner_id: string | null;
-    created_at: string;
 };
 
 export type SubmissionAggregate = {

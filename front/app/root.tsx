@@ -7,6 +7,7 @@ import {
   ScrollRestoration,
 } from "react-router";
 
+import AppThemeProvider from '#/utils/useThemeProvider';
 import type { Route } from "./+types/root";
 import stylesheet from "./app.css?url";
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
@@ -55,11 +56,13 @@ export function Layout({ children }: { children: React.ReactNode }) {
 
 export default function App() {
   return (
-    <QueryClientProvider client={queryClient}>
-      <SnackbarProvider maxSnack={3} anchorOrigin={{ vertical: "bottom", horizontal: "right" }}>
-        <Outlet />
-      </SnackbarProvider>
-    </QueryClientProvider>
+    <AppThemeProvider>
+      <QueryClientProvider client={queryClient}>
+        <SnackbarProvider maxSnack={3} anchorOrigin={{ vertical: "bottom", horizontal: "right" }}>
+          <Outlet />
+        </SnackbarProvider>
+      </QueryClientProvider>
+    </AppThemeProvider>
   );
 }
 

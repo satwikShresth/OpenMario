@@ -401,17 +401,14 @@ export const ProfileMinorUpdateSchema = {
 export const SubmissionSchema = {
     type: 'object',
     properties: {
-        id: {
+        company: {
             type: 'string',
-            format: 'uuid'
         },
-        position_id: {
+        position: {
             type: 'string',
-            format: 'uuid'
         },
-        location_id: {
+        location: {
             type: 'string',
-            format: 'uuid'
         },
         program_level: {
             type: 'string',
@@ -450,17 +447,9 @@ export const SubmissionSchema = {
             type: 'string',
             nullable: true,
             maxLength: 255
-        },
-        owner_id: {
-            type: 'string',
-            nullable: true,
-            format: 'uuid'
-        },
-        created_at: {
-            type: 'string'
         }
     },
-    required: ['id', 'position_id', 'location_id', 'program_level', 'work_hours', 'coop_cycle', 'coop_year', 'year', 'compensation', 'other_compensation', 'details', 'owner_id', 'created_at']
+    required: ['position', 'location', 'program_level', 'work_hours', 'coop_cycle', 'coop_year', 'year', 'compensation', 'other_compensation', 'details']
 } as const;
 
 export const SubmissionAggregateSchema = {

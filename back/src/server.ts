@@ -15,7 +15,7 @@ app.use(express.json());
 debugMiddlewares(app);
 
 app.use(
-   '/v1',
+   '/api/v1',
    //expressjwt({
    //   secret: 'Your-Secreat-Here',
    //   algorithms: ['HS256'],

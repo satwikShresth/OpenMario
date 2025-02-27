@@ -37,28 +37,28 @@ services:
   #   ports:
   #     - "4983:4983"
 
-  openmario-backend:
-    build:
-      context: ./back
-      dockerfile: dockerfile
-      platforms:
-        - linux/amd64
-    container_name: openmario-backend
-    entrypoint: ["/app/entrypoint.sh"]
-    env_file:
-      - .env
-    develop:
-      watch: 
-        - path: ./back/src/
-          target: /app/src/
-          action: sync
-    environment:
-      - ENV=development
-    depends_on:
-      db:
-       condition: service_healthy
-    ports:
-      - "3000:3000"
+  # openmario-backend:
+  #   build:
+  #     context: ./back
+  #     dockerfile: dockerfile
+  #     platforms:
+  #       - linux/amd64
+  #   container_name: openmario-backend
+  #   entrypoint: ["/app/entrypoint.sh"]
+  #   env_file:
+  #     - .env
+  #   develop:
+  #     watch: 
+  #       - path: ./back/src/
+  #         target: /app/src/
+  #         action: sync
+  #   environment:
+  #     - ENV=development
+  #   depends_on:
+  #     db:
+  #      condition: service_healthy
+  #   ports:
+  #     - "3000:3000"
 
   # frontend:
   #   image: ss5278/satwik-cs478-homework:frontend

@@ -3,7 +3,9 @@
 import { createClient, createConfig, type Options } from '@hey-api/client-axios';
 import type { GetAutocompleteCompanyData, GetAutocompleteCompanyResponse, GetAutocompleteCompanyError, GetAutocompletePositionData, GetAutocompletePositionResponse, GetAutocompletePositionError, GetAutocompleteLocationData, GetAutocompleteLocationResponse, GetAutocompleteLocationError, GetSubmissionsData, GetSubmissionsResponse, GetSubmissionsError, PostSubmissionsData, PostSubmissionsResponse, PostSubmissionsError } from './types.gen';
 
-export const client = createClient(createConfig());
+export const client = createClient(createConfig({
+    baseURL: "/api/v1",
+}));
 
 export class SearchService {
     /**
@@ -15,7 +17,7 @@ export class SearchService {
             ...options
         });
     }
-    
+
     /**
      * Search for positions within a specific company
      */
@@ -25,7 +27,7 @@ export class SearchService {
             ...options
         });
     }
-    
+
     /**
      * Search for locations with fuzzy matching across city, state, and state code
      */
@@ -35,7 +37,7 @@ export class SearchService {
             ...options
         });
     }
-    
+
 }
 
 export class SubmissionsService {
@@ -48,7 +50,7 @@ export class SubmissionsService {
             ...options
         });
     }
-    
+
     /**
      * Create new co-op submission(s)
      */
@@ -62,5 +64,5 @@ export class SubmissionsService {
             }
         });
     }
-    
+
 }
