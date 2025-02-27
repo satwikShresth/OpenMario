@@ -40,7 +40,7 @@ const SuperMarioNavbar = () => {
     neonYellow: '#FFFF00', // Neon yellow for dark mode
 
     // Common colors
-    black: '#000000',
+    black: '#121212',
     white: '#FFFFFF',
     gray: '#333333',
     darkBlue: '#1A1E3C' // Dark mode background
@@ -95,7 +95,7 @@ const SuperMarioNavbar = () => {
         boxShadow: mode === 'light'
           ? 'none'
           : '0 0 15px rgba(0, 238, 255, 0.3)',
-        borderBottom: `4px solid ${colors.black}`,
+        borderBottom: `5px solid ${colors.black}`,
         position: 'relative',
         zIndex: 1,
         overflow: 'visible',
@@ -169,7 +169,6 @@ const SuperMarioNavbar = () => {
                   fontSize: '0.95rem',
                   border: isActive(link.path) ? `3px solid ${colors.black}` : 'none',
                   borderBottom: isActive(link.path) ? 0 : 'none',
-                  position: 'relative',
                   top: isActive(link.path) ? 8 : 0,
                   zIndex: isActive(link.path) ? 2 : 1,
                   transition: 'all 0.2s ease-in-out',

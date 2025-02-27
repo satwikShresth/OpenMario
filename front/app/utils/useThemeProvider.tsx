@@ -19,11 +19,10 @@ export const useAppTheme = () => useContext(ThemeContext);
 
 // Enhanced Super Mario color palette with better harmony
 const marioColors = {
-  // Primary palette (more saturated but harmonious)
-  red: '#E60012',         // Mario red - slightly darker for better contrast
-  blue: '#009FE3',        // Sky blue - slightly muted for better harmony
-  green: '#1ABC3F',       // Pipe green - adjusted for balance
-  yellow: '#FFC300',      // Star/coin yellow - warmer for better pairing
+  red: '#E60012',         // Mario red - stays vibrant
+  blue: '#009FE3',        // Sky blue - maintains harmony
+  green: '#1ABC3F',       // Pipe green - balanced
+  yellow: '#FFC300',      // Star/coin yellow - warm and inviting
 
   // Secondary palette
   brown: '#8E562E',       // Question block brown
@@ -37,14 +36,12 @@ const marioColors = {
   cream: '#FFF5E6',       // Paper/menu background
   darkGrey: '#222222',    // Dark mode background
 
-  // Enhanced dark mode colors
-  darkBlue: '#1A1E3C',    // Dark mode background - deeper blue
-  darkPurple: '#2D1B3E',  // Dark mode secondary background
-  neonBlue: '#00EEFF',    // Dark mode accent - glowing blue
-  neonPink: '#FF3399',    // Dark mode accent - glowing pink
-  neonGreen: '#39FF14',   // Dark mode accent - glowing green
-  darkPaper: '#2A2A40',   // Dark mode paper surface
-};
+  // Simplified dark mode colors
+  darkBlue: '#141A2B',    // Dark mode background – a deeper navy for an immersive feel
+  darkPaper: '#1F2430',   // Dark mode paper surface – slightly lighter to distinguish cards/elements
+  darkAccent: '#009FE3',  // Mario-inspired accent blue – subdued for better legibility in dark mode
+  darkSecondary: '#A42D6D', // Subtle accent – a muted version of Mario red/pink for contrast
+}
 
 // Theme provider component
 interface ThemeContextProviderProps {
@@ -131,24 +128,24 @@ export const ThemeContextProvider: React.FC<ThemeContextProviderProps> = ({ chil
             divider: 'rgba(0, 0, 0, 0.09)',
           }
           : {
-            // Dark mode Mario palette - vibrant and neon-inspired for better contrast
+            // Simplified Dark mode Mario palette - more subtle with Mario accents
             primary: {
-              main: marioColors.neonPink,
-              light: '#FF70B5',
-              dark: '#CC0055',
+              main: marioColors.darkAccent,
+              light: '#2B95E9',
+              dark: '#005DA6',
               contrastText: marioColors.white,
             },
             secondary: {
-              main: marioColors.neonBlue,
-              light: '#70FFFF',
-              dark: '#00AACC',
-              contrastText: marioColors.black,
+              main: marioColors.darkSecondary,
+              light: '#D55C9E',
+              dark: '#9C1C62',
+              contrastText: marioColors.white,
             },
             info: {
-              main: marioColors.lightBlue,
-              light: '#7EEAFF',
-              dark: '#00A0CB',
-              contrastText: marioColors.black,
+              main: marioColors.blue,
+              light: '#5BD3FF',
+              dark: '#0070A0',
+              contrastText: marioColors.white,
             },
             warning: {
               main: marioColors.yellow,
@@ -163,10 +160,10 @@ export const ThemeContextProvider: React.FC<ThemeContextProviderProps> = ({ chil
               contrastText: marioColors.white,
             },
             success: {
-              main: marioColors.neonGreen,
-              light: '#85FF70',
-              dark: '#15CC00',
-              contrastText: marioColors.black,
+              main: marioColors.green,
+              light: '#4DE974',
+              dark: '#108A30',
+              contrastText: marioColors.white,
             },
             background: {
               default: marioColors.darkBlue,
@@ -203,12 +200,12 @@ export const ThemeContextProvider: React.FC<ThemeContextProviderProps> = ({ chil
               fontWeight: 700,
               fontSize: '0.95rem',
               padding: '8px 16px',
-              boxShadow: `0 4px 0 ${mode === 'light' ? 'rgba(0,0,0,0.5)' : 'rgba(0,0,0,0.8)'}`,
+              boxShadow: `0 4px 0 ${mode === 'light' ? 'rgba(0,0,0,0.5)' : 'rgba(0,0,0,0.7)'}`,
               border: `2px solid ${marioColors.black}`,
               transition: 'all 0.1s ease-in-out',
               '&:hover': {
                 transform: 'translateY(2px)',
-                boxShadow: `0 2px 0 ${mode === 'light' ? 'rgba(0,0,0,0.5)' : 'rgba(0,0,0,0.8)'}`,
+                boxShadow: `0 2px 0 ${mode === 'light' ? 'rgba(0,0,0,0.5)' : 'rgba(0,0,0,0.7)'}`,
                 filter: 'brightness(1.05)',
               },
               '&:active': {
@@ -219,28 +216,28 @@ export const ThemeContextProvider: React.FC<ThemeContextProviderProps> = ({ chil
             },
             // Color variants with coordinated styles
             containedPrimary: {
-              backgroundColor: mode === 'light' ? marioColors.red : marioColors.neonPink,
+              backgroundColor: mode === 'light' ? marioColors.red : marioColors.darkAccent,
               color: marioColors.white,
               '&:hover': {
-                backgroundColor: mode === 'light' ? marioColors.red : marioColors.neonPink,
+                backgroundColor: mode === 'light' ? marioColors.red : marioColors.darkAccent,
               },
             },
             containedSecondary: {
-              backgroundColor: mode === 'light' ? marioColors.blue : marioColors.neonBlue,
-              color: mode === 'light' ? marioColors.white : marioColors.black,
+              backgroundColor: mode === 'light' ? marioColors.blue : marioColors.darkSecondary,
+              color: marioColors.white,
               '&:hover': {
-                backgroundColor: mode === 'light' ? marioColors.blue : marioColors.neonBlue,
+                backgroundColor: mode === 'light' ? marioColors.blue : marioColors.darkSecondary,
               },
             },
             outlinedPrimary: {
-              borderColor: mode === 'light' ? marioColors.red : marioColors.neonPink,
-              color: mode === 'light' ? marioColors.red : marioColors.neonPink,
-              backgroundColor: mode === 'light' ? `${marioColors.red}10` : `${marioColors.neonPink}20`,
+              borderColor: mode === 'light' ? marioColors.red : marioColors.darkAccent,
+              color: mode === 'light' ? marioColors.red : marioColors.darkAccent,
+              backgroundColor: mode === 'light' ? `${marioColors.red}10` : 'rgba(0, 120, 212, 0.1)',
             },
             outlinedSecondary: {
-              borderColor: mode === 'light' ? marioColors.blue : marioColors.neonBlue,
-              color: mode === 'light' ? marioColors.blue : marioColors.neonBlue,
-              backgroundColor: mode === 'light' ? `${marioColors.blue}10` : `${marioColors.neonBlue}20`,
+              borderColor: mode === 'light' ? marioColors.blue : marioColors.darkSecondary,
+              color: mode === 'light' ? marioColors.blue : marioColors.darkSecondary,
+              backgroundColor: mode === 'light' ? `${marioColors.blue}10` : 'rgba(184, 50, 128, 0.1)',
             },
           },
         },
@@ -251,18 +248,15 @@ export const ThemeContextProvider: React.FC<ThemeContextProviderProps> = ({ chil
               border: `3px solid ${marioColors.black}`,
               boxShadow: mode === 'light'
                 ? `0 8px 0 rgba(0,0,0,0.5)`
-                : `0 8px 0 rgba(0,0,0,0.8), 0 0 15px ${marioColors.neonBlue}50`,
+                : `0 8px 0 rgba(0,0,0,0.7)`,
               overflow: 'hidden',
               transition: 'transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out',
               '&:hover': {
                 transform: 'translateY(-4px)',
                 boxShadow: mode === 'light'
                   ? `0 12px 0 rgba(0,0,0,0.5)`
-                  : `0 12px 0 rgba(0,0,0,0.8), 0 0 20px ${marioColors.neonBlue}70`
+                  : `0 12px 0 rgba(0,0,0,0.7)`
               },
-              ...(mode === 'dark' && {
-                background: `linear-gradient(135deg, ${marioColors.darkPaper} 0%, ${marioColors.darkPurple} 100%)`,
-              }),
             },
           },
         },
@@ -273,28 +267,22 @@ export const ThemeContextProvider: React.FC<ThemeContextProviderProps> = ({ chil
             },
             root: {
               backgroundImage: mode === 'light'
-                ? 'repeating-linear-gradient(45deg, rgba(0,0,0,0.01) 0px, rgba(0,0,0,0.01) 10px, rgba(0,0,0,0) 10px, rgba(0,0,0,0) 20px)'
+                ? 'repeating-linear-gradient(45deg)'
                 : 'none',
-              ...(mode === 'dark' && {
-                boxShadow: '0 0 10px rgba(0,170,255,0.2)'
-              }),
             },
           },
         },
         MuiAppBar: {
           styleOverrides: {
             root: {
-              boxShadow: `0 6px 0 ${mode === 'light' ? 'rgba(0,0,0,0.6)' : 'rgba(0,0,0,0.8)'}`,
+              boxShadow: `0 6px 0 ${mode === 'light' ? 'rgba(0,0,0,0.6)' : 'rgba(0,0,0,0.7)'}`,
               borderBottom: `3px solid ${marioColors.black}`,
               backgroundColor: mode === 'light'
                 ? marioColors.white
                 : marioColors.darkBlue,
               backgroundImage: mode === 'light'
                 ? `linear-gradient(90deg, ${marioColors.white} 50%, ${marioColors.cream} 100%)`
-                : `linear-gradient(90deg, ${marioColors.darkBlue} 0%, ${marioColors.darkPurple} 100%)`,
-              ...(mode === 'dark' && {
-                boxShadow: `0 6px 0 rgba(0,0,0,0.8), 0 0 15px rgba(0,210,255,0.3)`,
-              }),
+                : 'none',
             },
           },
         },
@@ -307,31 +295,28 @@ export const ThemeContextProvider: React.FC<ThemeContextProviderProps> = ({ chil
               borderRight: `3px solid ${marioColors.black}`,
               backgroundImage: mode === 'light'
                 ? 'repeating-linear-gradient(45deg, rgba(0,0,0,0.01) 0px, rgba(0,0,0,0.01) 10px, rgba(0,0,0,0) 10px, rgba(0,0,0,0) 20px)'
-                : `radial-gradient(circle at 100% 100%, ${marioColors.darkPurple} 0%, ${marioColors.darkBlue} 100%)`,
-              ...(mode === 'dark' && {
-                boxShadow: 'inset 0 0 20px rgba(0,210,255,0.1)',
-              }),
+                : 'none',
             },
           },
         },
         MuiSwitch: {
           styleOverrides: {
             switchBase: {
-              color: mode === 'light' ? marioColors.yellow : marioColors.neonBlue,
+              color: mode === 'light' ? marioColors.yellow : marioColors.darkAccent,
               '&.Mui-checked': {
-                color: mode === 'light' ? marioColors.green : marioColors.neonGreen,
+                color: mode === 'light' ? marioColors.green : marioColors.green,
               },
               '&.Mui-checked + .MuiSwitch-track': {
                 backgroundColor: mode === 'light'
                   ? `${marioColors.green}90`
-                  : `${marioColors.neonGreen}90`,
+                  : 'rgba(26, 188, 63, 0.7)',
                 opacity: 1,
               },
             },
             track: {
               backgroundColor: mode === 'light'
                 ? `${marioColors.yellow}90`
-                : `${marioColors.neonBlue}90`,
+                : 'rgba(0, 120, 212, 0.5)',
               opacity: 1,
             },
           },
@@ -344,12 +329,9 @@ export const ThemeContextProvider: React.FC<ThemeContextProviderProps> = ({ chil
             indicator: {
               backgroundColor: mode === 'light'
                 ? marioColors.red
-                : marioColors.neonPink,
+                : marioColors.darkAccent,
               height: 4,
               borderRadius: '4px 4px 0 0',
-              ...(mode === 'dark' && {
-                boxShadow: `0 0 8px ${marioColors.neonPink}`,
-              }),
             },
           },
         },
@@ -362,10 +344,10 @@ export const ThemeContextProvider: React.FC<ThemeContextProviderProps> = ({ chil
               '&.Mui-selected': {
                 color: mode === 'light'
                   ? marioColors.red
-                  : marioColors.neonPink,
+                  : marioColors.darkAccent,
                 backgroundColor: mode === 'light'
                   ? `${marioColors.red}10`
-                  : `${marioColors.neonPink}20`,
+                  : 'rgba(0, 120, 212, 0.1)',
               },
               '&:hover': {
                 backgroundColor: mode === 'light'
@@ -373,7 +355,7 @@ export const ThemeContextProvider: React.FC<ThemeContextProviderProps> = ({ chil
                   : 'rgba(255,255,255,0.04)',
                 color: mode === 'light'
                   ? marioColors.red
-                  : marioColors.neonPink,
+                  : marioColors.darkAccent,
               },
             },
           },
@@ -384,31 +366,26 @@ export const ThemeContextProvider: React.FC<ThemeContextProviderProps> = ({ chil
               fontWeight: 700,
               border: `2px solid ${marioColors.black}`,
               borderRadius: 16,
-              ...(mode === 'dark' && {
-                boxShadow: '0 0 5px rgba(255,255,255,0.2)',
-              }),
             },
             colorPrimary: {
               backgroundColor: mode === 'light'
                 ? marioColors.red
-                : marioColors.neonPink,
+                : marioColors.darkAccent,
               color: marioColors.white,
             },
             colorSecondary: {
               backgroundColor: mode === 'light'
                 ? marioColors.blue
-                : marioColors.neonBlue,
-              color: mode === 'light'
-                ? marioColors.white
-                : marioColors.black,
+                : marioColors.darkSecondary,
+              color: marioColors.white,
             },
             colorSuccess: {
               backgroundColor: mode === 'light'
                 ? marioColors.green
-                : marioColors.neonGreen,
+                : marioColors.green,
               color: mode === 'light'
                 ? marioColors.white
-                : marioColors.black,
+                : marioColors.white,
             },
             colorWarning: {
               backgroundColor: marioColors.yellow,
@@ -424,7 +401,7 @@ export const ThemeContextProvider: React.FC<ThemeContextProviderProps> = ({ chil
               '&.Mui-selected': {
                 backgroundColor: mode === 'light'
                   ? `${marioColors.yellow}30`
-                  : `${marioColors.neonBlue}20`,
+                  : 'rgba(0, 120, 212, 0.15)',
                 '&::before': {
                   content: '""',
                   position: 'absolute',
@@ -435,11 +412,8 @@ export const ThemeContextProvider: React.FC<ThemeContextProviderProps> = ({ chil
                   height: '70%',
                   backgroundColor: mode === 'light'
                     ? marioColors.yellow
-                    : marioColors.neonBlue,
+                    : marioColors.darkAccent,
                   borderRadius: '0 4px 4px 0',
-                  ...(mode === 'dark' && {
-                    boxShadow: `0 0 8px ${marioColors.neonBlue}`,
-                  }),
                 },
               },
               '&:hover': {
