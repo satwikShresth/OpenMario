@@ -4,42 +4,44 @@ import { useSnackbar } from 'notistack';
 
 const useTesseract = () => {
    const [isProcessing, setIsProcessing] = useState(false);
-   const workerRef = useRef(null);
+   const workerRef = useRef<Tesseract.Worker | null>(null);
    const { enqueueSnackbar } = useSnackbar();
 
    useEffect(() => {
       const initTesseract = async () => {
-         try {
-            setIsProcessing(true);
+         setIsProcessing(true);
 
-            const worker = await createWorker('eng');
-            await worker.setParameters({
-               tessedit_pageseg_mode: PSM.SPARSE_TEXT_OSD,
-            });
-            workerRef.current = worker;
-         } catch (error) {
-            console.error('Failed to initialize Tesseract:', error);
-            enqueueSnackbar(`Error initializing Tesseract: ${error.message}`, {
-               variant: 'error',
-               autoHideDuration: 4000
-            });
-         } finally {
-            setIsProcessing(false);
-         }
+         workerRef.current = await createWorker('eng')
+            .then(async (worker: Tesseract.Worker) => {
+               await worker.setParameters({
+                  tessedit_pageseg_mode: PSM.SPARSE_TEXT_OSD,
+               })
+               return worker;
+            })
+            .catch((error) => {
+               console.error('Failed to initialize Tesseract:', error);
+               enqueueSnackbar(`Error initializing Tesseract: ${error.message}`, {
+                  variant: 'error',
+                  autoHideDuration: 4000
+               });
+            })
+            .finally(() => {
+               setIsProcessing(false);
+            }) || null;
       };
 
       initTesseract();
 
       return () => {
          if (workerRef.current) {
-            workerRef.current.terminate().catch(e => {
-               console.error('Error terminating worker:', e);
-            });
+            workerRef.current
+               .terminate()
+               .catch(e => console.error('Error terminating worker:', e));
          }
       };
    }, [enqueueSnackbar]);
 
-   const recognizeText = useCallback(async (imageUrl) => {
+   const recognizeText = useCallback(async (imageUrl: string) => {
       if (!workerRef.current) {
          const error = new Error('Tesseract worker not initialized');
          enqueueSnackbar(error.message, {
@@ -49,31 +51,36 @@ const useTesseract = () => {
          throw error;
       }
 
-      try {
-         setIsProcessing(true);
-         enqueueSnackbar('Recognizing text (this may take a while)', {
-            variant: 'info',
-            autoHideDuration: 2000
-         });
+      setIsProcessing(true);
+      enqueueSnackbar('Recognizing text (this may take a while)', {
+         variant: 'info',
+         autoHideDuration: 2000
+      });
 
-         const result = await workerRef.current.recognize(imageUrl);
-         const text = result.data?.text || result.text;
+      return await workerRef.current
+         .recognize(imageUrl)
+         .then((result) => {
+            enqueueSnackbar('Job Parsing Complete', {
+               variant: 'success',
+               autoHideDuration: 2000
+            });
 
-         enqueueSnackbar('Job Parsing Complete', {
-            variant: 'success',
-            autoHideDuration: 2000
-         });
+            return result.data.text
+         })
+         .catch((error) => {
+            console.error(`Error: ${error.message}`)
 
-         return text;
-      } catch (error) {
-         enqueueSnackbar(`Error during OCR: ${error.message}`, {
-            variant: 'error',
-            autoHideDuration: 4000
-         });
-         throw error;
-      } finally {
-         setIsProcessing(false);
-      }
+            enqueueSnackbar(
+               `Error while parsing image`,
+               {
+                  variant: 'error',
+                  autoHideDuration: 4000
+               }
+            );
+            throw error
+         })
+         .finally(() => setIsProcessing(false))
+
    }, [enqueueSnackbar]);
 
    return {
