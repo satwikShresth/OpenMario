@@ -1,5 +1,7 @@
 import React, { useState, useCallback } from 'react';
 import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
 import { type Job } from '#/hooks/useJobParser';
 import { useJobSubmissionStore } from '#/stores/useJobSubmissionStore';
 import {
@@ -37,6 +39,7 @@ import {
   getAutocompleteLocationOptions,
   getAutocompletePositionOptions
 } from '#client/react-query.gen';
+import { PositionSchema, type Position } from '#/utils/validators';
 
 type JobFormProps = {
   editIndex?: number;
@@ -52,57 +55,9 @@ const JobForm: React.FC<JobFormProps> = ({
   onCancel
 }) => {
   const { addSubmission, updateSubmission } = useJobSubmissionStore();
-
-  // State for search terms
   const [companySearch, setCompanySearch] = useState('');
   const [locationSearch, setLocationSearch] = useState('');
   const [positionSearch, setPositionSearch] = useState('');
-
-  const getInitialValues = (): Submission => {
-    if (defaultValues) return defaultValues;
-
-    if (jobData) {
-      let compensation = null;
-      if (jobData.hourly_wage) {
-        const match = jobData.hourly_wage.match(/\$(\d+\.\d+)/);
-        if (match) compensation = parseFloat(match[1]);
-      }
-
-      let workHours = 40;
-      if (jobData.hours_per_week) {
-        workHours = parseInt(jobData.hours_per_week, 10) || 40;
-      }
-
-      return {
-        company: jobData.employer || '',
-        position: jobData.position || '',
-        location: jobData.location || '',
-        program_level: 'Undergraduate',
-        work_hours: workHours,
-        coop_cycle: 'Fall/Winter',
-        coop_year: '1st',
-        year: new Date().getFullYear(),
-        compensation: compensation,
-        other_compensation: jobData.other_compensation || null,
-        details: `Employer ID: ${jobData?.employer_id || 'N/A'}, Position ID: ${jobData?.position_id || 'N/A'}, Job Length: ${jobData?.job_length || 'N/A'}`
-      };
-    }
-
-    // Default values based on schema
-    return {
-      company: '',
-      position: '',
-      location: '',
-      program_level: 'Undergraduate',
-      work_hours: 40,
-      coop_cycle: 'Fall/Winter',
-      coop_year: '1st',
-      year: new Date().getFullYear(),
-      compensation: null,
-      other_compensation: null,
-      details: null
-    };
-  };
 
   const {
     control,
@@ -111,8 +66,21 @@ const JobForm: React.FC<JobFormProps> = ({
     watch,
     getValues,
     formState: { errors }
-  } = useForm<Submission>({
-    defaultValues: getInitialValues()
+  } = useForm<Position>({
+    resolver: zodResolver(PositionSchema),
+    defaultValues: {
+      company: jobData?.employer || '',
+      position: jobData?.position || '',
+      location: jobData?.location || '',
+      program_level: jobData?.program_level || 'Undergraduate',
+      work_hours: parseInt(jobData?.hours_per_week || "40"),
+      coop_cycle: jobData?.coop_cycle || 'Fall/Winter',
+      coop_year: jobData?.coop_year || '1st',
+      year: jobData?.year || new Date().getFullYear(),
+      compensation: parseFloat(jobData?.hourly_wage || "10.00"),
+      other_compensation: jobData?.other_compensation || '',
+      details: `Employer ID: ${jobData?.employer_id || 'N/A'}, Position ID: ${jobData?.position_id || 'N/A'}, Job Length: ${jobData?.job_length || 'N/A'}`
+    }
   });
 
   const compensation = watch('compensation');
@@ -134,7 +102,6 @@ const JobForm: React.FC<JobFormProps> = ({
     }, 500),
     []
   );
-
 
   const debouncedLocationSearch = useCallback(
     debounce((searchText) => {
@@ -162,7 +129,6 @@ const JobForm: React.FC<JobFormProps> = ({
     placeholderData: (previousData) => previousData
   });
 
-
   const locationQuery = useQuery({
     ...getAutocompleteLocationOptions({
       query: {
@@ -173,11 +139,11 @@ const JobForm: React.FC<JobFormProps> = ({
     placeholderData: (previousData) => previousData
   });
 
-  const onSubmit = (data: Submission) => {
+  const onSubmit = (data: Position) => {
     if (editIndex !== undefined) {
-      updateSubmission(editIndex, data);
+      updateSubmission(editIndex, data as Submission);
     } else {
-      addSubmission(data);
+      addSubmission(data as Submission);
     }
 
     reset();
@@ -204,12 +170,13 @@ const JobForm: React.FC<JobFormProps> = ({
               loading={companyQuery?.isLoading}
               getOptionLabel={(option) => { return option }}
               isOptionEqualToValue={(option, value) => option === value}
-              onInputChange={(_, value) => debouncedCompanySearch(value)}
+              onInputChange={(_, value) => !!errors.company || debouncedCompanySearch(value)}
               placeholder="Search for a company..."
-              nullable
+              rules={{ required: 'Company is required' }}
+              error={!!errors.company}
+              helperText={errors.company?.message}
             />
           </Grid>
-
 
           <Grid item xs={12} md={6}>
             <AutocompleteFieldWithIcon
@@ -221,10 +188,12 @@ const JobForm: React.FC<JobFormProps> = ({
               loading={positionQuery.isFetching}
               getOptionLabel={(option) => { return option }}
               isOptionEqualToValue={(option, value) => option === value}
-              onInputChange={(_, value) => debouncedPositionSearch(value)}
+              onInputChange={(_, value) => !!errors.position || debouncedPositionSearch(value)}
               placeholder="Search for a position..."
               disabled={!selectedCompany}
-              nullable
+              rules={{ required: 'Position is required' }}
+              error={!!errors.position}
+              helperText={errors.position?.message}
               freeSolo
             />
           </Grid>
@@ -234,15 +203,16 @@ const JobForm: React.FC<JobFormProps> = ({
               name="location"
               label="Location"
               control={control}
-              rules={{ required: 'Location is required' }}
               icon={<MapPin size={18} />}
               options={locationQuery?.data || []}
               loading={locationQuery.isFetching}
               getOptionLabel={(option) => { return option }}
               isOptionEqualToValue={(option, value) => option === value}
-              onInputChange={(_, value) => debouncedLocationSearch(value)}
-              placeholder="Search for a position..."
-              nullable
+              onInputChange={(_, value) => !!errors.location || debouncedLocationSearch(value)}
+              placeholder="Philadelphia, PA"
+              rules={{ required: 'Location is required' }}
+              error={!!errors.location}
+              helperText={errors.location?.message}
               freeSolo
             />
           </Grid>
@@ -253,6 +223,8 @@ const JobForm: React.FC<JobFormProps> = ({
               label="Program Level"
               control={control}
               options={PROGRAM_LEVELS}
+              error={!!errors.program_level}
+              helperText={errors.program_level?.message}
             />
           </Grid>
 
@@ -267,6 +239,8 @@ const JobForm: React.FC<JobFormProps> = ({
               label="Co-op Cycle"
               control={control}
               options={COOP_CYCLES}
+              error={!!errors.coop_cycle}
+              helperText={errors.coop_cycle?.message}
             />
           </Grid>
 
@@ -276,6 +250,8 @@ const JobForm: React.FC<JobFormProps> = ({
               label="Co-op Year"
               control={control}
               options={COOP_YEARS}
+              error={!!errors.coop_year}
+              helperText={errors.coop_year?.message}
             />
           </Grid>
 
@@ -285,9 +261,10 @@ const JobForm: React.FC<JobFormProps> = ({
               label="Year"
               type="number"
               control={control}
-              rules={{ required: 'Year is required' }}
               icon={<Calendar size={18} />}
-              inputProps={{ min: 2000, max: 2050 }}
+              inputProps={{ min: 2005, max: new Date().getFullYear() + 1 }}
+              error={!!errors.year}
+              helperText={errors.year?.message}
             />
           </Grid>
 
@@ -300,6 +277,8 @@ const JobForm: React.FC<JobFormProps> = ({
             <CompensationField
               control={control}
               value={compensation}
+              error={!!errors.compensation}
+              helperText={errors.compensation?.message}
             />
           </Grid>
 
@@ -317,7 +296,7 @@ const JobForm: React.FC<JobFormProps> = ({
               name="work_hours"
               control={control}
               label="Work Hours"
-              min={10}
+              min={5}
               max={60}
               step={1}
               currentValue={workHours}
@@ -327,6 +306,8 @@ const JobForm: React.FC<JobFormProps> = ({
                 { value: 40, label: '40h' },
                 { value: 60, label: '60h' }
               ]}
+              error={!!errors.work_hours}
+              helperText={errors.work_hours?.message}
               footer={
                 weeklyPay !== null && (
                   <Typography variant="body2" color="primary" sx={{ mt: 1, fontWeight: 'medium' }}>
@@ -345,6 +326,8 @@ const JobForm: React.FC<JobFormProps> = ({
               icon={<DollarSign size={18} />}
               placeholder="E.g., Benefits, transportation, housing allowance"
               nullable={true}
+              error={!!errors.other_compensation}
+              helperText={errors.other_compensation?.message}
             />
           </Grid>
 
@@ -359,13 +342,15 @@ const JobForm: React.FC<JobFormProps> = ({
               rows={3}
               placeholder="Any additional information about the position"
               nullable={true}
+              error={!!errors.details}
+              helperText={errors.details?.message}
             />
           </Grid>
         </Grid>
 
         <FormActions onCancel={onCancel} isEditing={editIndex !== undefined} />
       </Box>
-    </Paper >
+    </Paper>
   );
 };
 

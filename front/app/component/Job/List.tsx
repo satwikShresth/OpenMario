@@ -18,10 +18,11 @@ import {
   Grid
 } from '@mui/material';
 import { Plus, FileText, Briefcase } from 'lucide-react';
+import type { CommonData } from '#/types';
 
 interface JobListProps {
   jobs?: Job[];
-  onFileSelect: (file: File) => void;
+  onFileSelect: (file: File, common: CommonData) => void;
 }
 
 const JobList: React.FC<JobListProps> = ({ jobs = [], onFileSelect }) => {

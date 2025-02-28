@@ -18,7 +18,7 @@ export default () => {
     setProcessedJobs([]);
 
     await recognizeText(file)
-      .then((text) => processText(text))
+      .then((text) => processText(text, common))
       .catch(({ message }) => {
         console.error(`Error: ${message}`);
         enqueueSnackbar(message, { variant: "error" })

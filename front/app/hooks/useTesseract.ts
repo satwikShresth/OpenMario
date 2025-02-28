@@ -41,7 +41,7 @@ const useTesseract = () => {
       };
    }, [enqueueSnackbar]);
 
-   const recognizeText = useCallback(async (imageUrl: string) => {
+   const recognizeText = useCallback(async (imageUrl: File) => {
       if (!workerRef.current) {
          const error = new Error('Tesseract worker not initialized');
          enqueueSnackbar(error.message, {

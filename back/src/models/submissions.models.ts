@@ -182,8 +182,6 @@ export const SubmissionAggregateSchema = z.object({
    coop_year: z.enum(coop_year),
    coop_cycle: z.enum(coop_cycle),
    program_level: z.enum(program_level),
-   majors: z.array(z.enum([...undergrad.Majors, ...grad.Majors])).min(1),
-   minors: z.array(z.enum([...undergrad.Minors, ...grad.Minors])).optional().default([]),
 });
 
 export const SubmissionResponseSchema = z.object({
