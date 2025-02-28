@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useCallback } from 'react';
 import { useForm } from 'react-hook-form';
 import { type Job } from '#/hooks/useJobParser';
 import { useJobSubmissionStore } from '#/stores/useJobSubmissionStore';
@@ -19,12 +19,23 @@ import {
   Info,
   Clock
 } from 'lucide-react';
+import debounce from 'lodash/debounce';
+import { useQuery } from '@tanstack/react-query';
 import type { Submission } from '#client/types.gen';
-import { TextFieldWithIcon, DropdownField, SliderField, CompensationField } from './fields';
+import {
+  AutocompleteFieldWithIcon,
+  TextFieldWithIcon,
+  DropdownField,
+  SliderField,
+  CompensationField
+} from './fields';
 import { SectionHeader } from './SectionHeader';
 import { FormActions } from './FormActions';
 import { COOP_CYCLES, COOP_YEARS, PROGRAM_LEVELS } from '#/types';
-
+import {
+  getAutocompleteCompanyOptions,
+  getAutocompletePositionOptions
+} from '#client/react-query.gen';
 
 type JobFormProps = {
   editIndex?: number;
@@ -40,6 +51,10 @@ const JobForm: React.FC<JobFormProps> = ({
   onCancel
 }) => {
   const { addSubmission, updateSubmission } = useJobSubmissionStore();
+
+  // State for search terms
+  const [companySearch, setCompanySearch] = useState('');
+  const [positionSearch, setPositionSearch] = useState('');
 
   const getInitialValues = (): Submission => {
     if (defaultValues) return defaultValues;
@@ -92,6 +107,7 @@ const JobForm: React.FC<JobFormProps> = ({
     handleSubmit,
     reset,
     watch,
+    getValues,
     formState: { errors }
   } = useForm<Submission>({
     defaultValues: getInitialValues()
@@ -99,7 +115,42 @@ const JobForm: React.FC<JobFormProps> = ({
 
   const compensation = watch('compensation');
   const workHours = watch('work_hours');
+  const selectedCompany = watch('company');
   const weeklyPay = compensation !== null ? compensation * workHours : null;
+
+  // Debounced search function for company
+  const debouncedCompanySearch = useCallback(
+    debounce((searchText) => {
+      setCompanySearch(searchText);
+    }, 300),
+    []
+  );
+
+  const debouncedPositionSearch = useCallback(
+    debounce((searchText) => {
+      setPositionSearch(searchText);
+    }, 500),
+    []
+  );
+
+  const companyQuery = useQuery({
+    ...getAutocompleteCompanyOptions({
+      query: { comp: companySearch }
+    }),
+    enabled: companySearch.length >= 3,
+    placeholderData: (previousData) => previousData
+  });
+
+  const positionQuery = useQuery({
+    ...getAutocompletePositionOptions({
+      query: {
+        comp: selectedCompany || '',
+        pos: positionSearch
+      }
+    }),
+    enabled: !!selectedCompany && positionSearch.length >= 3,
+    placeholderData: (previousData) => previousData
+  });
 
   const onSubmit = (data: Submission) => {
     if (editIndex !== undefined) {
@@ -111,7 +162,6 @@ const JobForm: React.FC<JobFormProps> = ({
     reset();
     if (onCancel) onCancel();
   };
-
   return (
     <Paper elevation={2} sx={{ p: 3, mb: 3 }}>
       <Box component="form" onSubmit={handleSubmit(onSubmit)} noValidate>
@@ -121,24 +171,43 @@ const JobForm: React.FC<JobFormProps> = ({
         <Divider sx={{ mb: 3 }} />
 
         <Grid container spacing={3}>
-          {/* Basic Information */}
+
           <Grid item xs={12} md={6}>
-            <TextFieldWithIcon
+            <AutocompleteFieldWithIcon
               name="company"
-              label="Company Name"
+              label="Company"
               control={control}
-              rules={{ required: 'Company name is required' }}
+              rules={{ required: 'Please select a company' }}
               icon={<Building size={18} />}
+              options={companyQuery?.data || []}
+              loading={companyQuery?.isLoading}
+              getOptionLabel={(option) => { return option }}
+              isOptionEqualToValue={(option, value) => option === value}
+              onInputChange={(_, value) => debouncedCompanySearch(value)}
+              placeholder="Search for a company..."
+              nullable
             />
           </Grid>
 
+
           <Grid item xs={12} md={6}>
-            <TextFieldWithIcon
+            <AutocompleteFieldWithIcon
               name="position"
               label="Position"
               control={control}
               rules={{ required: 'Position is required' }}
               icon={<Briefcase size={18} />}
+              options={positionQuery?.data || []}
+              loading={positionQuery.isFetching}
+              getOptionLabel={(option) => { return option }}
+              isOptionEqualToValue={(option, value) => option === value}
+              onInputChange={(_, value) => debouncedPositionSearch(value)}
+              placeholder="Search for a position..."
+              noOptionsText={!selectedCompany ? "Select a company first" :
+                positionSearch.length < 3 ? "Type at least 3 characters to search" :
+                  positionQuery.isFetching ? "Loading..." : "No positions found"}
+              disabled={!selectedCompany}
+              freeSolo
             />
           </Grid>
 
@@ -270,7 +339,7 @@ const JobForm: React.FC<JobFormProps> = ({
 
         <FormActions onCancel={onCancel} isEditing={editIndex !== undefined} />
       </Box>
-    </Paper>
+    </Paper >
   );
 };
 

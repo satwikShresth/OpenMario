@@ -33,44 +33,52 @@ export const TextFieldWithIcon: React.FC<TextFieldWithIconProps> = ({
   nullable = false,
   ...props
 }) => {
+  // Filter out any props that might not be valid for TextField
+  const { dependsOn, loadOptions, ...filteredProps } = props as any;
+
   return (
     <Controller
       name={name}
       control={control}
       rules={rules}
-      render={({ field, fieldState: { error } }) => (
-        <TextField
-          {...field}
-          label={
-            <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-              <Box sx={{ transform: 'translateY(-2px)' }}>
-                {icon}
+      render={({ field, fieldState: { error } }) => {
+        // Ensure value is never null for the input
+        const value = field.value === null || field.value === undefined ? '' : field.value;
+
+        return (
+          <TextField
+            {...filteredProps}
+            {...field}
+            value={value} // Override field.value with our null-safe version
+            label={
+              <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                <Box sx={{ transform: 'translateY(-2px)' }}>
+                  {icon}
+                </Box>
+                {label}
               </Box>
-              {label}
-            </Box>
-          }
-          fullWidth
-          multiline={multiline}
-          rows={rows}
-          placeholder={placeholder}
-          type={type}
-          inputProps={inputProps}
-          error={!!error}
-          helperText={error?.message}
-          onChange={(e) => {
-            const value = e.target.value;
-            if (nullable) {
-              field.onChange(value || null);
-            } else if (type === 'number' && value !== '') {
-              field.onChange(parseFloat(value));
-            } else {
-              field.onChange(value);
             }
-          }}
-          {...props}
-        />
-      )
-      }
+            fullWidth
+            multiline={multiline}
+            rows={rows}
+            placeholder={placeholder}
+            type={type}
+            inputProps={inputProps}
+            error={!!error}
+            helperText={error?.message}
+            onChange={(e) => {
+              const value = e.target.value;
+              if (nullable) {
+                field.onChange(value || null);
+              } else if (type === 'number' && value !== '') {
+                field.onChange(parseFloat(value));
+              } else {
+                field.onChange(value);
+              }
+            }}
+          />
+        );
+      }}
     />
   );
 };

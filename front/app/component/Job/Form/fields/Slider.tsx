@@ -19,11 +19,9 @@ type SliderFieldProps = {
 export const SliderField: React.FC<SliderFieldProps> = ({
   name,
   control,
-  label,
   min,
   max,
   step,
-  currentValue,
   marks,
   valueLabelFormat = (value) => `${value}`,
   footer

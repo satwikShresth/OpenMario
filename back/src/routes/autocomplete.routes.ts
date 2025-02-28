@@ -50,7 +50,6 @@ export default () => {
             .select({ name: company.name })
             .from(company)
             .where(query)
-            .orderBy(order)
             .then((results) => res.status(200).json(results.map((item) => item.name)))
             .catch(({ message }) => res.status(409).json({ message }));
       },
@@ -102,7 +101,6 @@ export default () => {
             .from(position)
             .innerJoin(company, eq(position.company_id, company.id))
             .where(and(...queries))
-            .orderBy(order)
             .then((results) => res.status(200).json(results.map((item) => item.name)))
             .catch(({ message }) => res.staus(409).json({ message }));
       },

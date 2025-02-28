@@ -424,6 +424,93 @@ export const ThemeContextProvider: React.FC<ThemeContextProviderProps> = ({ chil
             },
           },
         },
+        // Add Snackbar styling to match the Super Mario theme
+        MuiSnackbar: {
+          styleOverrides: {
+            root: {
+              '& .MuiSnackbarContent-root': {
+                borderRadius: 16,
+                border: `3px solid ${marioColors.black}`,
+                boxShadow: `0 4px 0 ${mode === 'light' ? 'rgba(0,0,0,0.5)' : 'rgba(0,0,0,0.7)'}`,
+                fontWeight: 600,
+              },
+            },
+          },
+        },
+        // Style SnackbarContent separately for better control
+        MuiSnackbarContent: {
+          styleOverrides: {
+            root: {
+              backgroundColor: mode === 'light'
+                ? marioColors.blue
+                : marioColors.darkPaper,
+              color: mode === 'light'
+                ? marioColors.white
+                : marioColors.white,
+              '& .MuiSnackbarContent-message': {
+                padding: '2px 0',
+              },
+              '& .MuiSnackbarContent-action': {
+                marginRight: -8,
+                paddingLeft: 16,
+                color: mode === 'light'
+                  ? marioColors.yellow
+                  : marioColors.yellow,
+              },
+            },
+          },
+        },
+        // Style the Alert component used within Snackbars
+        MuiAlert: {
+          styleOverrides: {
+            root: {
+              borderRadius: 16,
+              border: `2px solid ${marioColors.black}`,
+              fontSize: '0.95rem',
+              alignItems: 'center',
+            },
+            standardSuccess: {
+              backgroundColor: mode === 'light'
+                ? `${marioColors.green}A0`
+                : `${marioColors.green}80`,
+              color: mode === 'light'
+                ? marioColors.white
+                : marioColors.white,
+              '& .MuiAlert-icon': {
+                color: mode === 'light'
+                  ? marioColors.white
+                  : marioColors.white,
+              },
+            },
+            standardError: {
+              backgroundColor: mode === 'light'
+                ? `${marioColors.red}A0`
+                : `${marioColors.red}80`,
+              color: marioColors.white,
+              '& .MuiAlert-icon': {
+                color: marioColors.white,
+              },
+            },
+            standardWarning: {
+              backgroundColor: mode === 'light'
+                ? `${marioColors.yellow}A0`
+                : `${marioColors.yellow}80`,
+              color: marioColors.black,
+              '& .MuiAlert-icon': {
+                color: marioColors.black,
+              },
+            },
+            standardInfo: {
+              backgroundColor: mode === 'light'
+                ? `${marioColors.blue}A0`
+                : `${marioColors.blue}80`,
+              color: marioColors.white,
+              '& .MuiAlert-icon': {
+                color: marioColors.white,
+              },
+            },
+          },
+        },
       },
     }),
     [mode]

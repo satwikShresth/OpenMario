@@ -3,3 +3,4 @@ export * from "./Slider";
 export * from "./Text";
 export * from "./Dropdown";
 export * from "./Compenstaion";
+export * from "./Autocomplete";
