@@ -34,6 +34,7 @@ import { FormActions } from './FormActions';
 import { COOP_CYCLES, COOP_YEARS, PROGRAM_LEVELS } from '#/types';
 import {
   getAutocompleteCompanyOptions,
+  getAutocompleteLocationOptions,
   getAutocompletePositionOptions
 } from '#client/react-query.gen';
 
@@ -54,6 +55,7 @@ const JobForm: React.FC<JobFormProps> = ({
 
   // State for search terms
   const [companySearch, setCompanySearch] = useState('');
+  const [locationSearch, setLocationSearch] = useState('');
   const [positionSearch, setPositionSearch] = useState('');
 
   const getInitialValues = (): Submission => {
@@ -122,13 +124,21 @@ const JobForm: React.FC<JobFormProps> = ({
   const debouncedCompanySearch = useCallback(
     debounce((searchText) => {
       setCompanySearch(searchText);
-    }, 300),
+    }, 500),
     []
   );
 
   const debouncedPositionSearch = useCallback(
     debounce((searchText) => {
       setPositionSearch(searchText);
+    }, 500),
+    []
+  );
+
+
+  const debouncedLocationSearch = useCallback(
+    debounce((searchText) => {
+      setLocationSearch(searchText);
     }, 500),
     []
   );
@@ -152,6 +162,17 @@ const JobForm: React.FC<JobFormProps> = ({
     placeholderData: (previousData) => previousData
   });
 
+
+  const locationQuery = useQuery({
+    ...getAutocompleteLocationOptions({
+      query: {
+        loc: locationSearch || '',
+      }
+    }),
+    enabled: locationSearch.length >= 3,
+    placeholderData: (previousData) => previousData
+  });
+
   const onSubmit = (data: Submission) => {
     if (editIndex !== undefined) {
       updateSubmission(editIndex, data);
@@ -162,6 +183,7 @@ const JobForm: React.FC<JobFormProps> = ({
     reset();
     if (onCancel) onCancel();
   };
+
   return (
     <Paper elevation={2} sx={{ p: 3, mb: 3 }}>
       <Box component="form" onSubmit={handleSubmit(onSubmit)} noValidate>
@@ -177,7 +199,6 @@ const JobForm: React.FC<JobFormProps> = ({
               name="company"
               label="Company"
               control={control}
-              rules={{ required: 'Please select a company' }}
               icon={<Building size={18} />}
               options={companyQuery?.data || []}
               loading={companyQuery?.isLoading}
@@ -195,7 +216,6 @@ const JobForm: React.FC<JobFormProps> = ({
               name="position"
               label="Position"
               control={control}
-              rules={{ required: 'Position is required' }}
               icon={<Briefcase size={18} />}
               options={positionQuery?.data || []}
               loading={positionQuery.isFetching}
@@ -203,21 +223,27 @@ const JobForm: React.FC<JobFormProps> = ({
               isOptionEqualToValue={(option, value) => option === value}
               onInputChange={(_, value) => debouncedPositionSearch(value)}
               placeholder="Search for a position..."
-              noOptionsText={!selectedCompany ? "Select a company first" :
-                positionSearch.length < 3 ? "Type at least 3 characters to search" :
-                  positionQuery.isFetching ? "Loading..." : "No positions found"}
               disabled={!selectedCompany}
+              nullable
               freeSolo
             />
           </Grid>
 
           <Grid item xs={12} md={6}>
-            <TextFieldWithIcon
+            <AutocompleteFieldWithIcon
               name="location"
               label="Location"
               control={control}
               rules={{ required: 'Location is required' }}
               icon={<MapPin size={18} />}
+              options={locationQuery?.data || []}
+              loading={locationQuery.isFetching}
+              getOptionLabel={(option) => { return option }}
+              isOptionEqualToValue={(option, value) => option === value}
+              onInputChange={(_, value) => debouncedLocationSearch(value)}
+              placeholder="Search for a position..."
+              nullable
+              freeSolo
             />
           </Grid>
 

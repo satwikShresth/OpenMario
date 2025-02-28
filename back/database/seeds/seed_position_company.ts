@@ -45,7 +45,7 @@ export async function seedComapnyPositions() {
 
       const positionValues = positions.map((pos: string) => ({
         company_id,
-        name: pos,
+        name: pos.trim(),
       }));
 
       const batchSize = 100;
