@@ -69,7 +69,7 @@ export default () => {
     glowColor: 'rgba(0, 238, 255, 0.7)' // Blue glow
   };
 
-  const isActive = (path) => {
+  const isActive = (path: string) => {
     if (path === '/' && location.pathname === '/') return true;
     if (path !== '/' && location.pathname.startsWith(path)) return true;
     return false;
@@ -439,22 +439,7 @@ export default () => {
               }}
             >
               {mode === 'dark' ? (
-                <Box
-                  component="img"
-                  src="/mushroom.png"
-                  alt="Moon"
-                  sx={{
-                    width: "50px",
-                    height: "auto",
-                    overflow: "visible",
-                    objectFit: "contain",
-                    filter: 'drop-shadow(0 1px 2px rgba(0,0,0,0.2))',
-                    transition: 'transform 0.3s ease-in-out',
-                    '&:hover': {
-                      transform: 'rotate(-10deg)'
-                    }
-                  }}
-                />
+                <Moon size={22} color={colors.white} />
               ) : (
                 <Sun size={22} color={colors.black} />
               )}

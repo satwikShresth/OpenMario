@@ -1,4 +1,4 @@
-import { COOP_CYCLES, COOP_YEARS, PROGRAM_LEVELS } from "#/types";
+import { COOP_CYCLES, COOP_ROUND, COOP_YEARS, PROGRAM_LEVELS } from "#/types";
 import { z } from "zod";
 
 export const name = (schema: any) =>
@@ -50,3 +50,14 @@ export const PositionSchema = z.object({
 });
 
 export type Position = z.infer<typeof PositionSchema>;
+
+
+export const UploadSchema = z.object({
+  year: z.preprocess((year) => Number(year), year(z.number().min(2005))),
+  coop_year: z.enum(COOP_YEARS),
+  coop_cycle: z.enum(COOP_CYCLES),
+  coop_round: z.enum(COOP_ROUND),
+  program_level: z.enum(PROGRAM_LEVELS),
+});
+
+export type Upload = z.infer<typeof UploadSchema>;

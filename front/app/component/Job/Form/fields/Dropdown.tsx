@@ -1,23 +1,23 @@
 import React from 'react';
-import { Controller } from 'react-hook-form';
 import { FormControl, InputLabel, Select, MenuItem } from '@mui/material';
 import type { Submission } from '#client/types.gen';
+import { Controller, type Control, type FieldValues, type RegisterOptions } from "react-hook-form";
 
-type DropdownFieldProps = {
-  name: keyof Submission;
+type DropdownFieldProps<T extends FieldValues> = {
+  name: keyof T;
   label: string;
-  control: any;
+  control: Control<T>;
   options: readonly string[];
-  rules?: object;
+  rules?: RegisterOptions;
 };
 
-export const DropdownField: React.FC<DropdownFieldProps> = ({
+export const DropdownField = <T extends FieldValues>({
   name,
   label,
   control,
   options,
-  rules
-}) => {
+  rules,
+}: DropdownFieldProps<T>) => {
   return (
     <Controller
       name={name}

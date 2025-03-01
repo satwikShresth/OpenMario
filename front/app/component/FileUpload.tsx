@@ -1,57 +1,11 @@
-import React, { useState, useRef } from 'react';
-import {
-  Button,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  IconButton,
-  Typography,
-  Box,
-  Paper,
-  Backdrop,
-  Fade,
-  Grid,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem
-} from '@mui/material';
-import {
-  Upload,
-  X,
-  ImagePlus,
-  FileUp,
-} from 'lucide-react';
-import { useForm, Controller } from 'react-hook-form';
-import { PROGRAM_LEVELS, COOP_CYCLES, COOP_YEARS, type CommonData } from '#/types';
-
-// Dropdown Field Component
-const DropdownField: React.FC<{
-  name: keyof CommonData;
-  label: string;
-  control: any;
-  options: readonly string[];
-}> = ({ name, label, control, options }) => {
-  return (
-    <Controller
-      name={name}
-      control={control}
-      render={({ field }) => (
-        <FormControl fullWidth>
-          <InputLabel>{label}</InputLabel>
-          <Select {...field} label={label}>
-            {options.map((option) => (
-              <MenuItem key={option} value={option}>
-                {option.includes('/') ? option : `${option}${name === 'coop_year' ? ' Year' : ''}`}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-      )}
-    />
-  );
-};
+import React, { useState, useRef, useMemo, useEffect } from 'react';
+import { Button, Dialog, DialogTitle, DialogContent, DialogActions, IconButton, Typography, Box, Paper, Backdrop, Fade, Grid, TextField, Tooltip, Divider, Accordion, AccordionSummary, AccordionDetails, Link } from '@mui/material';
+import { Upload, X, ImagePlus, FileUp, Clipboard, ExternalLink, ChevronDown, Calendar } from 'lucide-react';
+import { useForm } from 'react-hook-form';
+import { PROGRAM_LEVELS, COOP_CYCLES, COOP_YEARS, type CommonData, COOP_ROUND } from '#/types';
+import { DropdownField, TextFieldWithIcon } from './Job/Form/fields';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { UploadSchema } from '#/utils/validators';
 
 interface FileUploadProps {
   onFileSelect: (file: File, common: CommonData) => void;
@@ -61,15 +15,49 @@ const FileUpload: React.FC<FileUploadProps> = ({ onFileSelect }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string>('');
 
-  const { control, handleSubmit, formState: { errors: _ } } = useForm<CommonData>({
+  // Track if the year field has been touched for validation
+  const [yearFieldTouched, setYearFieldTouched] = useState(false);
+
+  const {
+    control,
+    handleSubmit,
+    watch,
+    trigger,
+    formState: { errors }
+  } = useForm<CommonData>({
+    resolver: zodResolver(UploadSchema),
     defaultValues: {
       coop_year: COOP_YEARS[0],
+      coop_round: COOP_ROUND[0],
       coop_cycle: COOP_CYCLES[0],
       program_level: PROGRAM_LEVELS[0],
-      year: new Date().getFullYear()
-    }
+      year: new Date().getFullYear(),
+    },
+    mode: 'onChange', // Enable validation as fields change
   });
+
+  const coop_round = watch('coop_round');
+  const coop_cycle = watch('coop_cycle');
+  const year = watch('year');
+
+  // Validate year field when it changes, but only if it's been touched
+  useEffect(() => {
+    if (yearFieldTouched) {
+      trigger('year');
+    }
+  }, [year, yearFieldTouched, trigger]);
+
+  // Mark the year field as touched
+  const markYearFieldAsTouched = () => {
+    setYearFieldTouched(true);
+  };
+
+  useMemo(() =>
+    setPreviewUrl(`https://banner.drexel.edu/duprod/hwczksrmk.P_StudentReqMaintRanking?i_user_type=S&i_begin_term=${year}${COOP_CYCLES.indexOf(coop_cycle) + 1}5&i_cycle=${coop_round}&i_mode=S&i_recs_per_page=20`),
+    [year, coop_cycle, coop_round]
+  );
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
@@ -108,13 +96,24 @@ const FileUpload: React.FC<FileUploadProps> = ({ onFileSelect }) => {
   };
 
   const onSubmit = (data: CommonData) => {
-    if (selectedFile) {
-      onFileSelect(selectedFile, data);
-      setIsModalOpen(false);
-      setSelectedFile(null);
-    } else {
-      alert('Please select a file');
-    }
+    // Mark the year field as touched to validate before submission
+    setYearFieldTouched(true);
+
+    // Trigger validation for year field
+    trigger('year').then(isValid => {
+      if (isValid && selectedFile) {
+        onFileSelect(selectedFile, data);
+        setIsModalOpen(false);
+        setSelectedFile(null);
+        setYearFieldTouched(false); // Reset touched state on successful submission
+      } else if (!selectedFile) {
+        alert('Please select a file');
+      }
+    });
+  };
+
+  const handleOpenUrl = () => {
+    window.open(previewUrl, '_blank', 'noopener,noreferrer');
   };
 
   return (
@@ -162,7 +161,7 @@ const FileUpload: React.FC<FileUploadProps> = ({ onFileSelect }) => {
           mb: 3
         }}>
           <Typography variant="h6" component="div">
-            Upload Job Listing Image
+            Upload Co-op Offer
           </Typography>
           <IconButton
             edge="end"
@@ -251,14 +250,18 @@ const FileUpload: React.FC<FileUploadProps> = ({ onFileSelect }) => {
                 </IconButton>
               </Paper>
             )}
+            <Typography variant="body2" color="text.secondary">
+              *Upload an image of your job listing for automatic information extraction.
+              Supported formats: JPG, PNG, GIF.
+            </Typography>
 
-            <Typography variant="subtitle1" gutterBottom sx={{ mt: 4, mb: 2 }}>
+            <Typography variant="subtitle1" gutterBottom sx={{ mt: 2, mb: 2 }}>
               Co-op Information
             </Typography>
 
             <Grid container spacing={3}>
-              <Grid item xs={12} md={6}>
-                <DropdownField
+              <Grid item xs={12} md={3}>
+                <DropdownField<CommonData>
                   name="coop_year"
                   label="Co-op Year"
                   control={control}
@@ -266,8 +269,17 @@ const FileUpload: React.FC<FileUploadProps> = ({ onFileSelect }) => {
                 />
               </Grid>
 
-              <Grid item xs={12} md={6}>
-                <DropdownField
+              <Grid item xs={12} md={3}>
+                <DropdownField<CommonData>
+                  name="coop_round"
+                  label="Co-op Round"
+                  control={control}
+                  options={COOP_ROUND}
+                />
+              </Grid>
+
+              <Grid item xs={12} md={4}>
+                <DropdownField<CommonData>
                   name="coop_cycle"
                   label="Co-op Cycle"
                   control={control}
@@ -275,8 +287,8 @@ const FileUpload: React.FC<FileUploadProps> = ({ onFileSelect }) => {
                 />
               </Grid>
 
-              <Grid item xs={12} md={6}>
-                <DropdownField
+              <Grid item xs={12} md={5}>
+                <DropdownField<CommonData>
                   name="program_level"
                   label="Program Level"
                   control={control}
@@ -284,32 +296,121 @@ const FileUpload: React.FC<FileUploadProps> = ({ onFileSelect }) => {
                 />
               </Grid>
 
-              <Grid item xs={12} md={6}>
-                <Controller
+              <Grid item xs={12} md={5}>
+                <TextFieldWithIcon
                   name="year"
+                  label="Year"
                   control={control}
-                  render={({ field }) => (
-                    <FormControl fullWidth>
-                      <InputLabel>Year</InputLabel>
-                      <Select {...field} label="Year">
-                        {[new Date().getFullYear() - 1, new Date().getFullYear(), new Date().getFullYear() + 1].map((year) => (
-                          <MenuItem key={year} value={year}>
-                            {year}
-                          </MenuItem>
-                        ))}
-                      </Select>
-                    </FormControl>
-                  )}
+                  icon={<Calendar size={20} />}
+                  onBlur={markYearFieldAsTouched}
+                  error={yearFieldTouched && !!errors.year}
+                  helperText={yearFieldTouched && errors.year ? errors.year.message : ''}
                 />
               </Grid>
             </Grid>
 
-            <Typography variant="body2" color="text.secondary" sx={{ mt: 4 }}>
-              Upload an image of your job listing for automatic information extraction.
-              Supported formats: JPG, PNG, GIF.
-            </Typography>
-          </Box>
-        </DialogContent>
+            <Divider sx={{ my: 4 }} />
+
+            {/* Drexel Banner URL Section */}
+            <Accordion
+              sx={{
+                mb: 3,
+                boxShadow: '0 1px 2px rgba(0,0,0,0.1)',
+                borderRadius: 1,
+                overflow: 'hidden',
+                '&:before': { display: 'none' },
+              }}
+            >
+              <AccordionSummary
+                expandIcon={<ChevronDown size={18} />}
+                sx={{
+                  bgcolor: 'primary.main',
+                  color: 'white',
+                  '&:hover': { bgcolor: 'primary.dark' }
+                }}
+              >
+                <Typography variant="body1" fontWeight="medium">
+                  Guide To Access Your Ranking
+                </Typography>
+              </AccordionSummary>
+              <AccordionDetails sx={{ p: 1 }}>
+                <Typography variant="body2" color="text.secondary">
+                  *You should be logged into DrexelOne.
+                </Typography>
+                <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
+                  <Typography variant="body2" color="text.secondary" component="span">
+                    <Box>
+                      *This Link must be open in a seprate tab :
+                      <Link
+                        href="https://bannersso.drexel.edu/ssomanager/c/SSB?pkg=bwszkfrag.P_DisplayFinResponsibility%3Fi_url%3Dhwczksrmp.P_StudentRequestMaintStud"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          window.open(e.currentTarget.href, '_blank', 'noopener,noreferrer,nofollow');
+                          return false;
+                        }}
+                        sx={{
+                          ml: 1,
+                          fontWeight: 500,
+                          color: 'primary.main',
+                          textDecoration: 'underline',
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          '&:hover': {
+                            color: 'primary.dark'
+                          }
+                        }}
+                      >
+                        {"Banner "}
+                        <ExternalLink size={14} sx={{ ml: 0.5 }} />
+                      </Link>
+                    </Box>
+                  </Typography>
+                </Box>
+
+                <TextField
+                  fullWidth
+                  size="small"
+                  value={previewUrl}
+                  InputProps={{
+                    readOnly: true,
+                    endAdornment: (
+                      <Box sx={{ display: 'flex' }}>
+                        <Tooltip title="Copy URL">
+                          <IconButton
+                            size="small"
+                            onClick={() => navigator.clipboard.writeText(previewUrl)}
+                            color="primary"
+                          >
+                            <Clipboard size={16} />
+                          </IconButton>
+                        </Tooltip>
+                        <Tooltip title="Open URL">
+                          <IconButton
+                            size="small"
+                            onClick={handleOpenUrl}
+                            color="primary"
+                          >
+                            <ExternalLink size={16} />
+                          </IconButton>
+                        </Tooltip>
+                      </Box>
+                    ),
+                    sx: { typography: 'caption' }
+                  }}
+                  variant="outlined"
+                  sx={{
+                    my: 1,
+                    '& .MuiOutlinedInput-root': { bgcolor: 'background.paper' }
+                  }}
+                />
+                <Typography variant="body2" color="text.secondary">
+                  *Coop information affects the link; ensure all information is correctly entered
+                </Typography>
+              </AccordionDetails>
+            </Accordion>
+
+          </Box >
+        </DialogContent >
 
         <DialogActions sx={{ px: 3, pb: 3 }}>
           <Button
@@ -324,12 +425,12 @@ const FileUpload: React.FC<FileUploadProps> = ({ onFileSelect }) => {
             color="primary"
             onClick={handleSubmit(onSubmit)}
             startIcon={<Upload size={16} />}
-            disabled={!selectedFile}
+            disabled={!selectedFile || (yearFieldTouched && !!errors.year)}
           >
             Upload
           </Button>
         </DialogActions>
-      </Dialog>
+      </Dialog >
     </>
   );
 };

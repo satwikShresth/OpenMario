@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -10,7 +10,8 @@ import {
   Typography,
   Divider,
   Box,
-  Stack
+  Stack,
+  TextField
 } from '@mui/material';
 import {
   DollarSign,
@@ -29,7 +30,7 @@ import {
   TextFieldWithIcon,
   DropdownField,
   SliderField,
-  CompensationField
+  CompensationField,
 } from './fields';
 import { SectionHeader } from './SectionHeader';
 import { FormActions } from './FormActions';
@@ -59,15 +60,20 @@ const JobForm: React.FC<JobFormProps> = ({
   const [locationSearch, setLocationSearch] = useState('');
   const [positionSearch, setPositionSearch] = useState('');
 
+  // Track which fields have been touched for live validation
+  const [touchedFields, setTouchedFields] = useState<Record<string, boolean>>({});
+
   const {
     control,
     handleSubmit,
     reset,
     watch,
     getValues,
-    formState: { errors }
+    trigger,
+    formState: { errors, isSubmitting, isDirty }
   } = useForm<Position>({
     resolver: zodResolver(PositionSchema),
+    mode: 'onChange', // Enable validation on change
     defaultValues: {
       company: jobData?.employer || '',
       position: jobData?.position || '',
@@ -79,7 +85,7 @@ const JobForm: React.FC<JobFormProps> = ({
       year: jobData?.year || new Date().getFullYear(),
       compensation: parseFloat(jobData?.hourly_wage || "10.00"),
       other_compensation: jobData?.other_compensation || '',
-      details: `Employer ID: ${jobData?.employer_id || 'N/A'}, Position ID: ${jobData?.position_id || 'N/A'}, Job Length: ${jobData?.job_length || 'N/A'}`
+      details: `Employer ID: ${jobData?.employer_id || 'N/A'}, Position ID: ${jobData?.position_id || 'N/A'}, Job Length: ${jobData?.job_length || 'N/A'}, Coop Round: ${jobData?.coop_round || 'N/A'}`
     }
   });
 
@@ -87,6 +93,26 @@ const JobForm: React.FC<JobFormProps> = ({
   const workHours = watch('work_hours');
   const selectedCompany = watch('company');
   const weeklyPay = compensation !== null ? compensation * workHours : null;
+
+  // Watch all fields for validation
+  const watchAllFields = watch();
+
+  // Function to mark a field as touched
+  const markFieldAsTouched = (fieldName: string) => {
+    setTouchedFields(prev => ({ ...prev, [fieldName]: true }));
+  };
+
+  // Validate fields when they're touched or their values change
+  useEffect(() => {
+    const validateTouchedFields = async () => {
+      const fieldsToValidate = Object.keys(touchedFields).filter(field => touchedFields[field]);
+      if (fieldsToValidate.length > 0) {
+        await trigger(fieldsToValidate as any);
+      }
+    };
+
+    validateTouchedFields();
+  }, [watchAllFields, touchedFields, trigger]);
 
   // Debounced search function for company
   const debouncedCompanySearch = useCallback(
@@ -139,15 +165,26 @@ const JobForm: React.FC<JobFormProps> = ({
     placeholderData: (previousData) => previousData
   });
 
-  const onSubmit = (data: Position) => {
-    if (editIndex !== undefined) {
-      updateSubmission(editIndex, data as Submission);
-    } else {
-      addSubmission(data as Submission);
-    }
+  const onSubmit = async (data: Position) => {
+    // Mark all fields as touched before submission
+    const allFields = Object.keys(PositionSchema.shape);
+    const allTouched = allFields.reduce((acc, field) => ({ ...acc, [field]: true }), {});
+    setTouchedFields(allTouched);
 
-    reset();
-    if (onCancel) onCancel();
+    // Validate all fields
+    const isValid = await trigger();
+
+    if (isValid) {
+      if (editIndex !== undefined) {
+        updateSubmission(editIndex, data as Submission);
+      } else {
+        addSubmission(data as Submission);
+      }
+
+      reset();
+      setTouchedFields({});
+      if (onCancel) onCancel();
+    }
   };
 
   return (
@@ -161,7 +198,7 @@ const JobForm: React.FC<JobFormProps> = ({
         <Grid container spacing={3}>
 
           <Grid item xs={12} md={6}>
-            <AutocompleteFieldWithIcon
+            <AutocompleteFieldWithIcon<{ id: string, name: string }>
               name="company"
               label="Company"
               control={control}
@@ -170,16 +207,20 @@ const JobForm: React.FC<JobFormProps> = ({
               loading={companyQuery?.isLoading}
               getOptionLabel={(option) => option?.name ?? ""}
               isOptionEqualToValue={(option, value) => option.id === value.id}
-              onInputChange={(_, value) => !!errors.company || debouncedCompanySearch(value)}
+              onInputChange={(_, value) => {
+                markFieldAsTouched('company');
+                debouncedCompanySearch(value);
+              }}
+              onBlur={() => markFieldAsTouched('company')}
               placeholder="Search for a company..."
               rules={{ required: 'Company is required' }}
-              error={errors?.company ? true : false}
-              helperText={errors?.company?.message || ""}
+              error={touchedFields.company && !!errors.company}
+              helperText={touchedFields.company && errors?.company?.message ? errors.company.message : ""}
             />
           </Grid>
 
           <Grid item xs={12} md={6}>
-            <AutocompleteFieldWithIcon
+            <AutocompleteFieldWithIcon<{ id: string, name: string }>
               name="position"
               label="Position"
               control={control}
@@ -188,18 +229,22 @@ const JobForm: React.FC<JobFormProps> = ({
               loading={positionQuery.isFetching}
               getOptionLabel={(option) => option?.name ?? ""}
               isOptionEqualToValue={(option, value) => option.id === value.id}
-              onInputChange={(_, value) => !!errors.position || debouncedPositionSearch(value)}
+              onInputChange={(_, value) => {
+                markFieldAsTouched('position');
+                debouncedPositionSearch(value);
+              }}
+              onBlur={() => markFieldAsTouched('position')}
               placeholder="Search for a position..."
               disabled={!selectedCompany}
               rules={{ required: 'Position is required' }}
-              error={errors?.position ? true : false}
-              helperText={errors?.position?.message || ""}
+              error={touchedFields.position && !!errors.position}
+              helperText={touchedFields.position && errors?.position?.message ? errors.position.message : ""}
               freeSolo
             />
           </Grid>
 
           <Grid item xs={12} md={6}>
-            <AutocompleteFieldWithIcon
+            <AutocompleteFieldWithIcon<{ id: string, name: string }>
               name="location"
               label="Location"
               control={control}
@@ -207,12 +252,16 @@ const JobForm: React.FC<JobFormProps> = ({
               options={locationQuery?.data || []}
               loading={locationQuery.isFetching}
               getOptionLabel={(option) => option?.name ?? ""}
-              isOptionEqualToValue={(option, value) => option.id === value.id}
-              onInputChange={(_, value) => !!errors.location || debouncedLocationSearch(value)}
+              isOptionEqualToValue={(option, value) => option?.id === value?.id}
+              onInputChange={(_, value) => {
+                markFieldAsTouched('location');
+                debouncedLocationSearch(value);
+              }}
+              onBlur={() => markFieldAsTouched('location')}
               placeholder="Search for a city..."
               rules={{ required: 'Location is required' }}
-              error={errors?.location ? true : false}
-              helperText={errors?.location?.message || ""}
+              error={touchedFields.location && !!errors.location}
+              helperText={touchedFields.location && errors?.location?.message ? errors.location.message : ""}
               freeSolo
             />
           </Grid>
@@ -223,8 +272,9 @@ const JobForm: React.FC<JobFormProps> = ({
               label="Program Level"
               control={control}
               options={PROGRAM_LEVELS}
-              error={!!errors.program_level}
-              helperText={errors.program_level?.message}
+              onBlur={() => markFieldAsTouched('program_level')}
+              error={touchedFields.program_level && !!errors.program_level}
+              helperText={touchedFields.program_level && errors.program_level?.message}
             />
           </Grid>
 
@@ -239,8 +289,9 @@ const JobForm: React.FC<JobFormProps> = ({
               label="Co-op Cycle"
               control={control}
               options={COOP_CYCLES}
-              error={!!errors.coop_cycle}
-              helperText={errors.coop_cycle?.message}
+              onBlur={() => markFieldAsTouched('coop_cycle')}
+              error={touchedFields.coop_cycle && !!errors.coop_cycle}
+              helperText={touchedFields.coop_cycle && errors.coop_cycle?.message}
             />
           </Grid>
 
@@ -250,8 +301,9 @@ const JobForm: React.FC<JobFormProps> = ({
               label="Co-op Year"
               control={control}
               options={COOP_YEARS}
-              error={!!errors.coop_year}
-              helperText={errors.coop_year?.message}
+              onBlur={() => markFieldAsTouched('coop_year')}
+              error={touchedFields.coop_year && !!errors.coop_year}
+              helperText={touchedFields.coop_year && errors.coop_year?.message}
             />
           </Grid>
 
@@ -259,12 +311,11 @@ const JobForm: React.FC<JobFormProps> = ({
             <TextFieldWithIcon
               name="year"
               label="Year"
-              type="number"
               control={control}
-              icon={<Calendar size={18} />}
-              inputProps={{ min: 2005, max: new Date().getFullYear() + 1 }}
-              error={!!errors.year}
-              helperText={errors.year?.message}
+              icon={<Calendar size={20} />}
+              onBlur={() => markFieldAsTouched('year')}
+              error={touchedFields.year && !!errors.year}
+              helperText={touchedFields.year && errors.year?.message}
             />
           </Grid>
 
@@ -277,8 +328,9 @@ const JobForm: React.FC<JobFormProps> = ({
             <CompensationField
               control={control}
               value={compensation}
-              error={!!errors.compensation}
-              helperText={errors.compensation?.message}
+              onBlur={() => markFieldAsTouched('compensation')}
+              error={touchedFields.compensation && !!errors.compensation}
+              helperText={touchedFields.compensation && errors.compensation?.message}
             />
           </Grid>
 
@@ -300,14 +352,15 @@ const JobForm: React.FC<JobFormProps> = ({
               max={60}
               step={1}
               currentValue={workHours}
+              onBlur={() => markFieldAsTouched('work_hours')}
               valueLabelFormat={(value) => `${value}h`}
               marks={[
                 { value: 20, label: '20h' },
                 { value: 40, label: '40h' },
                 { value: 60, label: '60h' }
               ]}
-              error={!!errors.work_hours}
-              helperText={errors.work_hours?.message}
+              error={touchedFields.work_hours && !!errors.work_hours}
+              helperText={touchedFields.work_hours && errors.work_hours?.message}
               footer={
                 weeklyPay !== null && (
                   <Typography variant="body2" color="primary" sx={{ mt: 1, fontWeight: 'medium' }}>
@@ -326,8 +379,9 @@ const JobForm: React.FC<JobFormProps> = ({
               icon={<DollarSign size={18} />}
               placeholder="E.g., Benefits, transportation, housing allowance"
               nullable={true}
-              error={!!errors.other_compensation}
-              helperText={errors.other_compensation?.message}
+              onBlur={() => markFieldAsTouched('other_compensation')}
+              error={touchedFields.other_compensation && !!errors.other_compensation}
+              helperText={touchedFields.other_compensation && errors.other_compensation?.message}
             />
           </Grid>
 
@@ -342,13 +396,19 @@ const JobForm: React.FC<JobFormProps> = ({
               rows={3}
               placeholder="Any additional information about the position"
               nullable={true}
-              error={!!errors.details}
-              helperText={errors.details?.message}
+              onBlur={() => markFieldAsTouched('details')}
+              error={touchedFields.details && !!errors.details}
+              helperText={touchedFields.details && errors.details?.message}
             />
           </Grid>
         </Grid>
 
-        <FormActions onCancel={onCancel} isEditing={editIndex !== undefined} />
+        <FormActions
+          onCancel={onCancel}
+          isEditing={editIndex !== undefined}
+          isSubmitting={isSubmitting}
+          hasErrors={Object.keys(errors).length > 0}
+        />
       </Box>
     </Paper>
   );

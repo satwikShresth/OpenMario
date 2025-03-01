@@ -57,7 +57,7 @@ type AutocompleteFieldWithIconProps<T> = {
   freeSolo?: boolean;
 };
 
-export const AutocompleteFieldWithIcon = <T extends object | string>({
+export const AutocompleteFieldWithIcon = <T extends object>({
   name,
   label,
   control,
