@@ -1,28 +1,14 @@
 import { NavLink, useLocation } from 'react-router';
-import {
-  AppBar,
-  Toolbar,
-  Box,
-  IconButton,
-  useTheme,
-  Container,
-  Tooltip,
-  Badge
-} from '@mui/material';
-import {
-  Sun,
-  Moon,
-  Home,
-  Briefcase,
-  Upload,
-  User
-} from 'lucide-react';
+import { AppBar, Toolbar, Box, IconButton, useTheme, Container, Tooltip } from '@mui/material';
+import { Sun, Moon, Home, Briefcase, Upload, User } from 'lucide-react';
 import { useAppTheme } from '#/utils/useThemeProvider';
+import { useState } from 'react';
 
-const SuperMarioNavbar = () => {
+export default () => {
   const { toggleColorMode, mode } = useAppTheme();
   const theme = useTheme();
   const location = useLocation();
+  const [isLogoHovered, setIsLogoHovered] = useState(false);
 
   // Mario theme colors
   const colors = {
@@ -49,7 +35,7 @@ const SuperMarioNavbar = () => {
   // Get the appropriate color set based on the current mode
   const getColor = (lightColor, darkColor) => mode === 'light' ? lightColor : darkColor;
 
-  // Navigation links with their Mario-themed colors
+  // Navigation links with their Mario-themed colors - removed Profile from this array
   const navLinks = [
     {
       text: 'Home',
@@ -71,15 +57,17 @@ const SuperMarioNavbar = () => {
       icon: <Upload size={20} />,
       color: getColor(colors.yellow, colors.neonYellow),
       glowColor: 'rgba(255, 255, 0, 0.7)' // Yellow glow
-    },
-    {
-      text: 'Profile',
-      path: '/profile',
-      icon: <User size={20} />,
-      color: getColor(colors.blue, colors.neonBlue),
-      glowColor: 'rgba(0, 238, 255, 0.7)' // Blue glow
     }
   ];
+
+  // Profile link configuration
+  const profileLink = {
+    text: 'Profile',
+    path: '/profile',
+    icon: <User size={20} />,
+    color: getColor(colors.blue, colors.neonBlue),
+    glowColor: 'rgba(0, 238, 255, 0.7)' // Blue glow
+  };
 
   const isActive = (path) => {
     if (path === '/' && location.pathname === '/') return true;
@@ -114,15 +102,43 @@ const SuperMarioNavbar = () => {
     >
       <Container maxWidth="xl">
         <Toolbar disableGutters sx={{ minHeight: 64 }}>
-          {/* Logo */}
+          {/* Logo with elegant hover effect */}
           <Box
             component={NavLink}
             to="/"
+            onMouseEnter={() => setIsLogoHovered(true)}
+            onMouseLeave={() => setIsLogoHovered(false)}
             sx={{
               display: 'flex',
               alignItems: 'center',
+              justifyContent: 'center',
+              position: 'relative',
               mr: 3,
-              filter: mode === 'dark' ? 'drop-shadow(0 0 5px rgba(255, 255, 255, 0.6))' : 'none'
+              height: 50,
+              transition: 'transform 0.3s ease-out',
+              transform: isLogoHovered ? 'scale(1.08)' : 'scale(1)',
+              '&::after': isLogoHovered ? {
+                content: '""',
+                position: 'absolute',
+                bottom: -8,
+                left: '50%',
+                transform: 'translateX(-50%)',
+                width: '80%',
+                height: 3,
+                background: `linear-gradient(90deg, 
+                  transparent 0%, 
+                  ${mode === 'light' ? colors.red : colors.neonPink} 20%, 
+                  ${mode === 'light' ? colors.blue : colors.neonBlue} 50%, 
+                  ${mode === 'light' ? colors.green : colors.neonGreen} 80%, 
+                  transparent 100%)`,
+                borderRadius: 4,
+                opacity: 0.8,
+                animation: 'rainbow 2s linear infinite',
+                '@keyframes rainbow': {
+                  '0%': { backgroundPosition: '0% 50%' },
+                  '100%': { backgroundPosition: '100% 50%' }
+                }
+              } : {}
             }}
           >
             <Box
@@ -132,9 +148,63 @@ const SuperMarioNavbar = () => {
               sx={{
                 height: 42,
                 width: 'auto',
-                display: 'block'
+                display: 'block',
+                filter: isLogoHovered
+                  ? mode === 'light'
+                    ? 'drop-shadow(0 0 3px rgba(230, 0, 18, 0.5))'
+                    : 'drop-shadow(0 0 8px rgba(255, 255, 255, 0.8))'
+                  : mode === 'dark'
+                    ? 'drop-shadow(0 0 5px rgba(255, 255, 255, 0.3))'
+                    : 'none',
+                transition: 'all 0.3s ease',
+                animation: isLogoHovered
+                  ? 'float 3s ease-in-out infinite'
+                  : 'none',
+                '@keyframes float': {
+                  '0%, 100%': { transform: 'translateY(0)' },
+                  '50%': { transform: 'translateY(-5px)' }
+                }
               }}
             />
+
+            {/* Star effect elements */}
+            {isLogoHovered && [...Array(6)].map((_, i) => (
+              <Box
+                key={i}
+                sx={{
+                  position: 'absolute',
+                  width: i % 2 === 0 ? 4 : 3,
+                  height: i % 2 === 0 ? 4 : 3,
+                  borderRadius: '50%',
+                  backgroundColor: i % 3 === 0
+                    ? mode === 'light' ? colors.yellow : colors.neonYellow
+                    : i % 3 === 1
+                      ? mode === 'light' ? colors.red : colors.neonPink
+                      : mode === 'light' ? colors.blue : colors.neonBlue,
+                  filter: `blur(${i % 2 === 0 ? '0' : '1px'})`,
+                  opacity: 0,
+                  animation: `twinkle 2s ease-in-out ${i * 0.3}s infinite`,
+                  top: '50%',
+                  left: '50%',
+                  transform: `translate(
+                    ${(Math.cos(i * Math.PI / 3) * 30)}px, 
+                    ${(Math.sin(i * Math.PI / 3) * 30)}px
+                  )`,
+                  '@keyframes twinkle': {
+                    '0%, 100%': {
+                      opacity: 0, transform: `translate(
+                      ${(Math.cos(i * Math.PI / 3) * 30)}px, 
+                      ${(Math.sin(i * Math.PI / 3) * 30)}px
+                    ) scale(0.5)` },
+                    '50%': {
+                      opacity: 0.8, transform: `translate(
+                      ${(Math.cos(i * Math.PI / 3) * 35)}px, 
+                      ${(Math.sin(i * Math.PI / 3) * 35)}px
+                    ) scale(1)` }
+                  }
+                }}
+              />
+            ))}
           </Box>
 
           {/* Navigation items */}
@@ -265,6 +335,83 @@ const SuperMarioNavbar = () => {
             ))}
           </Box>
 
+          {/* Profile link - now placed next to theme toggle */}
+          <Box
+            component={NavLink}
+            to={profileLink.path}
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              position: 'relative',
+              bgcolor: isActive(profileLink.path) ? profileLink.color : 'transparent',
+              color: isActive(profileLink.path)
+                ? colors.white
+                : mode === 'light'
+                  ? colors.black
+                  : colors.white,
+              textDecoration: 'none',
+              height: 46,
+              px: 2,
+              mr: 2,
+              borderRadius: isActive(profileLink.path) ? '8px 8px 0 0' : 4,
+              fontWeight: isActive(profileLink.path) ? 700 : 600,
+              fontSize: '0.95rem',
+              border: isActive(profileLink.path) ? `3px solid ${colors.black}` : 'none',
+              borderBottom: isActive(profileLink.path) ? 0 : 'none',
+              zIndex: isActive(profileLink.path) ? 2 : 1,
+              transition: 'all 0.2s ease-in-out',
+
+              // Add glow effect for dark mode
+              ...(mode === 'dark' && isActive(profileLink.path) && {
+                boxShadow: `0 0 15px ${profileLink.glowColor}`,
+              }),
+
+              // Dark mode specific hover effects
+              ...(mode === 'dark' && !isActive(profileLink.path) && {
+                '&:hover': {
+                  bgcolor: `${profileLink.color}22`,
+                  color: profileLink.color,
+                  transform: 'scale(1.05)',
+                  boxShadow: `0 0 10px ${profileLink.glowColor}`,
+                  transition: 'all 0.15s cubic-bezier(0.68, -0.55, 0.265, 1.55)'
+                }
+              }),
+
+              // Light mode hover effects
+              ...(mode === 'light' && !isActive(profileLink.path) && {
+                '&:hover': {
+                  bgcolor: `${profileLink.color}22`,
+                  color: profileLink.color,
+                  transform: 'scale(1.05)',
+                  boxShadow: `0 3px 0 ${colors.black}`,
+                  transition: 'all 0.15s cubic-bezier(0.68, -0.55, 0.265, 1.55)'
+                }
+              }),
+
+              // Add a playful icon pop on hover
+              '& svg': {
+                transition: isActive(profileLink.path) ? 'none' : 'transform 0.2s cubic-bezier(0.68, -0.55, 0.265, 1.55)'
+              },
+              '&:hover svg': {
+                transform: isActive(profileLink.path) ? 'none' : 'scale(1.15) rotate(-5deg)',
+                color: isActive(profileLink.path) ? 'none' : profileLink.color
+              }
+            }}
+          >
+            <Box sx={{
+              mr: 1,
+              display: 'flex',
+              alignItems: 'center',
+              ...(mode === 'dark' && {
+                filter: isActive(profileLink.path) ? 'none' : `drop-shadow(0 0 2px ${profileLink.color})`
+              })
+            }}>
+              {profileLink.icon}
+            </Box>
+            {profileLink.text}
+          </Box>
+
           {/* Theme Toggle Button */}
           <Tooltip title={`Switch to ${mode === 'dark' ? 'light' : 'dark'} mode`}>
             <IconButton
@@ -302,5 +449,3 @@ const SuperMarioNavbar = () => {
     </AppBar>
   );
 };
-
-export default SuperMarioNavbar;
