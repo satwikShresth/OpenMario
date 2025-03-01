@@ -3,7 +3,7 @@ import { Button, Dialog, DialogTitle, DialogContent, DialogActions, IconButton, 
 import { Upload, X, ImagePlus, FileUp, Clipboard, ExternalLink, ChevronDown, Calendar } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { PROGRAM_LEVELS, COOP_CYCLES, COOP_YEARS, type CommonData, COOP_ROUND } from '#/types';
-import { DropdownField, TextFieldWithIcon } from './Job/Form/fields';
+import { DatePickerField, DropdownField, TextFieldWithIcon } from './Job/Form/fields';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { UploadSchema } from '#/utils/validators';
 
@@ -297,11 +297,13 @@ const FileUpload: React.FC<FileUploadProps> = ({ onFileSelect }) => {
               </Grid>
 
               <Grid item xs={12} md={5}>
-                <TextFieldWithIcon
+                <DatePickerField
                   name="year"
                   label="Year"
                   control={control}
-                  icon={<Calendar size={20} />}
+                  views={['year']}
+                  openTo="year"
+                  minYear={2005}
                   onBlur={markYearFieldAsTouched}
                   error={yearFieldTouched && !!errors.year}
                   helperText={yearFieldTouched && errors.year ? errors.year.message : ''}

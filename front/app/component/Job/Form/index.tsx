@@ -31,6 +31,7 @@ import {
   DropdownField,
   SliderField,
   CompensationField,
+  DatePickerField,
 } from './fields';
 import { SectionHeader } from './SectionHeader';
 import { FormActions } from './FormActions';
@@ -308,11 +309,13 @@ const JobForm: React.FC<JobFormProps> = ({
           </Grid>
 
           <Grid item xs={12} md={4}>
-            <TextFieldWithIcon
+            <DatePickerField
               name="year"
               label="Year"
               control={control}
-              icon={<Calendar size={20} />}
+              views={['year']}
+              openTo="year"
+              minYear={2005}
               onBlur={() => markFieldAsTouched('year')}
               error={touchedFields.year && !!errors.year}
               helperText={touchedFields.year && errors.year?.message}

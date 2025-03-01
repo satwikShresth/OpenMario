@@ -4,3 +4,4 @@ export * from "./Text";
 export * from "./Dropdown";
 export * from "./Compenstaion";
 export * from "./Autocomplete";
+export * from "./DatePicker";
