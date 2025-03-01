@@ -413,13 +413,14 @@ export default () => {
           </Box>
 
           {/* Theme Toggle Button */}
+
           <Tooltip title={`Switch to ${mode === 'dark' ? 'light' : 'dark'} mode`}>
             <IconButton
               onClick={toggleColorMode}
               sx={{
                 width: 46,
                 height: 46,
-                bgcolor: mode === 'dark' ? colors.neonYellow : colors.blue,
+                bgcolor: mode === 'dark' ? colors.blue : colors.neonYellow,
                 color: colors.black,
                 border: `3px solid ${colors.black}`,
                 borderRadius: '50%',
@@ -428,7 +429,7 @@ export default () => {
                   : '0 4px 0 rgba(0,0,0,0.6)',
                 transition: 'all 0.15s ease',
                 '&:hover': {
-                  bgcolor: mode === 'dark' ? colors.neonYellow : colors.blue,
+                  bgcolor: mode === 'dark' ? colors.blue : colors.neonYellow,
                   transform: 'translateY(2px)',
                   boxShadow: mode === 'dark'
                     ? '0 2px 0 rgba(0,0,0,0.6), 0 0 10px rgba(255,255,0,0.5)'
@@ -438,14 +439,32 @@ export default () => {
               }}
             >
               {mode === 'dark' ? (
-                <Sun size={22} color={colors.black} />
+                <Box
+                  component="img"
+                  src="/moon.png"
+                  alt="Moon"
+                  sx={{
+                    width: "50px",
+                    height: "auto",
+                    overflow: "visible",
+                    objectFit: "contain",
+                    filter: 'drop-shadow(0 1px 2px rgba(0,0,0,0.2))',
+                    transition: 'transform 0.3s ease-in-out',
+                    '&:hover': {
+                      transform: 'rotate(-10deg)'
+                    }
+                  }}
+                />
               ) : (
-                <Moon size={22} color={colors.white} />
+                <Sun size={22} color={colors.black} />
               )}
             </IconButton>
           </Tooltip>
+
+
+
         </Toolbar>
       </Container>
-    </AppBar>
+    </AppBar >
   );
 };
