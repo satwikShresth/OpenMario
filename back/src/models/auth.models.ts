@@ -38,4 +38,3 @@ export const JwtPayload = z.object({
    });
 
 export type JwtPayload = z.infer<typeof JwtPayload>;
-

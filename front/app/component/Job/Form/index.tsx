@@ -168,13 +168,13 @@ const JobForm: React.FC<JobFormProps> = ({
               icon={<Building size={18} />}
               options={companyQuery?.data || []}
               loading={companyQuery?.isLoading}
-              getOptionLabel={(option) => { return option }}
-              isOptionEqualToValue={(option, value) => option === value}
+              getOptionLabel={(option) => option?.name ?? ""}
+              isOptionEqualToValue={(option, value) => option.id === value.id}
               onInputChange={(_, value) => !!errors.company || debouncedCompanySearch(value)}
               placeholder="Search for a company..."
               rules={{ required: 'Company is required' }}
-              error={!!errors.company}
-              helperText={errors.company?.message}
+              error={errors?.company ? true : false}
+              helperText={errors?.company?.message || ""}
             />
           </Grid>
 
@@ -186,14 +186,14 @@ const JobForm: React.FC<JobFormProps> = ({
               icon={<Briefcase size={18} />}
               options={positionQuery?.data || []}
               loading={positionQuery.isFetching}
-              getOptionLabel={(option) => { return option }}
-              isOptionEqualToValue={(option, value) => option === value}
+              getOptionLabel={(option) => option?.name ?? ""}
+              isOptionEqualToValue={(option, value) => option.id === value.id}
               onInputChange={(_, value) => !!errors.position || debouncedPositionSearch(value)}
               placeholder="Search for a position..."
               disabled={!selectedCompany}
               rules={{ required: 'Position is required' }}
-              error={!!errors.position}
-              helperText={errors.position?.message}
+              error={errors?.position ? true : false}
+              helperText={errors?.position?.message || ""}
               freeSolo
             />
           </Grid>
@@ -206,13 +206,13 @@ const JobForm: React.FC<JobFormProps> = ({
               icon={<MapPin size={18} />}
               options={locationQuery?.data || []}
               loading={locationQuery.isFetching}
-              getOptionLabel={(option) => { return option }}
-              isOptionEqualToValue={(option, value) => option === value}
+              getOptionLabel={(option) => option?.name ?? ""}
+              isOptionEqualToValue={(option, value) => option.id === value.id}
               onInputChange={(_, value) => !!errors.location || debouncedLocationSearch(value)}
-              placeholder="Philadelphia, PA"
+              placeholder="Search for a city..."
               rules={{ required: 'Location is required' }}
-              error={!!errors.location}
-              helperText={errors.location?.message}
+              error={errors?.location ? true : false}
+              helperText={errors?.location?.message || ""}
               freeSolo
             />
           </Grid>

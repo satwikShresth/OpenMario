@@ -17,7 +17,6 @@ const ThemeContext = createContext<ThemeContextType>({
 // Custom hook to use the theme context
 export const useAppTheme = () => useContext(ThemeContext);
 
-// Enhanced Super Mario color palette with better harmony
 const marioColors = {
   red: '#E60012',         // Mario red - stays vibrant
   blue: '#009FE3',        // Sky blue - maintains harmony
@@ -43,28 +42,23 @@ const marioColors = {
   darkSecondary: '#A42D6D', // Subtle accent – a muted version of Mario red/pink for contrast
 }
 
-// Theme provider component
 interface ThemeContextProviderProps {
   children: React.ReactNode;
 }
 
 export const ThemeContextProvider: React.FC<ThemeContextProviderProps> = ({ children }) => {
-  // Try to get user's preference from localStorage, default to light
   const [mode, setMode] = useState<PaletteMode>('light');
 
-  // Effect to get saved theme from localStorage on initial load
   useEffect(() => {
     const savedMode = localStorage.getItem('themeMode') as PaletteMode | null;
     if (savedMode) {
       setMode(savedMode);
     } else {
-      // Check if user prefers dark mode
       const prefersDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
       setMode(prefersDarkMode ? 'dark' : 'light');
     }
   }, []);
 
-  // Theme toggle function
   const toggleColorMode = () => {
     setMode((prevMode) => {
       const newMode = prevMode === 'light' ? 'dark' : 'light';
@@ -516,7 +510,6 @@ export const ThemeContextProvider: React.FC<ThemeContextProviderProps> = ({ chil
     [mode]
   );
 
-  // Context value
   const contextValue = useMemo(() => ({
     toggleColorMode,
     mode,

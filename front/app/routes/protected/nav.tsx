@@ -441,7 +441,7 @@ export default () => {
               {mode === 'dark' ? (
                 <Box
                   component="img"
-                  src="/moon.png"
+                  src="/mushroom.png"
                   alt="Moon"
                   sx={{
                     width: "50px",

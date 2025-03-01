@@ -47,10 +47,14 @@ export default () => {
          const { query, order } = req?.validated?.query;
 
          return await db
-            .select({ name: company.name })
+            .select({ id: company.id, name: company.name })
             .from(company)
             .where(query)
-            .then((results) => res.status(200).json(results.map((item) => item.name)))
+            .then((results) => {
+               console.log(results);
+               return results;
+            })
+            .then((results) => res.status(200).json(results))
             .catch(({ message }) => res.status(409).json({ message }));
       },
    );
@@ -97,12 +101,12 @@ export default () => {
          const { queries, order } = req?.validated?.query;
 
          return await db
-            .select({ name: position.name })
+            .select({ id: position.id, name: position.name })
             .from(position)
             .innerJoin(company, eq(position.company_id, company.id))
             .where(and(...queries))
-            .then((results) => res.status(200).json(results.map((item) => item.name)))
-            .catch(({ message }) => res.staus(409).json({ message }));
+            .then((results) => res.status(200).json(results))
+            .catch(({ message }) => res.status(409).json({ message }));
       },
    );
 
@@ -151,8 +155,8 @@ export default () => {
             .from(location)
             .where(or(...queries))
             .orderBy(order)
-            .then((results) => res.status(200).json(results.map((item) => `${item.city}, ${item.state_code}`)))
-            .catch(({ message }) => res.staus(409).json({ message }));
+            .then((results) => res.status(200).json(results.map((item) => ({ id: item.id, name: `${item.city}, ${item.state_code}` }))))
+            .catch(({ message }) => res.status(409).json({ message }));
       },
    );
 

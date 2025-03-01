@@ -103,81 +103,14 @@ export const SubmissionQuery = SubmissionQuerySchema
       }),
    );
 
-export const PositionInfo = z.object({
-   company: name(z.string())
-      .openapi({
-         description: 'Name of the company offering the position',
-         example: 'Acme Corporation',
-         minLength: 3,
-         maxLength: 100,
-         pattern: "^[a-zA-Z\\s\\-'\\p{L}\\p{M}]+$",
-      }),
-
-   position: name(z.string())
-      .openapi({
-         description: 'Title of the position',
-         example: 'Senior Software Engineer',
-         minLength: 3,
-         maxLength: 100,
-         pattern: "^[a-zA-Z\\s\\-'\\p{L}\\p{M}]+$",
-      }),
-
-   location: z.string()
-      .regex(/^[A-Za-z\s.-]+,\s*[A-Z]{2}$/)
-      .openapi({
-         description: 'Location in City, State format (US only)',
-         example: 'Boston, MA',
-         pattern: '^[A-Za-z\\s.-]+,\\s*[A-Z]{2}$',
-      }),
-
-   work_hours: z.preprocess(
-      (val) => Number(val),
-      work_hours(z.number()),
-   ).openapi({
-      description: 'Weekly work hours',
-      example: 40,
-      minimum: 0,
-      maximum: 168,
-   }),
-
-   compensation: compensation(z.number())
-      .openapi({
-         description: 'Base compensation amount',
-         example: 120000,
-         minimum: 0,
-      }),
-
-   other_compensation: z.string()
-      .max(255, 'Cannot be more than 255 characters')
-      .openapi({
-         description: 'Additional compensation details (bonuses, equity, etc.)',
-         example: 'Annual bonus up to 15%, stock options vesting over 4 years',
-         maxLength: 255,
-      }),
-
-   details: z.string()
-      .max(255, 'Cannot be more than 255 characters')
-      .openapi({
-         description: 'Additional position details and requirements',
-         example: 'Remote work available, requires occasional travel, 5+ years experience preferred',
-         maxLength: 255,
-      }),
-}).openapi({
-   title: 'Position Information',
-   description: 'Comprehensive information about a job position including company, location, compensation, and other details',
-   example: {
-      company: 'Acme Corporation',
-      position: 'Senior Software Engineer',
-      location: 'Boston, MA',
-      work_hours: 40,
-      compensation: 120000,
-      other_compensation: 'Annual bonus up to 15%, stock options vesting over 4 years',
-      details: 'Remote work available, requires occasional travel, 5+ years experience preferred',
-   },
-});
-
 export const SubmissionAggregateSchema = z.object({
-   positions: z.array(PositionInfo).min(1),
+   company: name(z.string()),
+   position: name(z.string()),
+   location: z.string(),
+   work_hours: z.preprocess((val) => Number(val), work_hours(z.number())),
+   compensation: compensation(z.number()),
+   other_compensation: z.string().max(255, 'Cannot be more than 255 characters'),
+   details: z.string().max(255, 'Cannot be more than 255 characters'),
    year: z.preprocess((year) => Number(year), year(z.number())),
    coop_year: z.enum(coop_year),
    coop_cycle: z.enum(coop_cycle),
