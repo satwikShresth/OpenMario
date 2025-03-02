@@ -1,7 +1,6 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useCallback, useMemo } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
 import { type Job } from '#/hooks/useJobParser';
 import { useJobSubmissionStore } from '#/stores/useJobSubmissionStore';
 import {
@@ -11,11 +10,9 @@ import {
   Divider,
   Box,
   Stack,
-  TextField
 } from '@mui/material';
 import {
   DollarSign,
-  Calendar,
   Briefcase,
   MapPin,
   Building,
@@ -57,122 +54,101 @@ const JobForm: React.FC<JobFormProps> = ({
   onCancel
 }) => {
   const { addSubmission, updateSubmission } = useJobSubmissionStore();
-  const [companySearch, setCompanySearch] = useState('');
-  const [locationSearch, setLocationSearch] = useState('');
-  const [positionSearch, setPositionSearch] = useState('');
 
-  // Track which fields have been touched for live validation
-  const [touchedFields, setTouchedFields] = useState<Record<string, boolean>>({});
+  // Initialize form default values
+  const formDefaultValues = useMemo(() => ({
+    company: jobData?.employer || '',
+    position: jobData?.position || '',
+    location: jobData?.location || '',
+    program_level: jobData?.program_level || 'Undergraduate',
+    work_hours: parseInt(jobData?.hours_per_week || "40"),
+    coop_cycle: jobData?.coop_cycle || 'Fall/Winter',
+    coop_year: jobData?.coop_year || '1st',
+    year: jobData?.year || new Date().getFullYear(),
+    compensation: parseFloat(jobData?.hourly_wage || "10.00"),
+    other_compensation: jobData?.other_compensation || '',
+    details: `Employer ID: ${jobData?.employer_id || 'N/A'}, Position ID: ${jobData?.position_id || 'N/A'}, Job Length: ${jobData?.job_length || 'N/A'}, Coop Round: ${jobData?.coop_round || 'N/A'}`
+  }), [jobData]);
 
+  // Only validate on submit, not onChange
   const {
     control,
     handleSubmit,
     reset,
     watch,
-    getValues,
     trigger,
     formState: { errors, isSubmitting, isDirty }
   } = useForm<Position>({
     resolver: zodResolver(PositionSchema),
-    mode: 'onChange', // Enable validation on change
-    defaultValues: {
-      company: jobData?.employer || '',
-      position: jobData?.position || '',
-      location: jobData?.location || '',
-      program_level: jobData?.program_level || 'Undergraduate',
-      work_hours: parseInt(jobData?.hours_per_week || "40"),
-      coop_cycle: jobData?.coop_cycle || 'Fall/Winter',
-      coop_year: jobData?.coop_year || '1st',
-      year: jobData?.year || new Date().getFullYear(),
-      compensation: parseFloat(jobData?.hourly_wage || "10.00"),
-      other_compensation: jobData?.other_compensation || '',
-      details: `Employer ID: ${jobData?.employer_id || 'N/A'}, Position ID: ${jobData?.position_id || 'N/A'}, Job Length: ${jobData?.job_length || 'N/A'}, Coop Round: ${jobData?.coop_round || 'N/A'}`
-    }
+    mode: 'onBlur', // Only validate on blur, not onChange
+    defaultValues: formDefaultValues
   });
 
+  // Search state with optimized debounce
+  const [searches, setSearches] = useState({
+    company: '',
+    position: '',
+    location: ''
+  });
+
+  // Only watch specific fields that need reactive updates
   const compensation = watch('compensation');
   const workHours = watch('work_hours');
   const selectedCompany = watch('company');
-  const weeklyPay = compensation !== null ? compensation * workHours : null;
 
-  // Watch all fields for validation
-  const watchAllFields = watch();
+  // Calculate derived values
+  const weeklyPay = useMemo(() =>
+    compensation !== null ? compensation * workHours : null
+    , [compensation, workHours]);
 
-  // Function to mark a field as touched
-  const markFieldAsTouched = (fieldName: string) => {
-    setTouchedFields(prev => ({ ...prev, [fieldName]: true }));
-  };
-
-  // Validate fields when they're touched or their values change
-  useEffect(() => {
-    const validateTouchedFields = async () => {
-      const fieldsToValidate = Object.keys(touchedFields).filter(field => touchedFields[field]);
-      if (fieldsToValidate.length > 0) {
-        await trigger(fieldsToValidate as any);
-      }
-    };
-
-    validateTouchedFields();
-  }, [watchAllFields, touchedFields, trigger]);
-
-  // Debounced search function for company
-  const debouncedCompanySearch = useCallback(
-    debounce((searchText) => {
-      setCompanySearch(searchText);
-    }, 500),
+  // Create a single debounced search function
+  const debouncedSearch = useCallback(
+    debounce((field: string, value: string) => {
+      setSearches(prev => ({ ...prev, [field]: value }));
+    }, 300),
     []
   );
 
-  const debouncedPositionSearch = useCallback(
-    debounce((searchText) => {
-      setPositionSearch(searchText);
-    }, 500),
-    []
-  );
-
-  const debouncedLocationSearch = useCallback(
-    debounce((searchText) => {
-      setLocationSearch(searchText);
-    }, 500),
-    []
-  );
-
+  // Optimized queries with proper dependency tracking
   const companyQuery = useQuery({
     ...getAutocompleteCompanyOptions({
-      query: { comp: companySearch }
+      query: { comp: searches.company }
     }),
-    enabled: companySearch.length >= 3,
+    enabled: searches.company.length >= 3,
+    staleTime: 30000, // Cache results for 30 seconds
     placeholderData: (previousData) => previousData
   });
+
+  // Extract company name if it's an object
+  const companyName = typeof selectedCompany === 'object' && selectedCompany !== null
+    ? selectedCompany.name
+    : selectedCompany;
 
   const positionQuery = useQuery({
     ...getAutocompletePositionOptions({
       query: {
-        comp: selectedCompany || '',
-        pos: positionSearch
+        comp: companyName || '',
+        pos: searches.position
       }
     }),
-    enabled: !!selectedCompany && positionSearch.length >= 3,
+    enabled: !!selectedCompany && searches.position.length >= 3,
+    staleTime: 30000,
     placeholderData: (previousData) => previousData
   });
 
   const locationQuery = useQuery({
     ...getAutocompleteLocationOptions({
       query: {
-        loc: locationSearch || '',
+        loc: searches.location || '',
       }
     }),
-    enabled: locationSearch.length >= 3,
+    enabled: searches.location.length >= 3,
+    staleTime: 30000,
     placeholderData: (previousData) => previousData
   });
 
   const onSubmit = async (data: Position) => {
-    // Mark all fields as touched before submission
-    const allFields = Object.keys(PositionSchema.shape);
-    const allTouched = allFields.reduce((acc, field) => ({ ...acc, [field]: true }), {});
-    setTouchedFields(allTouched);
-
-    // Validate all fields
+    // Validate all fields only on submit
     const isValid = await trigger();
 
     if (isValid) {
@@ -183,7 +159,6 @@ const JobForm: React.FC<JobFormProps> = ({
       }
 
       reset();
-      setTouchedFields({});
       if (onCancel) onCancel();
     }
   };
@@ -197,7 +172,6 @@ const JobForm: React.FC<JobFormProps> = ({
         <Divider sx={{ mb: 3 }} />
 
         <Grid container spacing={3}>
-
           <Grid item xs={12} md={6}>
             <AutocompleteFieldWithIcon<{ id: string, name: string }>
               name="company"
@@ -209,14 +183,12 @@ const JobForm: React.FC<JobFormProps> = ({
               getOptionLabel={(option) => option?.name ?? ""}
               isOptionEqualToValue={(option, value) => option.id === value.id}
               onInputChange={(_, value) => {
-                markFieldAsTouched('company');
-                debouncedCompanySearch(value);
+                debouncedSearch('company', value);
               }}
-              onBlur={() => markFieldAsTouched('company')}
               placeholder="Search for a company..."
               rules={{ required: 'Company is required' }}
-              error={touchedFields.company && !!errors.company}
-              helperText={touchedFields.company && errors?.company?.message ? errors.company.message : ""}
+              error={!!errors.company}
+              helperText={errors?.company?.message || ""}
             />
           </Grid>
 
@@ -231,15 +203,13 @@ const JobForm: React.FC<JobFormProps> = ({
               getOptionLabel={(option) => option?.name ?? ""}
               isOptionEqualToValue={(option, value) => option.id === value.id}
               onInputChange={(_, value) => {
-                markFieldAsTouched('position');
-                debouncedPositionSearch(value);
+                debouncedSearch('position', value);
               }}
-              onBlur={() => markFieldAsTouched('position')}
               placeholder="Search for a position..."
               disabled={!selectedCompany}
               rules={{ required: 'Position is required' }}
-              error={touchedFields.position && !!errors.position}
-              helperText={touchedFields.position && errors?.position?.message ? errors.position.message : ""}
+              error={!!errors.position}
+              helperText={errors?.position?.message || ""}
               freeSolo
             />
           </Grid>
@@ -255,14 +225,12 @@ const JobForm: React.FC<JobFormProps> = ({
               getOptionLabel={(option) => option?.name ?? ""}
               isOptionEqualToValue={(option, value) => option?.id === value?.id}
               onInputChange={(_, value) => {
-                markFieldAsTouched('location');
-                debouncedLocationSearch(value);
+                debouncedSearch('location', value);
               }}
-              onBlur={() => markFieldAsTouched('location')}
               placeholder="Search for a city..."
               rules={{ required: 'Location is required' }}
-              error={touchedFields.location && !!errors.location}
-              helperText={touchedFields.location && errors?.location?.message ? errors.location.message : ""}
+              error={!!errors.location}
+              helperText={errors?.location?.message || ""}
               freeSolo
             />
           </Grid>
@@ -273,9 +241,8 @@ const JobForm: React.FC<JobFormProps> = ({
               label="Program Level"
               control={control}
               options={PROGRAM_LEVELS}
-              onBlur={() => markFieldAsTouched('program_level')}
-              error={touchedFields.program_level && !!errors.program_level}
-              helperText={touchedFields.program_level && errors.program_level?.message}
+              error={!!errors.program_level}
+              helperText={errors.program_level?.message}
             />
           </Grid>
 
@@ -290,9 +257,8 @@ const JobForm: React.FC<JobFormProps> = ({
               label="Co-op Cycle"
               control={control}
               options={COOP_CYCLES}
-              onBlur={() => markFieldAsTouched('coop_cycle')}
-              error={touchedFields.coop_cycle && !!errors.coop_cycle}
-              helperText={touchedFields.coop_cycle && errors.coop_cycle?.message}
+              error={!!errors.coop_cycle}
+              helperText={errors.coop_cycle?.message}
             />
           </Grid>
 
@@ -302,9 +268,8 @@ const JobForm: React.FC<JobFormProps> = ({
               label="Co-op Year"
               control={control}
               options={COOP_YEARS}
-              onBlur={() => markFieldAsTouched('coop_year')}
-              error={touchedFields.coop_year && !!errors.coop_year}
-              helperText={touchedFields.coop_year && errors.coop_year?.message}
+              error={!!errors.coop_year}
+              helperText={errors.coop_year?.message}
             />
           </Grid>
 
@@ -316,9 +281,8 @@ const JobForm: React.FC<JobFormProps> = ({
               views={['year']}
               openTo="year"
               minYear={2005}
-              onBlur={() => markFieldAsTouched('year')}
-              error={touchedFields.year && !!errors.year}
-              helperText={touchedFields.year && errors.year?.message}
+              error={!!errors.year}
+              helperText={errors.year?.message}
             />
           </Grid>
 
@@ -331,9 +295,8 @@ const JobForm: React.FC<JobFormProps> = ({
             <CompensationField
               control={control}
               value={compensation}
-              onBlur={() => markFieldAsTouched('compensation')}
-              error={touchedFields.compensation && !!errors.compensation}
-              helperText={touchedFields.compensation && errors.compensation?.message}
+              error={!!errors.compensation}
+              helperText={errors.compensation?.message}
             />
           </Grid>
 
@@ -355,15 +318,14 @@ const JobForm: React.FC<JobFormProps> = ({
               max={60}
               step={1}
               currentValue={workHours}
-              onBlur={() => markFieldAsTouched('work_hours')}
               valueLabelFormat={(value) => `${value}h`}
               marks={[
                 { value: 20, label: '20h' },
                 { value: 40, label: '40h' },
                 { value: 60, label: '60h' }
               ]}
-              error={touchedFields.work_hours && !!errors.work_hours}
-              helperText={touchedFields.work_hours && errors.work_hours?.message}
+              error={!!errors.work_hours}
+              helperText={errors.work_hours?.message}
               footer={
                 weeklyPay !== null && (
                   <Typography variant="body2" color="primary" sx={{ mt: 1, fontWeight: 'medium' }}>
@@ -382,9 +344,8 @@ const JobForm: React.FC<JobFormProps> = ({
               icon={<DollarSign size={18} />}
               placeholder="E.g., Benefits, transportation, housing allowance"
               nullable={true}
-              onBlur={() => markFieldAsTouched('other_compensation')}
-              error={touchedFields.other_compensation && !!errors.other_compensation}
-              helperText={touchedFields.other_compensation && errors.other_compensation?.message}
+              error={!!errors.other_compensation}
+              helperText={errors.other_compensation?.message}
             />
           </Grid>
 
@@ -399,9 +360,8 @@ const JobForm: React.FC<JobFormProps> = ({
               rows={3}
               placeholder="Any additional information about the position"
               nullable={true}
-              onBlur={() => markFieldAsTouched('details')}
-              error={touchedFields.details && !!errors.details}
-              helperText={touchedFields.details && errors.details?.message}
+              error={!!errors.details}
+              helperText={errors.details?.message}
             />
           </Grid>
         </Grid>

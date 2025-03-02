@@ -1,9 +1,9 @@
 import React, { useState, useRef, useMemo, useEffect } from 'react';
-import { Button, Dialog, DialogTitle, DialogContent, DialogActions, IconButton, Typography, Box, Paper, Backdrop, Fade, Grid, TextField, Tooltip, Divider, Accordion, AccordionSummary, AccordionDetails, Link } from '@mui/material';
-import { Upload, X, ImagePlus, FileUp, Clipboard, ExternalLink, ChevronDown, Calendar } from 'lucide-react';
+import { Button, Dialog, DialogTitle, DialogContent, DialogActions, IconButton, Typography, Box, Paper, Backdrop, Fade, Grid2 as Grid, TextField, Tooltip, Divider, Accordion, AccordionSummary, AccordionDetails, Link } from '@mui/material';
+import { Upload, X, ImagePlus, FileUp, Clipboard, ExternalLink, ChevronDown } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { PROGRAM_LEVELS, COOP_CYCLES, COOP_YEARS, type CommonData, COOP_ROUND } from '#/types';
-import { DatePickerField, DropdownField, TextFieldWithIcon } from './Job/Form/fields';
+import { DatePickerField, DropdownField } from './Job/Form/fields';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { UploadSchema } from '#/utils/validators';
 
@@ -17,7 +17,6 @@ const FileUpload: React.FC<FileUploadProps> = ({ onFileSelect }) => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string>('');
 
-  // Track if the year field has been touched for validation
   const [yearFieldTouched, setYearFieldTouched] = useState(false);
 
   const {
@@ -35,21 +34,19 @@ const FileUpload: React.FC<FileUploadProps> = ({ onFileSelect }) => {
       program_level: PROGRAM_LEVELS[0],
       year: new Date().getFullYear(),
     },
-    mode: 'onChange', // Enable validation as fields change
+    mode: 'onChange',
   });
 
   const coop_round = watch('coop_round');
   const coop_cycle = watch('coop_cycle');
   const year = watch('year');
 
-  // Validate year field when it changes, but only if it's been touched
   useEffect(() => {
     if (yearFieldTouched) {
       trigger('year');
     }
   }, [year, yearFieldTouched, trigger]);
 
-  // Mark the year field as touched
   const markYearFieldAsTouched = () => {
     setYearFieldTouched(true);
   };
@@ -96,16 +93,14 @@ const FileUpload: React.FC<FileUploadProps> = ({ onFileSelect }) => {
   };
 
   const onSubmit = (data: CommonData) => {
-    // Mark the year field as touched to validate before submission
     setYearFieldTouched(true);
 
-    // Trigger validation for year field
     trigger('year').then(isValid => {
       if (isValid && selectedFile) {
         onFileSelect(selectedFile, data);
         setIsModalOpen(false);
         setSelectedFile(null);
-        setYearFieldTouched(false); // Reset touched state on successful submission
+        setYearFieldTouched(false);
       } else if (!selectedFile) {
         alert('Please select a file');
       }
@@ -144,12 +139,9 @@ const FileUpload: React.FC<FileUploadProps> = ({ onFileSelect }) => {
         onClose={() => setIsModalOpen(false)}
         maxWidth="sm"
         fullWidth
-        TransitionComponent={Fade}
+        slots={{ transition: Fade, backdrop: Backdrop }}
         TransitionProps={{ timeout: 500 }}
-        BackdropComponent={Backdrop}
-        BackdropProps={{
-          timeout: 500,
-        }}
+        BackdropProps={{ timeout: 500 }}
       >
         <DialogTitle sx={{
           display: 'flex',
@@ -259,47 +251,30 @@ const FileUpload: React.FC<FileUploadProps> = ({ onFileSelect }) => {
               Co-op Information
             </Typography>
 
-            <Grid container spacing={3}>
-              <Grid item xs={12} md={3}>
+            <Grid container columnSpacing={4} rowSpacing={3}>
+              <Grid item size={{ xs: 12, md: 4 }}>
                 <DropdownField<CommonData>
                   name="coop_year"
-                  label="Co-op Year"
+                  label="Coop Year"
                   control={control}
                   options={COOP_YEARS}
                 />
               </Grid>
 
-              <Grid item xs={12} md={3}>
+              <Grid item size={{ xs: 12, md: 3 }}>
                 <DropdownField<CommonData>
                   name="coop_round"
-                  label="Co-op Round"
+                  label="Cycle"
                   control={control}
                   options={COOP_ROUND}
                 />
               </Grid>
 
-              <Grid item xs={12} md={4}>
-                <DropdownField<CommonData>
-                  name="coop_cycle"
-                  label="Co-op Cycle"
-                  control={control}
-                  options={COOP_CYCLES}
-                />
-              </Grid>
 
-              <Grid item xs={12} md={5}>
-                <DropdownField<CommonData>
-                  name="program_level"
-                  label="Program Level"
-                  control={control}
-                  options={PROGRAM_LEVELS}
-                />
-              </Grid>
-
-              <Grid item xs={12} md={5}>
+              <Grid item size={{ xs: 12, md: 4 }}>
                 <DatePickerField
                   name="year"
-                  label="Year"
+                  label="Term"
                   control={control}
                   views={['year']}
                   openTo="year"
@@ -309,6 +284,25 @@ const FileUpload: React.FC<FileUploadProps> = ({ onFileSelect }) => {
                   helperText={yearFieldTouched && errors.year ? errors.year.message : ''}
                 />
               </Grid>
+
+              <Grid item size={{ xs: 12, md: 4 }}>
+                <DropdownField<CommonData>
+                  name="program_level"
+                  label="Program Level"
+                  control={control}
+                  options={PROGRAM_LEVELS}
+                />
+              </Grid>
+
+              <Grid item size={{ xs: 12, md: 3.4 }}>
+                <DropdownField<CommonData>
+                  name="coop_cycle"
+                  label="Season"
+                  control={control}
+                  options={COOP_CYCLES}
+                />
+              </Grid>
+
             </Grid>
 
             <Divider sx={{ my: 4 }} />
@@ -336,9 +330,6 @@ const FileUpload: React.FC<FileUploadProps> = ({ onFileSelect }) => {
                 </Typography>
               </AccordionSummary>
               <AccordionDetails sx={{ p: 1 }}>
-                <Typography variant="body2" color="text.secondary">
-                  *You should be logged into DrexelOne.
-                </Typography>
                 <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
                   <Typography variant="body2" color="text.secondary" component="span">
                     <Box>
@@ -363,7 +354,7 @@ const FileUpload: React.FC<FileUploadProps> = ({ onFileSelect }) => {
                         }}
                       >
                         {"Banner "}
-                        <ExternalLink size={14} sx={{ ml: 0.5 }} />
+                        <ExternalLink size={14} />
                       </Link>
                     </Box>
                   </Typography>
