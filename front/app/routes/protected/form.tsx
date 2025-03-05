@@ -7,6 +7,14 @@ import { useOcrJobStore } from '#/stores/useOcrJobStore';
 import { type Position } from '#/utils/validators';
 import type { Submission } from '#client/types.gen';
 
+
+export const meta = () => {
+  return [
+    { title: 'OpenMario | Form' },
+    { name: 'description', content: '' },
+  ];
+};
+
 const FormPage: React.FC = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
@@ -19,7 +27,6 @@ const FormPage: React.FC = () => {
 
   const submissionIndex = submissionIndexParam ? parseInt(submissionIndexParam) : undefined;
   const ocrIndex = ocrIndexParam ? parseInt(ocrIndexParam) : undefined;
-  console.log(ocrIndex)
 
   const submissionData = submissionIndex !== undefined ? submissions[submissionIndex] : undefined;
   const ocrData = ocrIndex !== undefined ? jobs[ocrIndex] : undefined;

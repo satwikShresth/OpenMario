@@ -7,7 +7,8 @@ import {
 
 export default [
   layout("routes/protected/layout.tsx", [
-    index("routes/protected/home.tsx"),
+    index("routes/protected/table.tsx"),
+    route("submission", "routes/protected/submission.tsx"),
     route("form", "routes/protected/form.tsx"),
   ]),
 

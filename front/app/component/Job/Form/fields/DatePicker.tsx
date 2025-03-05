@@ -56,7 +56,6 @@ export const DatePickerField = <T extends FieldValues>({
                 maxDate={maxDate}
                 value={dateTimeValue}
                 onChange={(newValue) => {
-                  // Extract just the year as an integer
                   onChange(newValue ? newValue.year : null);
                 }}
                 slotProps={{

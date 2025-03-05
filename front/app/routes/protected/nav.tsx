@@ -9,7 +9,6 @@ export default () => {
   const location = useLocation();
   const [isLogoHovered, setIsLogoHovered] = useState(false);
 
-  // Mario theme colors
   const colors = {
     // Light mode colors
     red: '#E60012', // Mario's hat/shirt
@@ -44,8 +43,8 @@ export default () => {
       glowColor: 'rgba(255, 51, 153, 0.7)' // Pink glow
     },
     {
-      text: 'Jobs',
-      path: '/jobs',
+      text: 'Submission',
+      path: '/submission',
       icon: <Briefcase size={20} />,
       color: getColor(colors.green, colors.neonGreen),
       glowColor: 'rgba(57, 255, 20, 0.7)' // Green glow

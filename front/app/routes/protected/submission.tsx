@@ -11,6 +11,14 @@ import type { CommonData } from '#/types';
 import { Typography, Button, Box, Alert, Paper } from '@mui/material';
 import { Plus, Briefcase } from 'lucide-react';
 
+
+export const meta = () => {
+  return [
+    { title: 'OpenMario | Submissions' },
+    { name: 'description', content: '' },
+  ];
+};
+
 export default () => {
   const navigate = useNavigate();
   const { recognizeText } = useTesseract();
@@ -45,11 +53,12 @@ export default () => {
   };
 
   const handleSelectJob = (job: Job) => {
-    const jobIndex = jobs.findIndex(j =>
-      j.position === job.position &&
-      j.employer === job.employer &&
-      j.location === job.location
-    );
+    const jobIndex = jobs
+      .findIndex(
+        j => j.position === job.position
+          && j.employer === job.employer
+          && j.location === job.location
+      );
 
     if (jobIndex !== -1) {
       navigate(`/form?ocr=${jobIndex}`);
@@ -64,7 +73,6 @@ export default () => {
     }
   };
 
-  // Determine if we should show the OCR alert
   const showOcrAlert = jobs.length > 0;
 
   return (

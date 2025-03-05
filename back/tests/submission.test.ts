@@ -5,17 +5,13 @@ import { AxiosError } from 'axios';
 
 describe('POST /submissions', () => {
    const validSubmissionData = {
-      positions: [
-         {
-            company: 'Rising Sun Presents',
-            position: 'Audio Engineer',
-            location: 'Philadelphia, PA',
-            work_hours: 40,
-            compensation: 35,
-            other_compensation: 'Health insurance, 401k',
-            details: 'Audio engineering role',
-         },
-      ],
+      company: 'Rising Sun Presents',
+      position: 'Audio Engineer',
+      location: 'Philadelphia, PA',
+      work_hours: 40,
+      compensation: 35,
+      other_compensation: 'Health insurance, 401k',
+      details: 'Audio engineering role',
       year: 2024,
       coop_cycle: 'Fall/Winter',
       coop_year: '2nd',
