@@ -4,6 +4,7 @@ import Nav from "./nav";
 import React, { useEffect, Suspense } from "react";
 //import { postAuthMeMutation } from "#client/react-query.gen";
 import { useMutation } from "@tanstack/react-query";
+import { Box, Container } from "@mui/material";
 //import { StoreProvider, useUserStore } from '../../hooks/useUserContext';
 
 const AuthValidator = ({ children }: { children: React.ReactNode }) => {
@@ -51,7 +52,11 @@ export default () => (
   //<ProtectRoute>
   <>
     <Nav />
-    <Outlet />
+    <Container maxWidth="lg">
+      <Box sx={{ mb: 4, mt: 4 }}>
+        <Outlet />
+      </Box>
+    </Container>
   </>
   //</ProtectRoute >
 )

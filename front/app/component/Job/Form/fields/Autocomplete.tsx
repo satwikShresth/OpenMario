@@ -74,13 +74,10 @@ export const AutocompleteFieldWithIcon = <T extends object>({
   disabled = false,
   error,
   helperText,
-  freeSolo,
+  freeSolo = true,
   ...props
 }: AutocompleteFieldWithIconProps<T>) => {
   const { loadOptions, dependsOn, ...filteredProps } = props as any;
-
-  // Debug output - uncomment this to check if options are being received
-  // console.log("AutocompleteFieldWithIcon options:", options);
 
   return (
     <Controller
@@ -88,15 +85,15 @@ export const AutocompleteFieldWithIcon = <T extends object>({
       control={control}
       rules={rules}
       render={({ field, fieldState }) => {
-        const value = field.value === null || field.value === undefined ? '' : field.value;
+        const { onChange, value, ref, ...restField } = field;
 
         return (
           <Autocomplete
             {...filteredProps}
+            {...restField}
             options={options}
             loading={loading}
             getOptionLabel={(option) => {
-              // Handle null/undefined options safely
               if (!option) return '';
               return getOptionLabel(option as T);
             }}
@@ -104,15 +101,16 @@ export const AutocompleteFieldWithIcon = <T extends object>({
             onInputChange={onInputChange}
             filterOptions={filterOptions}
             onChange={(event, newValue) => {
-              field.onChange(nullable && !newValue ? null : newValue);
+              onChange(nullable && !newValue ? null : newValue);
             }}
             disabled={disabled}
-            value={value}
+            value={value || ""}
             noOptionsText={noOptionsText}
             freeSolo={freeSolo}
             renderInput={(params) => (
               <TextField
                 {...params}
+                inputRef={ref}
                 label={
                   <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
                     <Box sx={{ transform: 'translateY(-2px)' }}>

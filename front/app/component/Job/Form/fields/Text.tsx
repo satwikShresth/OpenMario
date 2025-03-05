@@ -42,7 +42,6 @@ export const TextFieldWithIcon: React.FC<TextFieldWithIconProps> = ({
       control={control}
       rules={rules}
       render={({ field, fieldState: { error } }) => {
-        // Ensure value is never null for the input
         const value = field.value === null || field.value === undefined ? '' : field.value;
 
         return (

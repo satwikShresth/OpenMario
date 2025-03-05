@@ -4,7 +4,7 @@ interface UseFileHandlingProps {
    onFileSelect: (file: File) => void;
 }
 
-const useFileHandling = ({ onFileSelect }: UseFileHandlingProps) => {
+export const useFileHandling = ({ onFileSelect }: UseFileHandlingProps) => {
    const fileInputRef = useRef<HTMLInputElement | null>(null);
 
    // File input handler
@@ -46,5 +46,3 @@ const useFileHandling = ({ onFileSelect }: UseFileHandlingProps) => {
       triggerFileSelect
    };
 };
-
-export default useFileHandling;

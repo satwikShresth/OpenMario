@@ -75,7 +75,7 @@ export const CompensationField: React.FC<CompensationFieldProps> = ({
                 '&:hover': { bgcolor: isEditing ? 'primary.main' : 'action.hover' }
               }}
             >
-              <Box sx={{ transform: 'translateY(-1px)' }}>
+              <Box sx={{ transform: 'translateY(1px)' }}>
                 <Edit size={16} />
               </Box>
             </IconButton>

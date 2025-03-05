@@ -1,22 +1,23 @@
 import type { CommonData } from '#/types';
+import type { compensation } from '#/utils/validators';
 import { useState, useCallback } from 'react';
 
 export interface Job extends CommonData {
    position?: string;
    position_id?: string;
-   employer?: string;
+   company?: string;
    employer_id?: string;
    job_length?: string;
    location?: string;
    status?: string;
    ranking_status?: string;
-   hourly_wage?: string;
-   hours_per_week?: string;
+   compensation?: string;
+   work_hours?: string;
    weekly_pay?: string;
    other_compensation?: string;
 }
 
-const useJobParser = () => {
+export const useJobParser = () => {
    const [processedJobs, setProcessedJobs] = useState<Job[]>([]);
 
    const parseJobs = useCallback((text: string, common: CommonData): Job[] => {
@@ -86,7 +87,7 @@ const useJobParser = () => {
 
             const position = extract(headerLine, patterns.position);
             const positionId = extract(headerLine, patterns.position, 2);
-            const employer = extract(headerLine, patterns.employer);
+            const company = extract(headerLine, patterns.employer);
             const employerId = extract(headerLine, patterns.employer, 2);
             const jobLength = extract(headerLine, patterns.jobLength);
             const location = extract(headerLine, patterns.location);
@@ -116,8 +117,8 @@ const useJobParser = () => {
             const fullWageMatch = fullText.match(patterns.fullWage);
 
             const wageInfo = {
-               hourly_wage: hourlyWage || (fullWageMatch ? `$${fullWageMatch[1]}` : undefined),
-               hours_per_week: hoursPerWeek || (fullWageMatch ? fullWageMatch[2] : undefined),
+               compensation: hourlyWage || (fullWageMatch ? `$${fullWageMatch[1]}` : undefined),
+               work_hours: hoursPerWeek || (fullWageMatch ? fullWageMatch[2] : undefined),
                weekly_pay: weeklyPay || (fullWageMatch ? `$${fullWageMatch[3]}` : undefined)
             };
 
@@ -125,7 +126,7 @@ const useJobParser = () => {
                ...common,
                ...(position && { position }),
                ...(positionId && { position_id: positionId }),
-               ...(employer && { employer }),
+               ...(company && { company }),
                ...(employerId && { employer_id: employerId }),
                ...(jobLength && { job_length: jobLength }),
                ...(location && { location }),
@@ -152,5 +153,3 @@ const useJobParser = () => {
       processText
    };
 };
-
-export default useJobParser;

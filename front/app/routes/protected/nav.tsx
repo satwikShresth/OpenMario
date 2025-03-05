@@ -1,12 +1,11 @@
 import { NavLink, useLocation } from 'react-router';
-import { AppBar, Toolbar, Box, IconButton, useTheme, Container, Tooltip } from '@mui/material';
+import { AppBar, Toolbar, Box, IconButton, Container, Tooltip } from '@mui/material';
 import { Sun, Moon, Home, Briefcase, Upload, User } from 'lucide-react';
 import { useAppTheme } from '#/utils/useThemeProvider';
 import { useState } from 'react';
 
 export default () => {
   const { toggleColorMode, mode } = useAppTheme();
-  const theme = useTheme();
   const location = useLocation();
   const [isLogoHovered, setIsLogoHovered] = useState(false);
 

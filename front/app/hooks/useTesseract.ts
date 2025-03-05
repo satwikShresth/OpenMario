@@ -2,7 +2,7 @@ import { useState, useRef, useEffect, useCallback } from 'react';
 import { PSM, createWorker } from 'tesseract.js';
 import { useSnackbar } from 'notistack';
 
-const useTesseract = () => {
+export const useTesseract = () => {
    const [isProcessing, setIsProcessing] = useState(false);
    const workerRef = useRef<Tesseract.Worker | null>(null);
    const { enqueueSnackbar } = useSnackbar();
@@ -88,5 +88,3 @@ const useTesseract = () => {
       recognizeText
    };
 };
-
-export default useTesseract;

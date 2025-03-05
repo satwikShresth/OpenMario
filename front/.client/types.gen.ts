@@ -138,11 +138,11 @@ export type Submission = {
     position: string;
     location: string;
     program_level: 'Undergraduate' | 'Graduate';
-    work_hours: number;
+    work_hours: string;
     coop_cycle: 'Fall/Winter' | 'Winter/Spring' | 'Spring/Summer' | 'Summer/Fall';
     coop_year: '1st' | '2nd' | '3rd';
-    year: number;
-    compensation: number | null;
+    year: string;
+    compensation: string | null;
     other_compensation: string | null;
     details: string | null;
 };
