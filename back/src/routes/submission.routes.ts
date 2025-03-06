@@ -9,7 +9,7 @@ import {
    SubmissionQuery,
    SubmissionQuerySchema,
 } from '#models';
-import { zodBodyValidator, zodQueryValidator } from '#/middleware/validation.middleware.ts';
+import { zodBodyValidator, zodParamsValidator, zodQueryValidator } from '#/middleware/validation.middleware.ts';
 import { and, count, eq, sql } from 'drizzle-orm';
 
 export default () => {
@@ -19,6 +19,7 @@ export default () => {
     * GET /submissions
     * @summary Retrieve co-op submission records with pagination and filtering
     * @tags Submissions
+    * @param {Boolean} distinct.query - Query prarmer for filtering submission using company
     * @param {array<string>} company.query - Query prarmer for filtering submission using company
     * @param {array<string>} position.query - Query prarmer for filtering submission using position
     * @param {array<string>} location.query - Query prarmer for filtering submission using location
@@ -60,9 +61,16 @@ export default () => {
       .get(
          zodQueryValidator(SubmissionQuery),
          async (req: RequestParamsId, res: Response) => {
-            const { skip, limit, query } = req?.validated?.query as SubmissionQuery;
-            const subQuery = db
-               .select({
+            const { distinct, skip, limit, query } = req?.validated?.query as SubmissionQuery;
+
+            const subQuerySelect = (distinct: boolean, schema: any) =>
+               distinct
+                  ? db.selectDistinctOn([company.name, position.name, submission.compensation, submission.program_level], schema)
+                  : db.select(schema);
+
+            const subQuery = subQuerySelect(
+               !!distinct,
+               {
                   year: submission.year,
                   coop_year: submission.coop_year,
                   coop_cycle: submission.coop_cycle,
@@ -76,7 +84,8 @@ export default () => {
                   location_city: location.city,
                   location_state: location.state,
                   location_state_code: location.state_code,
-               })
+               },
+            )
                .from(submission)
                .innerJoin(position, eq(submission.position_id, position.id))
                .innerJoin(location, eq(submission.location_id, location.id))
@@ -182,17 +191,5 @@ export default () => {
    //   .all(
    //      zodParamsValidator(paramsIdSchema),
    //   )
-   //   .get(
-   //      async (req: RequestParamsId, res: Response) => {
-   //         const _validatedId = req?.validated?.params?.id!;
-   //      },
-   //   )
-   //   .put(
-   //      zodBodyValidator(SubmissionAggregateUpdateSchema),
-   //      async (req: RequestParamsId, res: Response) => {
-   //         const _validatedId = req?.validated?.params?.id!;
-   //         const _updateData = req?.validated?.body! as SubmissionAggregate;
-   //      },
-   //   );
    return router;
 };

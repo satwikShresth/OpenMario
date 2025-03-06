@@ -57,18 +57,18 @@ export const SubmissionQuerySchema = z.object({
    coop_cycle: ensureArray(z.enum(coop_cycle)).optional(),
    program_level: z.enum(program_level).optional(),
    skip: parseOptionalInt('Skip', 0),
-   limit: parseOptionalInt('Limit', 1, 1000),
+   limit: parseOptionalInt('Limit', 1, 100),
+   distinct: z.boolean().default(false),
 });
 export const querySQL = (column: Column, matchValue?: string) =>
    matchValue &&
    sql`(
-    to_tsvector('english', ${column}) @@ to_tsquery('english', ${
-      matchValue
+    to_tsvector('english', ${column}) @@ to_tsquery('english', ${matchValue
          .trim()
          .split(/\s+/)
          .map((term) => `${term}:*`)
          .join(' & ')
-   })
+      })
     OR ${column} % ${matchValue.trim()}
     OR ${column} ILIKE ${matchValue.trim().toLowerCase().split('').join('%') + '%'}
   )`;
@@ -76,13 +76,12 @@ export const querySQL = (column: Column, matchValue?: string) =>
 export const orderSQL = (column: Column, matchValue?: string) =>
    matchValue &&
    sql`(
-    (CASE WHEN lower(${column}) ILIKE ${
-      matchValue
+    (CASE WHEN lower(${column}) ILIKE ${matchValue
          .trim()
          .toLowerCase()
          .split('')
          .reduce((pattern, char, idx) => idx === 0 ? char + '%' : pattern + ' ' + char + '%', '')
-   } THEN 1 ELSE 0 END) * 10000
+      } THEN 1 ELSE 0 END) * 10000
     + similarity(${column}, ${matchValue.trim()})
   ) DESC`;
 
@@ -94,6 +93,7 @@ export const SubmissionQuery = SubmissionQuerySchema
          query?: SQL[];
          skip?: number;
          limit?: number;
+         distinct?: boolean;
       } => ({
          companyQuery: [
             ...(query?.company?.map((company_) => eq(company.name, company_)) || []),
@@ -113,6 +113,7 @@ export const SubmissionQuery = SubmissionQuerySchema
          ].filter((condition): condition is SQL => !!condition),
          skip: query?.skip ?? 0,
          limit: query?.limit ?? 10,
+         distinct: !!query?.distinct,
       }),
    );
 

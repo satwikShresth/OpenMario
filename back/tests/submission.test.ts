@@ -9,7 +9,7 @@ describe('POST /submissions', () => {
       position: 'Audio Engineer',
       location: 'Philadelphia, PA',
       work_hours: 40,
-      compensation: 35,
+      compensation: 45,
       other_compensation: 'Health insurance, 401k',
       details: 'Audio engineering role',
       year: 2024,

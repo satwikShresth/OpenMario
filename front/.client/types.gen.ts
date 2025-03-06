@@ -400,11 +400,11 @@ export type GetSubmissionsData = {
         /**
          * Query prarmer for offeset
          */
-        skip?: string;
+        skip?: number;
         /**
          * Query prarmer for limit
          */
-        limit?: string;
+        limit?: number;
     };
     url: '/submissions';
 };
