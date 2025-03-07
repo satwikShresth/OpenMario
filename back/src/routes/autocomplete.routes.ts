@@ -13,6 +13,7 @@ const queryStringPreprocess = () =>
 
 export default () => {
    const router = Router();
+   const limit = 25;
 
    /**
     * GET /autocomplete/company
@@ -50,6 +51,7 @@ export default () => {
             .select({ id: company.id, name: company.name })
             .from(company)
             .where(query)
+            .limit(limit)
             .then((results) => {
                console.log(results);
                return results;
@@ -92,7 +94,7 @@ export default () => {
          )
             .transform(
                ({ comp, pos }) => ({
-                  queries: [eq(company.name, comp.trim()), querySQL(position.name, pos)],
+                  queries: [comp !== '*' ? eq(company.name, comp.trim()) : undefined, querySQL(position.name, pos)],
                   order: orderSQL(position.name, pos),
                }),
             ),
@@ -105,6 +107,7 @@ export default () => {
             .from(position)
             .innerJoin(company, eq(position.company_id, company.id))
             .where(and(...queries))
+            .limit(limit)
             .then((results) => res.status(200).json(results))
             .catch(({ message }) => res.status(409).json({ message }));
       },
@@ -154,6 +157,7 @@ export default () => {
             .select()
             .from(location)
             .where(or(...queries))
+            .limit(limit)
             .orderBy(order)
             .then((results) => res.status(200).json(results.map((item) => ({ id: item.id, name: `${item.city}, ${item.state_code}` }))))
             .catch(({ message }) => res.status(409).json({ message }));

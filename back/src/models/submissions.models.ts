@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { extendZodWithOpenApi } from '@asteasolutions/zod-to-openapi';
-import { and, Column, eq, like, SQL, sql } from 'drizzle-orm';
+import { and, Column, eq, like, or, SQL, sql } from 'drizzle-orm';
 import * as undergrad from '#/db/undergraduate.data.ts';
 import * as grad from '#/db/graduate.data.ts';
 import { company, coop_cycle, coop_year, location, position, program_level, submission } from '#db';
@@ -60,7 +60,8 @@ export const SubmissionQuerySchema = z.object({
    limit: parseOptionalInt('Limit', 1, 100),
    distinct: z.boolean().default(false),
 });
-export const querySQL = (column: Column, matchValue?: string) =>
+
+export const querySQL = (column: Column, matchValue?: string): SQL =>
    matchValue &&
    sql`(
     to_tsvector('english', ${column}) @@ to_tsquery('english', ${matchValue
@@ -94,27 +95,63 @@ export const SubmissionQuery = SubmissionQuerySchema
          skip?: number;
          limit?: number;
          distinct?: boolean;
-      } => ({
-         companyQuery: [
-            ...(query?.company?.map((company_) => eq(company.name, company_)) || []),
-         ].filter((condition): condition is SQL => !!condition),
+      } => {
+         const queries: SQL[] = [];
 
-         positionQuery: [
-            ...(query?.position?.map((position_) => querySQL(position.name, position_)).filter((q): q is SQL => !!q) || []),
-         ].filter((condition): condition is SQL => !!condition),
+         const companyQueries: SQL[] = query?.company?.map((companyName) => eq(company.name, companyName));
+         if (companyQueries?.length!) {
+            queries.push(or(...companyQueries)!);
+         }
 
-         query: [
-            //...(query?.company?.map((company_) => eq(company.name, company_)) || []),
-            ...(query?.location?.map((loc) => and(eq(location.city, loc.split(', ')[0]), eq(location.state_code, loc.split(', ')[1]))) || []),
-            ...(query?.year?.map((year) => eq(submission.year, year)) || []),
-            ...(query?.coop_year?.map((coop_year) => eq(submission.coop_year, coop_year)) || []),
-            ...(query?.coop_cycle?.map((coop_cycle) => eq(submission.coop_cycle, coop_cycle)) || []),
-            ...(query?.program_level ? [eq(submission.program_level, query.program_level)] : []),
-         ].filter((condition): condition is SQL => !!condition),
-         skip: query?.skip ?? 0,
-         limit: query?.limit ?? 10,
-         distinct: !!query?.distinct,
-      }),
+         const positionQueries = query?.position?.map((position_) => querySQL(position.name, position_));
+         if (positionQueries?.length) {
+            queries.push(or(...positionQueries)!);
+         }
+
+         // Location queries
+         const locationQueries = query?.location?.map((loc) =>
+            and(eq(location.city, loc.split(', ')[0]), eq(location.state_code, loc.split(', ')[1]))
+         );
+         if (locationQueries?.length) {
+            queries.push(or(...locationQueries)!);
+         }
+
+         const range = (start, end) => {
+            if (start === end) {
+               return [start];
+            }
+            return Array.from({ length: end - start + 1 }, (_, i) => start + i);
+         };
+         const yearQueries = query?.year && range(query?.year[0], query?.year[1])?.map((year) => eq(submission.year, year));
+
+         if (yearQueries?.length) {
+            queries.push(or(...yearQueries)!);
+         }
+
+         // Coop year queries
+         const coopYearQueries = query?.coop_year?.map((coop_year) => eq(submission.coop_year, coop_year));
+         if (coopYearQueries?.length) {
+            queries.push(or(...coopYearQueries)!);
+         }
+
+         // Coop cycle queries
+         const coopCycleQueries = query?.coop_cycle?.map((coop_cycle) => eq(submission.coop_cycle, coop_cycle));
+         if (coopCycleQueries?.length) {
+            queries.push(or(...coopCycleQueries)!);
+         }
+
+         // Program level query
+         if (query?.program_level) {
+            queries.push(eq(submission.program_level, query.program_level));
+         }
+
+         return {
+            query: queries,
+            skip: query?.skip ?? 0,
+            limit: query?.limit ?? 10,
+            distinct: !!query?.distinct,
+         };
+      },
    );
 
 export const SubmissionAggregateSchema = z.object({

@@ -1,5 +1,6 @@
 import { Box, Paper, Typography, Container } from '@mui/material';
 import SubmissionsTable from '#/component/Table';
+import FilterDarwer from '#/component/Table/FilterDrawer';
 import { SubmissionsProvider } from '#/stores';
 
 export const meta = () => {
@@ -22,11 +23,12 @@ export default function TablePage() {
             positions, and compensation to help with your career decisions.
           </Typography>
         </Paper>
-        <Paper sx={{ width: '100%', overflow: 'hidden', mb: 4 }}>
-          <SubmissionsProvider initialValue={{ initialLimit: 10, initialSkip: 0 }}>
+        <SubmissionsProvider initialValue={{ initialLimit: 10, initialSkip: 0 }}>
+          <FilterDarwer />
+          <Paper sx={{ width: '100%', overflow: 'hidden', mb: 4 }}>
             <SubmissionsTable />
-          </SubmissionsProvider>
-        </Paper>
+          </Paper>
+        </SubmissionsProvider>
         <Paper elevation={1} sx={{ p: 2, mt: 4, borderRadius: 1 }}>
           <Typography variant="caption" color="text.secondary">
             Note: All compensation data is self-reported by students.

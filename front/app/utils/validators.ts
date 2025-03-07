@@ -7,7 +7,7 @@ export const name = (schema: any) =>
     .min(3, { message: 'Name must be more than 3 characters' })
     .max(100, { message: 'Name must be less than 100 characters' })
     .regex(
-      /^[a-zA-Z\s\-'\p{L}\p{M}]+$/u,
+      /^[a-zA-Z\s\-,'\p{L}\p{M}]+$/u,
       { message: 'Name can only contain letters, spaces, hyphens, apostrophes, and periods' },
     );
 
@@ -32,6 +32,12 @@ export const work_hours = (schema: any) =>
     .nonnegative({ message: 'Amount cannot be negative' })
     .min(5, { message: 'Amount must be greater than or equal to 5' })
     .max(60, { message: 'Amount must be less than or equal to 60' });
+
+
+export const CompanyPositionSchema = z.object({
+  company: name(z.string()),
+  position: name(z.string()),
+});
 
 export const PositionSchema = z.object({
   company: name(z.string()),

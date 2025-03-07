@@ -1,6 +1,6 @@
 import { NavLink, useLocation } from 'react-router';
 import { AppBar, Toolbar, Box, IconButton, Container, Tooltip } from '@mui/material';
-import { Sun, Moon, Home, Briefcase, Upload, User } from 'lucide-react';
+import { Sun, Moon, Home, Upload, User } from 'lucide-react';
 import { useAppTheme } from '#/utils/useThemeProvider';
 import { useState } from 'react';
 
@@ -33,41 +33,32 @@ export default () => {
   // Get the appropriate color set based on the current mode
   const getColor = (lightColor, darkColor) => mode === 'light' ? lightColor : darkColor;
 
-  // Navigation links with their Mario-themed colors - removed Profile from this array
+  // Navigation links including Profile - all with the same styling approach
   const navLinks = [
     {
       text: 'Home',
-      path: '/',
+      path: '/home',
       icon: <Home size={20} />,
       color: getColor(colors.red, colors.neonPink),
       glowColor: 'rgba(255, 51, 153, 0.7)' // Pink glow
     },
     {
-      text: 'Submission',
-      path: '/submission',
-      icon: <Briefcase size={20} />,
+      text: 'Submissions',
+      path: '/submissions',
+      icon: <Upload size={20} />,
       color: getColor(colors.green, colors.neonGreen),
-      glowColor: 'rgba(57, 255, 20, 0.7)' // Green glow
+      glowColor: 'rgba(255, 255, 0, 0.7)' // Yellow glow
     },
     {
-      text: 'Upload',
-      path: '/upload',
-      icon: <Upload size={20} />,
-      color: getColor(colors.yellow, colors.neonYellow),
-      glowColor: 'rgba(255, 255, 0, 0.7)' // Yellow glow
+      text: 'Profile',
+      path: '/profile',
+      icon: <User size={20} />,
+      color: getColor(colors.blue, colors.neonBlue),
+      glowColor: 'rgba(0, 238, 255, 0.7)' // Blue glow
     }
   ];
 
-  // Profile link configuration
-  const profileLink = {
-    text: 'Profile',
-    path: '/profile',
-    icon: <User size={20} />,
-    color: getColor(colors.blue, colors.neonBlue),
-    glowColor: 'rgba(0, 238, 255, 0.7)' // Blue glow
-  };
-
-  const isActive = (path: string) => {
+  const isActive = (path) => {
     if (path === '/' && location.pathname === '/') return true;
     if (path !== '/' && location.pathname.startsWith(path)) return true;
     return false;
@@ -205,7 +196,7 @@ export default () => {
             ))}
           </Box>
 
-          {/* Navigation items */}
+          {/* Navigation items with Profile included */}
           <Box
             sx={{
               display: 'flex',
@@ -333,85 +324,7 @@ export default () => {
             ))}
           </Box>
 
-          {/* Profile link - now placed next to theme toggle */}
-          <Box
-            component={NavLink}
-            to={profileLink.path}
-            sx={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              position: 'relative',
-              bgcolor: isActive(profileLink.path) ? profileLink.color : 'transparent',
-              color: isActive(profileLink.path)
-                ? colors.white
-                : mode === 'light'
-                  ? colors.black
-                  : colors.white,
-              textDecoration: 'none',
-              height: 46,
-              px: 2,
-              mr: 2,
-              borderRadius: isActive(profileLink.path) ? '8px 8px 0 0' : 4,
-              fontWeight: isActive(profileLink.path) ? 700 : 600,
-              fontSize: '0.95rem',
-              border: isActive(profileLink.path) ? `3px solid ${colors.black}` : 'none',
-              borderBottom: isActive(profileLink.path) ? 0 : 'none',
-              zIndex: isActive(profileLink.path) ? 2 : 1,
-              transition: 'all 0.2s ease-in-out',
-
-              // Add glow effect for dark mode
-              ...(mode === 'dark' && isActive(profileLink.path) && {
-                boxShadow: `0 0 15px ${profileLink.glowColor}`,
-              }),
-
-              // Dark mode specific hover effects
-              ...(mode === 'dark' && !isActive(profileLink.path) && {
-                '&:hover': {
-                  bgcolor: `${profileLink.color}22`,
-                  color: profileLink.color,
-                  transform: 'scale(1.05)',
-                  boxShadow: `0 0 10px ${profileLink.glowColor}`,
-                  transition: 'all 0.15s cubic-bezier(0.68, -0.55, 0.265, 1.55)'
-                }
-              }),
-
-              // Light mode hover effects
-              ...(mode === 'light' && !isActive(profileLink.path) && {
-                '&:hover': {
-                  bgcolor: `${profileLink.color}22`,
-                  color: profileLink.color,
-                  transform: 'scale(1.05)',
-                  boxShadow: `0 3px 0 ${colors.black}`,
-                  transition: 'all 0.15s cubic-bezier(0.68, -0.55, 0.265, 1.55)'
-                }
-              }),
-
-              // Add a playful icon pop on hover
-              '& svg': {
-                transition: isActive(profileLink.path) ? 'none' : 'transform 0.2s cubic-bezier(0.68, -0.55, 0.265, 1.55)'
-              },
-              '&:hover svg': {
-                transform: isActive(profileLink.path) ? 'none' : 'scale(1.15) rotate(-5deg)',
-                color: isActive(profileLink.path) ? 'none' : profileLink.color
-              }
-            }}
-          >
-            <Box sx={{
-              mr: 1,
-              display: 'flex',
-              alignItems: 'center',
-              ...(mode === 'dark' && {
-                filter: isActive(profileLink.path) ? 'none' : `drop-shadow(0 0 2px ${profileLink.color})`
-              })
-            }}>
-              {profileLink.icon}
-            </Box>
-            {profileLink.text}
-          </Box>
-
           {/* Theme Toggle Button */}
-
           <Tooltip title={`Switch to ${mode === 'dark' ? 'light' : 'dark'} mode`}>
             <IconButton
               onClick={toggleColorMode}
@@ -443,11 +356,8 @@ export default () => {
               )}
             </IconButton>
           </Tooltip>
-
-
-
         </Toolbar>
       </Container>
-    </AppBar >
+    </AppBar>
   );
 };

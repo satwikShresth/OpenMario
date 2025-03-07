@@ -1,12 +1,14 @@
 // components/Job/Form.tsx
 import React, { useMemo } from 'react';
+import { useSnackbar } from 'notistack';
 import { useNavigate, useSearchParams } from 'react-router';
+import { useMutation } from '@tanstack/react-query';
 import JobForm from '#/component/Job/Form';
 import { useJobSubmissionStore } from '#/stores/useJobSubmissionStore';
 import { useOcrJobStore } from '#/stores/useOcrJobStore';
 import { type Position } from '#/utils/validators';
-import type { Submission } from '#client/types.gen';
-
+import type { Submission, SubmissionAggregate } from '#client/types.gen';
+import { postSubmissionsMutation } from '#client/react-query.gen';
 
 export const meta = () => {
   return [
@@ -20,7 +22,7 @@ const FormPage: React.FC = () => {
   const [searchParams] = useSearchParams();
   const { submissions, addSubmission, updateSubmission } = useJobSubmissionStore();
   const { jobs } = useOcrJobStore();
-  console.log(jobs)
+  const { enqueueSnackbar } = useSnackbar();
 
   const submissionIndexParam = searchParams.get('submission');
   const ocrIndexParam = searchParams.get('ocr');
@@ -31,9 +33,11 @@ const FormPage: React.FC = () => {
   const submissionData = submissionIndex !== undefined ? submissions[submissionIndex] : undefined;
   const ocrData = ocrIndex !== undefined ? jobs[ocrIndex] : undefined;
 
+  // Setup the mutation
+  const submitMutation = useMutation(postSubmissionsMutation());
+
   const formDefaultValues = useMemo(() => {
     const data = ocrData || submissionData;
-    console.log(data)
     return {
       company: data?.company || '',
       position: data?.position || '',
@@ -50,14 +54,26 @@ const FormPage: React.FC = () => {
   }, [ocrData, submissionData]);
 
   const handleCancel = () => {
-    navigate('/');
+    navigate('/submissions');
   };
 
-  const handleSubmit = async (data: Position) => {
-    submissionIndex
-      && updateSubmission(submissionIndex, data as Submission)
-      || addSubmission(data as Submission);
-    navigate('/');
+  const handleSubmit = (data: Position) => {
+    if (submissionIndex !== undefined) {
+      updateSubmission(submissionIndex, data as Submission);
+    } else {
+      submitMutation.mutate({
+        body: data as SubmissionAggregate,
+      }, {
+        onSuccess: () => {
+          addSubmission(data as Submission);
+          enqueueSnackbar()
+          navigate('/submissions');
+        },
+        onError: (error) => {
+          console.error('Error submitting job:', error);
+        }
+      });
+    }
   };
 
   return (
@@ -67,6 +83,8 @@ const FormPage: React.FC = () => {
         formDefaultValues={formDefaultValues}
         onSubmit={handleSubmit}
         onCancel={handleCancel}
+        isSubmitting={submitMutation.isPending}
+        submitError={submitMutation.error?.message}
       />
     </>
   );

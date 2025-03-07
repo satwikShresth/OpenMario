@@ -1,45 +1,20 @@
+import { useCallback } from "react";
+import { useSubmissionsStore } from '#/stores';
 import { Box, Button, MenuItem, Select, Typography } from "@mui/material";
 import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from "lucide-react";
-import { useSubmissionsStore } from '#/stores';
-import { useCallback, useRef } from "react";
 
 const Pagination: React.FC<{ totalCount: number, isLoading: boolean }> = ({ totalCount, isLoading }) => {
   const { skip, limit, gotoFirstPage, gotoPreviousPage, gotoNextPage, gotoLastPage, handleChangeRowsPerPage } = useSubmissionsStore();
-
-  const isNavigating = useRef(false);
 
   const pageCount = Math.ceil(totalCount / limit) || 1;
   const pageIndex = Math.floor(skip / limit) || 0;
   const canPreviousPage = pageIndex > 0;
   const canNextPage = pageIndex < pageCount - 1;
 
-  const handleFirstPageClick = useCallback(() => {
-    if (isNavigating.current) return;
-    isNavigating.current = true;
-    gotoFirstPage();
-    setTimeout(() => { isNavigating.current = false; }, 500);
-  }, [gotoFirstPage]);
-
-  const handlePreviousPageClick = useCallback(() => {
-    if (isNavigating.current || !canPreviousPage) return;
-    isNavigating.current = true;
-    gotoPreviousPage(skip, limit);
-    setTimeout(() => { isNavigating.current = false; }, 500);
-  }, [canPreviousPage, gotoPreviousPage, skip, limit]);
-
-  const handleNextPageClick = useCallback(() => {
-    if (isNavigating.current || !canNextPage) return;
-    isNavigating.current = true;
-    gotoNextPage(skip, limit);
-    setTimeout(() => { isNavigating.current = false; }, 500);
-  }, [canNextPage, gotoNextPage, skip, limit]);
-
-  const handleLastPageClick = useCallback(() => {
-    if (isNavigating.current || !canNextPage) return;
-    isNavigating.current = true;
-    gotoLastPage(totalCount, limit);
-    setTimeout(() => { isNavigating.current = false; }, 500);
-  }, [canNextPage, gotoLastPage, totalCount, limit]);
+  const handleFirstPageClick = useCallback(() => gotoFirstPage(), []);
+  const handlePreviousPageClick = useCallback(() => gotoPreviousPage(skip, limit), [skip, limit]);
+  const handleNextPageClick = useCallback(() => gotoNextPage(skip, limit), [skip, limit]);
+  const handleLastPageClick = useCallback(() => gotoLastPage(totalCount, limit), [totalCount, limit]);
 
 
 
