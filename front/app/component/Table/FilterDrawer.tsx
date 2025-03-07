@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { Drawer, IconButton, Box, Typography, Button, Slider, Divider, Grid } from '@mui/material';
+import { Drawer, IconButton, Box, Typography, Button, Slider, Divider, Grid, RadioGroup, FormControlLabel, Radio, FormControl, FormLabel } from '@mui/material';
 import { Filter, Briefcase, Calendar, School, CalendarDays, X, Building, MapPin } from 'lucide-react';
 import { useSubmissionsStore } from '#/stores';
 import { useForm, FormProvider } from 'react-hook-form';
@@ -18,6 +18,7 @@ interface FilterFormData {
   coop_year: string[];
   coop_cycle: string[];
   program_level: string;
+  distinct: boolean;
 }
 
 const FilterDrawer = () => {
@@ -30,6 +31,7 @@ const FilterDrawer = () => {
     setCompany,
     setPosition,
     setLocation,
+    setDistinct,
     clearAll,
     year: currentYear,
     coop_year: currentCoopYear,
@@ -37,7 +39,8 @@ const FilterDrawer = () => {
     program_level: currentProgramLevel,
     company: currentCompany,
     position: currentPosition,
-    location: currentLocation
+    location: currentLocation,
+    distinct: currentDistinct,
   } = useSubmissionsStore();
 
   // Initialize the form with default values
@@ -49,7 +52,8 @@ const FilterDrawer = () => {
       year: currentYear || [new Date().getFullYear() - 5, new Date().getFullYear()],
       coop_year: currentCoopYear || [],
       coop_cycle: currentCoopCycle || [],
-      program_level: currentProgramLevel || ''
+      program_level: currentProgramLevel || '',
+      distinct: currentDistinct || false
     }
   });
 
@@ -62,7 +66,8 @@ const FilterDrawer = () => {
     program_level: programLevelValue,
     company: companyValues,
     position: positionValues,
-    location: locationValues
+    location: locationValues,
+    distinct: distinctValue
   } = watch();
 
   const minDistance = 2;
@@ -131,6 +136,12 @@ const FilterDrawer = () => {
     }
   }, [setValue, minDistance, yearRange]);
 
+  // Handler for distinct radio button
+  const handleDistinctChange = (event) => {
+    const newValue = event.target.value === 'true';
+    setValue('distinct', newValue);
+  };
+
   // Make sure values are arrays
   const makeSureArray = (val) => (Array.isArray(val) ? val : [val]);
 
@@ -143,6 +154,7 @@ const FilterDrawer = () => {
     if (companyValues) setCompany(makeSureArray(companyValues));
     if (positionValues) setPosition(makeSureArray(positionValues));
     if (locationValues) setLocation(makeSureArray(locationValues));
+    if (distinctValue !== undefined) setDistinct(distinctValue);
   }, [
     yearRange,
     coopYearValues,
@@ -151,13 +163,15 @@ const FilterDrawer = () => {
     companyValues,
     positionValues,
     locationValues,
+    distinctValue,
     setYear,
     setCoopYear,
     setCoopCycle,
     setProgramLevel,
     setCompany,
     setPosition,
-    setLocation
+    setLocation,
+    setDistinct
   ]);
 
   const valuetext = (value) => `${value}`;
@@ -176,7 +190,8 @@ const FilterDrawer = () => {
       year: [new Date().getFullYear() - 5, new Date().getFullYear()],
       coop_year: [],
       coop_cycle: [],
-      program_level: ''
+      program_level: '',
+      distinct: false
     });
   };
 
@@ -348,15 +363,29 @@ const FilterDrawer = () => {
               <DropdownField
                 name="program_level"
                 label="Program Level"
+                icon={<Briefcase size={18} />}
                 control={control}
                 options={PROGRAM_LEVELS}
-                icon={<Briefcase size={18} />}
-                helperText="Select program level"
-                emptyOption
-                emptyLabel="None"
-                nullable
               />
             </Box>
+
+            {/* Distinct Radio Button */}
+            <Box sx={{ mb: 3 }}>
+              <FormControl component="fieldset">
+                <FormLabel component="legend">Show Distinct Results</FormLabel>
+                <RadioGroup
+                  row
+                  name="distinct"
+                  value={distinctValue.toString()}
+                  onChange={handleDistinctChange}
+                >
+                  <FormControlLabel value={true} control={<Radio />} label="On" />
+                  <FormControlLabel value={false} control={<Radio />} label="Off" />
+                </RadioGroup>
+              </FormControl>
+            </Box>
+
+
 
             <Box sx={{ mb: 3 }}>
               <Button

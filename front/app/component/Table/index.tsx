@@ -15,10 +15,8 @@ import FilterDrawer from './FilterDrawer';
 
 
 const SubmissionsTable: React.FC = () => {
-  const { skip, limit, company, position, location, year, program_level, coop_cycle, coop_year } = useSubmissionsStore();
+  const { distinct, skip, limit, company, position, location, year, program_level, coop_cycle, coop_year } = useSubmissionsStore();
   const isNavigating = useRef(false);
-
-
 
   const submissionsQuery = useQuery({
     ...getSubmissionsOptions({
@@ -31,6 +29,7 @@ const SubmissionsTable: React.FC = () => {
         coop_cycle,
         coop_year,
         year,
+        distinct,
         program_level
       }
     }),

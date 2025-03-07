@@ -63,6 +63,7 @@ export default () => {
          async (req: RequestParamsId, res: Response) => {
             const { distinct, skip, limit, query } = req?.validated?.query as SubmissionQuery;
 
+            console.log(distinct);
             const subQuerySelect = (distinct: boolean, schema: any) =>
                distinct
                   ? db.selectDistinctOn([company.name, position.name, submission.compensation, submission.program_level], schema)

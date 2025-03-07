@@ -58,7 +58,7 @@ export const SubmissionQuerySchema = z.object({
    program_level: z.enum(program_level).optional(),
    skip: parseOptionalInt('Skip', 0),
    limit: parseOptionalInt('Limit', 1, 100),
-   distinct: z.boolean().default(false),
+   distinct: z.preprocess((val) => val === 'true', z.boolean()).default(false),
 });
 
 export const querySQL = (column: Column, matchValue?: string): SQL =>

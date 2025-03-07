@@ -98,12 +98,11 @@ export default () => {
 
       {showOcrAlert && (
         <Box sx={{ mb: 2 }}>
+          <Alert severity="info" sx={{ mb: 2 }}>
+            Click on a job to edit details before adding to your submissions
+          </Alert>
           <Paper elevation={2} sx={{ p: 3, mb: 4 }}>
-            <Alert severity="info" sx={{ mb: 2 }}>
-              Click on a job to edit details before adding to your submissions
-            </Alert>
-
-            <Box sx={{ ml: 2, mb: 2 }}>
+            <Box sx={{ mb: 1 }}>
               <OCRJobList onSelectJob={handleSelectJob} />
             </Box>
           </Paper>
