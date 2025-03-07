@@ -60,17 +60,38 @@ const FormPage: React.FC = () => {
   const handleSubmit = (data: Position) => {
     if (submissionIndex !== undefined) {
       updateSubmission(submissionIndex, data as Submission);
+      enqueueSnackbar('Submission updated successfully', { variant: 'success' });
+      navigate('/submissions');
     } else {
       submitMutation.mutate({
         body: data as SubmissionAggregate,
       }, {
         onSuccess: () => {
           addSubmission(data as Submission);
-          enqueueSnackbar()
+          enqueueSnackbar('Submission added successfully', { variant: 'success' });
           navigate('/submissions');
         },
         onError: (error) => {
           console.error('Error submitting job:', error);
+
+          // Handle validation errors
+          if (error.response?.data) {
+            const errorData = error.response.data;
+
+            if (errorData.message === "Validation failed" && Array.isArray(errorData.details)) {
+              // Create validation error messages
+              errorData.details.forEach((detail) => {
+                const fieldName = detail.field.charAt(0).toUpperCase() + detail.field.slice(1);
+                enqueueSnackbar(`${fieldName}: ${detail.message}`, { variant: 'error' });
+              });
+            } else {
+              // General error message
+              enqueueSnackbar(errorData.message || 'Failed to submit job', { variant: 'error' });
+            }
+          } else {
+            // Fallback error message
+            enqueueSnackbar('An unexpected error occurred. Please try again.', { variant: 'error' });
+          }
         }
       });
     }

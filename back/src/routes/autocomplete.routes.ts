@@ -51,6 +51,7 @@ export default () => {
             .select({ id: company.id, name: company.name })
             .from(company)
             .where(query)
+            .orderBy(order)
             .limit(limit)
             .then((results) => {
                console.log(results);
