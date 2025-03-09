@@ -183,7 +183,7 @@ export default () => {
                .insert(submission)
                .values(toBeInserted)
                .returning()
-               .then((_) => res.status(201).json({ message: 'Added positions successfully' }))
+               .then(([{ id }]) => res.status(201).json({ id, message: 'Added positions successfully' }))
                .catch(({ message }) => res.status(409).json({ message: 'Failed to add positions', detail: message }));
          },
       );

@@ -11,7 +11,6 @@ extendZodWithOpenApi(z);
 
 export const compensation = (schema: any) =>
    schema
-      .int({ message: 'Amount must be an integer' })
       .nonnegative({ message: 'Amount cannot be negative' })
       .openapi({ description: 'Compensation amount', example: 100 });
 
@@ -64,12 +63,13 @@ export const SubmissionQuerySchema = z.object({
 export const querySQL = (column: Column, matchValue?: string): SQL =>
    matchValue &&
    sql`(
-    to_tsvector('english', ${column}) @@ to_tsquery('english', ${matchValue
+    to_tsvector('english', ${column}) @@ to_tsquery('english', ${
+      matchValue
          .trim()
          .split(/\s+/)
          .map((term) => `${term}:*`)
          .join(' & ')
-      })
+   })
     OR ${column} % ${matchValue.trim()}
     OR ${column} ILIKE ${matchValue.trim().toLowerCase().split('').join('%') + '%'}
   )`;
@@ -77,12 +77,13 @@ export const querySQL = (column: Column, matchValue?: string): SQL =>
 export const orderSQL = (column: Column, matchValue?: string) =>
    matchValue &&
    sql`(
-    (CASE WHEN lower(${column}) ILIKE ${matchValue
+    (CASE WHEN lower(${column}) ILIKE ${
+      matchValue
          .trim()
          .toLowerCase()
          .split('')
          .reduce((pattern, char, idx) => idx === 0 ? char + '%' : pattern + ' ' + char + '%', '')
-      } THEN 1 ELSE 0 END) * 10000
+   } THEN 1 ELSE 0 END) * 10000
     + similarity(${column}, ${matchValue.trim()})
   ) DESC`;
 

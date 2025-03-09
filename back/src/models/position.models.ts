@@ -9,11 +9,7 @@ export const name = (schema: any) =>
    schema
       .trim()
       .min(3, { message: 'Name must be more than 3 characters' })
-      .max(100, { message: 'Name must be less than 100 characters' })
-      .regex(
-         /^[a-zA-Z\s\-,'\p{L}\p{M}]+$/u,
-         { message: 'Name can only contain letters, spaces, hyphens, apostrophes, and periods' },
-      );
+      .max(100, { message: 'Name must be less than 100 characters' });
 
 export const CompanySchema = createSelectSchema(company);
 export type Company = z.infer<typeof CompanySchema>;

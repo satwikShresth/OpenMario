@@ -1,4 +1,4 @@
-import { boolean, integer, pgEnum, pgTable, primaryKey, timestamp, unique, uuid, varchar } from 'drizzle-orm/pg-core';
+import { boolean, doublePrecision, integer, pgEnum, pgTable, primaryKey, timestamp, unique, uuid, varchar } from 'drizzle-orm/pg-core';
 
 export const program_level = ['Undergraduate', 'Graduate'] as const;
 export const coop_cycle = ['Fall/Winter', 'Winter/Spring', 'Spring/Summer', 'Summer/Fall'] as const;
@@ -55,7 +55,7 @@ export const submission = pgTable(
       coop_cycle: coop_cycle_type().notNull(),
       coop_year: coop_year_type().notNull(),
       year: integer().notNull(),
-      compensation: integer(),
+      compensation: doublePrecision(),
       other_compensation: varchar({ length: 255 }),
       details: varchar({ length: 255 }),
       owner_id: uuid().references(() => users.id, { onDelete: 'restrict' }),

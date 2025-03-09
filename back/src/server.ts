@@ -3,12 +3,15 @@ import { debugMiddlewares } from '#utils';
 //import morgan from 'morgan';
 //import { expressjwt } from 'express-jwt';
 import routes from '#routes';
+//import { toNodeHandler } from 'better-auth/node';
+//import { auth } from '#/utils/auth.ts';
 
 const port = 3000;
 const host = '0.0.0.0';
 const protocol = 'http';
 const app = express();
 
+//app.all('/api/auth/*', toNodeHandler(auth));
 app.use(express.json());
 //app.use(morgan(':method :url :status :response-time ms'));
 
