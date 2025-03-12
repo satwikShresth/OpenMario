@@ -5,9 +5,21 @@ import AppThemeProvider from '#/utils/useThemeProvider';
 import './app.css'
 import { SnackbarProvider } from 'notistack';
 
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 1000 * 60 * 5, // 5 minutes
+      retry: 2,
+    },
+  },
+})
+
 // Set up a Router instance
 const router = createRouter({
   routeTree,
+  context: {
+    queryClient
+  },
   defaultPreload: 'intent',
   scrollRestoration: true,
   defaultNotFoundComponent: () => {
@@ -27,20 +39,12 @@ declare module '@tanstack/react-router' {
 }
 
 
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      staleTime: 1000 * 60 * 5, // 5 minutes
-      retry: 2,
-    },
-  },
-})
 
 const App = () => {
   return (
     <AppThemeProvider>
       <QueryClientProvider client={queryClient}>
-        <SnackbarProvider maxSnack={3} anchorOrigin={{ vertical: "bottom", horizontal: "right" }} autoHideDuration={500}>
+        <SnackbarProvider maxSnack={3} anchorOrigin={{ vertical: "bottom", horizontal: "right" }} autoHideDuration={1000}>
           <RouterProvider router={router} />
         </SnackbarProvider>
       </QueryClientProvider>

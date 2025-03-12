@@ -1,13 +1,13 @@
 import { useState, useEffect, useCallback } from 'react';
 import { Drawer, IconButton, Box, Typography, Button, Slider, Divider, Grid, RadioGroup, FormControlLabel, Radio, FormControl, FormLabel } from '@mui/material';
 import { Filter, Briefcase, Calendar, School, CalendarDays, X, Building, MapPin } from 'lucide-react';
-import { useFilterStore } from '#/stores';
+import { useFilterStore } from '#/stores/useFilterStore';
 import { useForm, FormProvider } from 'react-hook-form';
-import { MultiselectFieldWithIcon, DropdownField } from '../Job/Form/fields';
 import { COOP_CYCLES, COOP_YEARS, PROGRAM_LEVELS } from '#/types';
 import { useQuery } from '@tanstack/react-query';
 import debounce from 'lodash/debounce';
 import { getAutocompleteCompanyOptions, getAutocompletePositionOptions, getAutocompleteLocationOptions } from '#client/react-query.gen';
+import { DropdownField, MultiselectFieldWithIcon } from '#/components/Job/Form/fields';
 
 // Combined form interface
 interface FilterFormData {

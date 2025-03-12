@@ -55,8 +55,8 @@ export const SubmissionQuerySchema = z.object({
    coop_year: ensureArray(z.enum(coop_year)).optional(),
    coop_cycle: ensureArray(z.enum(coop_cycle)).optional(),
    program_level: z.enum(program_level).optional(),
-   skip: parseOptionalInt('Skip', 0),
-   limit: parseOptionalInt('Limit', 1, 100),
+   pageIndex: parseOptionalInt('pageIndex', 0),
+   pageSize: parseOptionalInt('pageSize', 1, 100),
    distinct: z.preprocess((val) => val === 'true', z.boolean()).default(false),
 });
 
@@ -93,6 +93,7 @@ export const SubmissionQuery = SubmissionQuerySchema
          companyQuery?: SQL[];
          positionQuery?: SQL[];
          query?: SQL[];
+         pageIndex?: number;
          skip?: number;
          limit?: number;
          distinct?: boolean;
@@ -148,8 +149,9 @@ export const SubmissionQuery = SubmissionQuerySchema
 
          return {
             query: queries,
-            skip: query?.skip ?? 0,
-            limit: query?.limit ?? 10,
+            pageIndex: query?.pageIndex,
+            skip: query?.pageIndex * query?.pageSize ?? 0,
+            limit: query?.pageSize ?? 10,
             distinct: !!query?.distinct,
          };
       },

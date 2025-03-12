@@ -15,7 +15,7 @@ export type RequestParamsId = Request & {
 };
 
 export const paramsIdSchema = z.object({
-   id: z.preprocess((val) => Number(val), z.number().positive()),
+   id: z.string(),
 });
 
 export type ParamsId = z.infer<typeof paramsIdSchema>;

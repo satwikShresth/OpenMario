@@ -1,14 +1,14 @@
 import type { COOP_CYCLES, COOP_YEARS, PROGRAM_LEVELS } from '#/types';
 import type { Filter } from '#/utils/validators';
-import { useSearch } from '@tanstack/react-router';
 import { create } from 'zustand';
 import { createZustandContext } from 'zustand-context';
 import { devtools } from 'zustand/middleware'
 
 type SubmissionsStore = {
   // Pagination
-  skip: number;
-  limit: number;
+  pageIndex: number;
+  pageSize: number;
+  //pageCount: number;
 
   // Query parameters
   company: string[] | undefined;
@@ -21,14 +21,9 @@ type SubmissionsStore = {
   distinct: boolean;
 
   // Pagination methods
-  setSkip: (skip: number) => void;
-  setLimit: (limit: number) => void;
-  gotoFirstPage: () => void;
-  gotoPreviousPage: (skip: number, limit: number) => void;
-  gotoNextPage: (skip: number, limit: number) => void;
-  gotoLastPage: (totalCount: number, limit: number) => void;
-  handleChangeRowsPerPage: (event: React.ChangeEvent<HTMLSelectElement>) => void;
+  setPagination: ({ pageIndex, pageSize }: { pageIndex: number, pageSize: number }) => void;
 
+  setPageCount: (company: number) => void;
   // Query parameter methods
   setCompany: (company: string[] | undefined) => void;
   setPosition: (position: string[] | undefined) => void;
@@ -47,14 +42,15 @@ type SubmissionsStore = {
 };
 
 export const [FilterProvider, useFilterStore] = createZustandContext(
-  ({ skip = 0, limit = 10, company, position, location, year, coop_cycle, coop_year, program_level, distinct = false }: Filter = {}) => {
+  ({ pageIndex = 0, pageSize = 10, pageCount, company, position, location, year, coop_cycle, coop_year, program_level, distinct = false }: Filter = {}) => {
 
     return create<SubmissionsStore>()(
       devtools(
-        (set, get) => (
+        (set) => (
           {
-            skip,
-            limit,
+            pageIndex,
+            pageSize,
+            //pageCount,
             company,
             position,
             location,
@@ -64,23 +60,14 @@ export const [FilterProvider, useFilterStore] = createZustandContext(
             program_level,
             distinct,
 
-            setSkip: (skip) => set(() => ({ skip })),
-            setLimit: (limit) => set(() => ({ limit })),
-            gotoFirstPage: () => set(() => ({ skip: 0 })),
-            gotoPreviousPage: (skip, limit) => {
-              set(() => ({ skip: Math.max(0, skip - limit) }));
+            setPagination: (updater) => {
+              if (typeof updater === 'function') {
+                set((state) => updater(state));
+              } else {
+                set(updater);
+              }
             },
-            gotoNextPage: (skip, limit) => {
-              set(() => ({ skip: skip + limit }));
-            },
-            gotoLastPage: (totalCount, limit) => {
-              const lastPageSkip = Math.max(0, Math.floor((totalCount - 1) / limit) * limit);
-              set(() => ({ skip: lastPageSkip }));
-            },
-            handleChangeRowsPerPage: (event: React.ChangeEvent<HTMLSelectElement>) => {
-              set(() => ({ skip: 0, limit: parseInt(event.target.value, 10) }));
-            },
-
+            //setPageCount: (pageCount) => set(() => ({ pageCount })),
             setCompany: (company) => set(() => ({ company, skip: 0 })),
             setPosition: (position) => set(() => ({ position, skip: 0 })),
             setLocation: (location) => set(() => ({ location, skip: 0 })),
@@ -99,9 +86,8 @@ export const [FilterProvider, useFilterStore] = createZustandContext(
               coop_cycle: undefined,
               program_level: undefined,
               distinct: false,
-              skip: 0,
-              // Keep the current limit
-              limit: state.limit
+              pageSize: 10,
+              pageIndex: 0,
             })),
 
             clearAll: () => {
@@ -114,8 +100,8 @@ export const [FilterProvider, useFilterStore] = createZustandContext(
                 coop_cycle: undefined,
                 program_level: undefined,
                 distinct: false,
-                skip: 0,
-                limit: initialState.initialLimit || 10 // Reset to initial limit
+                pageSize,
+                pageIndex,
               }));
               if (typeof window !== 'undefined') {
                 const url = new URL(window.location.href);

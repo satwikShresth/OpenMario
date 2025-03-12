@@ -51,6 +51,8 @@ const ensureArray = <T extends z.ZodTypeAny>(schema: T) =>
   z.preprocess((val) => (Array.isArray(val) ? val : [val]), z.array(schema));
 
 export const FilterSchema = z.object({
+  pageSize: z.coerce.number().optional(),
+  pageIndex: z.coerce.number().optional(),
   company: ensureArray(z.string()).optional(),
   position: ensureArray(z.string()).optional(),
   location: ensureArray(z.string()).optional(),
@@ -62,7 +64,9 @@ export const FilterSchema = z.object({
   coop_year: ensureArray(z.enum(COOP_YEARS)).optional(),
   coop_cycle: ensureArray(z.enum(COOP_CYCLES)).optional(),
   program_level: z.enum(PROGRAM_LEVELS).optional(),
-  distinct: z.preprocess((val) => val === "true", z.boolean()).optional(),
+  distinct: z
+    .preprocess((val) => val === "true" || val === true, z.boolean())
+    .optional(),
 });
 
 export type Filter = z.infer<typeof FilterSchema>;

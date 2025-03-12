@@ -5,7 +5,6 @@ import { flexRender } from "@tanstack/react-table";
 import { ChevronDown, ChevronUp, GripVertical } from "lucide-react";
 
 const HeaderCell = ({ header }) => {
-
   const {
     attributes,
     listeners,

@@ -1,3 +1,3 @@
-export * from "./useFileHandling"
-export * from "./useJobParser"
-export * from "./useTesseract"
+export * from "./useFileHandling";
+export * from "./useJobParser";
+export * from "./useTesseract";

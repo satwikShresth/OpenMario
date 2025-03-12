@@ -55,6 +55,7 @@
     "@tanstack/react-query-devtools": "^5.67.2",
     "@tanstack/router-devtools": "^1.114.0",
     "@tanstack/router-plugin": "^1.113.0",
+    "@types/lodash": "^4.17.16",
     "@types/react": "^19.0.10",
     "@types/react-dom": "^19.0.4",
     "@vitejs/plugin-react-swc": "^3.8.0",
