@@ -1,4 +1,4 @@
-import React, { createContext, useState, useMemo, useContext, useEffect } from 'react';
+import React, { createContext, useState, useContext, useEffect, useMemo } from 'react';
 import ThemeProvider from '@mui/material/styles/ThemeProvider';
 import createTheme from '@mui/material/styles/createTheme';
 import { type PaletteMode } from '@mui/material';
@@ -68,7 +68,7 @@ export const ThemeContextProvider: React.FC<ThemeContextProviderProps> = ({ chil
     });
   };
 
-  // Create theme based on current mode
+  // Create theme based on current mode - using useMemo to avoid recreating on every render
   const theme = useMemo(() =>
     createTheme({
       palette: {
@@ -508,9 +508,9 @@ export const ThemeContextProvider: React.FC<ThemeContextProviderProps> = ({ chil
         },
       },
     }),
-    [mode]
-  );
+    [mode]);
 
+  // Create context value with useMemo to avoid unnecessary re-renders
   const contextValue = useMemo(() => ({
     toggleColorMode,
     mode,

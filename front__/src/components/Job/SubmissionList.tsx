@@ -1,8 +1,7 @@
 // components/Job/SubmissionList.tsx
 import React from 'react';
 import JobCard from './Card';
-import { useJobSubmissionStore } from '#/stores/useJobSubmissionStore';
-import { Box, Typography, Paper, Divider, CircularProgress } from '@mui/material';
+import { Box, Typography, Paper } from '@mui/material';
 import { AlertCircle } from 'lucide-react';
 import type { Submission } from '#client/types.gen';
 
@@ -17,11 +16,10 @@ interface SubmissionListProps {
 const SubmissionList: React.FC<SubmissionListProps> = ({
   onEdit,
   onDelete,
-  submissions: submissionsProp,
+  submissions,
   isDraftList = false,
   onSelect
 }) => {
-  const { submissions } = useJobSubmissionStore();
 
   if (submissions.length === 0) {
     return (

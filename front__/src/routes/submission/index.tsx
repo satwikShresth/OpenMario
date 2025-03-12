@@ -129,9 +129,10 @@ function SubmissionsPageComponent() {
               maxHeight: 48,
             }}
           >
+
             <Tab
-              label={`Drafts (${draftSubmissions.length})`}
-              icon={<Save size={16} />}
+              label={`Submissions (${submissions.length})`}
+              icon={<Briefcase size={16} />}
               iconPosition="start"
               sx={{
                 fontSize: 14,
@@ -140,8 +141,8 @@ function SubmissionsPageComponent() {
               }}
             />
             <Tab
-              label={`Submissions (${submissions.length})`}
-              icon={<Briefcase size={16} />}
+              label={`Drafts (${draftSubmissions.length})`}
+              icon={<Save size={16} />}
               iconPosition="start"
               sx={{
                 fontSize: 14,

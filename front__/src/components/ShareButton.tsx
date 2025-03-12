@@ -46,14 +46,17 @@ const ShareButton = ({ baseUrl }: { baseUrl: string }) => {
     const searchParams = new URLSearchParams();
 
     Object.entries(search).forEach(([key, value]) => {
-      //console.log(key)
-      //console.log(value)
-      if (value !== undefined && value !== null && value !== '' && value?.length > 0) {
-        searchParams.append(key, value);
+      if (value !== undefined && value !== null) {
+        // Arrays and objects need to be JSON stringified first
+        if (typeof value === 'object') {
+          searchParams.append(key, JSON.stringify(value));
+        } else {
+          searchParams.append(key, String(value));
+        }
       }
     });
 
-    return `${baseUrl}?${searchParams.toString()}`;
+    return `${baseUrl}?${searchParams.toString().replace(/\+/g, ' ')}`;
   };
 
   const handleClick = (event) => {

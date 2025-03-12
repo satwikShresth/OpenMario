@@ -2,11 +2,11 @@ import { Box, Paper, Typography, Container } from '@mui/material';
 import SubmissionsTable from '#/components/Table';
 import FilterDarwer from '#/components/Table/FilterDrawer';
 import { FilterProvider } from '#/stores';
-import { createFileRoute, retainSearchParams, useNavigate, useRouter } from '@tanstack/react-router';
+import { createFileRoute, retainSearchParams } from '@tanstack/react-router';
 import { zodValidator } from '@tanstack/zod-adapter'
 import { FilterSchema, type Filter } from '#/utils/validators';
 import ShareButton from '#/components/ShareButton';
-import { Banknote, Briefcase, Grid } from 'lucide-react';
+import { Banknote } from 'lucide-react';
 
 export const Route = createFileRoute('/home')({
   component: TablePageComponent,

@@ -2,7 +2,6 @@ import Nav from '#/components/nav'
 import { Outlet, createRootRoute } from '@tanstack/react-router'
 import { TanStackRouterDevtools } from '@tanstack/react-router-devtools'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
-import { SnackbarProvider } from 'notistack';
 import { Container, Box } from '@mui/material';
 
 export const Route = createRootRoute({
