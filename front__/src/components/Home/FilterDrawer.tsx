@@ -23,6 +23,14 @@ interface FilterFormData {
 
 const FilterDrawer = () => {
   const [open, setOpen] = useState(false);
+  const currentYear = useFilterStore((state) => state.year);
+  const currentCoopYear = useFilterStore((state) => state.coop_year);
+  const currentCoopCycle = useFilterStore((state) => state.coop_cycle);
+  const currentProgramLevel = useFilterStore((state) => state.program_level);
+  const currentCompany = useFilterStore((state) => state.company);
+  const currentPosition = useFilterStore((state) => state.position);
+  const currentLocation = useFilterStore((state) => state.location);
+  const currentDistinct = useFilterStore((state) => state.distinct);
   const {
     setYear,
     setCoopYear,
@@ -32,18 +40,9 @@ const FilterDrawer = () => {
     setPosition,
     setLocation,
     setDistinct,
-    clearAll,
-    year: currentYear,
-    coop_year: currentCoopYear,
-    coop_cycle: currentCoopCycle,
-    program_level: currentProgramLevel,
-    company: currentCompany,
-    position: currentPosition,
-    location: currentLocation,
-    distinct: currentDistinct,
+    resetFilters,
   } = useFilterStore();
 
-  // Initialize the form with default values
   const methods = useForm<FilterFormData>({
     defaultValues: {
       company: currentCompany || [],
@@ -53,7 +52,7 @@ const FilterDrawer = () => {
       coop_year: currentCoopYear || [],
       coop_cycle: currentCoopCycle || [],
       program_level: currentProgramLevel || '',
-      distinct: currentDistinct || false
+      distinct: currentDistinct || true
     }
   });
 
@@ -79,13 +78,14 @@ const FilterDrawer = () => {
     location: ''
   });
 
-  // Debounced search handler
   const debouncedSearch = useCallback(
     debounce((field, value) => {
       setSearchInputs(prev => ({ ...prev, [field]: value }));
     }, 300),
     []
   );
+  const debouncedSetYearRange = useCallback(debounce((value) => setYear(value), 300), []);
+
 
   // Queries for autocomplete fields
   const companyQuery = useQuery({
@@ -147,7 +147,7 @@ const FilterDrawer = () => {
 
   // Update store when form values change
   useEffect(() => {
-    if (yearRange?.length) setYear([yearRange[0], yearRange[1]]);
+    if (yearRange?.length) debouncedSetYearRange([yearRange[0], yearRange[1]]);
     if (coopYearValues) setCoopYear(coopYearValues);
     if (coopCycleValues) setCoopCycle(coopCycleValues);
     if (programLevelValue) setProgramLevel(programLevelValue);
@@ -164,14 +164,6 @@ const FilterDrawer = () => {
     positionValues,
     locationValues,
     distinctValue,
-    setYear,
-    setCoopYear,
-    setCoopCycle,
-    setProgramLevel,
-    setCompany,
-    setPosition,
-    setLocation,
-    setDistinct
   ]);
 
   const valuetext = (value) => `${value}`;
@@ -180,19 +172,8 @@ const FilterDrawer = () => {
     setOpen(!open);
   };
 
-  // Reset all form values
   const handleClearAll = () => {
-    clearAll();
-    reset({
-      company: [],
-      position: [],
-      location: [],
-      year: [new Date().getFullYear() - 5, new Date().getFullYear()],
-      coop_year: [],
-      coop_cycle: [],
-      program_level: '',
-      distinct: false
-    });
+    resetFilters();
   };
 
   // Default year range for display

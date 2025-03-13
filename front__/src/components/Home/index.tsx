@@ -131,7 +131,7 @@ const DataTable = () => {
           <TableBody>
             <TableBodyComponent
               rows={table.getRowModel().rows}
-              isLoading={submissionsQuery.isFetching}
+              isLoading={submissionsQuery.isPending}
               columnLength={columns.length}
             />
           </TableBody>

@@ -9,6 +9,8 @@ export default () => {
   const location = useLocation();
   const [isLogoHovered, setIsLogoHovered] = useState(false);
 
+
+
   const colors = {
     // Light mode colors
     red: '#E60012', // Mario's hat/shirt
