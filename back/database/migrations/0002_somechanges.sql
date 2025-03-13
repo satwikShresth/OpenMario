@@ -1,1 +1,0 @@
-ALTER TABLE "submission" ALTER COLUMN "compensation" SET DATA TYPE double precision;

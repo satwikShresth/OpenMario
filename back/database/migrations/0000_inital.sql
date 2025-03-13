@@ -1,10 +1,33 @@
 CREATE TYPE "public"."coop_cycle" AS ENUM('Fall/Winter', 'Winter/Spring', 'Spring/Summer', 'Summer/Fall');--> statement-breakpoint
 CREATE TYPE "public"."coop_year" AS ENUM('1st', '2nd', '3rd');--> statement-breakpoint
 CREATE TYPE "public"."program_level" AS ENUM('Undergraduate', 'Graduate');--> statement-breakpoint
+CREATE TABLE "accounts" (
+	"id" text PRIMARY KEY NOT NULL,
+	"account_id" text NOT NULL,
+	"provider_id" text NOT NULL,
+	"user_id" text NOT NULL,
+	"access_token" text,
+	"refresh_token" text,
+	"id_token" text,
+	"access_token_expires_at" timestamp,
+	"refresh_token_expires_at" timestamp,
+	"scope" text,
+	"password" text,
+	"created_at" timestamp NOT NULL,
+	"updated_at" timestamp NOT NULL
+);
+--> statement-breakpoint
 CREATE TABLE "company" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
 	"name" varchar(255) NOT NULL,
 	CONSTRAINT "company_name_unique" UNIQUE("name")
+);
+--> statement-breakpoint
+CREATE TABLE "jwkss" (
+	"id" text PRIMARY KEY NOT NULL,
+	"public_key" text NOT NULL,
+	"private_key" text NOT NULL,
+	"created_at" timestamp NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE "location" (
@@ -37,13 +60,13 @@ CREATE TABLE "position" (
 );
 --> statement-breakpoint
 CREATE TABLE "profile_major" (
-	"user_id" uuid NOT NULL,
+	"user_id" text NOT NULL,
 	"major_id" uuid NOT NULL,
 	CONSTRAINT "profile_major_user_id_major_id_pk" PRIMARY KEY("user_id","major_id")
 );
 --> statement-breakpoint
 CREATE TABLE "profile_minor" (
-	"user_id" uuid NOT NULL,
+	"user_id" text NOT NULL,
 	"minor_id" uuid NOT NULL,
 	CONSTRAINT "profile_minor_user_id_minor_id_pk" PRIMARY KEY("user_id","minor_id")
 );
@@ -57,26 +80,39 @@ CREATE TABLE "submission" (
 	"coop_cycle" "coop_cycle" NOT NULL,
 	"coop_year" "coop_year" NOT NULL,
 	"year" integer NOT NULL,
-	"compensation" integer,
+	"compensation" double precision,
 	"other_compensation" varchar(255),
 	"details" varchar(255),
-	"owner_id" uuid,
+	"owner_id" text,
 	"created_at" timestamp DEFAULT now() NOT NULL
 );
 --> statement-breakpoint
-CREATE TABLE "user" (
-	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
-	"is_verified" boolean DEFAULT false NOT NULL,
-	"username" varchar(25) NOT NULL,
-	"password" varchar(25) NOT NULL,
-	CONSTRAINT "user_username_unique" UNIQUE("username")
+CREATE TABLE "users" (
+	"id" text PRIMARY KEY NOT NULL,
+	"name" text NOT NULL,
+	"email" text NOT NULL,
+	"email_verified" boolean NOT NULL,
+	"image" text,
+	"created_at" timestamp NOT NULL,
+	"updated_at" timestamp NOT NULL,
+	CONSTRAINT "users_email_unique" UNIQUE("email")
 );
 --> statement-breakpoint
+CREATE TABLE "verifications" (
+	"id" text PRIMARY KEY NOT NULL,
+	"identifier" text NOT NULL,
+	"value" text NOT NULL,
+	"expires_at" timestamp NOT NULL,
+	"created_at" timestamp,
+	"updated_at" timestamp
+);
+--> statement-breakpoint
+ALTER TABLE "accounts" ADD CONSTRAINT "accounts_user_id_users_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."users"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "position" ADD CONSTRAINT "position_company_id_company_id_fk" FOREIGN KEY ("company_id") REFERENCES "public"."company"("id") ON DELETE restrict ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "profile_major" ADD CONSTRAINT "profile_major_user_id_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."user"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "profile_major" ADD CONSTRAINT "profile_major_user_id_users_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."users"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "profile_major" ADD CONSTRAINT "profile_major_major_id_major_id_fk" FOREIGN KEY ("major_id") REFERENCES "public"."major"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "profile_minor" ADD CONSTRAINT "profile_minor_user_id_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."user"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "profile_minor" ADD CONSTRAINT "profile_minor_user_id_users_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."users"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "profile_minor" ADD CONSTRAINT "profile_minor_minor_id_minor_id_fk" FOREIGN KEY ("minor_id") REFERENCES "public"."minor"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "submission" ADD CONSTRAINT "submission_position_id_position_id_fk" FOREIGN KEY ("position_id") REFERENCES "public"."position"("id") ON DELETE restrict ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "submission" ADD CONSTRAINT "submission_location_id_location_id_fk" FOREIGN KEY ("location_id") REFERENCES "public"."location"("id") ON DELETE restrict ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE "submission" ADD CONSTRAINT "submission_owner_id_user_id_fk" FOREIGN KEY ("owner_id") REFERENCES "public"."user"("id") ON DELETE restrict ON UPDATE no action;
+ALTER TABLE "submission" ADD CONSTRAINT "submission_owner_id_users_id_fk" FOREIGN KEY ("owner_id") REFERENCES "public"."users"("id") ON DELETE restrict ON UPDATE no action;

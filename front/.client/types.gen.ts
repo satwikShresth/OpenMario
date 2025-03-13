@@ -134,6 +134,7 @@ export type ProfileMinorUpdate = {
 };
 
 export type Submission = {
+    id?: string;
     company: string;
     position: string;
     location: string;

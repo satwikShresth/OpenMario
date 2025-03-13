@@ -1,19 +1,33 @@
-import { reactRouter } from "@react-router/dev/vite";
+import { defineConfig } from "vite";
 import autoprefixer from "autoprefixer";
 import tailwindcss from "tailwindcss";
-import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react";
+//import react from '@vitejs/plugin-react-swc'
+import { TanStackRouterVite } from "@tanstack/router-plugin/vite";
 import tsconfigPaths from "vite-tsconfig-paths";
 
+const ReactCompilerConfig = {
+  /* ... */
+};
+
 export default defineConfig({
-  css: {
-    postcss: {
-      plugins: [tailwindcss, autoprefixer],
-    },
-  },
-  plugins: [reactRouter(), tsconfigPaths()],
   server: {
     proxy: {
       "/api/v1": "http://localhost:3000",
     },
   },
+  css: {
+    postcss: {
+      plugins: [tailwindcss, autoprefixer],
+    },
+  },
+  plugins: [
+    tsconfigPaths(),
+    TanStackRouterVite({ target: "react", autoCodeSplitting: true }),
+    react({
+      babel: {
+        plugins: [["babel-plugin-react-compiler", ReactCompilerConfig]],
+      },
+    }),
+  ],
 });
