@@ -17,15 +17,7 @@ app.use(express.json());
 
 debugMiddlewares(app);
 
-app.use(
-  "/api/v1",
-  //expressjwt({
-  //   secret: 'Your-Secreat-Here',
-  //   algorithms: ['HS256'],
-  //   credentialsRequired: false,
-  //}).unless({ path: ['/api/signup', '/api/access-token'] }),
-  routes(),
-);
+app.use("/api/v1", routes());
 
 app.use((req: Request, res: Response, next: NextFunction) => {
   const error = new Error(`Not Found: ${req.originalUrl}`);

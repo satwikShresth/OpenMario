@@ -28,6 +28,7 @@ export default (options: any) => {
   //          tokenUrl: https://api.getbase.com/oauth2/token
 
   registry.register("JwtPayload", schemas.JwtPayload);
+  registry.register("Login", schemas.LoginSchema);
 
   //enums Schemas
   registry.register("Major", schemas.MajorSchema);
@@ -46,22 +47,33 @@ export default (options: any) => {
   registry.register("PositionInsert", schemas.PositionInsertSchema);
   registry.register("PositionUpdate", schemas.PositionUpdateSchema);
 
-  //User Schemas
-  registry.register("User", schemas.UserSchema);
-  registry.register("UserInsert", schemas.UserInsertSchema);
-  registry.register("UserUpdate", schemas.UserUpdateSchema);
+  ////User Schemas
+  //registry.register("User", schemas.UserSchema);
+  //registry.register("UserInsert", schemas.UserInsertSchema);
+  //registry.register("UserUpdate", schemas.UserUpdateSchema);
+  //
+  //registry.register("ProfileMajor", schemas.ProfileMajorSchema);
+  //registry.register("ProfileMajorInsert", schemas.ProfileMajorInsertSchema);
+  //registry.register("ProfileMajorUpdate", schemas.ProfileMajorUpdateSchema);
+  //
+  //registry.register("ProfileMinor", schemas.ProfileMinorSchema);
+  //registry.register("ProfileMinorInsert", schemas.ProfileMinorInsertSchema);
+  //registry.register("ProfileMinorUpdate", schemas.ProfileMinorUpdateSchema);
 
-  registry.register("ProfileMajor", schemas.ProfileMajorSchema);
-  registry.register("ProfileMajorInsert", schemas.ProfileMajorInsertSchema);
-  registry.register("ProfileMajorUpdate", schemas.ProfileMajorUpdateSchema);
-
-  registry.register("ProfileMinor", schemas.ProfileMinorSchema);
-  registry.register("ProfileMinorInsert", schemas.ProfileMinorInsertSchema);
-  registry.register("ProfileMinorUpdate", schemas.ProfileMinorUpdateSchema);
-
+  //Company Schemas
+  registry.register(
+    "CompanyPositionInsert",
+    schemas.CompanyPositionInsertSchema,
+  );
+  registry.register("CompanyUpdate", schemas.CompanyUpdateSchema);
+  registry.register("CompanyInsert", schemas.CompanyInsertSchema);
   //Submission Schemas
   registry.register("Submission", schemas.SubmissionSchema);
   registry.register("SubmissionAggregate", schemas.SubmissionAggregateSchema);
+  registry.register(
+    "SubmissionAggregateUpdate",
+    schemas.SubmissionAggregateUpdateSchema,
+  );
   registry.register("SubmissionInsert", schemas.SubmissionInsertSchema);
   registry.register("SubmissionUpdate", schemas.SubmissionUpdateSchema);
   registry.register("SubmissionQuery", schemas.SubmissionQuerySchema);

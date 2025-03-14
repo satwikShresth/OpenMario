@@ -18,10 +18,7 @@ class EmailService {
     sgMail.setApiKey(this.apiKey);
   }
 
-  public async sendVerificationEmail(
-    to: string,
-    magic_link: string,
-  ): Promise<boolean> {
+  public async sendVerificationEmail(to: string, magic_link: string) {
     return await sgMail
       .send({
         to,

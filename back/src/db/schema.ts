@@ -28,6 +28,7 @@ export const coop_year_type = pgEnum("coop_year", coop_year);
 export const company = pgTable("company", {
   id: uuid().defaultRandom().primaryKey(),
   name: varchar({ length: 255 }).notNull().unique(),
+  owner_id: uuid().references(() => users.id, { onDelete: "set null" }),
 });
 
 export const position = pgTable(
@@ -38,6 +39,7 @@ export const position = pgTable(
       .notNull()
       .references(() => company.id, { onDelete: "restrict" }),
     name: varchar({ length: 255 }).notNull(),
+    owner_id: uuid().references(() => users.id, { onDelete: "set null" }),
   },
   (table) => [unique().on(table.company_id, table.name)],
 );
@@ -69,71 +71,22 @@ export const submission = pgTable("submission", {
   compensation: doublePrecision(),
   other_compensation: varchar({ length: 255 }),
   details: varchar({ length: 255 }),
-  owner_id: text().references(() => users.id, { onDelete: "restrict" }),
+  owner_id: uuid().references(() => users.id, { onDelete: "set null" }),
   created_at: timestamp().notNull().defaultNow(),
 });
 
 export const users = pgTable("users", {
-  id: text("id").primaryKey(),
-  name: text("name").notNull(),
-  email: text("email").notNull().unique(),
-  emailVerified: boolean("email_verified").notNull(),
-  image: text("image"),
-  createdAt: timestamp("created_at").notNull(),
-  updatedAt: timestamp("updated_at").notNull(),
-});
-
-export const accounts = pgTable("accounts", {
-  id: text("id").primaryKey(),
-  accountId: text("account_id").notNull(),
-  providerId: text("provider_id").notNull(),
-  userId: text("user_id")
-    .notNull()
-    .references(() => users.id, { onDelete: "cascade" }),
-  accessToken: text("access_token"),
-  refreshToken: text("refresh_token"),
-  idToken: text("id_token"),
-  accessTokenExpiresAt: timestamp("access_token_expires_at"),
-  refreshTokenExpiresAt: timestamp("refresh_token_expires_at"),
-  scope: text("scope"),
-  password: text("password"),
-  createdAt: timestamp("created_at").notNull(),
-  updatedAt: timestamp("updated_at").notNull(),
-});
-
-export const verifications = pgTable("verifications", {
-  id: text("id").primaryKey(),
-  identifier: text("identifier").notNull(),
-  value: text("value").notNull(),
-  expiresAt: timestamp("expires_at").notNull(),
-  createdAt: timestamp("created_at"),
-  updatedAt: timestamp("updated_at"),
-});
-
-export const jwkss = pgTable("jwkss", {
-  id: text("id").primaryKey(),
-  publicKey: text("public_key").notNull(),
-  privateKey: text("private_key").notNull(),
-  createdAt: timestamp("created_at").notNull(),
-});
-
-export const sessions = pgTable("sessions", {
-  id: text("id").primaryKey(),
-  expiresAt: timestamp("expires_at").notNull(),
-  token: text("token").notNull().unique(),
-  createdAt: timestamp("created_at").notNull(),
-  updatedAt: timestamp("updated_at").notNull(),
-  ipAddress: text("ip_address"),
-  userAgent: text("user_agent"),
-  userId: text("user_id")
-    .notNull()
-    .references(() => users.id, { onDelete: "cascade" }),
+  id: uuid().primaryKey().defaultRandom(),
+  username: varchar({ length: 100 }).notNull(),
+  email: text().notNull().unique(),
+  created_at: timestamp().notNull().defaultNow(),
+  updated_at: timestamp().notNull().defaultNow(),
 });
 
 export const profile_major = pgTable(
   "profile_major",
   {
-    user_id: text()
+    user_id: uuid()
       .notNull()
       .references(() => users.id, { onDelete: "cascade" }),
     major_id: uuid()
@@ -146,7 +99,7 @@ export const profile_major = pgTable(
 export const profile_minor = pgTable(
   "profile_minor",
   {
-    user_id: text()
+    user_id: uuid()
       .notNull()
       .references(() => users.id, { onDelete: "cascade" }),
     minor_id: uuid()

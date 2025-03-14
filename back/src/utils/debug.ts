@@ -36,6 +36,7 @@ export const debugMiddlewares = (app: any) => {
     ),
   );
 
+  //@ts-ignore: Because this libarary does not have good typiung support
   expressJSDocSwagger(app)(
     {
       ...options,

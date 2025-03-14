@@ -41,6 +41,7 @@
     "npm:helmet@8": "8.0.0",
     "npm:jsonwebtoken@^9.0.2": "9.0.2",
     "npm:morgan@^1.10.0": "1.10.0",
+    "npm:node-persist@^4.0.4": "4.0.4",
     "npm:pg@*": "8.13.3",
     "npm:pg@^8.13.3": "8.13.3",
     "npm:swagger-ui-express@^5.0.1": "5.0.1_express@5.0.0",
@@ -2179,6 +2180,12 @@
     "node-gyp-build@4.8.4": {
       "integrity": "sha512-LA4ZjwlnUblHVgq0oBF3Jl/6h/Nvs5fzBLwdEF4nuxnFdsfajde4WfxtJr3CaiH+F6ewcIB/q4jQ4UzPyid+CQ=="
     },
+    "node-persist@4.0.4": {
+      "integrity": "sha512-8sPAz/7tw1mCCc8xBG4f0wi+flHkSSgQeX998iQ75Pu27evA6UUWCjSE7xnrYTg2q33oU5leJ061EKPDv6BocQ==",
+      "dependencies": [
+        "p-limit"
+      ]
+    },
     "node-releases@2.0.19": {
       "integrity": "sha512-xxOWJsBKtzAq7DY0J+DTzuz58K8e7sJbdgwkbMWQe8UYB6ekmsQ45q0M/tJDsGaZmbC+l7n57UV8Hl5tHxO9uw=="
     },
@@ -2224,6 +2231,12 @@
       "integrity": "sha512-9asTNB9IkKEzWMcHmVZE7Ts3kC9G7AFHfs8i7caD8HbI76gEjdkId4z/AkP83xdZsH7PLAnnbl47qZkXuxpArw==",
       "dependencies": [
         "yaml"
+      ]
+    },
+    "p-limit@3.1.0": {
+      "integrity": "sha512-TYOanM3wGwNGsZN2cVTYPArw454xnXj5qmWF1bEoAc4+cU/ol7GVh7odevjp1FNHduHc3KZMcFduxU5Xc6uJRQ==",
+      "dependencies": [
+        "yocto-queue"
       ]
     },
     "parseurl@1.3.3": {
@@ -2779,6 +2792,9 @@
     "yaml@2.6.1": {
       "integrity": "sha512-7r0XPzioN/Q9kXBro/XPnA6kznR73DHq+GXh5ON7ZozRO6aMjbmiBuKste2wslTFkC5d1dw0GooOCepZXJ2SAg=="
     },
+    "yocto-queue@0.1.0": {
+      "integrity": "sha512-rVksvsnNCdJ/ohGc6xgPwyN8eheCxsiLM8mxuE/t/mOVqJewPuO1miLpTHQiRgTKCLexL4MeAFVagts7HmNZ2Q=="
+    },
     "yocto-spinner@0.1.2": {
       "integrity": "sha512-VfmLIh/ZSZOJnVRQZc/dvpPP90lWL4G0bmxQMP0+U/2vKBA8GSpcBuWv17y7F+CZItRuO97HN1wdbb4p10uhOg==",
       "dependencies": [
@@ -2838,6 +2854,7 @@
       "npm:helmet@8",
       "npm:jsonwebtoken@^9.0.2",
       "npm:morgan@^1.10.0",
+      "npm:node-persist@^4.0.4",
       "npm:pg@^8.13.3",
       "npm:swagger-ui-express@^5.0.1",
       "npm:zod@^3.24.1"

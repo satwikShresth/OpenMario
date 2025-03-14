@@ -25,6 +25,7 @@
     "helmet": "npm:helmet@^8.0.0",
     "jsonwebtoken": "npm:jsonwebtoken@^9.0.2",
     "morgan": "npm:morgan@^1.10.0",
+    "node-persist": "npm:node-persist@^4.0.4",
     "pg": "npm:pg@^8.13.3",
     "swagger-ui-express": "npm:swagger-ui-express@^5.0.1",
     "zod": "npm:zod@^3.24.1",

@@ -1,69 +1,77 @@
-import { z } from 'zod';
-import { NextFunction, Request, Response } from 'express';
-import { formatZodError } from '#utils';
-import { RequestParamsId } from '#models';
-import { db } from '#db';
-import { eq } from 'drizzle-orm';
+import { z } from "zod";
+import { NextFunction, Request, Response } from "express";
+import { formatZodError } from "#utils";
+import { RequestParamsId } from "#models";
+import { db } from "#db";
+import { eq } from "drizzle-orm";
+import { fromNodeHeaders } from "better-auth/node";
+import { auth } from "#/utils/auth.ts";
+import { Session } from "better-auth";
 
-const zodValidator = (method: 'query' | 'body' | 'params', schema: z.ZodTypeAny) =>
-async (
-   req: Request,
-   res: Response,
-   next: NextFunction,
-) => {
-   const result = await schema.safeParseAsync(req[method]);
+const zodValidator =
+  (method: "query" | "body" | "params", schema: any) =>
+  async (req: Request, res: Response, next: NextFunction) => {
+    const result = await schema.safeParseAsync(req[method]);
 
-   if (!result.success) {
+    if (!result.success) {
       console.error(formatZodError(result.error).error);
       return res.status(400).send({
-         type: method,
-         errors: formatZodError(result.error).error,
+        type: method,
+        errors: formatZodError(result.error).error,
       });
-   }
+    }
 
-   if (req.validated === undefined) {
+    if (req.validated === undefined) {
       req.validated = {};
-   }
+    }
 
-   req.validated[method] = result.data;
-   return next();
-};
+    req.validated[method] = result.data;
+    return next();
+  };
 
-export const zodBodyValidator = (schema: z.ZodTypeAny) => zodValidator('body', schema);
+export const zodBodyValidator = (schema: any) => zodValidator("body", schema);
 
-export const zodQueryValidator = (schema: z.ZodTypeAny) => zodValidator('query', schema);
+export const zodQueryValidator = (schema: any) => zodValidator("query", schema);
 
-export const zodParamsValidator = (schema: z.ZodTypeAny) => zodValidator('params', schema);
+export const zodParamsValidator = (schema: any) =>
+  zodValidator("params", schema);
 
-export const validateOwner = (table: any) =>
-async (
-   req: RequestParamsId,
-   res: Response,
-   next: NextFunction,
-) => {
-   const current_user_id = req?.auth?.user_id!;
-   const item_id = req.validated?.params?.id!;
+export const validateOwner =
+  (table: any) =>
+  async (req: RequestParamsId, res: Response, next: NextFunction) => {
+    const current_user_id = req?.auth?.user_id!;
+    const item_id = req.validated?.params?.id!;
 
-   return await db
+    return await db
       .select({ user_id: table?.user_id! })
       .from(table)
       .where(eq(table.id, item_id))
       .then((result) => result[0].user_id === current_user_id)
-      .then((result) => result ? next() : res.status(401).json({ message: 'Unauthorized Access' }))
+      .then((result) =>
+        result
+          ? next()
+          : res.status(401).json({ message: "Unauthorized Access" }),
+      )
       .catch(({ message }) => {
-         console.log(message);
-         res.status(404).json({ message, detail: `Item not found` });
+        console.log(message);
+        res.status(404).json({ message, detail: `Item not found` });
       });
-};
+  };
 
-export const validateNotLoggedIn = (
-   req: RequestParamsId,
-   res: Response,
-   next: NextFunction,
-) => (req?.auth) ? res.status(401).json({ message: 'Unauthorized Access' }) : next();
-
-export const validateUser = (
-   req: RequestParamsId,
-   res: Response,
-   next: NextFunction,
-) => (req?.auth) ? next() : res.status(401).json({ message: 'Unauthorized Access' });
+//export const validateSession = async (
+//  req: RequestParamsId,
+//  res: Response,
+//  next: NextFunction,
+//) =>
+//  await auth.api
+//    .getSession({
+//      headers: fromNodeHeaders(req.headers),
+//    })
+//    .then((result) => {
+//      if (result !== null) {
+//        req.user = result?.user;
+//        req.session = result?.session;
+//        return next();
+//      }
+//      return res.status(401).json({ message: "Unauthorized Access" });
+//    });

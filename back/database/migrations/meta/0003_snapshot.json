@@ -1,6 +1,6 @@
 {
-  "id": "43755f0f-4685-4d90-8b1b-66f01c680b8d",
-  "prevId": "00000000-0000-0000-0000-000000000000",
+  "id": "700cfe24-3591-4f11-aa8c-220a79417145",
+  "prevId": "dcca968e-03fe-4c7e-8a0f-076e191fa934",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -190,6 +190,12 @@
           "type": "varchar(255)",
           "primaryKey": false,
           "notNull": true
+        },
+        "owner_id": {
+          "name": "owner_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
         }
       },
       "indexes": {},
@@ -205,6 +211,19 @@
             "id"
           ],
           "onDelete": "restrict",
+          "onUpdate": "no action"
+        },
+        "position_owner_id_users_id_fk": {
+          "name": "position_owner_id_users_id_fk",
+          "tableFrom": "position",
+          "tableTo": "users",
+          "columnsFrom": [
+            "owner_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
           "onUpdate": "no action"
         }
       },
@@ -488,7 +507,8 @@
           "name": "id",
           "type": "uuid",
           "primaryKey": true,
-          "notNull": true
+          "notNull": true,
+          "default": "gen_random_uuid()"
         },
         "username": {
           "name": "username",
