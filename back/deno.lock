@@ -40,6 +40,7 @@
     "npm:expresso@*": "0.9.2",
     "npm:helmet@8": "8.0.0",
     "npm:jsonwebtoken@^9.0.2": "9.0.2",
+    "npm:jwt-express@^1.1.0": "1.1.0",
     "npm:morgan@^1.10.0": "1.10.0",
     "npm:node-persist@^4.0.4": "4.0.4",
     "npm:pg@*": "8.13.3",
@@ -1563,7 +1564,7 @@
       "dependencies": [
         "@types/jsonwebtoken",
         "express-unless",
-        "jsonwebtoken"
+        "jsonwebtoken@9.0.2"
       ]
     },
     "express-rate-limit@7.5.0_express@5.0.0": {
@@ -1948,6 +1949,14 @@
         "universalify"
       ]
     },
+    "jsonwebtoken@5.7.0": {
+      "integrity": "sha512-VP2HXX7tJ73v5ZGGTFdgILhOBwGSDlPP4qArdrq6YbDVJ9YJflcNE/fbuGHPlefPkbM1+7rFzz1eTq1xICsJxA==",
+      "dependencies": [
+        "jws",
+        "ms@0.7.3",
+        "xtend"
+      ]
+    },
     "jsonwebtoken@9.0.2": {
       "integrity": "sha512-PRp66vJ865SSqOlgqS8hujT5U4AOgMfhrwYIuIhfKaoSCZcirrmASQr8CX7cUg+RMih+hgznrjp99o+W4pJLHQ==",
       "dependencies": [
@@ -1976,6 +1985,12 @@
       "dependencies": [
         "jwa",
         "safe-buffer@5.2.1"
+      ]
+    },
+    "jwt-express@1.1.0": {
+      "integrity": "sha512-6ThTkgqy4Tpvy1JxV4MYiouGOHo/8V54wdXnicuFOy/hCUscTOyoMWmc2wztH76XJ6/2aEuKH1PfF1SSIVvo7Q==",
+      "dependencies": [
+        "jsonwebtoken@5.7.0"
       ]
     },
     "kleur@3.0.3": {
@@ -2132,6 +2147,9 @@
         "on-finished@2.3.0",
         "on-headers"
       ]
+    },
+    "ms@0.7.3": {
+      "integrity": "sha512-lrKNzMWqQZgwJahtrtrM+9NgOoDUveDrVmm5aGXrf3BdtL0mq7X6IVzoZaw+TfNti29eHd1/8GI+h45K5cQ6/w=="
     },
     "ms@2.0.0": {
       "integrity": "sha512-Tpp60P6IUJDTuOq/5Z8cdskzJujfwqfOTkrwIwj7IRISpnkJnT6SyJ4PCPnGMoFjC9ddhal5KVIYtAt97ix05A=="
@@ -2843,7 +2861,6 @@
       "npm:@types/jest@^29.5.14",
       "npm:argon2@~0.41.1",
       "npm:axios@^1.7.9",
-      "npm:better-auth@^1.2.3",
       "npm:drizzle-kit@~0.30.1",
       "npm:drizzle-orm@~0.38.3",
       "npm:drizzle-zod@~0.6.1",
@@ -2853,6 +2870,7 @@
       "npm:express@5.0.0",
       "npm:helmet@8",
       "npm:jsonwebtoken@^9.0.2",
+      "npm:jwt-express@^1.1.0",
       "npm:morgan@^1.10.0",
       "npm:node-persist@^4.0.4",
       "npm:pg@^8.13.3",

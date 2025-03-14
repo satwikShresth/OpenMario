@@ -1,18 +1,18 @@
-import React, { useState, useCallback, useMemo } from 'react';
+import React, { useState, useCallback, useMemo, useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Paper, Grid, Typography, Divider, Box, Stack, Button } from '@mui/material';
 import { DollarSign, Briefcase, MapPin, Building, Info, Clock, PlusCircle } from 'lucide-react';
 import debounce from 'lodash/debounce';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { AutocompleteFieldWithIcon, TextFieldWithIcon, DropdownField, SliderField, CompensationField, DatePickerField, } from './fields';
 import { SectionHeader } from './SectionHeader';
 import { FormActions } from './FormActions';
 import { COOP_CYCLES, COOP_YEARS, PROGRAM_LEVELS } from '#/types';
-import { getAutocompleteCompanyOptions, getAutocompleteLocationOptions, getAutocompletePositionOptions } from '#client/react-query.gen';
+import { getAutocompleteCompanyOptions, getAutocompleteLocationOptions, getAutocompletePositionOptions, postCompanyPositionMutation } from '#client/react-query.gen';
 import { PositionSchema, type Position } from '#/utils/validators';
 import CompanyPositionModal, { type CompanyPosition } from './CompanyPositionModal';
-import ModalAutocompleteField from './ModalAutocompleteField';
+import { useSnackbar } from 'notistack';
 
 const JobForm: React.FC<{
   editIndex?: number;
@@ -29,6 +29,7 @@ const JobForm: React.FC<{
 }) => {
     const [modalOpen, setModalOpen] = useState(false);
     const queryClient = useQueryClient();
+    const { enqueueSnackbar } = useSnackbar();
 
     const {
       control,
@@ -49,6 +50,7 @@ const JobForm: React.FC<{
     const compensation = watch('compensation');
     const workHours = watch('work_hours');
     const selectedCompany = watch('company');
+    const isSubmittingRef = useRef(false);
     const weeklyPay = useMemo(() => compensation !== null ? compensation * workHours : null, [compensation, workHours]);
 
     const debouncedSearch = useCallback(
@@ -98,10 +100,17 @@ const JobForm: React.FC<{
       const isValid = await trigger();
 
       if (isValid) {
-        await onSubmit(data);
-        reset();
+        isSubmittingRef.current = true;
+        try {
+          await onSubmit(data);
+        } catch (error) {
+          isSubmittingRef.current = false;
+          console.error("Submission error:", error);
+        }
       }
     };
+
+    const postMutation = useMutation(postCompanyPositionMutation());
 
     const handleOpenModal = () => {
       setModalOpen(true);
@@ -124,7 +133,33 @@ const JobForm: React.FC<{
         queryKey: ['autocompletePositionOptions']
       });
 
-      return Promise.resolve();
+      postMutation.mutate({
+        body: { company: data.company, position: data.position }
+      }, {
+        onSuccess: () => {
+          enqueueSnackbar('Comapny Position added successfully', { variant: 'success' });
+        },
+        onError: (error: any) => {
+          console.error('Error updating job:', error);
+
+          if (error.response?.data) {
+            const errorData = error.response.data;
+
+            if (errorData.message === "Validation failed" && Array.isArray(errorData.details)) {
+              errorData.details.forEach((detail: any) => {
+                const fieldName = detail.field.charAt(0).toUpperCase() + detail.field.slice(1);
+                enqueueSnackbar(`${fieldName}: ${detail.message}`, { variant: 'error' });
+              });
+            } else {
+              enqueueSnackbar(errorData.message || 'Failed to update job', { variant: 'error' });
+            }
+          } else {
+            enqueueSnackbar('An unexpected error occurred. Please try again.', { variant: 'error' });
+          }
+        }
+      });
+
+
     };
 
     return (

@@ -1,41 +1,8 @@
 import React from 'react';
 import { Controller } from 'react-hook-form';
 import { Box, TextField, Autocomplete, CircularProgress, Chip } from '@mui/material';
-import type { Submission } from '#client/types.gen';
-import { matchSorter } from 'match-sorter';
-
-// Improved filterOptions function
-const filterOptions = (options, { inputValue }) => {
-  // If no input, return all options
-  if (!inputValue) {
-    return options;
-  }
-
-  // First get all filtered options
-  const filteredOptions = matchSorter(options, inputValue, {
-    keys: [(item) => typeof item === 'string' ? item : item.name]
-  });
-
-  // Special case for Susquehanna
-  if (inputValue.toLowerCase().includes("sig")) {
-    const sigOption = options.find(
-      option => (typeof option === 'string' ? option : option.name) === "Susquehanna Int'l Group LLP"
-    );
-
-    // If Susquehanna exists but isn't in filtered results, add it
-    if (sigOption && !filteredOptions.includes(sigOption)) {
-      return [sigOption, ...filteredOptions];
-    }
-
-    // If Susquehanna exists and is in results, bring it to the top
-    if (sigOption && filteredOptions.includes(sigOption)) {
-      const withoutSig = filteredOptions.filter(option => option !== sigOption);
-      return [sigOption, ...withoutSig];
-    }
-  }
-
-  return filteredOptions;
-};
+import type { Submission } from '#/types';
+import { filterOptions } from '../filter';
 
 type MultiselectFieldWithIconProps<T> = {
   name: keyof Submission;

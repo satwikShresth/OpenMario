@@ -12,6 +12,7 @@ import {
   SubmissionQuery,
 } from "#models";
 import {
+  validateUser,
   zodBodyValidator,
   zodQueryValidator,
 } from "#/middleware/validation.middleware.ts";
@@ -38,7 +39,6 @@ const getPositionId = async (insertData: SubmissionAggregate) =>
       return position_id;
     })
     .catch(({ message }) => {
-      console.log(message);
       throw new Error(message);
     });
 
@@ -70,7 +70,7 @@ export default () => {
    * GET /submissions
    * @summary Retrieve co-op submission records with pagination and filtering
    * @tags Submissions
-   * @param {Boolean} distinct.query - Query prarmer for filtering submission using company
+   * @param {boolean} distinct.query - Query prarmer for filtering submission using company
    * @param {array<string>} company.query - Query prarmer for filtering submission using company
    * @param {array<string>} position.query - Query prarmer for filtering submission using position
    * @param {array<string>} location.query - Query prarmer for filtering submission using location
@@ -116,7 +116,6 @@ export default () => {
         const { distinct, skip, limit, query, pageIndex } = req?.validated
           ?.query as SubmissionQuery;
 
-        console.log(distinct);
         const subQuerySelect = (distinct: boolean, schema: any) =>
           distinct
             ? db.selectDistinctOn(
@@ -169,6 +168,7 @@ export default () => {
      * POST /submissions
      * @summary Create new co-op submission(s)
      * @tags Submissions
+     * @security JWT
      * @param {SubmissionAggregate} request.body.required - Submission data
      * @return {object} 201 - Successfully created submission
      * @example response - 201 - Success response example
@@ -185,7 +185,7 @@ export default () => {
     .post(
       zodBodyValidator(SubmissionAggregateSchema),
       async (req: RequestParamsId, res: Response) => {
-        const { user_id = null } = req?.auth!;
+        const user_id = req?.auth?.user_id || null;
         const insertData = req?.validated?.body! as SubmissionAggregate;
         try {
           const toBeInserted: SubmissionInsert = {
@@ -218,6 +218,7 @@ export default () => {
      * PATCH /submissions
      * @summary Update an existing co-op submission
      * @tags Submissions
+     * @security JWT
      * @param {SubmissionAggregateUpdate} request.body.required - Updated submission data including submission ID
      * @return {object} 201 - Successfully updated submission
      * @example response - 201 - Success response example
@@ -234,7 +235,7 @@ export default () => {
     .patch(
       zodBodyValidator(SubmissionAggregateUpdateSchema),
       async (req: RequestParamsId, res: Response) => {
-        const { user_id = null } = req?.auth!;
+        const user_id = req?.auth?.user_id || null;
         const updateData = req?.validated?.body! as SubmissionAggregateUpdate;
         try {
           const toBeUpdated: SubmissionInsert = {
@@ -305,33 +306,37 @@ export default () => {
    *   "message": "Failed to retrieve submissions"
    * }
    */
-  router.get("/me", async (req: Request<JwtPayload>, res: Response) => {
-    const { user_id } = req?.auth!;
+  router.get(
+    "/me",
+    validateUser,
+    async (req: Request<JwtPayload>, res: Response) => {
+      const { user_id } = req?.auth!;
 
-    return await db
-      .select({
-        year: submission.year,
-        coop_year: submission.coop_year,
-        coop_cycle: submission.coop_cycle,
-        program_level: submission.program_level,
-        work_hours: submission.work_hours,
-        compensation: submission.compensation,
-        other_compensation: submission.other_compensation,
-        details: submission.details,
-        company: company.name,
-        position: position.name,
-        location_city: location.city,
-        location_state: location.state,
-        location_state_code: location.state_code,
-      })
-      .from(submission)
-      .innerJoin(position, eq(submission.position_id, position.id))
-      .innerJoin(location, eq(submission.location_id, location.id))
-      .innerJoin(company, eq(position.company_id, company.id))
-      .where(eq(submission.owner_id, user_id))
-      .then((data) => res.status(200).json({ data }))
-      .catch(({ message }) => res.status(409).json({ message }));
-  });
+      return await db
+        .select({
+          year: submission.year,
+          coop_year: submission.coop_year,
+          coop_cycle: submission.coop_cycle,
+          program_level: submission.program_level,
+          work_hours: submission.work_hours,
+          compensation: submission.compensation,
+          other_compensation: submission.other_compensation,
+          details: submission.details,
+          company: company.name,
+          position: position.name,
+          location_city: location.city,
+          location_state: location.state,
+          location_state_code: location.state_code,
+        })
+        .from(submission)
+        .innerJoin(position, eq(submission.position_id, position.id))
+        .innerJoin(location, eq(submission.location_id, location.id))
+        .innerJoin(company, eq(position.company_id, company.id))
+        .where(eq(submission.owner_id, user_id))
+        .then((data) => res.status(200).json({ data }))
+        .catch(({ message }) => res.status(409).json({ message }));
+    },
+  );
 
   return router;
 };

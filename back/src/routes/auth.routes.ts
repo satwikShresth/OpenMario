@@ -57,7 +57,6 @@ export default () => {
       });
 
       const magiclink = createMagicLink(token);
-      console.log(magiclink);
       return (await emailService.sendVerificationEmail(email, magiclink))
         ? res.status(200).json({ message: "Magic link sent to your email" })
         : res.status(409).json({ message: "Failed to send email" });

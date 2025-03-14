@@ -6,42 +6,9 @@ import {
   CircularProgress
 } from '@mui/material';
 import { Controller } from 'react-hook-form';
-import { matchSorter } from 'match-sorter';
+import { filterOptions } from './filter';
 
-// Improved filterOptions function (same as in the main AutocompleteFieldWithIcon)
-const filterOptions = (options, { inputValue }) => {
-  // If no input, return all options
-  if (!inputValue) {
-    return options;
-  }
 
-  // First get all filtered options
-  const filteredOptions = matchSorter(options, inputValue, {
-    keys: [(item) => typeof item === 'string' ? item : item.name]
-  });
-
-  // Special case for Susquehanna
-  if (inputValue.toLowerCase().includes("sig")) {
-    const sigOption = options.find(
-      option => (typeof option === 'string' ? option : option.name) === "Susquehanna Int'l Group LLP"
-    );
-
-    // If Susquehanna exists but isn't in filtered results, add it
-    if (sigOption && !filteredOptions.includes(sigOption)) {
-      return [sigOption, ...filteredOptions];
-    }
-
-    // If Susquehanna exists and is in results, bring it to the top
-    if (sigOption && filteredOptions.includes(sigOption)) {
-      const withoutSig = filteredOptions.filter(option => option !== sigOption);
-      return [sigOption, ...withoutSig];
-    }
-  }
-
-  return filteredOptions;
-};
-
-// Custom Autocomplete component that allows any string input
 const ModalAutocompleteField = ({
   name,
   label,
@@ -68,10 +35,17 @@ const ModalAutocompleteField = ({
             loading={loading}
             filterOptions={filterOptions}
             freeSolo={true}
-            selectOnFocus
-            handleHomeEndKeys
-            onInputChange={onInputChange}
+            onInputChange={(event, newInputValue) => {
+              // Update the form field value whenever input changes
+              onChange(newInputValue);
+
+              // Also call the parent's onInputChange if provided
+              if (onInputChange) {
+                onInputChange(event, newInputValue);
+              }
+            }}
             onChange={(_, newValue) => {
+              // Handle selection from dropdown
               onChange(newValue);
             }}
             value={value || ""}

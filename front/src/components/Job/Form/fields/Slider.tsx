@@ -1,7 +1,7 @@
 import React from 'react';
 import { Typography, Slider, Box } from '@mui/material';
 import { Controller } from 'react-hook-form';
-import type { Submission } from '#client/types.gen';
+import type { Submission } from '#/types';
 
 type SliderFieldProps = {
   name: keyof Submission;

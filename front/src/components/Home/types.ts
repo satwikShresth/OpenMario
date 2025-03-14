@@ -1,4 +1,4 @@
-import type { Submission } from "#client/types.gen";
+import type { Submission } from "#/types";
 import type { PaginationState, SortingState } from "@tanstack/react-table";
 
 export interface SubmissionsTableProps {

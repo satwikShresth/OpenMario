@@ -8,12 +8,12 @@ export default (options: any) => {
   const registry = new OpenAPIRegistry();
 
   //Auth Schemas
-  registry.registerComponent("securitySchemes", "OAuth2Password", {
+  registry.registerComponent("securitySchemes", "JWT", {
     type: "oauth2",
     description: "Using OAuth2 for password validation flow of generating jwt",
     flows: {
-      password: {
-        tokenUrl: "/v1/token",
+      implicit: {
+        authorizationUrl: "/api/v1/login/:jwt",
       },
     },
   });

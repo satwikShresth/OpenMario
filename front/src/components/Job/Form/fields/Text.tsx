@@ -1,7 +1,7 @@
 import React from 'react';
 import { Controller } from 'react-hook-form';
 import { Box, TextField } from '@mui/material';
-import type { Submission } from '#client/types.gen';
+import type { Submission } from '#/types';
 
 type TextFieldWithIconProps = {
   name: keyof Submission;

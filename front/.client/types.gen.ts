@@ -4,456 +4,722 @@
  * Schema for JWT payload containing user authentication information
  */
 export type JwtPayload = {
-    /**
-     * Unique identifier for the user
-     */
-    user_id: string;
-    /**
-     * Username of the authenticated user
-     */
-    username: string;
-    /**
-     * Issued at timestamp (in seconds since Unix epoch)
-     */
-    iat: number;
+  /**
+   * Unique identifier for the user
+   */
+  user_id: string;
+  /**
+   * Username of the authenticated user
+   */
+  username: string;
+  /**
+   * Username of the authenticated user
+   */
+  email: string;
+  /**
+   * Issued at timestamp (in seconds since Unix epoch)
+   */
+  exp: number;
+};
+
+export type Login = {
+  email: string;
 };
 
 export type Major = {
-    id: string;
-    program_level: 'Undergraduate' | 'Graduate';
-    name: string;
+  id: string;
+  program_level: "Undergraduate" | "Graduate";
+  name: string;
 };
 
 export type Minor = {
-    id: string;
-    program_level: 'Undergraduate' | 'Graduate';
-    name: string;
+  id: string;
+  program_level: "Undergraduate" | "Graduate";
+  name: string;
 };
 
 export type Location = {
-    id: string;
-    state_code: string;
-    state: string;
-    city: string;
+  id: string;
+  state_code: string;
+  state: string;
+  city: string;
 };
 
-export type CoopYear = '1st' | '2nd' | '3rd';
+export type CoopYear = "1st" | "2nd" | "3rd";
 
-export type CoopCycle = 'Fall/Winter' | 'Winter/Spring' | 'Spring/Summer' | 'Summer/Fall';
+export type CoopCycle =
+  | "Fall/Winter"
+  | "Winter/Spring"
+  | "Spring/Summer"
+  | "Summer/Fall";
 
-export type ProgramLevel = 'Undergraduate' | 'Graduate';
+export type ProgramLevel = "Undergraduate" | "Graduate";
 
 export type Company = {
-    id: string;
-    name: string;
+  id: string;
+  name: string;
+  owner_id: string | null;
 };
 
 export type CompanyInsert = {
-    id?: string;
-    name: string;
+  id?: string;
+  name: string;
+  owner_id?: string | null;
 };
 
 export type CompanyUpdate = {
-    id?: string;
-    name?: string;
+  company_id: string;
+  company: string;
 };
 
 export type Position = {
-    id: string;
-    company_id: string;
-    name: string;
+  id: string;
+  company_id: string;
+  name: string;
+  owner_id: string | null;
 };
 
 export type PositionInsert = {
-    id?: string;
-    company_id: string;
-    name: string;
+  id?: string;
+  company_id: string;
+  name: string;
+  owner_id?: string | null;
 };
 
 export type PositionUpdate = {
-    id?: string;
-    company_id?: string;
-    name?: string;
+  position_id: string;
+  position: string;
 };
 
-export type User = {
-    id: string;
-    is_verified: boolean;
-    username: string;
-    password: string;
-};
-
-export type UserInsert = {
-    id?: string;
-    is_verified?: boolean;
-    username: string;
-    password: string;
-};
-
-export type UserUpdate = {
-    id?: string;
-    is_verified?: boolean;
-    username?: string;
-    password?: string;
-};
-
-export type ProfileMajor = {
-    id: string;
-    user_id: string;
-    major_id: string;
-};
-
-export type ProfileMajorInsert = {
-    id?: string;
-    user_id: string;
-    major_id: string;
-};
-
-export type ProfileMajorUpdate = {
-    id?: string;
-    user_id?: string;
-    major_id?: string;
-};
-
-export type ProfileMinor = {
-    id: string;
-    user_id: string;
-    minor_id: string;
-};
-
-export type ProfileMinorInsert = {
-    id?: string;
-    user_id: string;
-    minor_id: string;
-};
-
-export type ProfileMinorUpdate = {
-    id?: string;
-    user_id?: string;
-    minor_id?: string;
+export type CompanyPositionInsert = {
+  company: string;
+  position: string;
 };
 
 export type Submission = {
-    id?: string;
-    company: string;
-    position: string;
-    location: string;
-    program_level: 'Undergraduate' | 'Graduate';
-    work_hours: string;
-    coop_cycle: 'Fall/Winter' | 'Winter/Spring' | 'Spring/Summer' | 'Summer/Fall';
-    coop_year: '1st' | '2nd' | '3rd';
-    year: string;
-    compensation: string | null;
-    other_compensation: string | null;
-    details: string | null;
+  id: string;
+  position_id: string;
+  location_id: string;
+  program_level: "Undergraduate" | "Graduate";
+  work_hours: number;
+  coop_cycle: "Fall/Winter" | "Winter/Spring" | "Spring/Summer" | "Summer/Fall";
+  coop_year: "1st" | "2nd" | "3rd";
+  year: number;
+  compensation: number | null;
+  other_compensation: string | null;
+  details: string | null;
+  owner_id: string | null;
+  created_at: string;
 };
 
 export type SubmissionAggregate = {
-    /**
-     * Title of the position
-     */
-    position: string
-    /**
-     * Name of the company offering the position
-     */
-    company: string;
-    /**
-     * Location in City, State format (US only)
-     */
-    location: string;
-    /**
-     * Weekly work hours
-     */
-    work_hours: number;
-    /**
-     * Base compensation amount
-     */
-    compensation: number;
-    /**
-     * Additional compensation details (bonuses, equity, etc.)
-     */
-    other_compensation: string;
-    /**
-     * Additional position details and requirements
-     */
-    details: string;
-    year: number;
-    coop_year: '1st' | '2nd' | '3rd';
-    coop_cycle: 'Fall/Winter' | 'Winter/Spring' | 'Spring/Summer' | 'Summer/Fall';
-    program_level: 'Undergraduate' | 'Graduate';
+  company: string;
+  position: string;
+  location: string;
+  /**
+   * Expected Work Hours
+   */
+  work_hours: number;
+  /**
+   * Compensation amount
+   */
+  compensation: number;
+  other_compensation: string;
+  details: string;
+  year: number;
+  coop_year: "1st" | "2nd" | "3rd";
+  coop_cycle: "Fall/Winter" | "Winter/Spring" | "Spring/Summer" | "Summer/Fall";
+  program_level: "Undergraduate" | "Graduate";
+};
+
+export type SubmissionAggregateUpdate = {
+  company: string;
+  position: string;
+  location: string;
+  /**
+   * Expected Work Hours
+   */
+  work_hours: number;
+  /**
+   * Compensation amount
+   */
+  compensation: number;
+  other_compensation: string;
+  details: string;
+  year: number;
+  coop_year: "1st" | "2nd" | "3rd";
+  coop_cycle: "Fall/Winter" | "Winter/Spring" | "Spring/Summer" | "Summer/Fall";
+  program_level: "Undergraduate" | "Graduate";
+  id: string;
 };
 
 export type SubmissionInsert = {
-    id?: string;
-    position_id: string;
-    location_id: string;
-    program_level: 'Undergraduate' | 'Graduate';
-    /**
-     * Expected Work Hours
-     */
-    work_hours?: number;
-    coop_cycle: 'Fall/Winter' | 'Winter/Spring' | 'Spring/Summer' | 'Summer/Fall';
-    coop_year: '1st' | '2nd' | '3rd';
-    /**
-     * Submission Year
-     */
-    year: number;
-    /**
-     * Compensation amount
-     */
-    compensation?: number | null;
-    other_compensation?: string | null;
-    details?: string | null;
-    owner_id?: string | null;
-    created_at?: string;
+  id?: string;
+  position_id: string;
+  location_id: string;
+  program_level: "Undergraduate" | "Graduate";
+  /**
+   * Expected Work Hours
+   */
+  work_hours?: number;
+  coop_cycle: "Fall/Winter" | "Winter/Spring" | "Spring/Summer" | "Summer/Fall";
+  coop_year: "1st" | "2nd" | "3rd";
+  /**
+   * Submission Year
+   */
+  year: number;
+  /**
+   * Compensation amount
+   */
+  compensation?: number | null;
+  other_compensation?: string | null;
+  details?: string | null;
+  owner_id?: string | null;
+  created_at?: string;
 };
 
 export type SubmissionUpdate = {
-    id?: string;
-    position_id?: string;
-    location_id?: string;
-    program_level?: 'Undergraduate' | 'Graduate';
-    /**
-     * Expected Work Hours
-     */
-    work_hours?: number;
-    coop_cycle?: 'Fall/Winter' | 'Winter/Spring' | 'Spring/Summer' | 'Summer/Fall';
-    coop_year?: '1st' | '2nd' | '3rd';
-    /**
-     * Submission Year
-     */
-    year?: number;
-    /**
-     * Compensation amount
-     */
-    compensation?: number | null;
-    other_compensation?: string | null;
-    details?: string | null;
-    owner_id?: string | null;
-    created_at?: string;
+  id?: string;
+  position_id?: string;
+  location_id?: string;
+  program_level?: "Undergraduate" | "Graduate";
+  /**
+   * Expected Work Hours
+   */
+  work_hours?: number;
+  coop_cycle?:
+    | "Fall/Winter"
+    | "Winter/Spring"
+    | "Spring/Summer"
+    | "Summer/Fall";
+  coop_year?: "1st" | "2nd" | "3rd";
+  /**
+   * Submission Year
+   */
+  year?: number;
+  /**
+   * Compensation amount
+   */
+  compensation?: number | null;
+  other_compensation?: string | null;
+  details?: string | null;
+  owner_id?: string | null;
+  created_at?: string;
 };
 
 export type SubmissionQuery = {
-    company?: string;
-    position?: string;
-    location?: string;
-    year?: number;
-    coop_year?: '1st' | '2nd' | '3rd';
-    coop_cycle?: 'Fall/Winter' | 'Winter/Spring' | 'Spring/Summer' | 'Summer/Fall';
-    program_level?: 'Undergraduate' | 'Graduate';
-    skip?: number | null;
-    limit?: number;
+  company?: Array<string>;
+  position?: Array<string>;
+  location?: Array<string>;
+  year?: Array<number | null> | null;
+  coop_year?: Array<"1st" | "2nd" | "3rd">;
+  coop_cycle?: Array<
+    "Fall/Winter" | "Winter/Spring" | "Spring/Summer" | "Summer/Fall"
+  >;
+  program_level?: "Undergraduate" | "Graduate";
+  pageIndex?: number | null;
+  pageSize?: number;
+  distinct?: boolean | null;
 };
 
 export type SubmissionResponse = {
-    id: string;
-    year: number;
-    coop_year: number;
-    coop_cycle: string;
-    program_level: string;
-    work_hours: number;
-    compensation: number;
-    other_compensation: string;
-    details: string;
-    position: string;
-    company: string;
-    location_city: string;
-    location_state: string;
-    location_state_code: string;
+  id: string;
+  year: number;
+  coop_year: number;
+  coop_cycle: string;
+  program_level: string;
+  work_hours: number;
+  compensation: number;
+  other_compensation: string;
+  details: string;
+  position: string;
+  company: string;
+  location_city: string;
+  location_state: string;
+  location_state_code: string;
 };
 
+export type PostAuthLoginData = {
+  /**
+   * User email
+   */
+  body: Login;
+  path?: never;
+  query?: never;
+  url: "/auth/login";
+};
+
+export type PostAuthLoginErrors = {
+  /**
+   * Error response
+   */
+  400: {
+    [key: string]: unknown;
+  };
+  /**
+   * Database or email error
+   */
+  409: {
+    [key: string]: unknown;
+  };
+};
+
+export type PostAuthLoginError = PostAuthLoginErrors[keyof PostAuthLoginErrors];
+
+export type PostAuthLoginResponses = {
+  /**
+   * Success response
+   */
+  200: {
+    [key: string]: unknown;
+  };
+};
+
+export type PostAuthLoginResponse =
+  PostAuthLoginResponses[keyof PostAuthLoginResponses];
+
+export type GetAuthLoginTokenData = {
+  body?: never;
+  path: {
+    /**
+     * Magic link token
+     */
+    token: string;
+  };
+  query?: never;
+  url: "/auth/login/:token";
+};
+
+export type GetAuthLoginTokenErrors = {
+  /**
+   * Invalid token response
+   */
+  401: {
+    [key: string]: unknown;
+  };
+  /**
+   * Error response
+   */
+  409: {
+    [key: string]: unknown;
+  };
+};
+
+export type GetAuthLoginTokenError =
+  GetAuthLoginTokenErrors[keyof GetAuthLoginTokenErrors];
+
+export type GetAuthLoginTokenResponses = {
+  /**
+   * Success response with access token
+   */
+  200: {
+    [key: string]: unknown;
+  };
+};
+
+export type GetAuthLoginTokenResponse =
+  GetAuthLoginTokenResponses[keyof GetAuthLoginTokenResponses];
+
 export type GetAutocompleteCompanyData = {
-    body?: never;
-    path?: never;
-    query: {
-        /**
-         * Search parameters for company name
-         */
-        comp: string;
-    };
-    url: '/autocomplete/company';
+  body?: never;
+  path?: never;
+  query: {
+    /**
+     * Search parameters for company name
+     */
+    comp: string;
+  };
+  url: "/autocomplete/company";
 };
 
 export type GetAutocompleteCompanyErrors = {
-    /**
-     * Error response
-     */
-    409: {
-        [key: string]: unknown;
-    };
+  /**
+   * Error response
+   */
+  409: {
+    [key: string]: unknown;
+  };
 };
 
-export type GetAutocompleteCompanyError = GetAutocompleteCompanyErrors[keyof GetAutocompleteCompanyErrors];
+export type GetAutocompleteCompanyError =
+  GetAutocompleteCompanyErrors[keyof GetAutocompleteCompanyErrors];
 
 export type GetAutocompleteCompanyResponses = {
-    /**
-     * List of matching company names
-     */
-    200: Array<string>;
+  /**
+   * List of matching company names
+   */
+  200: Array<string>;
 };
 
-export type GetAutocompleteCompanyResponse = GetAutocompleteCompanyResponses[keyof GetAutocompleteCompanyResponses];
+export type GetAutocompleteCompanyResponse =
+  GetAutocompleteCompanyResponses[keyof GetAutocompleteCompanyResponses];
 
 export type GetAutocompletePositionData = {
-    body?: never;
-    path?: never;
-    query: {
-        /**
-         * Company name and optional position search term
-         */
-        comp: string;
-        /**
-         * Company name and optional position search term
-         */
-        pos: string;
-    };
-    url: '/autocomplete/position';
+  body?: never;
+  path?: never;
+  query: {
+    /**
+     * Company name and optional position search term
+     */
+    comp: string;
+    /**
+     * Company name and optional position search term
+     */
+    pos: string;
+  };
+  url: "/autocomplete/position";
 };
 
 export type GetAutocompletePositionErrors = {
-    /**
-     * Error response
-     */
-    409: {
-        [key: string]: unknown;
-    };
+  /**
+   * Error response
+   */
+  409: {
+    [key: string]: unknown;
+  };
 };
 
-export type GetAutocompletePositionError = GetAutocompletePositionErrors[keyof GetAutocompletePositionErrors];
+export type GetAutocompletePositionError =
+  GetAutocompletePositionErrors[keyof GetAutocompletePositionErrors];
 
 export type GetAutocompletePositionResponses = {
-    /**
-     * List of matching position titles
-     */
-    200: Array<string>;
+  /**
+   * List of matching position titles
+   */
+  200: Array<string>;
 };
 
-export type GetAutocompletePositionResponse = GetAutocompletePositionResponses[keyof GetAutocompletePositionResponses];
+export type GetAutocompletePositionResponse =
+  GetAutocompletePositionResponses[keyof GetAutocompletePositionResponses];
 
 export type GetAutocompleteLocationData = {
-    body?: never;
-    path?: never;
-    query: {
-        /**
-         * Search parameters for location
-         */
-        loc: string;
-    };
-    url: '/autocomplete/location';
+  body?: never;
+  path?: never;
+  query: {
+    /**
+     * Search parameters for location
+     */
+    loc: string;
+  };
+  url: "/autocomplete/location";
 };
 
 export type GetAutocompleteLocationErrors = {
-    /**
-     * Error response
-     */
-    409: {
-        [key: string]: unknown;
-    };
+  /**
+   * Error response
+   */
+  409: {
+    [key: string]: unknown;
+  };
 };
 
-export type GetAutocompleteLocationError = GetAutocompleteLocationErrors[keyof GetAutocompleteLocationErrors];
+export type GetAutocompleteLocationError =
+  GetAutocompleteLocationErrors[keyof GetAutocompleteLocationErrors];
 
 export type GetAutocompleteLocationResponses = {
-    /**
-     * List of matching locations in "City, State_Code" format
-     */
-    200: Array<string>;
+  /**
+   * List of matching locations in "City, State_Code" format
+   */
+  200: Array<string>;
 };
 
-export type GetAutocompleteLocationResponse = GetAutocompleteLocationResponses[keyof GetAutocompleteLocationResponses];
+export type GetAutocompleteLocationResponse =
+  GetAutocompleteLocationResponses[keyof GetAutocompleteLocationResponses];
+
+export type GetCompanyPositionData = {
+  body?: never;
+  path?: never;
+  query?: never;
+  url: "/company-position";
+};
+
+export type GetCompanyPositionErrors = {
+  /**
+   * Error response
+   */
+  409: {
+    [key: string]: unknown;
+  };
+};
+
+export type GetCompanyPositionError =
+  GetCompanyPositionErrors[keyof GetCompanyPositionErrors];
+
+export type GetCompanyPositionResponses = {
+  /**
+   * Success response with user's companies and positions
+   */
+  200: {
+    [key: string]: unknown;
+  };
+};
+
+export type GetCompanyPositionResponse =
+  GetCompanyPositionResponses[keyof GetCompanyPositionResponses];
+
+export type PostCompanyPositionData = {
+  /**
+   * Company and position data
+   */
+  body: CompanyPositionInsert;
+  path?: never;
+  query?: never;
+  url: "/company-position";
+};
+
+export type PostCompanyPositionErrors = {
+  /**
+   * Error response
+   */
+  409: {
+    [key: string]: unknown;
+  };
+};
+
+export type PostCompanyPositionError =
+  PostCompanyPositionErrors[keyof PostCompanyPositionErrors];
+
+export type PostCompanyPositionResponses = {
+  /**
+   * Successfully created company and position
+   */
+  201: {
+    [key: string]: unknown;
+  };
+};
+
+export type PostCompanyPositionResponse =
+  PostCompanyPositionResponses[keyof PostCompanyPositionResponses];
+
+export type PatchCompanyData = {
+  /**
+   * Updated company data including company ID
+   */
+  body: CompanyUpdate;
+  path?: never;
+  query?: never;
+  url: "/company";
+};
+
+export type PatchCompanyErrors = {
+  /**
+   * Error response
+   */
+  409: {
+    [key: string]: unknown;
+  };
+};
+
+export type PatchCompanyError = PatchCompanyErrors[keyof PatchCompanyErrors];
+
+export type PatchCompanyResponses = {
+  /**
+   * Successfully updated company
+   */
+  204: {
+    [key: string]: unknown;
+  };
+};
+
+export type PatchCompanyResponse =
+  PatchCompanyResponses[keyof PatchCompanyResponses];
+
+export type PatchPositionData = {
+  /**
+   * Updated position data including position ID
+   */
+  body: PositionUpdate;
+  path?: never;
+  query?: never;
+  url: "/position";
+};
+
+export type PatchPositionErrors = {
+  /**
+   * Error response
+   */
+  409: {
+    [key: string]: unknown;
+  };
+};
+
+export type PatchPositionError = PatchPositionErrors[keyof PatchPositionErrors];
+
+export type PatchPositionResponses = {
+  /**
+   * Successfully updated position
+   */
+  204: {
+    [key: string]: unknown;
+  };
+};
+
+export type PatchPositionResponse =
+  PatchPositionResponses[keyof PatchPositionResponses];
 
 export type GetSubmissionsData = {
-    body?: never;
-    path?: never;
-    query?: {
-        /**
-         * Query prarmer for filtering submission using company
-         */
-        company?: string;
-        /**
-         * Query prarmer for filtering submission using position
-         */
-        position?: string;
-        /**
-         * Query prarmer for filtering submission using location
-         */
-        location?: string;
-        /**
-         * Query prarmer for filtering submission using year
-         */
-        year?: string;
-        /**
-         * Query prarmer for filtering submission using coop_year
-         */
-        coop_year?: string;
-        /**
-         * Query prarmer for filtering submission using coop_cycle
-         */
-        coop_cycle?: string;
-        /**
-         * Query prarmer for filtering submission using program_level
-         */
-        program_level?: string;
-        /**
-         * Query prarmer for offeset
-         */
-        skip?: number;
-        /**
-         * Query prarmer for limit
-         */
-        limit?: number;
-    };
-    url: '/submissions';
+  body?: never;
+  path?: never;
+  query?: {
+    /**
+     * Query prarmer for filtering submission using company
+     */
+    distinct?: boolean;
+    /**
+     * Query prarmer for filtering submission using company
+     */
+    company?: Array<string>;
+    /**
+     * Query prarmer for filtering submission using position
+     */
+    position?: Array<string>;
+    /**
+     * Query prarmer for filtering submission using location
+     */
+    location?: Array<string>;
+    /**
+     * Query prarmer for filtering submission using year
+     */
+    year?: Array<string>;
+    /**
+     * Query prarmer for filtering submission using coop_year
+     */
+    coop_year?: Array<string>;
+    /**
+     * Query prarmer for filtering submission using coop_cycle
+     */
+    coop_cycle?: Array<string>;
+    /**
+     * Query prarmer for filtering submission using program_level
+     */
+    program_level?: string;
+    /**
+     * Query prarmer for offeset
+     */
+    skip?: string;
+    /**
+     * Query prarmer for limit
+     */
+    limit?: string;
+  };
+  url: "/submissions";
 };
 
 export type GetSubmissionsErrors = {
-    /**
-     * Error response
-     */
-    409: {
-        [key: string]: unknown;
-    };
+  /**
+   * Error response
+   */
+  409: {
+    [key: string]: unknown;
+  };
 };
 
-export type GetSubmissionsError = GetSubmissionsErrors[keyof GetSubmissionsErrors];
+export type GetSubmissionsError =
+  GetSubmissionsErrors[keyof GetSubmissionsErrors];
 
 export type GetSubmissionsResponses = {
-    /**
-     * Success response with paginated submissions
-     */
-    200: Array<SubmissionResponse>;
+  /**
+   * Success response with paginated submissions
+   */
+  200: Array<SubmissionResponse>;
 };
 
-export type GetSubmissionsResponse = GetSubmissionsResponses[keyof GetSubmissionsResponses];
+export type GetSubmissionsResponse =
+  GetSubmissionsResponses[keyof GetSubmissionsResponses];
+
+export type PatchSubmissionsData = {
+  /**
+   * Updated submission data including submission ID
+   */
+  body: SubmissionAggregateUpdate;
+  path?: never;
+  query?: never;
+  url: "/submissions";
+};
+
+export type PatchSubmissionsErrors = {
+  /**
+   * Error response
+   */
+  409: {
+    [key: string]: unknown;
+  };
+};
+
+export type PatchSubmissionsError =
+  PatchSubmissionsErrors[keyof PatchSubmissionsErrors];
+
+export type PatchSubmissionsResponses = {
+  /**
+   * Successfully updated submission
+   */
+  201: {
+    [key: string]: unknown;
+  };
+};
+
+export type PatchSubmissionsResponse =
+  PatchSubmissionsResponses[keyof PatchSubmissionsResponses];
 
 export type PostSubmissionsData = {
-    /**
-     * Submission data
-     */
-    body: SubmissionAggregate;
-    path?: never;
-    query?: never;
-    url: '/submissions';
+  /**
+   * Submission data
+   */
+  body: SubmissionAggregate;
+  path?: never;
+  query?: never;
+  url: "/submissions";
 };
 
 export type PostSubmissionsErrors = {
-    /**
-     * Error response
-     */
-    409: {
-        [key: string]: unknown;
-    };
+  /**
+   * Error response
+   */
+  409: {
+    [key: string]: unknown;
+  };
 };
 
-export type PostSubmissionsError = PostSubmissionsErrors[keyof PostSubmissionsErrors];
+export type PostSubmissionsError =
+  PostSubmissionsErrors[keyof PostSubmissionsErrors];
 
 export type PostSubmissionsResponses = {
-    /**
-     * Successfully created submission
-     */
-    201: {
-        [key: string]: unknown;
-    };
+  /**
+   * Successfully created submission
+   */
+  201: {
+    [key: string]: unknown;
+  };
 };
 
-export type PostSubmissionsResponse = PostSubmissionsResponses[keyof PostSubmissionsResponses];
+export type PostSubmissionsResponse =
+  PostSubmissionsResponses[keyof PostSubmissionsResponses];
+
+export type GetSubmissionsMeData = {
+  body?: never;
+  path?: never;
+  query?: never;
+  url: "/submissions/me";
+};
+
+export type GetSubmissionsMeErrors = {
+  /**
+   * Error response
+   */
+  409: {
+    [key: string]: unknown;
+  };
+};
+
+export type GetSubmissionsMeError =
+  GetSubmissionsMeErrors[keyof GetSubmissionsMeErrors];
+
+export type GetSubmissionsMeResponses = {
+  /**
+   * Success response with user's submissions
+   */
+  200: Array<SubmissionResponse>;
+};
+
+export type GetSubmissionsMeResponse =
+  GetSubmissionsMeResponses[keyof GetSubmissionsMeResponses];

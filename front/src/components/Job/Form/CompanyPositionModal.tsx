@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import {
   Dialog,
   DialogTitle,
@@ -63,18 +63,23 @@ const CompanyPositionModal: React.FC<CompanyPositionModalProps> = ({
     }
   });
 
+
+  const isSubmittingRef = useRef(false);
+
   const handleCancel = () => {
     reset();
     onClose();
   };
 
   const handleFormSubmit = async (data: CompanyPosition) => {
+
+    isSubmittingRef.current = true;
     try {
       await onSubmit(data);
-      console.log(data);
       reset();
       onClose();
     } catch (error) {
+      isSubmittingRef.current = false;
       console.error('Failed to submit company/position', error);
     }
   };

@@ -4,9 +4,6 @@ import { formatZodError } from "#utils";
 import { RequestParamsId } from "#models";
 import { db } from "#db";
 import { eq } from "drizzle-orm";
-import { fromNodeHeaders } from "better-auth/node";
-import { auth } from "#/utils/auth.ts";
-import { Session } from "better-auth";
 
 const zodValidator =
   (method: "query" | "body" | "params", schema: any) =>
@@ -53,25 +50,12 @@ export const validateOwner =
           : res.status(401).json({ message: "Unauthorized Access" }),
       )
       .catch(({ message }) => {
-        console.log(message);
         res.status(404).json({ message, detail: `Item not found` });
       });
   };
-
-//export const validateSession = async (
-//  req: RequestParamsId,
-//  res: Response,
-//  next: NextFunction,
-//) =>
-//  await auth.api
-//    .getSession({
-//      headers: fromNodeHeaders(req.headers),
-//    })
-//    .then((result) => {
-//      if (result !== null) {
-//        req.user = result?.user;
-//        req.session = result?.session;
-//        return next();
-//      }
-//      return res.status(401).json({ message: "Unauthorized Access" });
-//    });
+export const validateUser = (
+  req: RequestParamsId,
+  res: Response,
+  next: NextFunction,
+) =>
+  req?.auth ? next() : res.status(401).json({ message: "Unauthorized Access" });

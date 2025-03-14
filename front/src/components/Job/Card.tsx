@@ -23,7 +23,7 @@ import {
   GraduationCap,
   ArrowRight
 } from 'lucide-react';
-import type { Submission } from '#client/types.gen';
+import type { Submission } from '#/types';
 
 interface JobCardProps {
   submission: Submission;

@@ -6,7 +6,7 @@ import { useMutation } from '@tanstack/react-query';
 import JobForm from '#/components/Job/Form';
 import { useJobSubmissionStore } from '#/stores/useJobSubmissionStore';
 import { type Position } from '#/utils/validators';
-import type { Submission, SubmissionAggregate } from '#client/types.gen';
+import type { Submission, SubmissionAggregate } from '#/types';
 import { Box, Typography } from '@mui/material';
 import { Edit } from 'lucide-react';
 import { postSubmissionsMutation } from '#client/react-query.gen';

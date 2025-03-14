@@ -4,10 +4,9 @@ import { useSnackbar } from 'notistack';
 import { createFileRoute, useNavigate } from '@tanstack/react-router';
 import JobForm from '#/components/Job/Form';
 import { useJobSubmissionStore } from '#/stores/useJobSubmissionStore';
-import type { Submission, SubmissionAggregate } from '#client/types.gen';
+import type { Submission } from '#/types';
 import { Box, Typography } from '@mui/material';
 import { Edit } from 'lucide-react';
-import { add } from '@dnd-kit/utilities';
 import type { Position } from 'postcss';
 import { useMutation } from '@tanstack/react-query';
 import { postSubmissionsMutation } from '#client/react-query.gen';
@@ -26,7 +25,7 @@ function DraftFormComponent() {
   const { enqueueSnackbar } = useSnackbar();
   const { draftSubmissions, updateDraftSubmission, moveDraftToSubmission, removeDraftSubmission } = useJobSubmissionStore();
 
-  const draftIndex = formId;
+  const draftIndex: string = formId;
   const draftData = draftSubmissions[draftIndex];
 
   if (!draftData) {
@@ -43,9 +42,8 @@ function DraftFormComponent() {
   const postMutation = useMutation(postSubmissionsMutation());
 
   const handleSubmit = (data: Position) => {
-    console.log("passing")
     postMutation.mutate({
-      body: data as SubmissionAggregate,
+      body: data
     }, {
       onSuccess: ({ id, message }) => {
         enqueueSnackbar('Submission updated successfully', { variant: 'success' });

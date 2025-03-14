@@ -3,21 +3,28 @@ import { debugMiddlewares } from "#utils";
 //import morgan from 'morgan';
 //import { expressjwt } from 'express-jwt';
 import routes from "#routes";
-import { toNodeHandler } from "better-auth/node";
-import { auth } from "#/utils/auth.ts";
+import { JWT_CLIENT_SECRET as secret } from "#/config/index.ts";
+import { expressjwt } from "express-jwt";
 
 const port = 3000;
 const host = "0.0.0.0";
 const protocol = "http";
 const app = express();
 
-app.all("/api/auth/*splat", toNodeHandler(auth));
 app.use(express.json());
 //app.use(morgan(':method :url :status :response-time ms'));
 
 debugMiddlewares(app);
 
-app.use("/api/v1", routes());
+app.use(
+  "/api/v1",
+  expressjwt({
+    secret,
+    algorithms: ["HS256"],
+    credentialsRequired: false,
+  }),
+  routes(),
+);
 
 app.use((req: Request, res: Response, next: NextFunction) => {
   const error = new Error(`Not Found: ${req.originalUrl}`);

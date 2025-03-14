@@ -1,41 +1,8 @@
 import React from 'react';
 import { Controller } from 'react-hook-form';
 import { Box, TextField, Autocomplete, CircularProgress } from '@mui/material';
-import type { Submission } from '#client/types.gen';
-import { matchSorter } from 'match-sorter';
-
-// Improved filterOptions function
-const filterOptions = (options, { inputValue }) => {
-  // If no input, return all options
-  if (!inputValue) {
-    return options;
-  }
-
-  // First get all filtered options
-  const filteredOptions = matchSorter(options, inputValue, {
-    keys: [(item) => typeof item === 'string' ? item : item.name]
-  });
-
-  // Special case for Susquehanna
-  if (inputValue.toLowerCase().includes("sig")) {
-    const sigOption = options.find(
-      option => (typeof option === 'string' ? option : option.name) === "Susquehanna Int'l Group LLP"
-    );
-
-    // If Susquehanna exists but isn't in filtered results, add it
-    if (sigOption && !filteredOptions.includes(sigOption)) {
-      return [sigOption, ...filteredOptions];
-    }
-
-    // If Susquehanna exists and is in results, bring it to the top
-    if (sigOption && filteredOptions.includes(sigOption)) {
-      const withoutSig = filteredOptions.filter(option => option !== sigOption);
-      return [sigOption, ...withoutSig];
-    }
-  }
-
-  return filteredOptions;
-};
+import type { Submission } from '#/types';
+import { filterOptions } from '../filter';
 
 type AutocompleteFieldWithIconProps<T> = {
   name: keyof Submission;
@@ -86,6 +53,7 @@ export const AutocompleteFieldWithIcon = <T extends object>({
       rules={rules}
       render={({ field, fieldState }) => {
         const { onChange, value, ref, ...restField } = field;
+        const controlledValue = value === null || value === undefined ? "" : value;
 
         return (
           <Autocomplete
@@ -94,17 +62,19 @@ export const AutocompleteFieldWithIcon = <T extends object>({
             options={options}
             loading={loading}
             getOptionLabel={(option) => {
-              if (!option) return '';
+              // Handle null/undefined option
+              if (option === null || option === undefined) return '';
               return getOptionLabel(option as T);
             }}
             isOptionEqualToValue={isOptionEqualToValue}
             onInputChange={onInputChange}
             filterOptions={filterOptions}
             onChange={(event, newValue) => {
-              onChange(nullable && !newValue ? null : newValue);
+              // Use the actual newValue (even if empty string) or null if nullable is true
+              onChange(newValue === "" && nullable ? null : newValue);
             }}
             disabled={disabled}
-            value={value || ""}
+            value={controlledValue}
             noOptionsText={noOptionsText}
             freeSolo={freeSolo}
             renderInput={(params) => (
@@ -134,7 +104,7 @@ export const AutocompleteFieldWithIcon = <T extends object>({
               />
             )}
             renderOption={(props, option) => {
-              if (!option) return null;
+              if (option === null || option === undefined) return null;
 
               const optionLabel = getOptionLabel(option as T);
               const optionKey = typeof option === 'object' && option !== null

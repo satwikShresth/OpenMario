@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import { createZustandContext } from 'zustand-context';
-import type { Submission } from '#client/types.gen';
+import type { Submission } from '#/types';
 
 type JobSubmissionStore = {
   submissions: Submission[];

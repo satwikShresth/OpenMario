@@ -10,7 +10,10 @@ import {
 } from "#models";
 import { company, db, position } from "#db";
 import { and, eq, or, sql } from "drizzle-orm";
-import { zodBodyValidator } from "#/middleware/validation.middleware.ts";
+import {
+  validateUser,
+  zodBodyValidator,
+} from "#/middleware/validation.middleware.ts";
 
 export default () => {
   const router = Router();
@@ -38,7 +41,7 @@ export default () => {
    */
   router
     .route("/company-position")
-    .get(async (req: RequestParamsId, res: Response) => {
+    .get(validateUser, async (req: RequestParamsId, res: Response) => {
       const { user_id } = req?.auth!;
 
       return await db
@@ -61,7 +64,7 @@ export default () => {
      * @summary Create a new company and position pair
      * @tags Companies and Positions
      * @security JWT
-     * @param {CompanyPostionInsert} request.body.required - Company and position data
+     * @param {CompanyPositionInsert} request.body.required - Company and position data
      * @return {object} 201 - Successfully created company and position
      * @example request - Example request body
      * {
@@ -87,7 +90,7 @@ export default () => {
     .post(
       zodBodyValidator(CompanyPositionInsertSchema),
       async (req: RequestParamsId, res: Response) => {
-        const { user_id = null } = req?.auth!;
+        const user_id = req?.auth?.user_id || null;
         const { company_name, position_name } = req?.validated
           ?.body! as CompanyPostionInsert;
 
@@ -104,7 +107,7 @@ export default () => {
                     .values({ name: company_name, owner_id: user_id })
                     .returning({
                       id: company.id,
-                      owner: eq(company.owner_id, user_id),
+                      owner: sql`CASE WHEN ${company.owner_id} = ${user_id} THEN true ELSE false END`,
                     })
                     .then(([{ id, owner }]) => ({ id, owner })),
             );

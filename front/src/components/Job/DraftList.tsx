@@ -8,12 +8,9 @@ import {
   Card,
   CardContent,
   Grid,
-  CircularProgress,
-  Alert,
   Chip
 } from '@mui/material';
 import { FileText, Clock } from 'lucide-react';
-import type { Submission } from '#client/types.gen';
 
 interface DraftListProps {
   onSelectDraft: (index: number) => void;

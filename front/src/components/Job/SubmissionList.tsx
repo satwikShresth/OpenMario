@@ -3,7 +3,7 @@ import React from 'react';
 import JobCard from './Card';
 import { Box, Typography, Paper } from '@mui/material';
 import { AlertCircle } from 'lucide-react';
-import type { Submission } from '#client/types.gen';
+import type { Submission } from '#/types';
 
 interface SubmissionListProps {
   onEdit: (index: number) => void;
