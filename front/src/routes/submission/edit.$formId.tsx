@@ -9,7 +9,7 @@ import { type Position } from '#/utils/validators';
 import type { Submission, SubmissionAggregate } from '#/types';
 import { Box, Typography } from '@mui/material';
 import { Edit } from 'lucide-react';
-import { postSubmissionsMutation } from '#client/react-query.gen';
+import { patchSubmissionsMutation, postSubmissionsMutation } from '#client/react-query.gen';
 
 export const Route = createFileRoute('/submission/edit/$formId')({
   loader: ({ params }) => {
@@ -28,19 +28,20 @@ function EditSubmissionComponent() {
 
   const submissionIndex = formId;
   const submissionData = submissions[submissionIndex];
-  const updateMutation = useMutation(postSubmissionsMutation);
+  const updateMutation = useMutation(patchSubmissionsMutation());
   const formDefaultValues = useMemo(() => submissionData, [submissionData]);
-  console.log(submissionData)
+  const id = submissionData?.id;
 
 
   const handleCancel = () => {
     navigate({ to: '/submission' });
   };
 
+  console.log(submissionData)
+
   const handleSubmit = (data: Position) => {
     updateMutation.mutate({
-      id: submissionData.id,
-      body: data as SubmissionAggregate,
+      body: { ...data, id }
     }, {
       onSuccess: () => {
         updateSubmission(submissionIndex, data as Submission);

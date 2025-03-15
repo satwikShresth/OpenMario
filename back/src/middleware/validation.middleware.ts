@@ -1,4 +1,3 @@
-import { z } from "zod";
 import { NextFunction, Request, Response } from "express";
 import { formatZodError } from "#utils";
 import { RequestParamsId } from "#models";

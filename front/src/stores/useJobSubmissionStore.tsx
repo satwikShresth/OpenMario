@@ -12,7 +12,7 @@ type JobSubmissionStore = {
   addDraftSubmission: (submission: Submission) => void;
   updateDraftSubmission: (index: number, submission: Submission) => void;
   removeDraftSubmission: (index: number) => void;
-  moveDraftToSubmission: (draftIndex: number, id: string) => void;
+  moveDraftToSubmission: (draftIndex: number, id: string, data: any) => void;
   clearDraftSubmissions: () => void;
   setProcessing: (isProcessing: boolean) => void;
 };
@@ -63,13 +63,13 @@ export const [JobSubmissionProvider, useJobSubmissionStore] = createZustandConte
             set(() => ({ processing: isProcessing })),
 
           // Move from draft to complete submission
-          moveDraftToSubmission: (draftIndex, id) =>
+          moveDraftToSubmission: (draftIndex, id, data) =>
             set((state) => {
               const draftToMove = state.draftSubmissions[draftIndex];
               if (!draftToMove) return state;
 
               return {
-                submissions: [...state.submissions, { ...draftToMove, id }],
+                submissions: [...state.submissions, { ...data, id }],
                 draftSubmissions: state.draftSubmissions.filter((_, i) => i !== draftIndex)
               };
             })

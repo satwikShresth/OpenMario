@@ -206,8 +206,10 @@ export default () => {
             .insert(submission)
             .values(toBeInserted)
             .returning()
-            .then(() =>
-              res.status(201).json({ message: "Added position successfully" }),
+            .then(([{ id }]) =>
+              res
+                .status(201)
+                .json({ id, message: "Added position successfully" }),
             );
         } catch ({ message }) {
           return res.status(409).json({ message });
@@ -233,7 +235,7 @@ export default () => {
      * }
      */
     .patch(
-      zodBodyValidator(SubmissionAggregateUpdateSchema),
+      zodBodyValidator(SubmissionAggregateSchema),
       async (req: RequestParamsId, res: Response) => {
         const user_id = req?.auth?.user_id || null;
         const updateData = req?.validated?.body! as SubmissionAggregateUpdate;
@@ -271,6 +273,7 @@ export default () => {
                 .json({ message: "Updated position successfully" }),
             );
         } catch ({ message }) {
+          console.log(message);
           return res.status(409).json({ message });
         }
       },

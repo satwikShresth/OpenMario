@@ -47,7 +47,7 @@ function DraftFormComponent() {
     }, {
       onSuccess: ({ id, message }) => {
         enqueueSnackbar('Submission updated successfully', { variant: 'success' });
-        moveDraftToSubmission(draftIndex, id)
+        moveDraftToSubmission(draftIndex, id, data)
         navigate({ to: '/submission' });
       },
       onError: (error: any) => {
