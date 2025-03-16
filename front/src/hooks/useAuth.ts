@@ -1,85 +1,73 @@
-//import React, { useState } from 'react';
-//import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-//import { Navigate, useNavigate } from 'react-router';
-//import { postAuthMeOptions, postAuthSignupMutation, postAuthLogoutMutation, postAuthAccessTokenMutation } from '#client/react-query.gen';
-//
-//
-////export const isLoggedIn = () => localStorage.getItem('access_token') !== null;
-//export const isLoggedIn = () => true;
-//export const clearToken = () => localStorage.removeItem('access_token');
-//export const isLoggedInRedirector = (fn: () => {}) => isLoggedIn() ? fn() : Navigate({ to: '/', replace: true })
-//
-//export const useAuth = () => {
-//  const [error, setError] = useState('');
-//  const navigate = useNavigate();
-//  const queryClient = useQueryClient();
-//
-//  const { data: user, isLoading } = useQuery({
-//    ...postAuthMeOptions(),
-//    enabled: isLoggedIn()
-//  });
-//
-//  const signUpMutation = useMutation(postAuthSignupMutation());
-//  const loginMutation = useMutation(postAuthAccessTokenMutation());
-//  const logoutMutation = useMutation(postAuthLogoutMutation());
-//
-//
-//  const register = (data: any) => {
-//    signUpMutation.mutateAsync({
-//      body: data,
-//      throwOnError: true
-//    })
-//      .then(() => {
-//        navigate('/login');
-//      })
-//      .catch((error) => {
-//        setError(error.response?.status === 409 ? 'Username already exists' : error?.response?.data?.errors?.details[0]?.message || "Failed to create account");
-//        console.error('Signup error:', error);
-//      })
-//      .finally(() => {
-//        queryClient.invalidateQueries({ queryKey: ['currentUser'] });
-//      });
-//  };
-//
-//  const login = (credentials: any) => {
-//    loginMutation.mutateAsync({
-//      body: credentials,
-//      throwOnError: true
-//    })
-//      .then((response) => {
-//        localStorage.setItem('access_token', response.access_token);
-//        navigate('/');
-//      })
-//      .catch((error) => {
-//        setError(error.response?.status === 401 ? 'Invalid credentials' : 'Login failed');
-//        console.error('Login error:', error);
-//      })
-//      .finally(() => {
-//        queryClient.invalidateQueries({ queryKey: ['currentUser'] });
-//      });
-//  };
-//
-//  const logout = () => {
-//    logoutMutation.mutateAsync({
-//      throwOnError: true
-//    })
-//      .catch((error) => {
-//        console.error('Logout error:', error);
-//      })
-//      .finally(() => {
-//        localStorage.removeItem('access_token');
-//        queryClient.removeQueries({ queryKey: ['currentUser'] });
-//        navigate('/');
-//      });
-//  };
-//
-//  return {
-//    user,
-//    isLoading,
-//    error,
-//    register,
-//    login,
-//    logout,
-//    resetError: () => setError('')
-//  };
-//};
+import { useState, useEffect } from "react";
+import { useMutation } from "@tanstack/react-query";
+import { postAuthLoginMutation } from "#client/react-query.gen";
+
+// Create a custom event for auth state changes
+export const AUTH_CHANGE_EVENT = "auth-state-change";
+
+export const isLoggedIn = () => localStorage.getItem("access_token") !== null;
+
+export const clearToken = () => {
+  localStorage.removeItem("access_token");
+  window.dispatchEvent(new Event(AUTH_CHANGE_EVENT));
+};
+
+export const setToken = (token) => {
+  localStorage.setItem("access_token", token);
+  window.dispatchEvent(new Event(AUTH_CHANGE_EVENT));
+};
+
+export const useAuth = () => {
+  const [error, setError] = useState("");
+  const [authState, setAuthState] = useState(isLoggedIn());
+  const postloginMutation = useMutation(postAuthLoginMutation());
+
+  useEffect(() => {
+    const handleAuthChange = () => {
+      setAuthState(isLoggedIn());
+    };
+
+    setAuthState(isLoggedIn());
+
+    window.addEventListener(AUTH_CHANGE_EVENT, handleAuthChange);
+
+    window.addEventListener("storage", (event) => {
+      if (event.key === "access_token") {
+        handleAuthChange();
+      }
+    });
+
+    return () => {
+      window.removeEventListener(AUTH_CHANGE_EVENT, handleAuthChange);
+      window.removeEventListener("storage", handleAuthChange);
+    };
+  }, []);
+
+  const login = async (body: { email: string }) => {
+    return await postloginMutation
+      .mutateAsync({
+        body,
+        throwOnError: true,
+      })
+      .then((response) => {
+        return response;
+      })
+      .catch((error) => {
+        const errorMessage =
+          error?.response?.data?.message ||
+          "Failed to send login link. Please try again.";
+        setError(errorMessage);
+        throw new Error(errorMessage);
+      });
+  };
+
+  return {
+    error,
+    login,
+    isLoading: postloginMutation.isPending,
+    isSuccess: postloginMutation.isSuccess,
+    isLoggedIn: authState,
+    logout: clearToken,
+    resetError: () => setError(""),
+  };
+};

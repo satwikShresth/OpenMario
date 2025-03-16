@@ -10,122 +10,136 @@
 
 // Import Routes
 
-import { Route as rootRoute } from './routes/__root'
-import { Route as SubmissionImport } from './routes/submission'
-import { Route as HomeImport } from './routes/home'
-import { Route as IndexImport } from './routes/index'
-import { Route as SubmissionIndexImport } from './routes/submission/index'
-import { Route as SubmissionNewImport } from './routes/submission/new'
-import { Route as SubmissionFormIdImport } from './routes/submission/$formId'
-import { Route as SubmissionEditFormIdImport } from './routes/submission/edit.$formId'
+import { Route as rootRoute } from "./routes/__root";
+import { Route as SubmissionImport } from "./routes/submission";
+import { Route as HomeImport } from "./routes/home";
+import { Route as IndexImport } from "./routes/index";
+import { Route as SubmissionIndexImport } from "./routes/submission/index";
+import { Route as SubmissionNewImport } from "./routes/submission/new";
+import { Route as SubmissionFormIdImport } from "./routes/submission/$formId";
+import { Route as LoginJwtPayloadImport } from "./routes/login.$jwtPayload";
+import { Route as SubmissionEditFormIdImport } from "./routes/submission/edit.$formId";
 
 // Create/Update Routes
 
 const SubmissionRoute = SubmissionImport.update({
-  id: '/submission',
-  path: '/submission',
+  id: "/submission",
+  path: "/submission",
   getParentRoute: () => rootRoute,
-} as any)
+} as any);
 
 const HomeRoute = HomeImport.update({
-  id: '/home',
-  path: '/home',
+  id: "/home",
+  path: "/home",
   getParentRoute: () => rootRoute,
-} as any)
+} as any);
 
 const IndexRoute = IndexImport.update({
-  id: '/',
-  path: '/',
+  id: "/",
+  path: "/",
   getParentRoute: () => rootRoute,
-} as any)
+} as any);
 
 const SubmissionIndexRoute = SubmissionIndexImport.update({
-  id: '/',
-  path: '/',
+  id: "/",
+  path: "/",
   getParentRoute: () => SubmissionRoute,
-} as any)
+} as any);
 
 const SubmissionNewRoute = SubmissionNewImport.update({
-  id: '/new',
-  path: '/new',
+  id: "/new",
+  path: "/new",
   getParentRoute: () => SubmissionRoute,
-} as any)
+} as any);
 
 const SubmissionFormIdRoute = SubmissionFormIdImport.update({
-  id: '/$formId',
-  path: '/$formId',
+  id: "/$formId",
+  path: "/$formId",
   getParentRoute: () => SubmissionRoute,
-} as any)
+} as any);
+
+const LoginJwtPayloadRoute = LoginJwtPayloadImport.update({
+  id: "/login/$jwtPayload",
+  path: "/login/$jwtPayload",
+  getParentRoute: () => rootRoute,
+} as any);
 
 const SubmissionEditFormIdRoute = SubmissionEditFormIdImport.update({
-  id: '/edit/$formId',
-  path: '/edit/$formId',
+  id: "/edit/$formId",
+  path: "/edit/$formId",
   getParentRoute: () => SubmissionRoute,
-} as any)
+} as any);
 
 // Populate the FileRoutesByPath interface
 
-declare module '@tanstack/react-router' {
+declare module "@tanstack/react-router" {
   interface FileRoutesByPath {
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexImport
-      parentRoute: typeof rootRoute
-    }
-    '/home': {
-      id: '/home'
-      path: '/home'
-      fullPath: '/home'
-      preLoaderRoute: typeof HomeImport
-      parentRoute: typeof rootRoute
-    }
-    '/submission': {
-      id: '/submission'
-      path: '/submission'
-      fullPath: '/submission'
-      preLoaderRoute: typeof SubmissionImport
-      parentRoute: typeof rootRoute
-    }
-    '/submission/$formId': {
-      id: '/submission/$formId'
-      path: '/$formId'
-      fullPath: '/submission/$formId'
-      preLoaderRoute: typeof SubmissionFormIdImport
-      parentRoute: typeof SubmissionImport
-    }
-    '/submission/new': {
-      id: '/submission/new'
-      path: '/new'
-      fullPath: '/submission/new'
-      preLoaderRoute: typeof SubmissionNewImport
-      parentRoute: typeof SubmissionImport
-    }
-    '/submission/': {
-      id: '/submission/'
-      path: '/'
-      fullPath: '/submission/'
-      preLoaderRoute: typeof SubmissionIndexImport
-      parentRoute: typeof SubmissionImport
-    }
-    '/submission/edit/$formId': {
-      id: '/submission/edit/$formId'
-      path: '/edit/$formId'
-      fullPath: '/submission/edit/$formId'
-      preLoaderRoute: typeof SubmissionEditFormIdImport
-      parentRoute: typeof SubmissionImport
-    }
+    "/": {
+      id: "/";
+      path: "/";
+      fullPath: "/";
+      preLoaderRoute: typeof IndexImport;
+      parentRoute: typeof rootRoute;
+    };
+    "/home": {
+      id: "/home";
+      path: "/home";
+      fullPath: "/home";
+      preLoaderRoute: typeof HomeImport;
+      parentRoute: typeof rootRoute;
+    };
+    "/submission": {
+      id: "/submission";
+      path: "/submission";
+      fullPath: "/submission";
+      preLoaderRoute: typeof SubmissionImport;
+      parentRoute: typeof rootRoute;
+    };
+    "/login/$jwtPayload": {
+      id: "/login/$jwtPayload";
+      path: "/login/$jwtPayload";
+      fullPath: "/login/$jwtPayload";
+      preLoaderRoute: typeof LoginJwtPayloadImport;
+      parentRoute: typeof rootRoute;
+    };
+    "/submission/$formId": {
+      id: "/submission/$formId";
+      path: "/$formId";
+      fullPath: "/submission/$formId";
+      preLoaderRoute: typeof SubmissionFormIdImport;
+      parentRoute: typeof SubmissionImport;
+    };
+    "/submission/new": {
+      id: "/submission/new";
+      path: "/new";
+      fullPath: "/submission/new";
+      preLoaderRoute: typeof SubmissionNewImport;
+      parentRoute: typeof SubmissionImport;
+    };
+    "/submission/": {
+      id: "/submission/";
+      path: "/";
+      fullPath: "/submission/";
+      preLoaderRoute: typeof SubmissionIndexImport;
+      parentRoute: typeof SubmissionImport;
+    };
+    "/submission/edit/$formId": {
+      id: "/submission/edit/$formId";
+      path: "/edit/$formId";
+      fullPath: "/submission/edit/$formId";
+      preLoaderRoute: typeof SubmissionEditFormIdImport;
+      parentRoute: typeof SubmissionImport;
+    };
   }
 }
 
 // Create and export the route tree
 
 interface SubmissionRouteChildren {
-  SubmissionFormIdRoute: typeof SubmissionFormIdRoute
-  SubmissionNewRoute: typeof SubmissionNewRoute
-  SubmissionIndexRoute: typeof SubmissionIndexRoute
-  SubmissionEditFormIdRoute: typeof SubmissionEditFormIdRoute
+  SubmissionFormIdRoute: typeof SubmissionFormIdRoute;
+  SubmissionNewRoute: typeof SubmissionNewRoute;
+  SubmissionIndexRoute: typeof SubmissionIndexRoute;
+  SubmissionEditFormIdRoute: typeof SubmissionEditFormIdRoute;
 }
 
 const SubmissionRouteChildren: SubmissionRouteChildren = {
@@ -133,87 +147,95 @@ const SubmissionRouteChildren: SubmissionRouteChildren = {
   SubmissionNewRoute: SubmissionNewRoute,
   SubmissionIndexRoute: SubmissionIndexRoute,
   SubmissionEditFormIdRoute: SubmissionEditFormIdRoute,
-}
+};
 
 const SubmissionRouteWithChildren = SubmissionRoute._addFileChildren(
   SubmissionRouteChildren,
-)
+);
 
 export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
-  '/home': typeof HomeRoute
-  '/submission': typeof SubmissionRouteWithChildren
-  '/submission/$formId': typeof SubmissionFormIdRoute
-  '/submission/new': typeof SubmissionNewRoute
-  '/submission/': typeof SubmissionIndexRoute
-  '/submission/edit/$formId': typeof SubmissionEditFormIdRoute
+  "/": typeof IndexRoute;
+  "/home": typeof HomeRoute;
+  "/submission": typeof SubmissionRouteWithChildren;
+  "/login/$jwtPayload": typeof LoginJwtPayloadRoute;
+  "/submission/$formId": typeof SubmissionFormIdRoute;
+  "/submission/new": typeof SubmissionNewRoute;
+  "/submission/": typeof SubmissionIndexRoute;
+  "/submission/edit/$formId": typeof SubmissionEditFormIdRoute;
 }
 
 export interface FileRoutesByTo {
-  '/': typeof IndexRoute
-  '/home': typeof HomeRoute
-  '/submission/$formId': typeof SubmissionFormIdRoute
-  '/submission/new': typeof SubmissionNewRoute
-  '/submission': typeof SubmissionIndexRoute
-  '/submission/edit/$formId': typeof SubmissionEditFormIdRoute
+  "/": typeof IndexRoute;
+  "/home": typeof HomeRoute;
+  "/login/$jwtPayload": typeof LoginJwtPayloadRoute;
+  "/submission/$formId": typeof SubmissionFormIdRoute;
+  "/submission/new": typeof SubmissionNewRoute;
+  "/submission": typeof SubmissionIndexRoute;
+  "/submission/edit/$formId": typeof SubmissionEditFormIdRoute;
 }
 
 export interface FileRoutesById {
-  __root__: typeof rootRoute
-  '/': typeof IndexRoute
-  '/home': typeof HomeRoute
-  '/submission': typeof SubmissionRouteWithChildren
-  '/submission/$formId': typeof SubmissionFormIdRoute
-  '/submission/new': typeof SubmissionNewRoute
-  '/submission/': typeof SubmissionIndexRoute
-  '/submission/edit/$formId': typeof SubmissionEditFormIdRoute
+  __root__: typeof rootRoute;
+  "/": typeof IndexRoute;
+  "/home": typeof HomeRoute;
+  "/submission": typeof SubmissionRouteWithChildren;
+  "/login/$jwtPayload": typeof LoginJwtPayloadRoute;
+  "/submission/$formId": typeof SubmissionFormIdRoute;
+  "/submission/new": typeof SubmissionNewRoute;
+  "/submission/": typeof SubmissionIndexRoute;
+  "/submission/edit/$formId": typeof SubmissionEditFormIdRoute;
 }
 
 export interface FileRouteTypes {
-  fileRoutesByFullPath: FileRoutesByFullPath
+  fileRoutesByFullPath: FileRoutesByFullPath;
   fullPaths:
-    | '/'
-    | '/home'
-    | '/submission'
-    | '/submission/$formId'
-    | '/submission/new'
-    | '/submission/'
-    | '/submission/edit/$formId'
-  fileRoutesByTo: FileRoutesByTo
+    | "/"
+    | "/home"
+    | "/submission"
+    | "/login/$jwtPayload"
+    | "/submission/$formId"
+    | "/submission/new"
+    | "/submission/"
+    | "/submission/edit/$formId";
+  fileRoutesByTo: FileRoutesByTo;
   to:
-    | '/'
-    | '/home'
-    | '/submission/$formId'
-    | '/submission/new'
-    | '/submission'
-    | '/submission/edit/$formId'
+    | "/"
+    | "/home"
+    | "/login/$jwtPayload"
+    | "/submission/$formId"
+    | "/submission/new"
+    | "/submission"
+    | "/submission/edit/$formId";
   id:
-    | '__root__'
-    | '/'
-    | '/home'
-    | '/submission'
-    | '/submission/$formId'
-    | '/submission/new'
-    | '/submission/'
-    | '/submission/edit/$formId'
-  fileRoutesById: FileRoutesById
+    | "__root__"
+    | "/"
+    | "/home"
+    | "/submission"
+    | "/login/$jwtPayload"
+    | "/submission/$formId"
+    | "/submission/new"
+    | "/submission/"
+    | "/submission/edit/$formId";
+  fileRoutesById: FileRoutesById;
 }
 
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute
-  HomeRoute: typeof HomeRoute
-  SubmissionRoute: typeof SubmissionRouteWithChildren
+  IndexRoute: typeof IndexRoute;
+  HomeRoute: typeof HomeRoute;
+  SubmissionRoute: typeof SubmissionRouteWithChildren;
+  LoginJwtPayloadRoute: typeof LoginJwtPayloadRoute;
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   HomeRoute: HomeRoute,
   SubmissionRoute: SubmissionRouteWithChildren,
-}
+  LoginJwtPayloadRoute: LoginJwtPayloadRoute,
+};
 
 export const routeTree = rootRoute
   ._addFileChildren(rootRouteChildren)
-  ._addFileTypes<FileRouteTypes>()
+  ._addFileTypes<FileRouteTypes>();
 
 /* ROUTE_MANIFEST_START
 {
@@ -223,7 +245,8 @@ export const routeTree = rootRoute
       "children": [
         "/",
         "/home",
-        "/submission"
+        "/submission",
+        "/login/$jwtPayload"
       ]
     },
     "/": {
@@ -240,6 +263,9 @@ export const routeTree = rootRoute
         "/submission/",
         "/submission/edit/$formId"
       ]
+    },
+    "/login/$jwtPayload": {
+      "filePath": "login.$jwtPayload.tsx"
     },
     "/submission/$formId": {
       "filePath": "submission/$formId.tsx",

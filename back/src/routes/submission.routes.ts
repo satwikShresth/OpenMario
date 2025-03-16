@@ -9,6 +9,8 @@ import {
   SubmissionAggregateUpdate,
   SubmissionAggregateUpdateSchema,
   SubmissionInsert,
+  SubmissionMeIds,
+  SubmissionMeIdsSchema,
   SubmissionQuery,
 } from "#models";
 import {
@@ -16,7 +18,7 @@ import {
   zodBodyValidator,
   zodQueryValidator,
 } from "#/middleware/validation.middleware.ts";
-import { and, eq, isNull, or, sql } from "drizzle-orm";
+import { and, eq, inArray, isNull, or, sql } from "drizzle-orm";
 import { Request } from "express-jwt";
 
 const getPositionId = async (insertData: SubmissionAggregate) =>
@@ -284,6 +286,7 @@ export default () => {
    * @summary Retrieve all co-op submissions owned by the authenticated user
    * @tags Submissions
    * @security JWT
+   * @param {array<string>} ids.query - Query prarmer for filtering submission using company
    * @return {array<SubmissionResponse>} 200 - Success response with user's submissions
    * @example response - 200 - Example success response
    * {
@@ -309,37 +312,52 @@ export default () => {
    *   "message": "Failed to retrieve submissions"
    * }
    */
-  router.get(
-    "/me",
-    validateUser,
-    async (req: Request<JwtPayload>, res: Response) => {
-      const { user_id } = req?.auth!;
+  router
+    .route("/me")
+    .all(validateUser)
+    .get(
+      zodQueryValidator(SubmissionMeIdsSchema),
+      async (req: RequestParamsId, res: Response) => {
+        const { ids } = req?.validated?.query as SubmissionMeIds;
+        const { user_id } = req?.auth!;
+        console.log(ids);
 
-      return await db
-        .select({
-          year: submission.year,
-          coop_year: submission.coop_year,
-          coop_cycle: submission.coop_cycle,
-          program_level: submission.program_level,
-          work_hours: submission.work_hours,
-          compensation: submission.compensation,
-          other_compensation: submission.other_compensation,
-          details: submission.details,
-          company: company.name,
-          position: position.name,
-          location_city: location.city,
-          location_state: location.state,
-          location_state_code: location.state_code,
-        })
-        .from(submission)
-        .innerJoin(position, eq(submission.position_id, position.id))
-        .innerJoin(location, eq(submission.location_id, location.id))
-        .innerJoin(company, eq(position.company_id, company.id))
-        .where(eq(submission.owner_id, user_id))
-        .then((data) => res.status(200).json({ data }))
-        .catch(({ message }) => res.status(409).json({ message }));
-    },
-  );
+        if (ids && ids?.length > 0) {
+          await db
+            .update(submission)
+            .set({ owner_id: user_id })
+            .where(
+              and(inArray(submission.id, ids!), isNull(submission.owner_id)),
+            );
+        }
+
+        return await db
+          .select({
+            id: submission.id,
+            owner_id: submission.owner_id,
+            year: submission.year,
+            coop_year: submission.coop_year,
+            coop_cycle: submission.coop_cycle,
+            program_level: submission.program_level,
+            work_hours: submission.work_hours,
+            compensation: submission.compensation,
+            other_compensation: submission.other_compensation,
+            details: submission.details,
+            company: company.name,
+            position: position.name,
+            location_city: location.city,
+            location_state: location.state,
+            location_state_code: location.state_code,
+          })
+          .from(submission)
+          .innerJoin(position, eq(submission.position_id, position.id))
+          .innerJoin(location, eq(submission.location_id, location.id))
+          .innerJoin(company, eq(position.company_id, company.id))
+          .where(eq(submission.owner_id, user_id))
+          .then((data) => res.status(200).json({ data }))
+          .catch(({ message }) => res.status(409).json({ message }));
+      },
+    );
 
   return router;
 };

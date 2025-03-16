@@ -1,5 +1,6 @@
 import { Response, Router } from "express";
 import {
+  validateUser,
   zodBodyValidator,
   zodParamsValidator,
 } from "#/middleware/validation.middleware.ts";
@@ -40,7 +41,6 @@ export default () => {
    *   "message": "Failed to send email"
    * }
    */
-
   router.post(
     "/login",
     zodBodyValidator(
@@ -64,7 +64,7 @@ export default () => {
   );
 
   /**
-   * GET /auth/login/:token
+   * GET /auth/login/{token}
    * @summary Verify magic link token and authenticate user
    * @tags Auth
    * @param {string} token.path.required - Magic link token
@@ -84,11 +84,10 @@ export default () => {
   router.get(
     "/login/:token",
     zodParamsValidator(
-      z
-        .object({ token: z.string() })
-        .transform(
-          async ({ token }) => await verify(token, config.JWT_MAGIC_SECRET),
-        ),
+      z.object({ token: z.string() }).transform(async ({ token }) => {
+        console.log(token);
+        return await verify(token, config.JWT_MAGIC_SECRET);
+      }),
     ),
     async (req: RequestParamsId, res: Response) => {
       console.log(req?.validated?.params);
@@ -127,6 +126,34 @@ export default () => {
         });
     },
   );
+
+  ///**
+  // * POST /auth/me
+  // * @summary Request a magic link for authentication
+  // * @tags Auth
+  // * @return {object} 200 - Success response
+  // * @example response - 200 - Example success response
+  // * {
+  // *   "username": "something"
+  // *   "email": "something@something.com"
+  // * }
+  // * @return {object} 400 - Error response
+  // * @example response - 400 - Example error response
+  // * {
+  // *   "message": "Email is required"
+  // * }
+  // * @return {object} 409 - Database or email error
+  // * @example response - 409 - Example error response
+  // * {
+  // *   "message": "Failed to send email"
+  // * }
+  // */
+  //router.post(
+  //  "/me",
+  //  validateUser,
+  //  (req: RequestParamsId, res: Response): Promise<Response> =>
+  //    res.status(200).json(req?.auth),
+  //);
 
   return router;
 };

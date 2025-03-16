@@ -13,6 +13,7 @@ import { getAutocompleteCompanyOptions, getAutocompleteLocationOptions, getAutoc
 import { PositionSchema, type Position } from '#/utils/validators';
 import CompanyPositionModal, { type CompanyPosition } from './CompanyPositionModal';
 import { useSnackbar } from 'notistack';
+import { useJobSubmissionStore } from '#/stores';
 
 const JobForm: React.FC<{
   editIndex?: number;
@@ -31,11 +32,12 @@ const JobForm: React.FC<{
     const queryClient = useQueryClient();
     const { enqueueSnackbar } = useSnackbar();
 
+    const { addCompanyPosition } = useJobSubmissionStore();
+
     const {
       control,
       handleSubmit,
       getValues,
-      reset,
       watch,
       trigger,
       setValue,
@@ -120,7 +122,7 @@ const JobForm: React.FC<{
       setModalOpen(false);
     };
 
-    const handleAddCompanyPosition = async (data: CompanyPosition) => {
+    const handleAddCompanyPosition = async (data: CompanyPosition, onReset, onClose) => {
 
       setValue('company', data.company);
       setValue('position', data.position);
@@ -133,11 +135,13 @@ const JobForm: React.FC<{
         queryKey: ['autocompletePositionOptions']
       });
 
-      postMutation.mutate({
+      return postMutation.mutate({
         body: { company: data.company, position: data.position }
       }, {
-        onSuccess: () => {
+        onSuccess: ({ company_id, position_id }) => {
           enqueueSnackbar('Comapny Position added successfully', { variant: 'success' });
+          onReset();
+          onClose();
         },
         onError: (error: any) => {
           console.error('Error updating job:', error);
@@ -385,13 +389,8 @@ const JobForm: React.FC<{
         <CompanyPositionModal
           open={modalOpen}
           onClose={handleCloseModal}
-          initialCompany={companyName || ''}
-          companyOptions={companyQuery?.data?.map((item) => item.name) || []}
-          companyLoading={companyQuery?.isLoading}
-          positionOptions={positionQuery?.data?.map((item) => item.name) || []}
-          positionLoading={positionQuery?.isFetching}
-          onCompanyInputChange={(value) => debouncedSearch('company', value)}
-          onPositionInputChange={(value) => debouncedSearch('position', value)}
+          initialCompany={searches.company || ''}
+          initialPosition={searches.position || ''}
           onSubmit={handleAddCompanyPosition}
         />
       </>

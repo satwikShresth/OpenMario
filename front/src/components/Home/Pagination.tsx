@@ -6,13 +6,22 @@ import type { TableConfig } from "./types";
 import React from "react";
 import { useFilterStore } from "#/stores/useFilterStore";
 import { getSubmissionsOptions } from "#client/react-query.gen";
+import { Route } from "#/routes/home";
+import { useQueryClient } from "@tanstack/react-query";
 
 const Pagination: React.FC<{ table: Table<typeof TableConfig>, query: any }> =
-  ({ table, query }) => {
-    const { pageIndex, pageSize } = useFilterStore();
+  ({ table }) => {
+
+    const query = Route.useSearch();
+    const client = useQueryClient();
+    const { pageIndex, pageSize } = query;
     const rowCount = table.getRowCount();
     const canPreviousPage = table.getCanPreviousPage();
     const canNextPage = table.getCanNextPage();
+
+    const prefetchPage = (pageIndex: number, pageSize: number) => {
+      client.prefetchQuery({ ...getSubmissionsOptions({ query: { ...query, pageIndex, pageSize } }), staleTime: 6000 })
+    }
 
     return (
       <Box sx={{
@@ -35,7 +44,14 @@ const Pagination: React.FC<{ table: Table<typeof TableConfig>, query: any }> =
             }}
           >
             {[5, 10, 25, 50, 100].map(size => (
-              <MenuItem key={size} value={size}>
+              <MenuItem
+                key={size}
+                value={size}
+                onMouseEnter={(e) => {
+                  const pageSize = Number(e.target.attributes["data-value"]["value"]);
+                  prefetchPage(0, pageSize)
+                }}
+              >
                 {size}
               </MenuItem>
             ))}
@@ -50,6 +66,7 @@ const Pagination: React.FC<{ table: Table<typeof TableConfig>, query: any }> =
               variant="outlined"
               size="small"
               onClick={() => table.firstPage()}
+              onMouseEnter={() => canPreviousPage && prefetchPage(0, pageSize)}
               disabled={!canPreviousPage}
               sx={{ minWidth: '40px', p: '4px' }}
             >
@@ -59,7 +76,7 @@ const Pagination: React.FC<{ table: Table<typeof TableConfig>, query: any }> =
               variant="outlined"
               size="small"
               onClick={() => table.previousPage()}
-              onMouseEnter={() => canPreviousPage && prefetchPage(pageIndex - 1)}
+              onMouseEnter={() => canPreviousPage && prefetchPage(pageIndex - 1, pageSize)}
               disabled={!canPreviousPage}
               sx={{ minWidth: '40px', p: '4px' }}
             >
@@ -69,7 +86,7 @@ const Pagination: React.FC<{ table: Table<typeof TableConfig>, query: any }> =
               variant="outlined"
               size="small"
               onClick={() => table.nextPage()}
-              onMouseEnter={() => canNextPage && prefetchPage(pageIndex + 1)}
+              onMouseEnter={() => canNextPage && prefetchPage(pageIndex + 1, pageSize)}
               disabled={!canNextPage}
               sx={{ minWidth: '40px', p: '4px' }}
             >
@@ -79,7 +96,7 @@ const Pagination: React.FC<{ table: Table<typeof TableConfig>, query: any }> =
               variant="outlined"
               size="small"
               onClick={() => table.lastPage()}
-              onMouseEnter={() => canNextPage && prefetchPage(Math.ceil(rowCount / pageSize) - 1)}
+              onMouseEnter={() => canNextPage && prefetchPage(Math.ceil(rowCount / pageSize) - 1, pageSize)}
               disabled={!canNextPage}
               sx={{ minWidth: '40px', p: '4px' }}
             >
@@ -87,7 +104,7 @@ const Pagination: React.FC<{ table: Table<typeof TableConfig>, query: any }> =
             </Button>
           </Box>
         </Box>
-      </Box>
+      </Box >
     );
   };
 

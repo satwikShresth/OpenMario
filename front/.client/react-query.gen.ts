@@ -6,7 +6,7 @@ import type {
   PostAuthLoginData,
   PostAuthLoginError,
   PostAuthLoginResponse,
-  GetAuthLoginTokenData,
+  GetAuthLoginByTokenData,
   GetAutocompleteCompanyData,
   GetAutocompletePositionData,
   GetAutocompleteLocationData,
@@ -14,12 +14,6 @@ import type {
   PostCompanyPositionData,
   PostCompanyPositionError,
   PostCompanyPositionResponse,
-  PatchCompanyData,
-  PatchCompanyError,
-  PatchCompanyResponse,
-  PatchPositionData,
-  PatchPositionError,
-  PatchPositionResponse,
   GetSubmissionsData,
   PatchSubmissionsData,
   PatchSubmissionsError,
@@ -111,16 +105,16 @@ export const postAuthLoginMutation = (
   return mutationOptions;
 };
 
-export const getAuthLoginTokenQueryKey = (
-  options: Options<GetAuthLoginTokenData>,
-) => [createQueryKey("getAuthLoginToken", options)];
+export const getAuthLoginByTokenQueryKey = (
+  options: Options<GetAuthLoginByTokenData>,
+) => [createQueryKey("getAuthLoginByToken", options)];
 
-export const getAuthLoginTokenOptions = (
-  options: Options<GetAuthLoginTokenData>,
+export const getAuthLoginByTokenOptions = (
+  options: Options<GetAuthLoginByTokenData>,
 ) => {
   return queryOptions({
     queryFn: async ({ queryKey, signal }) => {
-      const { data } = await AuthService.getAuthLoginToken({
+      const { data } = await AuthService.getAuthLoginByToken({
         ...options,
         ...queryKey[0],
         signal,
@@ -128,7 +122,7 @@ export const getAuthLoginTokenOptions = (
       });
       return data;
     },
-    queryKey: getAuthLoginTokenQueryKey(options),
+    queryKey: getAuthLoginByTokenQueryKey(options),
   });
 };
 
@@ -247,46 +241,6 @@ export const postCompanyPositionMutation = (
   > = {
     mutationFn: async (localOptions) => {
       const { data } = await CompaniesAndPositionsService.postCompanyPosition({
-        ...options,
-        ...localOptions,
-        throwOnError: true,
-      });
-      return data;
-    },
-  };
-  return mutationOptions;
-};
-
-export const patchCompanyMutation = (
-  options?: Partial<Options<PatchCompanyData>>,
-) => {
-  const mutationOptions: UseMutationOptions<
-    PatchCompanyResponse,
-    AxiosError<PatchCompanyError>,
-    Options<PatchCompanyData>
-  > = {
-    mutationFn: async (localOptions) => {
-      const { data } = await CompaniesAndPositionsService.patchCompany({
-        ...options,
-        ...localOptions,
-        throwOnError: true,
-      });
-      return data;
-    },
-  };
-  return mutationOptions;
-};
-
-export const patchPositionMutation = (
-  options?: Partial<Options<PatchPositionData>>,
-) => {
-  const mutationOptions: UseMutationOptions<
-    PatchPositionResponse,
-    AxiosError<PatchPositionError>,
-    Options<PatchPositionData>
-  > = {
-    mutationFn: async (localOptions) => {
-      const { data } = await CompaniesAndPositionsService.patchPosition({
         ...options,
         ...localOptions,
         throwOnError: true,

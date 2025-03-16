@@ -56,5 +56,10 @@ export const validateUser = (
   req: RequestParamsId,
   res: Response,
   next: NextFunction,
-) =>
-  req?.auth ? next() : res.status(401).json({ message: "Unauthorized Access" });
+) => {
+  console.log("passing");
+  console.log(req?.auth);
+  return req?.auth
+    ? next()
+    : res.status(401).json({ message: "Unauthorized Access" });
+};

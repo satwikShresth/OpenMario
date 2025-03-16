@@ -1,12 +1,13 @@
 import { useSnackbar } from 'notistack';
 import { createFileRoute, useNavigate } from '@tanstack/react-router';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import JobForm from '#/components/Job/Form';
 import { useJobSubmissionStore } from '#/stores/useJobSubmissionStore';
 import { type Position } from '#/utils/validators';
 import type { Submission, SubmissionAggregate } from '#/types';
-import { postSubmissionsMutation } from '#client/react-query.gen';
-import { useCallback } from 'react';
+import { getAutocompleteCompanyOptions, postSubmissionsMutation } from '#client/react-query.gen';
+import { useCallback, useState } from 'react';
+import { debounce } from 'lodash';
 
 export const Route = createFileRoute('/submission/new')({
   component: FormPageComponent,
@@ -19,6 +20,15 @@ export default function FormPageComponent() {
   const { enqueueSnackbar } = useSnackbar();
 
   const submitMutation = useMutation(postSubmissionsMutation());
+
+
+  const debouncedSearch = useCallback(
+    debounce((field: string, value: string) => {
+      setSearches(prev => ({ ...prev, [field]: value }));
+    }, 300),
+    []
+  );
+
 
   const formDefaultValues = {
     company: '',

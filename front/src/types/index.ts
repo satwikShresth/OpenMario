@@ -55,3 +55,10 @@ export type Submission = {
   details: string | null;
   [key: string]: any;
 };
+
+export type CompanyPosition = {
+  company: string;
+  position: string;
+  company_id: string;
+  position_id: string;
+};

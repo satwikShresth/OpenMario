@@ -1,7 +1,7 @@
 "use no memo"
 // Table.jsx
 import { useState, useEffect, useMemo } from 'react';
-import { Table, TableContainer, TableHead, TableBody, Paper } from '@mui/material';
+import { Table, TableContainer, TableHead, TableBody, TableRow, Paper } from '@mui/material';
 import { useReactTable, getCoreRowModel, getSortedRowModel } from '@tanstack/react-table';
 import { DndContext, closestCenter, KeyboardSensor, PointerSensor, useSensor, useSensors } from '@dnd-kit/core';
 import { SortableContext, horizontalListSortingStrategy, arrayMove, sortableKeyboardCoordinates } from '@dnd-kit/sortable';
@@ -10,15 +10,13 @@ import { TableConfig } from './types';
 import TableHeaderComponent from './TableHeader';
 import TableBodyComponent from './TableBody';
 import { useFilterStore } from '#/stores';
-import { useQuery, useSuspenseQuery } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import { getSubmissionsOptions } from '#client/react-query.gen';
 import { Route } from "#/routes/home";
 
 
 const DataTable = () => {
-
   const query = Route.useSearch();
-
   const [sorting, setSorting] = useState([]);
   const [columnOrder, setColumnOrder] = useState([]);
   const defaultColumns = useMemo(() => TableConfig, []);
@@ -105,39 +103,42 @@ const DataTable = () => {
     }
   };
 
+  // Move DndContext outside of the table structure
+  const headerGroups = table.getHeaderGroups();
+
   return (
     <Paper elevation={5} sx={{ overflow: 'hidden', mb: 4 }}>
       <TableContainer>
-        <Table stickyHeader>
-          <TableHead>
-            {table.getHeaderGroups().map(headerGroup => (
-              <DndContext
-                key={headerGroup.id}
-                sensors={sensors}
-                collisionDetection={closestCenter}
-                onDragEnd={handleDragEnd}
-              >
-                <SortableContext
-                  items={columnOrder}
-                  strategy={horizontalListSortingStrategy}
-                >
+        <DndContext
+          sensors={sensors}
+          collisionDetection={closestCenter}
+          onDragEnd={handleDragEnd}
+        >
+          <SortableContext
+            items={columnOrder}
+            strategy={horizontalListSortingStrategy}
+          >
+            <Table stickyHeader>
+              <TableHead>
+                {headerGroups.map(headerGroup => (
                   <TableHeaderComponent
+                    key={headerGroup.id}
                     headerGroup={headerGroup}
                   />
-                </SortableContext>
-              </DndContext>
-            ))}
-          </TableHead>
-          <TableBody>
-            <TableBodyComponent
-              rows={table.getRowModel().rows}
-              isLoading={submissionsQuery.isPending}
-              columnLength={columns.length}
-            />
-          </TableBody>
-        </Table>
+                ))}
+              </TableHead>
+              <TableBody>
+                <TableBodyComponent
+                  rows={table.getRowModel().rows}
+                  isLoading={submissionsQuery.isPending}
+                  columnLength={columns.length}
+                />
+              </TableBody>
+            </Table>
+          </SortableContext>
+        </DndContext>
       </TableContainer>
-      <Pagination table={table} query={query} />
+      <Pagination table={table} />
     </Paper>
   );
 };

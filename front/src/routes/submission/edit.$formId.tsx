@@ -37,8 +37,6 @@ function EditSubmissionComponent() {
     navigate({ to: '/submission' });
   };
 
-  console.log(submissionData)
-
   const handleSubmit = (data: Position) => {
     updateMutation.mutate({
       body: { ...data, id }

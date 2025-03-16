@@ -202,20 +202,14 @@ export const SubmissionAggregateSchema = z.object({
   program_level: z.enum(program_level),
 });
 
-export const SubmissionAggregateUpdateSchema = z.object({
-  id: z.string().uuid(),
-  company: name(z.string()),
-  position: name(z.string()),
-  location: z.string(),
-  work_hours: z.preprocess((val) => Number(val), work_hours(z.number())),
-  compensation: compensation(z.number()),
-  other_compensation: z.string().max(255, "Cannot be more than 255 characters"),
-  details: z.string().max(255, "Cannot be more than 255 characters"),
-  year: z.preprocess((year) => Number(year), year(z.number())),
-  coop_year: z.enum(coop_year),
-  coop_cycle: z.enum(coop_cycle),
-  program_level: z.enum(program_level),
-});
+export const SubmissionAggregateUpdateSchema = SubmissionAggregateSchema.extend(
+  {
+    id: z
+      .string({ required_error: "Needs id to update entry" })
+      .uuid()
+      .readonly(),
+  },
+);
 
 export const SubmissionResponseSchema = z.object({
   id: z.string(),
@@ -234,6 +228,10 @@ export const SubmissionResponseSchema = z.object({
   location_state_code: z.string(),
 });
 
+export const SubmissionMeIdsSchema = z.object({
+  ids: ensureArray(z.string().uuid()).optional(),
+});
+
 export const SubmissionSchema = createSelectSchema(submission);
 
 export const SubmissionInsertSchema = createInsertSchema(submission, {
@@ -247,6 +245,7 @@ export const SubmissionUpdateSchema = createUpdateSchema(submission, {
   compensation,
 });
 
+export type SubmissionMeIds = z.infer<typeof SubmissionMeIdsSchema>;
 export type Submission = z.infer<typeof SubmissionSchema>;
 export type SubmissionInsert = z.infer<typeof SubmissionInsertSchema>;
 export type SubmissionUpdate = z.infer<typeof SubmissionUpdateSchema>;

@@ -40,8 +40,8 @@ const JobCard: React.FC<JobCardProps> = ({
   onDelete,
   isDraft = false
 }) => {
-  const weeklyPay = submission.compensation
-    ? `$${(submission.compensation * submission.work_hours).toFixed(2)}/week`
+  const weeklyPay = submission?.compensation
+    ? `$${(submission?.compensation * submission?.work_hours).toFixed(2)}/week`
     : null;
 
   const handleEditClick = (e: React.MouseEvent) => {
@@ -85,12 +85,12 @@ const JobCard: React.FC<JobCardProps> = ({
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 1 }}>
           <Box>
             <Typography variant="h6" component="div" color="primary" sx={{ fontWeight: 'medium' }}>
-              {submission.position || 'Untitled Position'}
+              {submission?.position || 'Untitled Position'}
             </Typography>
             <Box sx={{ display: 'flex', alignItems: 'center', mt: 0.5 }}>
               <Building size={16} />
               <Typography variant="body1" sx={{ ml: 1 }}>
-                {submission.company || 'No Company'}
+                {submission?.company || 'No Company'}
               </Typography>
             </Box>
           </Box>
@@ -119,7 +119,7 @@ const JobCard: React.FC<JobCardProps> = ({
         <Box sx={{ display: 'flex', alignItems: 'center', mt: 1 }}>
           <MapPin size={16} />
           <Typography variant="body2" sx={{ ml: 1 }}>
-            {submission.location || 'No Location'}
+            {submission?.location || 'No Location'}
           </Typography>
         </Box>
 
@@ -131,7 +131,7 @@ const JobCard: React.FC<JobCardProps> = ({
                 <Box sx={{ display: 'flex', alignItems: 'center' }}>
                   <GraduationCap size={16} />
                   <Typography variant="body2" sx={{ ml: 1 }}>
-                    {submission.program_level || 'Undergraduate'}
+                    {submission?.program_level || 'Undergraduate'}
                   </Typography>
                 </Box>
               </Grid>
@@ -139,7 +139,7 @@ const JobCard: React.FC<JobCardProps> = ({
                 <Box sx={{ display: 'flex', alignItems: 'center' }}>
                   <Calendar size={16} />
                   <Typography variant="body2" sx={{ ml: 1 }}>
-                    {submission.coop_cycle || 'No Cycle'}, {submission.year || new Date().getFullYear()} ({submission.coop_year || '1st'} year)
+                    {submission?.coop_cycle || 'No Cycle'}, {submission?.year || new Date().getFullYear()} ({submission?.coop_year || '1st'} year)
                   </Typography>
                 </Box>
               </Grid>
@@ -152,16 +152,16 @@ const JobCard: React.FC<JobCardProps> = ({
                 <Box sx={{ display: 'flex', alignItems: 'center' }}>
                   <Clock size={16} />
                   <Typography variant="body2" sx={{ ml: 1 }}>
-                    {submission.work_hours || 40} hours/week
+                    {submission?.work_hours || 40} hours/week
                   </Typography>
                 </Box>
               </Grid>
-              {submission.compensation && (
+              {submission?.compensation && (
                 <Grid item xs={12}>
                   <Box sx={{ display: 'flex', alignItems: 'center' }}>
                     <DollarSign size={16} />
                     <Typography variant="body2" sx={{ ml: 1 }}>
-                      ${parseFloat(submission.compensation.toString()).toFixed(2)}/hour {weeklyPay && `(${weeklyPay})`}
+                      ${parseFloat(submission?.compensation.toString()).toFixed(2)}/hour {weeklyPay && `(${weeklyPay})`}
                     </Typography>
                   </Box>
                 </Grid>
@@ -171,21 +171,21 @@ const JobCard: React.FC<JobCardProps> = ({
         </Grid>
 
         {/* Other Compensation */}
-        {submission.other_compensation && (
+        {submission?.other_compensation && (
           <Box sx={{ mt: 2 }}>
             <Divider sx={{ mb: 1 }} />
             <Typography variant="body2" color="text.secondary">
-              <strong>Other Compensation:</strong> {submission.other_compensation}
+              <strong>Other Compensation:</strong> {submission?.other_compensation}
             </Typography>
           </Box>
         )}
 
         {/* Details */}
-        {submission.details && (
+        {submission?.details && (
           <Box sx={{ mt: 2 }}>
             <Divider sx={{ mb: 1 }} />
             <Typography variant="body2" color="text.secondary">
-              <strong>Details:</strong> {submission.details}
+              <strong>Details:</strong> {submission?.details}
             </Typography>
           </Box>
         )}
@@ -194,19 +194,19 @@ const JobCard: React.FC<JobCardProps> = ({
       <CardActions sx={{ pt: 0, pb: 1.5, px: 2 }}>
         <Box sx={{ display: 'flex', gap: 1 }}>
           <Chip
-            label={submission.program_level || 'Undergraduate'}
+            label={submission?.program_level || 'Undergraduate'}
             size="small"
             color="primary"
             variant="outlined"
           />
           <Chip
-            label={submission.coop_cycle || 'No Cycle'}
+            label={submission?.coop_cycle || 'No Cycle'}
             size="small"
             color="secondary"
             variant="outlined"
           />
           <Chip
-            label={`${submission.coop_year || '1st'} year`}
+            label={`${submission?.coop_year || '1st'} year`}
             size="small"
             color="info"
             variant="outlined"

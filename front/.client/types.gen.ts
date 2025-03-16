@@ -67,11 +67,6 @@ export type CompanyInsert = {
   owner_id?: string | null;
 };
 
-export type CompanyUpdate = {
-  company_id: string;
-  company: string;
-};
-
 export type Position = {
   id: string;
   company_id: string;
@@ -84,11 +79,6 @@ export type PositionInsert = {
   company_id: string;
   name: string;
   owner_id?: string | null;
-};
-
-export type PositionUpdate = {
-  position_id: string;
-  position: string;
 };
 
 export type CompanyPositionInsert = {
@@ -176,6 +166,10 @@ export type SubmissionInsert = {
   details?: string | null;
   owner_id?: string | null;
   created_at?: string;
+};
+
+export type SubmissionMeIds = {
+  ids?: Array<string>;
 };
 
 export type SubmissionUpdate = {
@@ -278,7 +272,7 @@ export type PostAuthLoginResponses = {
 export type PostAuthLoginResponse =
   PostAuthLoginResponses[keyof PostAuthLoginResponses];
 
-export type GetAuthLoginTokenData = {
+export type GetAuthLoginByTokenData = {
   body?: never;
   path: {
     /**
@@ -287,10 +281,10 @@ export type GetAuthLoginTokenData = {
     token: string;
   };
   query?: never;
-  url: "/auth/login/:token";
+  url: "/auth/login/{token}";
 };
 
-export type GetAuthLoginTokenErrors = {
+export type GetAuthLoginByTokenErrors = {
   /**
    * Invalid token response
    */
@@ -305,10 +299,10 @@ export type GetAuthLoginTokenErrors = {
   };
 };
 
-export type GetAuthLoginTokenError =
-  GetAuthLoginTokenErrors[keyof GetAuthLoginTokenErrors];
+export type GetAuthLoginByTokenError =
+  GetAuthLoginByTokenErrors[keyof GetAuthLoginByTokenErrors];
 
-export type GetAuthLoginTokenResponses = {
+export type GetAuthLoginByTokenResponses = {
   /**
    * Success response with access token
    */
@@ -317,8 +311,8 @@ export type GetAuthLoginTokenResponses = {
   };
 };
 
-export type GetAuthLoginTokenResponse =
-  GetAuthLoginTokenResponses[keyof GetAuthLoginTokenResponses];
+export type GetAuthLoginByTokenResponse =
+  GetAuthLoginByTokenResponses[keyof GetAuthLoginByTokenResponses];
 
 export type GetAutocompleteCompanyData = {
   body?: never;
@@ -491,72 +485,6 @@ export type PostCompanyPositionResponses = {
 export type PostCompanyPositionResponse =
   PostCompanyPositionResponses[keyof PostCompanyPositionResponses];
 
-export type PatchCompanyData = {
-  /**
-   * Updated company data including company ID
-   */
-  body: CompanyUpdate;
-  path?: never;
-  query?: never;
-  url: "/company";
-};
-
-export type PatchCompanyErrors = {
-  /**
-   * Error response
-   */
-  409: {
-    [key: string]: unknown;
-  };
-};
-
-export type PatchCompanyError = PatchCompanyErrors[keyof PatchCompanyErrors];
-
-export type PatchCompanyResponses = {
-  /**
-   * Successfully updated company
-   */
-  204: {
-    [key: string]: unknown;
-  };
-};
-
-export type PatchCompanyResponse =
-  PatchCompanyResponses[keyof PatchCompanyResponses];
-
-export type PatchPositionData = {
-  /**
-   * Updated position data including position ID
-   */
-  body: PositionUpdate;
-  path?: never;
-  query?: never;
-  url: "/position";
-};
-
-export type PatchPositionErrors = {
-  /**
-   * Error response
-   */
-  409: {
-    [key: string]: unknown;
-  };
-};
-
-export type PatchPositionError = PatchPositionErrors[keyof PatchPositionErrors];
-
-export type PatchPositionResponses = {
-  /**
-   * Successfully updated position
-   */
-  204: {
-    [key: string]: unknown;
-  };
-};
-
-export type PatchPositionResponse =
-  PatchPositionResponses[keyof PatchPositionResponses];
-
 export type GetSubmissionsData = {
   body?: never;
   path?: never;
@@ -698,7 +626,12 @@ export type PostSubmissionsResponse =
 export type GetSubmissionsMeData = {
   body?: never;
   path?: never;
-  query?: never;
+  query?: {
+    /**
+     * Query prarmer for filtering submission using company
+     */
+    ids?: Array<string>;
+  };
   url: "/submissions/me";
 };
 
@@ -723,3 +656,4 @@ export type GetSubmissionsMeResponses = {
 
 export type GetSubmissionsMeResponse =
   GetSubmissionsMeResponses[keyof GetSubmissionsMeResponses];
+

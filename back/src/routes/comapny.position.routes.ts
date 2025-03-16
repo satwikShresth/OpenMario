@@ -2,10 +2,6 @@ import { Response, Router } from "express";
 import {
   CompanyPositionInsertSchema,
   CompanyPostionInsert,
-  CompanyUpdate,
-  CompanyUpdateSchema,
-  PositionUpdate,
-  PositionUpdateSchema,
   RequestParamsId,
 } from "#models";
 import { company, db, position } from "#db";
@@ -147,114 +143,6 @@ export default () => {
         }
       },
     );
-
-  /**
-   * PATCH /company
-   * @summary Update an existing company name
-   * @tags Companies and Positions
-   * @security JWT
-   * @param {CompanyUpdate} request.body.required - Updated company data including company ID
-   * @return {object} 204 - Successfully updated company
-   * @example request - Example request body
-   * {
-   *   "company_id": "123e4567-e89b-12d3-a456-426614174000",
-   *   "company_name": "Updated Tech Corp"
-   * }
-   * @example response - 204 - Success response example
-   * {
-   *   "data": [{
-   *     "id": "123e4567-e89b-12d3-a456-426614174000",
-   *     "name": "Updated Tech Corp",
-   *     "owner_id": "user-uuid-here"
-   *   }],
-   *   "message": "Updated Comapny Successfully"
-   * }
-   * @return {object} 409 - Error response
-   * @example response - 409 - Error response example
-   * {
-   *   "message": "Error: Failed to update company"
-   * }
-   */
-  router.patch(
-    "/company",
-    zodBodyValidator(CompanyUpdateSchema),
-    async (req: RequestParamsId, res: Response) => {
-      const { user_id = null } = req?.auth!;
-      const { company_name, company_id } = req?.validated
-        ?.body! as CompanyUpdate;
-
-      return await db
-        .update(company)
-        .set({ name: company_name })
-        .where(and(eq(company.owner_id, user_id), eq(company.id, company_id)))
-        .returning()
-        .then((data) =>
-          res
-            .status(204)
-            .json({ data, message: `Updated Comapny Successfully` }),
-        )
-        .catch((error) => {
-          console.log(`Error:${error}`);
-          return res.status(409).json({ message: `Error: ${error?.message!}` });
-        });
-    },
-  );
-
-  /**
-   * PATCH /position
-   * @summary Update an existing position name
-   * @tags Companies and Positions
-   * @security JWT
-   * @param {PositionUpdate} request.body.required - Updated position data including position ID
-   * @return {object} 204 - Successfully updated position
-   * @example request - Example request body
-   * {
-   *   "position_id": "123e4567-e89b-12d3-a456-426614174001",
-   *   "position_name": "Senior Frontend Developer"
-   * }
-   * @example response - 204 - Success response example
-   * {
-   *   "data": [{
-   *     "id": "123e4567-e89b-12d3-a456-426614174001",
-   *     "name": "Senior Frontend Developer",
-   *     "company_id": "123e4567-e89b-12d3-a456-426614174000",
-   *     "owner_id": "user-uuid-here"
-   *   }],
-   *   "message": "Updated Position Successfully"
-   * }
-   * @return {object} 409 - Error response
-   * @example response - 409 - Error response example
-   * {
-   *   "message": "Error: Failed to update position"
-   * }
-   */
-  router.patch(
-    "/position",
-    zodBodyValidator(PositionUpdateSchema),
-    async (req: RequestParamsId, res: Response) => {
-      const { user_id = null } = req?.auth!;
-      const { position_name, position_id } = req?.validated
-        ?.body! as PositionUpdate;
-
-      return await db
-        .update(position)
-        .set({ name: position_name })
-        .where(
-          and(eq(position.owner_id, user_id), eq(position.id, position_id)),
-        )
-        .returning()
-        .then((data) =>
-          res.status(204).json({
-            data,
-            message: `Updated Position Successfully`,
-          }),
-        )
-        .catch((error) => {
-          console.log(`Error:${error}`);
-          return res.status(409).json({ message: `Error: ${error?.message!}` });
-        });
-    },
-  );
 
   return router;
 };

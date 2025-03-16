@@ -32,11 +32,12 @@ app.use((req: Request, res: Response, next: NextFunction) => {
   next(error);
 });
 
-app.use((error: Error, _req: Request, res: Response, next: NextFunction) =>
-  error.name === "UnauthorizedError"
+app.use((error: Error, _req: Request, res: Response, next: NextFunction) => {
+  console.log(error);
+  return error.name === "UnauthorizedError"
     ? res.status(401).send("invalid token...")
-    : next(error),
-);
+    : next(error);
+});
 
 app.use((error: Error, _req: Request, res: Response, _next: NextFunction) => {
   const status = res.statusCode >= 400 ? res.statusCode : 500;

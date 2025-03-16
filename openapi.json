@@ -225,24 +225,6 @@
           "name"
         ]
       },
-      "CompanyUpdate": {
-        "type": "object",
-        "properties": {
-          "company_id": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "company": {
-            "type": "string",
-            "minLength": 3,
-            "maxLength": 100
-          }
-        },
-        "required": [
-          "company_id",
-          "company"
-        ]
-      },
       "Position": {
         "type": "object",
         "properties": {
@@ -296,24 +278,6 @@
         "required": [
           "company_id",
           "name"
-        ]
-      },
-      "PositionUpdate": {
-        "type": "object",
-        "properties": {
-          "position_id": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "position": {
-            "type": "string",
-            "minLength": 3,
-            "maxLength": 100
-          }
-        },
-        "required": [
-          "position_id",
-          "position"
         ]
       },
       "CompanyPositionInsert": {
@@ -679,6 +643,18 @@
           "year"
         ]
       },
+      "SubmissionMeIds": {
+        "type": "object",
+        "properties": {
+          "ids": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        }
+      },
       "SubmissionUpdate": {
         "type": "object",
         "properties": {
@@ -1006,7 +982,7 @@
         }
       }
     },
-    "/auth/login/:token": {
+    "/auth/login/{token}": {
       "get": {
         "deprecated": false,
         "summary": "Verify magic link token and authenticate user",
@@ -1418,161 +1394,6 @@
         }
       }
     },
-    "/company": {
-      "patch": {
-        "deprecated": false,
-        "summary": "Update an existing company name",
-        "security": [
-          {
-            "JWT": []
-          }
-        ],
-        "responses": {
-          "204": {
-            "description": "Successfully updated company",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object"
-                },
-                "examples": {
-                  "example1": {
-                    "summary": "Success response example",
-                    "value": {
-                      "data": [
-                        {
-                          "id": "123e4567-e89b-12d3-a456-426614174000",
-                          "name": "Updated Tech Corp",
-                          "owner_id": "user-uuid-here"
-                        }
-                      ],
-                      "message": "Updated Comapny Successfully"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "409": {
-            "description": "Error response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object"
-                },
-                "examples": {
-                  "example2": {
-                    "summary": "Error response example",
-                    "value": {
-                      "message": "Error: Failed to update company"
-                    }
-                  }
-                }
-              }
-            }
-          }
-        },
-        "parameters": [],
-        "tags": [
-          "Companies and Positions"
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CompanyUpdate"
-              },
-              "examples": {
-                "example1": {
-                  "summary": "Example request body",
-                  "value": "{\n  \"company_id\": \"123e4567-e89b-12d3-a456-426614174000\",\n  \"company_name\": \"Updated Tech Corp\"\n}"
-                }
-              }
-            }
-          },
-          "description": "Updated company data including company ID",
-          "required": true
-        }
-      }
-    },
-    "/position": {
-      "patch": {
-        "deprecated": false,
-        "summary": "Update an existing position name",
-        "security": [
-          {
-            "JWT": []
-          }
-        ],
-        "responses": {
-          "204": {
-            "description": "Successfully updated position",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object"
-                },
-                "examples": {
-                  "example1": {
-                    "summary": "Success response example",
-                    "value": {
-                      "data": [
-                        {
-                          "id": "123e4567-e89b-12d3-a456-426614174001",
-                          "name": "Senior Frontend Developer",
-                          "company_id": "123e4567-e89b-12d3-a456-426614174000",
-                          "owner_id": "user-uuid-here"
-                        }
-                      ],
-                      "message": "Updated Position Successfully"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "409": {
-            "description": "Error response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object"
-                },
-                "examples": {
-                  "example2": {
-                    "summary": "Error response example",
-                    "value": {
-                      "message": "Error: Failed to update position"
-                    }
-                  }
-                }
-              }
-            }
-          }
-        },
-        "parameters": [],
-        "tags": [
-          "Companies and Positions"
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/PositionUpdate"
-              },
-              "examples": {
-                "example1": {
-                  "summary": "Example request body",
-                  "value": "{\n  \"position_id\": \"123e4567-e89b-12d3-a456-426614174001\",\n  \"position_name\": \"Senior Frontend Developer\"\n}"
-                }
-              }
-            }
-          },
-          "description": "Updated position data including position ID",
-          "required": true
-        }
-      }
-    },
     "/submissions": {
       "get": {
         "deprecated": false,
@@ -1955,7 +1776,21 @@
             }
           }
         },
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "ids",
+            "in": "query",
+            "description": "Query prarmer for filtering submission using company",
+            "required": false,
+            "deprecated": false,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        ],
         "tags": [
           "Submissions"
         ]

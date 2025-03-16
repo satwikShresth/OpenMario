@@ -1,15 +1,38 @@
-import { Link, useLocation } from '@tanstack/react-router';
+import { Link, useLocation, useNavigate } from '@tanstack/react-router';
 import { AppBar, Toolbar, Box, IconButton, Container, Tooltip } from '@mui/material';
 import { Sun, Moon, Home, Upload, User } from 'lucide-react';
 import { useAppTheme } from '#/utils/useThemeProvider';
-import { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { clearToken, isLoggedIn } from '#/hooks/useAuth';
 
-export default () => {
+
+const Nav = ({ onLoginClick }): React.FC<{ onLoginClick: () => void }> => {
   const { toggleColorMode, mode } = useAppTheme();
   const location = useLocation();
+  const navigate = useNavigate();
   const [isLogoHovered, setIsLogoHovered] = useState(false);
+  const [authState, setAuthState] = useState(isLoggedIn());
 
+  useEffect(() => {
+    setAuthState(isLoggedIn());
 
+    const handleStorageChange = () => {
+      setAuthState(isLoggedIn());
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+    };
+  }, []);
+
+  const handleLogout = () => {
+    clearToken();
+    setAuthState(false);
+    // Navigate to home or login page after logout
+    navigate({ to: '/home' });
+  };
 
   const colors = {
     // Light mode colors
@@ -33,30 +56,31 @@ export default () => {
   // Get the appropriate color set based on the current mode
   const getColor = (lightColor, darkColor) => mode === 'light' ? lightColor : darkColor;
 
-  // Navigation links including Profile - all with the same styling approach
+  // Navigation links - removed Profile from here
   const navLinks = [
     {
       text: 'Home',
       path: '/home',
       icon: <Home size={20} />,
-      color: getColor(colors.red, colors.neonPink),
-      glowColor: 'rgba(255, 51, 153, 0.7)' // Pink glow
+      color: getColor(colors.red, colors.green),
+      glowColor: 'rgba(255, 255, 0, 0.7)' // Yellow glow
     },
     {
       text: 'Submissions',
       path: '/submission',
       icon: <Upload size={20} />,
-      color: getColor(colors.green, colors.neonGreen),
-      glowColor: 'rgba(255, 255, 0, 0.7)' // Yellow glow
-    },
-    {
-      text: 'Profile',
-      path: '/profile',
-      icon: <User size={20} />,
-      color: getColor(colors.blue, colors.neonBlue),
-      glowColor: 'rgba(0, 238, 255, 0.7)' // Blue glow
+      color: getColor(colors.green, colors.neonPink),
+      glowColor: 'rgba(255, 51, 153, 0.7)' // Pink glow
     }
   ];
+
+  const profileLink = {
+    text: authState ? 'Profile' : 'Login',
+    path: authState ? '/logout' : '/login',
+    icon: <User size={20} />,
+    color: getColor(colors.blue, colors.neonPink),
+    glowColor: 'rgba(255, 51, 153, 0.7)' // Pink glow
+  };
 
   const isActive = (path) => {
     if (path === '/' && location.pathname === '/') return true;
@@ -89,6 +113,8 @@ export default () => {
         }
       }}
     >
+      {/* GitHub button will be added next to the theme toggle and profile */}
+
       <Container maxWidth="xl">
         <Toolbar disableGutters sx={{ minHeight: 64 }}>
           {/* Logo with elegant hover effect */}
@@ -196,7 +222,7 @@ export default () => {
             ))}
           </Box>
 
-          {/* Navigation items with Profile included */}
+          {/* Navigation items - without Profile */}
           <Box
             sx={{
               display: 'flex',
@@ -324,6 +350,60 @@ export default () => {
             ))}
           </Box>
 
+          {/* Profile/Login Link - Moved next to theme toggle */}
+          <Tooltip title={authState ? "Logout" : "Login"}>
+            <IconButton
+              onClick={authState ? handleLogout : onLoginClick}
+              sx={{
+                position: 'relative',
+                mr: 2,
+                width: 46,
+                height: 46,
+                bgcolor: authState ? profileLink.color : 'transparent',
+                color: authState
+                  ? colors.white
+                  : mode === 'light' ? colors.black : profileLink.color,
+                border: `3px solid ${authState ? colors.black : profileLink.color}`,
+                borderRadius: '50%',
+                boxShadow: authState
+                  ? mode === 'dark'
+                    ? `0 4px 0 rgba(0,0,0,0.6), 0 0 10px ${profileLink.glowColor}`
+                    : '0 4px 0 rgba(0,0,0,0.6)'
+                  : mode === 'dark'
+                    ? `0 0 5px ${profileLink.glowColor}`
+                    : 'none',
+                transition: 'all 0.15s ease',
+                overflow: 'hidden',
+
+                '&:hover': {
+                  bgcolor: authState
+                    ? profileLink.color
+                    : `${profileLink.color}22`,
+                  transform: 'translateY(2px)',
+                  boxShadow: authState
+                    ? mode === 'dark'
+                      ? `0 2px 0 rgba(0,0,0,0.6), 0 0 10px ${profileLink.glowColor}`
+                      : '0 2px 0 rgba(0,0,0,0.6)'
+                    : mode === 'dark'
+                      ? `0 0 8px ${profileLink.glowColor}`
+                      : '0 2px 0 rgba(0,0,0,0.2)',
+                  filter: 'brightness(1.1)'
+                }
+              }}
+            >
+              {authState ? (
+                <User size={22} />
+              ) : (
+                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4" />
+                  <polyline points="10 17 15 12 10 7" />
+                  <line x1="15" y1="12" x2="3" y2="12" />
+                </svg>
+              )}
+            </IconButton>
+          </Tooltip>
+
+
           {/* Theme Toggle Button */}
           <Tooltip title={`Switch to ${mode === 'dark' ? 'light' : 'dark'} mode`}>
             <IconButton
@@ -336,14 +416,14 @@ export default () => {
                 border: `3px solid ${colors.black}`,
                 borderRadius: '50%',
                 boxShadow: mode === 'dark'
-                  ? '0 4px 0 rgba(0,0,0,0.6), 0 0 10px rgba(255,255,0,0.7)'
+                  ? '0 4px 0 rgba(0,0,0,0.6), 0 0 10px rgba(0, 238, 255, 0.7)'
                   : '0 4px 0 rgba(0,0,0,0.6)',
                 transition: 'all 0.15s ease',
                 '&:hover': {
                   bgcolor: mode === 'dark' ? colors.blue : colors.neonYellow,
                   transform: 'translateY(2px)',
                   boxShadow: mode === 'dark'
-                    ? '0 2px 0 rgba(0,0,0,0.6), 0 0 10px rgba(255,255,0,0.5)'
+                    ? '0 2px 0 rgba(0,0,0,0.6), 0 0 10px rgba(0, 238, 255, 0.7)'
                     : '0 2px 0 rgba(0,0,0,0.6)',
                   filter: 'brightness(1.1)'
                 }
@@ -356,8 +436,45 @@ export default () => {
               )}
             </IconButton>
           </Tooltip>
+
+          {/* GitHub Button */}
+          <Tooltip title="View source on GitHub">
+            <IconButton
+              component="a"
+              href="https://github.com/your-username/your-repo"
+              target="_blank"
+              rel="noopener noreferrer"
+              sx={{
+                width: 46,
+                height: 46,
+                ml: 2,
+                bgcolor: colors.darkBlue,
+                color: colors.white,
+                border: `3px solid ${colors.black}`,
+                borderRadius: '50%',
+                boxShadow: mode === 'dark'
+                  ? `0 4px 0 rgba(0,0,0,0.6), 0 0 10px rgba(255, 255, 255, 0.3)`
+                  : '0 4px 0 rgba(0,0,0,0.6)',
+                transition: 'all 0.15s ease',
+                '&:hover': {
+                  bgcolor: mode === 'dark' ? '#555555' : '#333333',
+                  transform: 'translateY(2px)',
+                  boxShadow: mode === 'dark'
+                    ? '0 2px 0 rgba(0,0,0,0.6), 0 0 10px rgba(255, 255, 255, 0.2)'
+                    : '0 2px 0 rgba(0,0,0,0.6)',
+                  filter: 'brightness(1.1)'
+                }
+              }}
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+              </svg>
+            </IconButton>
+          </Tooltip>
         </Toolbar>
       </Container>
     </AppBar>
   );
 };
+
+export default Nav;

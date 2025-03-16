@@ -1,11 +1,15 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import { createZustandContext } from 'zustand-context';
-import type { Submission } from '#/types';
+import type { Submission, CompanyPosition } from '#/types';
 
 type JobSubmissionStore = {
   submissions: Submission[];
   draftSubmissions: Submission[];
+  companyPositions: CompanyPosition[];
+  processing: boolean;
+
+  // Original actions
   addSubmission: (submission: Submission) => void;
   updateSubmission: (index: number, submission: Submission) => void;
   removeSubmission: (index: number) => void;
@@ -15,11 +19,15 @@ type JobSubmissionStore = {
   moveDraftToSubmission: (draftIndex: number, id: string, data: any) => void;
   clearDraftSubmissions: () => void;
   setProcessing: (isProcessing: boolean) => void;
+
+  // New sync helpers
+  replaceAllSubmissions: (submissions: Submission[]) => void;
 };
 
 type InitialState = {
   initialSubmissions?: Submission[];
   initialDraftSubmissions?: Submission[];
+  initialcompanyPositions?: CompanyPosition[];
   initialProcessing?: boolean;
 };
 
@@ -30,16 +38,19 @@ export const [JobSubmissionProvider, useJobSubmissionStore] = createZustandConte
         (set) => ({
           submissions: initialState.initialSubmissions || [],
           draftSubmissions: initialState.initialDraftSubmissions || [],
+          companyPositions: initialState.initialcompanyPositions || [],
           processing: initialState.initialProcessing || false,
 
           addSubmission: (submission) =>
             set((state) => ({ submissions: [...state.submissions, submission] })),
+
           updateSubmission: (index, submission) =>
             set((state) => ({
               submissions: state.submissions.map((item, i) =>
                 i === index ? submission : item
               )
             })),
+
           removeSubmission: (index) =>
             set((state) => ({
               submissions: state.submissions.filter((_, i) => i !== index)
@@ -47,18 +58,22 @@ export const [JobSubmissionProvider, useJobSubmissionStore] = createZustandConte
 
           addDraftSubmission: (submission) =>
             set((state) => ({ draftSubmissions: [...state.draftSubmissions, submission] })),
+
           updateDraftSubmission: (index, submission) =>
             set((state) => ({
               draftSubmissions: state.draftSubmissions.map((item, i) =>
                 i === index ? submission : item
               )
             })),
+
           removeDraftSubmission: (index) =>
             set((state) => ({
               draftSubmissions: state.draftSubmissions.filter((_, i) => i !== index)
             })),
+
           clearDraftSubmissions: () =>
             set(() => ({ draftSubmissions: [] })),
+
           setProcessing: (isProcessing) =>
             set(() => ({ processing: isProcessing })),
 
@@ -72,7 +87,10 @@ export const [JobSubmissionProvider, useJobSubmissionStore] = createZustandConte
                 submissions: [...state.submissions, { ...data, id }],
                 draftSubmissions: state.draftSubmissions.filter((_, i) => i !== draftIndex)
               };
-            })
+            }),
+
+          replaceAllSubmissions: (submissions) =>
+            set(() => ({ submissions })),
         }),
         {
           name: 'job-submissions-storage',

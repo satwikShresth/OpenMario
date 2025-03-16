@@ -112,7 +112,10 @@ export default () => {
       const { queries, order } = req?.validated?.query;
 
       return await db
-        .select({ id: position.id, name: position.name })
+        .selectDistinctOn([position.name], {
+          id: position.id,
+          name: position.name,
+        })
         .from(position)
         .innerJoin(company, eq(position.company_id, company.id))
         .where(and(...queries))

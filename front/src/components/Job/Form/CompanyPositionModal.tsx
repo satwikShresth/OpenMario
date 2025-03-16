@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useCallback, useState } from 'react';
 import {
   Dialog,
   DialogTitle,
@@ -15,11 +15,14 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { Building, Briefcase } from 'lucide-react';
 import ModalAutocompleteField from './ModalAutocompleteField';
+import { useQuery } from '@tanstack/react-query';
+import { getAutocompleteCompanyOptions, getAutocompletePositionOptions } from '#client/react-query.gen';
+import { debounce } from 'lodash';
 
 // Create a schema for company/position submission
 const CompanyPositionSchema = z.object({
-  company: z.string().min(1, "Company name is required"),
-  position: z.string().min(1, "Position name is required"),
+  company: z.string().min(3, "Company name is required"),
+  position: z.string().min(3, "Position name is required"),
 });
 
 export type CompanyPosition = z.infer<typeof CompanyPositionSchema>;
@@ -28,43 +31,35 @@ interface CompanyPositionModalProps {
   open: boolean;
   onClose: () => void;
   initialCompany?: string;
-  companyOptions: string[];
-  companyLoading?: boolean;
-  positionOptions: string[];
-  positionLoading?: boolean;
-  onCompanyInputChange: (value: string) => void;
-  onPositionInputChange: (value: string) => void;
-  onSubmit: (data: CompanyPosition) => Promise<void>;
+  initialPosition?: string;
+  onSubmit: (data: CompanyPosition, onReset, onClose) => Promise<void>;
+  disabledCompany: boolean,
+  disabledPosition: boolean,
 }
 
 const CompanyPositionModal: React.FC<CompanyPositionModalProps> = ({
   open,
   onClose,
   initialCompany = '',
-  companyOptions,
-  companyLoading = false,
-  positionOptions,
-  positionLoading = false,
-  onCompanyInputChange,
-  onPositionInputChange,
-  onSubmit
+  initialPosition = '',
+  onSubmit,
+  disabledCompany = false,
+  disabledPosition = false,
 }) => {
   const {
     control,
     handleSubmit,
     reset,
+    watch,
     formState: { errors, isSubmitting }
   } = useForm<CompanyPosition>({
     resolver: zodResolver(CompanyPositionSchema),
     mode: 'onBlur',
     defaultValues: {
       company: initialCompany,
-      position: ''
+      position: initialPosition
     }
   });
-
-
-  const isSubmittingRef = useRef(false);
 
   const handleCancel = () => {
     reset();
@@ -72,17 +67,39 @@ const CompanyPositionModal: React.FC<CompanyPositionModalProps> = ({
   };
 
   const handleFormSubmit = async (data: CompanyPosition) => {
-
-    isSubmittingRef.current = true;
-    try {
-      await onSubmit(data);
-      reset();
-      onClose();
-    } catch (error) {
-      isSubmittingRef.current = false;
-      console.error('Failed to submit company/position', error);
-    }
+    await onSubmit(data, reset, onClose);
   };
+
+  const company = watch("company");
+  const position = watch("position");
+
+  const debouncedSearch = useCallback(
+    debounce((field: string, value: string) => {
+      setSearches(prev => ({ ...prev, [field]: value }));
+    }, 300),
+    []
+  );
+
+  const companyQuery = useQuery({
+    ...getAutocompleteCompanyOptions({
+      query: { comp: company }
+    }),
+    enabled: company?.length >= 3,
+    staleTime: 30000,
+    placeholderData: (previousData) => previousData
+  });
+
+  const positionQuery = useQuery({
+    ...getAutocompletePositionOptions({
+      query: {
+        comp: '*',
+        pos: position
+      }
+    }),
+    enabled: position?.length >= 3,
+    staleTime: 30000,
+    placeholderData: (previousData) => previousData
+  });
 
   return (
     <Dialog
@@ -92,8 +109,9 @@ const CompanyPositionModal: React.FC<CompanyPositionModalProps> = ({
       fullWidth
       sx={{ p: 4 }}
     >
-      <DialogTitle>
-        <Typography variant="h6">Add New Company & Position</Typography>
+      {/* Fixed the DialogTitle to prevent h6 inside h2 */}
+      <DialogTitle component="div">
+        Add New Company & Position
       </DialogTitle>
       <Divider sx={{ mb: 1 }} />
       <DialogContent>
@@ -105,12 +123,13 @@ const CompanyPositionModal: React.FC<CompanyPositionModalProps> = ({
                 label="Company Name"
                 control={control}
                 icon={<Building size={18} />}
-                options={companyOptions}
-                loading={companyLoading}
-                onInputChange={(_, value) => onCompanyInputChange(value)}
+                options={companyQuery?.data?.map((item) => item.name) || []}
+                loading={companyQuery?.isLoading}
+                //onInputChange={(value) => debouncedSearch('company', value)}
                 placeholder="Enter company name..."
                 error={!!errors.company}
                 helperText={errors?.company?.message || ""}
+                disabled={disabledCompany}
               />
             </Grid>
             <Grid item xs={12}>
@@ -119,12 +138,13 @@ const CompanyPositionModal: React.FC<CompanyPositionModalProps> = ({
                 label="Position Title"
                 control={control}
                 icon={<Briefcase size={18} />}
-                options={positionOptions}
-                loading={positionLoading}
-                onInputChange={(_, value) => onPositionInputChange(value)}
+                options={positionQuery?.data?.map((item) => item.name) || []}
+                loading={positionQuery?.isFetching}
+                //onInputChange={(value) => debouncedSearch('position', value)}
                 placeholder="Enter position title..."
                 error={!!errors.position}
                 helperText={errors?.position?.message || ""}
+                disabled={disabledPosition}
               />
             </Grid>
           </Grid>

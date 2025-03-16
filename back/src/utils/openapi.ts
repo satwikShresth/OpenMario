@@ -41,11 +41,9 @@ export default (options: any) => {
   //postion Schemas
   registry.register("Company", schemas.CompanySchema);
   registry.register("CompanyInsert", schemas.CompanyInsertSchema);
-  registry.register("CompanyUpdate", schemas.CompanyUpdateSchema);
 
   registry.register("Position", schemas.PositionSchema);
   registry.register("PositionInsert", schemas.PositionInsertSchema);
-  registry.register("PositionUpdate", schemas.PositionUpdateSchema);
 
   ////User Schemas
   //registry.register("User", schemas.UserSchema);
@@ -65,7 +63,6 @@ export default (options: any) => {
     "CompanyPositionInsert",
     schemas.CompanyPositionInsertSchema,
   );
-  registry.register("CompanyUpdate", schemas.CompanyUpdateSchema);
   registry.register("CompanyInsert", schemas.CompanyInsertSchema);
   //Submission Schemas
   registry.register("Submission", schemas.SubmissionSchema);
@@ -75,6 +72,7 @@ export default (options: any) => {
     schemas.SubmissionAggregateUpdateSchema,
   );
   registry.register("SubmissionInsert", schemas.SubmissionInsertSchema);
+  registry.register("SubmissionMeIds", schemas.SubmissionMeIdsSchema);
   registry.register("SubmissionUpdate", schemas.SubmissionUpdateSchema);
   registry.register("SubmissionQuery", schemas.SubmissionQuerySchema);
 

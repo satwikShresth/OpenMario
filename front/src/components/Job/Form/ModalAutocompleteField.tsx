@@ -19,7 +19,8 @@ const ModalAutocompleteField = ({
   onInputChange,
   placeholder,
   error,
-  helperText
+  helperText,
+  disabled,
 }) => {
   return (
     <Controller
@@ -48,6 +49,7 @@ const ModalAutocompleteField = ({
               // Handle selection from dropdown
               onChange(newValue);
             }}
+            disabled={disabled}
             value={value || ""}
             renderInput={(params) => (
               <TextField

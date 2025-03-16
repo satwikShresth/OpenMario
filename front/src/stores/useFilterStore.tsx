@@ -87,8 +87,6 @@ export const useFilterStore = create<SubmissionsStore>(
       setProgramLevel: (program_level) => set(() => ({ program_level, skip: 0 })),
       setDistinct: (distinct) => set(() => ({ distinct, skip: 0 })),
       setSearch: (search) => set(() => {
-        console.log("Onload: ")
-        console.log(search)
         return {
           company: search?.company,
           position: search?.position,

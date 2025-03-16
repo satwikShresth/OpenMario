@@ -4,6 +4,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import AppThemeProvider from '#/utils/useThemeProvider';
 import './app.css'
 import { SnackbarProvider } from 'notistack';
+import { client } from '#client/sdk.gen';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -14,7 +15,8 @@ const queryClient = new QueryClient({
   },
 })
 
-// Set up a Router instance
+
+
 const router = createRouter({
   routeTree,
   context: {
@@ -31,14 +33,11 @@ const router = createRouter({
   },
 })
 
-// Register things for typesafety
 declare module '@tanstack/react-router' {
   interface Register {
     router: typeof router
   }
 }
-
-
 
 const App = () => {
   return (

@@ -9,9 +9,9 @@ import type {
   PostAuthLoginData,
   PostAuthLoginResponse,
   PostAuthLoginError,
-  GetAuthLoginTokenData,
-  GetAuthLoginTokenResponse,
-  GetAuthLoginTokenError,
+  GetAuthLoginByTokenData,
+  GetAuthLoginByTokenResponse,
+  GetAuthLoginByTokenError,
   GetAutocompleteCompanyData,
   GetAutocompleteCompanyResponse,
   GetAutocompleteCompanyError,
@@ -27,12 +27,6 @@ import type {
   PostCompanyPositionData,
   PostCompanyPositionResponse,
   PostCompanyPositionError,
-  PatchCompanyData,
-  PatchCompanyResponse,
-  PatchCompanyError,
-  PatchPositionData,
-  PatchPositionResponse,
-  PatchPositionError,
   GetSubmissionsData,
   GetSubmissionsResponse,
   GetSubmissionsError,
@@ -46,9 +40,20 @@ import type {
   GetSubmissionsMeResponse,
   GetSubmissionsMeError,
 } from "./types.gen";
+import axios from "axios";
 
+axios.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response && error.response.status === 401) {
+      localStorage.removeItem("access_token");
+    }
+    return Promise.reject(error);
+  },
+);
 export const client = createClient(
   createConfig({
+    axios: axios,
     auth: () => localStorage.getItem("access_token") || "",
     baseURL: "/api/v1",
   }),
@@ -78,15 +83,15 @@ export class AuthService {
   /**
    * Verify magic link token and authenticate user
    */
-  public static getAuthLoginToken<ThrowOnError extends boolean = false>(
-    options: Options<GetAuthLoginTokenData, ThrowOnError>,
+  public static getAuthLoginByToken<ThrowOnError extends boolean = false>(
+    options: Options<GetAuthLoginByTokenData, ThrowOnError>,
   ) {
     return (options?.client ?? client).get<
-      GetAuthLoginTokenResponse,
-      GetAuthLoginTokenError,
+      GetAuthLoginByTokenResponse,
+      GetAuthLoginByTokenError,
       ThrowOnError
     >({
-      url: "/auth/login/:token",
+      url: "/auth/login/{token}",
       ...options,
     });
   }
@@ -183,58 +188,6 @@ export class CompaniesAndPositionsService {
         },
       ],
       url: "/company-position",
-      ...options,
-      headers: {
-        "Content-Type": "application/json",
-        ...options?.headers,
-      },
-    });
-  }
-
-  /**
-   * Update an existing company name
-   */
-  public static patchCompany<ThrowOnError extends boolean = false>(
-    options: Options<PatchCompanyData, ThrowOnError>,
-  ) {
-    return (options?.client ?? client).patch<
-      PatchCompanyResponse,
-      PatchCompanyError,
-      ThrowOnError
-    >({
-      security: [
-        {
-          scheme: "bearer",
-          type: "http",
-        },
-      ],
-      url: "/company",
-      ...options,
-      headers: {
-        "Content-Type": "application/json",
-        ...options?.headers,
-      },
-    });
-  }
-
-  /**
-   * Update an existing position name
-   */
-  public static patchPosition<ThrowOnError extends boolean = false>(
-    options: Options<PatchPositionData, ThrowOnError>,
-  ) {
-    return (options?.client ?? client).patch<
-      PatchPositionResponse,
-      PatchPositionError,
-      ThrowOnError
-    >({
-      security: [
-        {
-          scheme: "bearer",
-          type: "http",
-        },
-      ],
-      url: "/position",
       ...options,
       headers: {
         "Content-Type": "application/json",
