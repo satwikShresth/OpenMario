@@ -4,28 +4,27 @@ import { createZustandContext } from 'zustand-context';
 import type { Submission, CompanyPosition } from '#/types';
 
 type JobSubmissionStore = {
-  submissions: Submission[];
+  submissions: Map<string, Submission>;
   draftSubmissions: Submission[];
   companyPositions: CompanyPosition[];
   processing: boolean;
 
   // Original actions
-  addSubmission: (submission: Submission) => void;
-  updateSubmission: (index: number, submission: Submission) => void;
-  removeSubmission: (index: number) => void;
+  addSubmission: (id: string, submission: Submission) => void;
+  updateSubmission: (id: string, submission: Submission) => void;
+  removeSubmission: (id: string) => void;
   addDraftSubmission: (submission: Submission) => void;
   updateDraftSubmission: (index: number, submission: Submission) => void;
   removeDraftSubmission: (index: number) => void;
-  moveDraftToSubmission: (draftIndex: number, id: string, data: any) => void;
+  moveDraftToSubmission: (draftIndex: number, id: string, data: Submission) => void;
   clearDraftSubmissions: () => void;
   setProcessing: (isProcessing: boolean) => void;
 
-  // New sync helpers
-  replaceAllSubmissions: (submissions: Submission[]) => void;
+  replaceAllSubmissions: (submissions: Record<string, Submission>) => void;
 };
 
 type InitialState = {
-  initialSubmissions?: Submission[];
+  initialSubmissions?: Map<string, Submission>;
   initialDraftSubmissions?: Submission[];
   initialcompanyPositions?: CompanyPosition[];
   initialProcessing?: boolean;
@@ -36,25 +35,36 @@ export const [JobSubmissionProvider, useJobSubmissionStore] = createZustandConte
     create<JobSubmissionStore>()(
       persist(
         (set) => ({
-          submissions: initialState.initialSubmissions || [],
+          submissions: initialState.initialSubmissions || new Map<string, Submission>(),
           draftSubmissions: initialState.initialDraftSubmissions || [],
           companyPositions: initialState.initialcompanyPositions || [],
           processing: initialState.initialProcessing || false,
 
-          addSubmission: (submission) =>
-            set((state) => ({ submissions: [...state.submissions, submission] })),
-
-          updateSubmission: (index, submission) =>
+          addSubmission: (id, submission) =>
             set((state) => ({
-              submissions: state.submissions.map((item, i) =>
-                i === index ? submission : item
-              )
+              submissions: new Map([...state.submissions, [id, submission]])
             })),
 
-          removeSubmission: (index) =>
-            set((state) => ({
-              submissions: state.submissions.filter((_, i) => i !== index)
-            })),
+          updateSubmission: (id, submission) =>
+            set((state) => {
+              if (!state.submissions.has(id) || state.submissions.get(id) === submission) {
+                return state;
+              }
+              return {
+                submissions: new Map([...state.submissions, [id, submission]])
+              };
+            }),
+
+          removeSubmission: (id) =>
+            set((state) => {
+              // Skip if id doesn't exist
+              if (!state.submissions.has(id)) {
+                return state;
+              }
+              const newSubmissions = new Map(state.submissions);
+              newSubmissions.delete(id);
+              return { submissions: newSubmissions };
+            }),
 
           addDraftSubmission: (submission) =>
             set((state) => ({ draftSubmissions: [...state.draftSubmissions, submission] })),
@@ -77,33 +87,47 @@ export const [JobSubmissionProvider, useJobSubmissionStore] = createZustandConte
           setProcessing: (isProcessing) =>
             set(() => ({ processing: isProcessing })),
 
-          // Move from draft to complete submission
           moveDraftToSubmission: (draftIndex, id, data) =>
             set((state) => {
+              console.log(data)
               const draftToMove = state.draftSubmissions[draftIndex];
               if (!draftToMove) return state;
 
               return {
-                submissions: [...state.submissions, { ...data, id }],
+                submissions: new Map([...state.submissions, [id, { ...data }]]),
                 draftSubmissions: state.draftSubmissions.filter((_, i) => i !== draftIndex)
               };
             }),
 
           replaceAllSubmissions: (submissions) =>
-            set(() => ({ submissions })),
+            set((state) => {
+              const newSubmissions = new Map(state.submissions);
+
+              submissions.forEach(submission => {
+                if (submission && submission.id) {
+                  newSubmissions.set(submission.id, submission);
+                }
+              });
+
+              return { submissions: newSubmissions };
+            }),
+
+
         }),
         {
           name: 'job-submissions-storage',
           storage: createJSONStorage(() => localStorage),
           partialize: (state) => ({
-            submissions: state.submissions,
+            submissions: Object.fromEntries(state.submissions),
             draftSubmissions: state.draftSubmissions,
             processing: state.processing
           }),
-          version: 1,
-          migrate: (persistedState: any) => {
-            return persistedState as JobSubmissionStore;
+          onRehydrateStorage: () => (state) => {
+            if (state && state.submissions) {
+              state.submissions = new Map(Object.entries(state.submissions));
+            }
           },
+          version: 0,
         }
       )
     ),

@@ -1,4 +1,4 @@
-import { Link, useLocation, useNavigate } from '@tanstack/react-router';
+import { Link, useLocation } from '@tanstack/react-router';
 import { AppBar, Toolbar, Box, IconButton, Container, Tooltip } from '@mui/material';
 import { Sun, Moon, Home, Upload, User } from 'lucide-react';
 import { useAppTheme } from '#/utils/useThemeProvider';
@@ -9,7 +9,6 @@ import { clearToken, isLoggedIn } from '#/hooks/useAuth';
 const Nav = ({ onLoginClick }): React.FC<{ onLoginClick: () => void }> => {
   const { toggleColorMode, mode } = useAppTheme();
   const location = useLocation();
-  const navigate = useNavigate();
   const [isLogoHovered, setIsLogoHovered] = useState(false);
   const [authState, setAuthState] = useState(isLoggedIn());
 
@@ -30,8 +29,6 @@ const Nav = ({ onLoginClick }): React.FC<{ onLoginClick: () => void }> => {
   const handleLogout = () => {
     clearToken();
     setAuthState(false);
-    // Navigate to home or login page after logout
-    navigate({ to: '/home' });
   };
 
   const colors = {
@@ -363,7 +360,7 @@ const Nav = ({ onLoginClick }): React.FC<{ onLoginClick: () => void }> => {
                 color: authState
                   ? colors.white
                   : mode === 'light' ? colors.black : profileLink.color,
-                border: `3px solid ${authState ? colors.black : profileLink.color}`,
+                border: `3px solid ${colors.black}`,
                 borderRadius: '50%',
                 boxShadow: authState
                   ? mode === 'dark'
@@ -441,7 +438,7 @@ const Nav = ({ onLoginClick }): React.FC<{ onLoginClick: () => void }> => {
           <Tooltip title="View source on GitHub">
             <IconButton
               component="a"
-              href="https://github.com/your-username/your-repo"
+              href="https://github.com/satwikShresth/OpenMario"
               target="_blank"
               rel="noopener noreferrer"
               sx={{

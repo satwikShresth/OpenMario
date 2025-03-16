@@ -24,29 +24,26 @@ export const Route = createFileRoute('/submission/')({
       addDraftSubmission,
       clearDraftSubmissions,
       setProcessing,
+      replaceAllSubmissions
     } = useJobSubmissionStore();
     const { processText } = useJobParser();
     const [tabValue, setTabValue] = useState(0);
     const navigate = useNavigate({ from: '/submission' });
 
-    const replaceAllSubmissions = useJobSubmissionStore(state => state.replaceAllSubmissions);
-
-    const ids = Array.isArray(submissions)
-      ? submissions
-        .filter(item => !item?.user_id && !!item?.id)
-        .map(item => item.id)
-      : []
+    const submissionIds = Array.from(submissions.keys())
+    console.log(submissionIds)
 
     const { data: jobSubmissionsData, isSuccess } = useQuery({
       ...getSubmissionsMeOptions({
-        query: { ids }
+        query: { ids: submissionIds }
       }),
       staleTime: 6000,
-      enabled: isLoggedIn(),
+      enabled: isLoggedIn() && submissionIds.length > 0,
     });
 
     useEffect(() => {
       if (isSuccess && jobSubmissionsData.data) {
+        console.log(jobSubmissionsData)
         replaceAllSubmissions(jobSubmissionsData.data);
       }
     }, [isSuccess, jobSubmissionsData, replaceAllSubmissions]);
@@ -91,12 +88,18 @@ export const Route = createFileRoute('/submission/')({
     }, [recognizeText, processText, clearDraftSubmissions, addDraftSubmission, setProcessing, enqueueSnackbar, setTabValue]);
 
     const handleAddNew = () => { navigate({ to: `/submission/new` }) }
-    const handleEditSubmission = (index: number) => { navigate({ to: `/submission/edit/${index}` }) }
-    const handleEditDraft = (index: number) => { navigate({ to: `/submission/${index}` }) }
 
-    const handleDeleteSubmission = (index: number) => {
+    const handleEditSubmission = (id: string) => {
+      navigate({ to: `/submission/edit/${id}` })
+    }
+
+    const handleEditDraft = (index: number) => {
+      navigate({ to: `/submission/${index}` })
+    }
+
+    const handleDeleteSubmission = (id: string) => {
       if (window.confirm('Are you sure you want to delete this job submission?')) {
-        removeSubmission(index);
+        removeSubmission(id);
       }
     };
 
@@ -151,9 +154,8 @@ export const Route = createFileRoute('/submission/')({
                 maxHeight: 48,
               }}
             >
-
               <Tab
-                label={`Submissions (${submissions.length})`}
+                label={`Submissions (${submissions.size})`}
                 icon={<Briefcase size={16} />}
                 iconPosition="start"
                 sx={{
@@ -195,7 +197,6 @@ export const Route = createFileRoute('/submission/')({
           </Box>
         </Box>
       </>
-
     );
   }
 })

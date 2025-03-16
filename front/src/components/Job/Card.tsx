@@ -46,7 +46,6 @@ const JobCard: React.FC<JobCardProps> = ({
 
   const handleEditClick = (e: React.MouseEvent) => {
     e.stopPropagation();
-    console.log(index);
     onEdit(index);
   };
 

@@ -1,11 +1,11 @@
 import { useSnackbar } from 'notistack';
 import { createFileRoute, useNavigate } from '@tanstack/react-router';
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useMutation } from '@tanstack/react-query';
 import JobForm from '#/components/Job/Form';
 import { useJobSubmissionStore } from '#/stores/useJobSubmissionStore';
 import { type Position } from '#/utils/validators';
 import type { Submission, SubmissionAggregate } from '#/types';
-import { getAutocompleteCompanyOptions, postSubmissionsMutation } from '#client/react-query.gen';
+import { postSubmissionsMutation } from '#client/react-query.gen';
 import { useCallback, useState } from 'react';
 import { debounce } from 'lodash';
 
@@ -13,22 +13,11 @@ export const Route = createFileRoute('/submission/new')({
   component: FormPageComponent,
 })
 
-
 export default function FormPageComponent() {
   const navigate = useNavigate();
   const { addSubmission, addDraftSubmission } = useJobSubmissionStore();
   const { enqueueSnackbar } = useSnackbar();
-
   const submitMutation = useMutation(postSubmissionsMutation());
-
-
-  const debouncedSearch = useCallback(
-    debounce((field: string, value: string) => {
-      setSearches(prev => ({ ...prev, [field]: value }));
-    }, 300),
-    []
-  );
-
 
   const formDefaultValues = {
     company: '',
@@ -44,8 +33,8 @@ export default function FormPageComponent() {
     details: `Employer ID: 'N/A', Position ID: 'N/A', Job Length: 'N/A', Coop Round: 'N/A'`
   };
 
-  const handleDraft = (data) => {
-    addDraftSubmission(data)
+  const handleDraft = (data: Position) => {
+    addDraftSubmission(data as Submission);
     navigate({ to: '/submission' });
   };
 
@@ -57,19 +46,17 @@ export default function FormPageComponent() {
     submitMutation.mutate({
       body: data as SubmissionAggregate,
     }, {
-      onSuccess: ({ id, message }) => {
-        addSubmission({ ...data as Submission, id });
+      onSuccess: ({ id, owner_id, message }) => {
+        addSubmission(id, { ...data, owner_id });
         enqueueSnackbar(message, { variant: 'success' });
         navigate({ to: '/submission' });
       },
-      onError: (error) => {
+      onError: (error: any) => {
         console.error('Error submitting job:', error);
-
         if (error.response?.data) {
           const errorData = error.response.data;
-
           if (errorData.message === "Validation failed" && Array.isArray(errorData.details)) {
-            errorData.details.forEach((detail) => {
+            errorData.details.forEach((detail: any) => {
               const fieldName = detail.field.charAt(0).toUpperCase() + detail.field.slice(1);
               enqueueSnackbar(`${fieldName}: ${detail.message}`, { variant: 'error' });
             });
@@ -96,5 +83,3 @@ export default function FormPageComponent() {
     </>
   );
 };
-
-

@@ -208,10 +208,10 @@ export default () => {
             .insert(submission)
             .values(toBeInserted)
             .returning()
-            .then(([{ id }]) =>
+            .then(([{ id, owner_id }]) =>
               res
                 .status(201)
-                .json({ id, message: "Added position successfully" }),
+                .json({ id, owner_id, message: "Added position successfully" }),
             );
         } catch ({ message }) {
           return res.status(409).json({ message });

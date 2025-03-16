@@ -13,7 +13,7 @@ import { patchSubmissionsMutation, postSubmissionsMutation } from '#client/react
 
 export const Route = createFileRoute('/submission/edit/$formId')({
   loader: ({ params }) => {
-    const formId = parseInt(params.formId);
+    const formId = params.formId;
     return { formId };
   },
   component: EditSubmissionComponent,
@@ -23,15 +23,11 @@ function EditSubmissionComponent() {
   const navigate = useNavigate();
   const { formId } = Route.useLoaderData();
   const { enqueueSnackbar } = useSnackbar();
-
   const { submissions, updateSubmission, removeSubmission } = useJobSubmissionStore();
 
-  const submissionIndex = formId;
-  const submissionData = submissions[submissionIndex];
+  const submissionData = submissions && submissions.get(formId);
   const updateMutation = useMutation(patchSubmissionsMutation());
   const formDefaultValues = useMemo(() => submissionData, [submissionData]);
-  const id = submissionData?.id;
-
 
   const handleCancel = () => {
     navigate({ to: '/submission' });
@@ -39,19 +35,17 @@ function EditSubmissionComponent() {
 
   const handleSubmit = (data: Position) => {
     updateMutation.mutate({
-      body: { ...data, id }
+      body: { ...data, id: formId }
     }, {
       onSuccess: () => {
-        updateSubmission(submissionIndex, data as Submission);
+        updateSubmission(formId, data as Submission);
         enqueueSnackbar('Submission updated successfully', { variant: 'success' });
         navigate({ to: '/submission' });
       },
       onError: (error: any) => {
         console.error('Error updating job:', error);
-
         if (error.response?.data) {
           const errorData = error.response.data;
-
           if (errorData.message === "Validation failed" && Array.isArray(errorData.details)) {
             errorData.details.forEach((detail: any) => {
               const fieldName = detail.field.charAt(0).toUpperCase() + detail.field.slice(1);
@@ -65,16 +59,25 @@ function EditSubmissionComponent() {
         }
       }
     });
-
   };
 
   const handleDelete = () => {
     if (window.confirm('Are you sure you want to delete this submission?')) {
-      removeSubmission(submissionIndex);
+      removeSubmission(formId);
       enqueueSnackbar('Submission deleted successfully', { variant: 'success' });
       navigate({ to: '/submission' });
     }
   };
+
+  if (!submissionData) {
+    return (
+      <Box sx={{ mt: 3 }}>
+        <Typography variant="h6">
+          Submission not found
+        </Typography>
+      </Box>
+    );
+  }
 
   return (
     <>
@@ -84,10 +87,8 @@ function EditSubmissionComponent() {
           Edit Submission
         </Typography>
       </Box>
-
       <JobForm
-        onDraft={(data) => updateSubmission(submissionIndex, data)}
-        editIndex={submissionIndex}
+        onDraft={(data) => updateSubmission(formId, data)}
         formDefaultValues={formDefaultValues}
         onSubmit={handleSubmit}
         onCancel={handleCancel}

@@ -13,7 +13,6 @@ import { getAutocompleteCompanyOptions, getAutocompleteLocationOptions, getAutoc
 import { PositionSchema, type Position } from '#/utils/validators';
 import CompanyPositionModal, { type CompanyPosition } from './CompanyPositionModal';
 import { useSnackbar } from 'notistack';
-import { useJobSubmissionStore } from '#/stores';
 
 const JobForm: React.FC<{
   editIndex?: number;
@@ -31,8 +30,6 @@ const JobForm: React.FC<{
     const [modalOpen, setModalOpen] = useState(false);
     const queryClient = useQueryClient();
     const { enqueueSnackbar } = useSnackbar();
-
-    const { addCompanyPosition } = useJobSubmissionStore();
 
     const {
       control,

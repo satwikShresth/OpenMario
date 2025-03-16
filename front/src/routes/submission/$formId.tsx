@@ -45,9 +45,10 @@ function DraftFormComponent() {
     postMutation.mutate({
       body: data
     }, {
-      onSuccess: ({ id, message }) => {
+      onSuccess: ({ id, owner_id, message }) => {
         enqueueSnackbar('Submission updated successfully', { variant: 'success' });
-        moveDraftToSubmission(draftIndex, id, data)
+        moveDraftToSubmission(Number.parseInt(draftIndex), id!, { ...data, owner_id })
+        console.log(`Job Complete: ${message}`);
         navigate({ to: '/submission' });
       },
       onError: (error: any) => {
