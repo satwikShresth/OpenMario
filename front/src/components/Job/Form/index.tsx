@@ -261,7 +261,7 @@ const JobForm: React.FC<{
                   label="Company"
                   control={control}
                   icon={<Building size={18} />}
-                  options={companyQuery?.data?.map((item) => item.name) || []}
+                  options={companyQuery?.data && companyQuery?.data?.map((item) => item.name) || []}
                   loading={companyQuery?.isLoading}
                   getOptionLabel={(option) => option ?? ""}
                   isOptionEqualToValue={(option, value) => option === value}
@@ -282,7 +282,7 @@ const JobForm: React.FC<{
                   label="Position"
                   control={control}
                   icon={<Briefcase size={18} />}
-                  options={positionQuery?.data?.map((item) => item.name) || []}
+                  options={positionQuery?.data && positionQuery?.data?.map((item) => item.name) || []}
                   loading={positionQuery.isFetching}
                   getOptionLabel={(option) => option ?? ""}
                   isOptionEqualToValue={(option, value) => option === value}
@@ -304,7 +304,7 @@ const JobForm: React.FC<{
                   label="Location"
                   control={control}
                   icon={<MapPin size={18} />}
-                  options={locationQuery?.data?.map((item) => item.name) || []}
+                  options={positionQuery?.data && locationQuery?.data?.map((item) => item.name) || []}
                   loading={locationQuery.isFetching}
                   getOptionLabel={(option) => option ?? ""}
                   isOptionEqualToValue={(option, value) => option === value}

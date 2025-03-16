@@ -3,11 +3,11 @@ import pg from "pg";
 export * from "./schema.ts";
 
 const client = new pg.Pool({
-  user: "postgres",
-  password: "postgres",
-  database: "openmario",
-  host: "localhost",
-  port: 5432,
+  user: Deno.env.get("POSTGRES_PASSWORD"),
+  password: Deno.env.get("POSTGRES_USER"),
+  database: Deno.env.get("POSTGRES_DB"),
+  host: Deno.env.get("POSTGRES_SERVER"),
+  port: Deno.env.get("POSTGRES_PORT"),
   min: 2,
   max: 10,
 });

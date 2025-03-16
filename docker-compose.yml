@@ -1,76 +1,101 @@
 services:
-  db:
+  database:
     image: postgres:latest
-    env_file:
-      - .env
-    ports:
-      - "5432:5432"
+    restart: always
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
       interval: 10s
-      timeout: 5s
       retries: 5
+      start_period: 30s
+      timeout: 10s
+    networks:
+      - app_network 
+    volumes:
+      - app-db-data:/var/lib/postgresql/data/pgdata
+    env_file:
+      - .env
+    environment:
+      - PGDATA=/var/lib/postgresql/data/pgdata
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD?Variable not set}
+      - POSTGRES_USER=${POSTGRES_USER?Variable not set}
+      - POSTGRES_DB=${POSTGRES_DB?Variable not set}
 
-  # reverse-proxy:
-  #   image: nginx:latest
-  #   container_name: reverse-proxy
-  #   volumes:
-  #     - ./nginx.conf:/etc/nginx/nginx.conf:ro
-  #   ports:
-  #     - "3000:3000"
-  #   depends_on:
-  #     - backend
-  #     - frontend
-  #   networks:
-  #     - internal
+  prestart:
+    build: 
+      context: ./back
+      dockerfile: Dockerfile
+      platforms:
+        - linux/amd64
+    image: ss5278/openmario:backend
+    container_name: prestart
+    restart: no
+    depends_on:
+      database:
+        condition: service_healthy
+        restart: true
+    command:
+      - deno
+      - task
+      - prestart
+    networks:
+      - app_network 
+    env_file:
+      - .env
 
-  # drizzle-studio:
-  #   build:
-  #     context: ./drizzle-studio
-  #     dockerfile: dockerfile
-  #   container_name: drizzle-studio
-  #   env_file:
-  #     - .env
-  #   networks:
-  #     - internal
-  #   command: ["npx", "drizzle-kit", "studio", "--host=0.0.0.0"]
-  #   ports:
-  #     - "4983:4983"
 
-  # openmario-backend:
-  #   build:
-  #     context: ./back
-  #     dockerfile: dockerfile
-  #     platforms:
-  #       - linux/amd64
-  #   container_name: openmario-backend
-  #   entrypoint: ["/app/entrypoint.sh"]
-  #   env_file:
-  #     - .env
-  #   develop:
-  #     watch: 
-  #       - path: ./back/src/
-  #         target: /app/src/
-  #         action: sync
-  #   environment:
-  #     - ENV=development
-  #   depends_on:
-  #     db:
-  #      condition: service_healthy
-  #   ports:
-  #     - "3000:3000"
+  backend:
+    build: 
+      context: ./back
+      dockerfile: Dockerfile
+      platforms:
+        - linux/amd64
+    image: ss5278/openmario:backend
+    container_name: backend
+    restart: always
+    depends_on:
+      database:
+        condition: service_healthy
+        restart: true
+      prestart:
+        condition: service_completed_successfully
+    command:
+      - deno
+      - task
+      - start
+    networks:
+      - app_network 
+    env_file:
+      - .env
 
-  # frontend:
-  #   image: ss5278/satwik-cs478-homework:frontend
-  #   build:
-  #     context: ./front
-  #     dockerfile: dockerfile
-  #     platforms:
-  #       - linux/amd64
-  #   container_name: frontend
-  #   networks:
-  #     - internal
+  reverse-proxy:
+    build: 
+      context: ./front
+      dockerfile: Dockerfile
+      platforms:
+        - linux/amd64
+      args:
+          - VITE_API_URL=https://${DOMAIN?Variable not set}/api/v1
+          - NODE_ENV=production
+    image: ss5278/openmario:reverse-proxy
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./caddy/Caddyfile:/etc/caddy/Caddyfile
+      - ./caddy/config:/config
+      - ./caddy/data:/data
+    depends_on:
+      - database
+      - backend
+    networks:
+      - app_network 
+
+volumes:
+  app-db-data:
+  caddy_data:
+  caddy_config:
 
 networks:
-  internal:
-    name: internal_network
+  app_network:
+    driver: bridge

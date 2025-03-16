@@ -1,9 +1,13 @@
-import { RouterProvider, createRouter } from '@tanstack/react-router'
-import { routeTree } from './routeTree.gen'
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { RouterProvider, createRouter } from '@tanstack/react-router';
+import { routeTree } from './routeTree.gen';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import AppThemeProvider from '#/utils/useThemeProvider';
-import './app.css'
+import './app.css';
+import { CssBaseline } from '@mui/material';
 import { SnackbarProvider } from 'notistack';
+import ErrorBoundary from './components/Error/Boundary';
+import { ErrorPage } from './components/Error/Page';
+import { QueryBoundary } from './components/Error/QueryBoundry';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -14,8 +18,6 @@ const queryClient = new QueryClient({
   },
 })
 
-
-
 const router = createRouter({
   routeTree,
   context: {
@@ -24,11 +26,10 @@ const router = createRouter({
   defaultPreload: 'intent',
   scrollRestoration: true,
   defaultNotFoundComponent: () => {
-    return (
-      <div>
-        <p>Not found!</p>
-      </div>
-    )
+    return <ErrorPage error={new Error("Page not found")} />
+  },
+  defaultErrorComponent: ({ error }) => {
+    return <ErrorPage error={error as Error} />
   },
 })
 
@@ -41,14 +42,22 @@ declare module '@tanstack/react-router' {
 const App = () => {
   return (
     <AppThemeProvider>
-      <QueryClientProvider client={queryClient}>
-        <SnackbarProvider maxSnack={3} anchorOrigin={{ vertical: "bottom", horizontal: "right" }} autoHideDuration={8000}>
-          <RouterProvider router={router} />
-        </SnackbarProvider>
-      </QueryClientProvider>
+      <CssBaseline />
+      <ErrorBoundary>
+        <QueryBoundary>
+          <QueryClientProvider client={queryClient}>
+            <SnackbarProvider
+              maxSnack={3}
+              anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+              autoHideDuration={8000}
+            >
+              <RouterProvider router={router} />
+            </SnackbarProvider>
+          </QueryClientProvider>
+        </QueryBoundary>
+      </ErrorBoundary>
     </AppThemeProvider>
   )
 }
 
 export default App
-

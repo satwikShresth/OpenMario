@@ -71,7 +71,7 @@ export const [JobSubmissionProvider, useJobSubmissionStore] = createZustandConte
 
           updateDraftSubmission: (index, submission) =>
             set((state) => ({
-              draftSubmissions: state.draftSubmissions.map((item, i) =>
+              draftSubmissions: state?.draftSubmissions?.map((item, i) =>
                 i === index ? submission : item
               )
             })),

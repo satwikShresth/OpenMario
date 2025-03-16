@@ -1,0 +1,53 @@
+{
+    # Global options
+    admin off
+}
+
+:80 {
+
+    handle_path /* {
+       root * /usr/share/caddy
+
+       # Set correct MIME types for JavaScript modules
+       @jsmodules {
+           path *.js
+           header Content-Type "application/javascript"
+       }
+
+       # Explicit MIME types for common web assets
+       @mjs {
+           path *.mjs
+           header Content-Type "application/javascript"
+       }
+
+       @css {
+           path *.css
+           header Content-Type "text/css"
+       }
+
+       @json {
+           path *.json
+           header Content-Type "application/json"
+       }
+
+       try_files {path} /index.html
+
+       file_server
+
+    }
+
+    # Handle API requests
+    handle_path /api/* {
+        uri strip_prefix /api
+        reverse_proxy backend:3000 {
+            header_up Host {host}
+            header_up X-Real-IP {remote}
+        }
+    }
+
+    # Logging
+    log {
+        output stdout
+        format console
+    }
+}
