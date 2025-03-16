@@ -362,13 +362,9 @@ const Nav = ({ onLoginClick }): React.FC<{ onLoginClick: () => void }> => {
                   : mode === 'light' ? colors.black : profileLink.color,
                 border: `3px solid ${colors.black}`,
                 borderRadius: '50%',
-                boxShadow: authState
-                  ? mode === 'dark'
-                    ? `0 4px 0 rgba(0,0,0,0.6), 0 0 10px ${profileLink.glowColor}`
-                    : '0 4px 0 rgba(0,0,0,0.6)'
-                  : mode === 'dark'
-                    ? `0 0 5px ${profileLink.glowColor}`
-                    : 'none',
+                boxShadow: mode === 'dark'
+                  ? `0 4px 0 rgba(0,0,0,0.6), 0 0 10px ${profileLink.glowColor}`
+                  : '0 4px 0 rgba(0,0,0,0.6)',
                 transition: 'all 0.15s ease',
                 overflow: 'hidden',
 
@@ -377,13 +373,9 @@ const Nav = ({ onLoginClick }): React.FC<{ onLoginClick: () => void }> => {
                     ? profileLink.color
                     : `${profileLink.color}22`,
                   transform: 'translateY(2px)',
-                  boxShadow: authState
-                    ? mode === 'dark'
-                      ? `0 2px 0 rgba(0,0,0,0.6), 0 0 10px ${profileLink.glowColor}`
-                      : '0 2px 0 rgba(0,0,0,0.6)'
-                    : mode === 'dark'
-                      ? `0 0 8px ${profileLink.glowColor}`
-                      : '0 2px 0 rgba(0,0,0,0.2)',
+                  boxShadow: mode === 'dark'
+                    ? '0 2px 0 rgba(0,0,0,0.6), 0 0 10px rgba(0, 238, 255, 0.7)'
+                    : '0 2px 0 rgba(0,0,0,0.6)',
                   filter: 'brightness(1.1)'
                 }
               }}

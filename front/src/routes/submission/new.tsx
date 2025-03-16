@@ -1,3 +1,6 @@
+
+// submissions/new.tsx
+import React, { useState } from 'react';
 import { useSnackbar } from 'notistack';
 import { createFileRoute, useNavigate } from '@tanstack/react-router';
 import { useMutation } from '@tanstack/react-query';
@@ -6,8 +9,6 @@ import { useJobSubmissionStore } from '#/stores/useJobSubmissionStore';
 import { type Position } from '#/utils/validators';
 import type { Submission, SubmissionAggregate } from '#/types';
 import { postSubmissionsMutation } from '#client/react-query.gen';
-import { useCallback, useState } from 'react';
-import { debounce } from 'lodash';
 
 export const Route = createFileRoute('/submission/new')({
   component: FormPageComponent,
@@ -18,6 +19,7 @@ export default function FormPageComponent() {
   const { addSubmission, addDraftSubmission } = useJobSubmissionStore();
   const { enqueueSnackbar } = useSnackbar();
   const submitMutation = useMutation(postSubmissionsMutation());
+  const [externalErrors, setExternalErrors] = useState([]);
 
   const formDefaultValues = {
     company: '',
@@ -56,6 +58,10 @@ export default function FormPageComponent() {
         if (error.response?.data) {
           const errorData = error.response.data;
           if (errorData.message === "Validation failed" && Array.isArray(errorData.details)) {
+            // Set external errors to be passed to the form
+            setExternalErrors(errorData.details);
+
+            // Also show as snackbar notifications
             errorData.details.forEach((detail: any) => {
               const fieldName = detail.field.charAt(0).toUpperCase() + detail.field.slice(1);
               enqueueSnackbar(`${fieldName}: ${detail.message}`, { variant: 'error' });
@@ -79,6 +85,7 @@ export default function FormPageComponent() {
         onCancel={handleCancel}
         isSubmitting={submitMutation.isPending}
         submitError={submitMutation.error?.message}
+        externalErrors={externalErrors}
       />
     </>
   );

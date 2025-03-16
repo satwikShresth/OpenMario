@@ -1,4 +1,6 @@
 # Homework 4
+## migration
+## Deployment 
 
 ## The Easy Way if you have docker
 

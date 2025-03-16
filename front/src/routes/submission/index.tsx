@@ -31,7 +31,6 @@ export const Route = createFileRoute('/submission/')({
     const navigate = useNavigate({ from: '/submission' });
 
     const submissionIds = Array.from(submissions.keys())
-    console.log(submissionIds)
 
     const { data: jobSubmissionsData, isSuccess } = useQuery({
       ...getSubmissionsMeOptions({
@@ -43,7 +42,6 @@ export const Route = createFileRoute('/submission/')({
 
     useEffect(() => {
       if (isSuccess && jobSubmissionsData.data) {
-        console.log(jobSubmissionsData)
         replaceAllSubmissions(jobSubmissionsData.data);
       }
     }, [isSuccess, jobSubmissionsData, replaceAllSubmissions]);

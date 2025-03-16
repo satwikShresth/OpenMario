@@ -1,5 +1,5 @@
 // submissions/$formId.tsx
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { useSnackbar } from 'notistack';
 import { createFileRoute, useNavigate } from '@tanstack/react-router';
 import JobForm from '#/components/Job/Form';
@@ -24,12 +24,13 @@ function DraftFormComponent() {
   const { formId } = Route.useLoaderData();
   const { enqueueSnackbar } = useSnackbar();
   const { draftSubmissions, updateDraftSubmission, moveDraftToSubmission, removeDraftSubmission } = useJobSubmissionStore();
-
-  const draftIndex: string = formId;
+  const draftIndex = formId.toString();
   const draftData = draftSubmissions[draftIndex];
+  const [externalErrors, setExternalErrors] = useState([]);
 
   if (!draftData) {
-    navigate({ to: '/submission' })
+    navigate({ to: '/submission' });
+    return null;
   }
 
   const formDefaultValues = useMemo(() => draftData, [draftData]);
@@ -37,7 +38,6 @@ function DraftFormComponent() {
   const handleCancel = () => {
     navigate({ to: '/submission' });
   };
-
 
   const postMutation = useMutation(postSubmissionsMutation());
 
@@ -47,17 +47,19 @@ function DraftFormComponent() {
     }, {
       onSuccess: ({ id, owner_id, message }) => {
         enqueueSnackbar('Submission updated successfully', { variant: 'success' });
-        moveDraftToSubmission(Number.parseInt(draftIndex), id!, { ...data, owner_id })
+        moveDraftToSubmission(Number.parseInt(draftIndex), id!, { ...data, owner_id });
         console.log(`Job Complete: ${message}`);
         navigate({ to: '/submission' });
       },
       onError: (error: any) => {
         console.error('Error updating job:', error);
-
         if (error.response?.data) {
           const errorData = error.response.data;
-
           if (errorData.message === "Validation failed" && Array.isArray(errorData.details)) {
+            // Set external errors to be passed to the form
+            setExternalErrors(errorData.details);
+
+            // Also show as snackbar notifications
             errorData.details.forEach((detail: any) => {
               const fieldName = detail.field.charAt(0).toUpperCase() + detail.field.slice(1);
               enqueueSnackbar(`${fieldName}: ${detail.message}`, { variant: 'error' });
@@ -74,9 +76,7 @@ function DraftFormComponent() {
 
   const handleCompleteDraft = (data: any) => {
     updateDraftSubmission(draftIndex, data as Submission);
-
     moveDraftToSubmission(draftIndex);
-
     enqueueSnackbar('Draft moved to submissions successfully', { variant: 'success' });
     navigate({ to: '/submission' });
   };
@@ -97,17 +97,19 @@ function DraftFormComponent() {
           Edit Draft Submission
         </Typography>
       </Box>
-
       <JobForm
         onDraft={(data) => updateDraftSubmission(draftIndex, data)}
         formDefaultValues={formDefaultValues}
         onSubmit={handleSubmit}
         onCancel={handleCancel}
-        isSubmitting={false}
+        isSubmitting={postMutation.isPending}
+        submitError={postMutation.error?.message}
         isDraft={true}
         onCompleteDraft={handleCompleteDraft}
         onDelete={handleDeleteDraft}
+        externalErrors={externalErrors}
       />
     </>
   );
 }
+

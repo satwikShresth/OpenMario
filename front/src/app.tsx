@@ -4,7 +4,6 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import AppThemeProvider from '#/utils/useThemeProvider';
 import './app.css'
 import { SnackbarProvider } from 'notistack';
-import { client } from '#client/sdk.gen';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -43,7 +42,7 @@ const App = () => {
   return (
     <AppThemeProvider>
       <QueryClientProvider client={queryClient}>
-        <SnackbarProvider maxSnack={3} anchorOrigin={{ vertical: "bottom", horizontal: "right" }} autoHideDuration={1000}>
+        <SnackbarProvider maxSnack={3} anchorOrigin={{ vertical: "bottom", horizontal: "right" }} autoHideDuration={8000}>
           <RouterProvider router={router} />
         </SnackbarProvider>
       </QueryClientProvider>

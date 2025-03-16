@@ -89,7 +89,6 @@ export const [JobSubmissionProvider, useJobSubmissionStore] = createZustandConte
 
           moveDraftToSubmission: (draftIndex, id, data) =>
             set((state) => {
-              console.log(data)
               const draftToMove = state.draftSubmissions[draftIndex];
               if (!draftToMove) return state;
 

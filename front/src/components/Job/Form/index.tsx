@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useMemo, useRef } from 'react';
+import React, { useState, useCallback, useMemo, useRef, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Paper, Grid, Typography, Divider, Box, Stack, Button } from '@mui/material';
@@ -20,12 +20,27 @@ const JobForm: React.FC<{
   onDraft: (data: Position) => void;
   onSubmit: (data: Position) => Promise<void>;
   onCancel?: () => void;
+  isSubmitting?: boolean;
+  submitError?: string;
+  isDraft?: boolean;
+  onCompleteDraft?: (data: Position) => void;
+  onDelete?: () => void;
+  externalErrors?: {
+    field: string;
+    message: string;
+  }[];
 }> = ({
   editIndex,
   formDefaultValues,
   onSubmit,
   onDraft,
-  onCancel
+  onCancel,
+  isSubmitting: isSubmittingProp = false,
+  submitError,
+  isDraft = false,
+  onCompleteDraft,
+  onDelete,
+  externalErrors = []
 }) => {
     const [modalOpen, setModalOpen] = useState(false);
     const queryClient = useQueryClient();
@@ -38,7 +53,8 @@ const JobForm: React.FC<{
       watch,
       trigger,
       setValue,
-      formState: { errors, isSubmitting }
+      setError,
+      formState: { errors, isSubmitting: formIsSubmitting }
     } = useForm<Position>({
       resolver: zodResolver(PositionSchema),
       mode: 'onBlur',
@@ -51,6 +67,37 @@ const JobForm: React.FC<{
     const selectedCompany = watch('company');
     const isSubmittingRef = useRef(false);
     const weeklyPay = useMemo(() => compensation !== null ? compensation * workHours : null, [compensation, workHours]);
+    const isSubmitting = isSubmittingProp || formIsSubmitting;
+
+    // Handle external validation errors
+    useEffect(() => {
+      if (externalErrors && externalErrors.length > 0) {
+        externalErrors.forEach(({ field, message }) => {
+          const fieldMapping: Record<string, string> = {
+            comp: 'company',
+            pos: 'position',
+            loc: 'location'
+          };
+
+          // Map API field names to form field names
+          const formField = fieldMapping[field] || field;
+
+          if (formField) {
+            setError(formField as any, {
+              type: 'server',
+              message
+            });
+          }
+        });
+      }
+    }, [externalErrors, setError]);
+
+    // Handle submit error if provided
+    useEffect(() => {
+      if (submitError) {
+        enqueueSnackbar(submitError, { variant: 'error' });
+      }
+    }, [submitError, enqueueSnackbar]);
 
     const debouncedSearch = useCallback(
       debounce((field: string, value: string) => {
@@ -105,6 +152,31 @@ const JobForm: React.FC<{
         } catch (error) {
           isSubmittingRef.current = false;
           console.error("Submission error:", error);
+
+          // Handle error response
+          if (error.response?.data) {
+            const errorData = error.response.data;
+
+            if (errorData.message === "Validation failed" && Array.isArray(errorData.details)) {
+              errorData.details.forEach((detail: any) => {
+                const fieldName = detail.field;
+                const fieldMapping: Record<string, string> = {
+                  comp: 'company',
+                  pos: 'position',
+                  loc: 'location'
+                };
+
+                const formField = fieldMapping[fieldName] || fieldName;
+
+                if (formField) {
+                  setError(formField as any, {
+                    type: 'server',
+                    message: detail.message
+                  });
+                }
+              });
+            }
+          }
         }
       }
     };
@@ -120,7 +192,6 @@ const JobForm: React.FC<{
     };
 
     const handleAddCompanyPosition = async (data: CompanyPosition, onReset, onClose) => {
-
       setValue('company', data.company);
       setValue('position', data.position);
 
@@ -136,7 +207,7 @@ const JobForm: React.FC<{
         body: { company: data.company, position: data.position }
       }, {
         onSuccess: ({ company_id, position_id }) => {
-          enqueueSnackbar('Comapny Position added successfully', { variant: 'success' });
+          enqueueSnackbar('Company Position added successfully', { variant: 'success' });
           onReset();
           onClose();
         },
@@ -159,8 +230,6 @@ const JobForm: React.FC<{
           }
         }
       });
-
-
     };
 
     return (
@@ -169,7 +238,7 @@ const JobForm: React.FC<{
           <Box component="form" onSubmit={handleSubmit(handleFormSubmit)} noValidate>
             <Box display="flex" justifyContent="space-between" alignItems="center" mb={1}>
               <Typography variant="h6" sx={{ mb: 1 }} >
-                {editIndex !== undefined ? 'Edit Job Submission' : 'Add New Job Submission'}
+                {editIndex !== undefined ? 'Edit Job Submission' : isDraft ? 'Edit Draft Submission' : 'Add New Job Submission'}
               </Typography>
               <Button
                 variant="outlined"
@@ -376,9 +445,12 @@ const JobForm: React.FC<{
             <FormActions
               onCancel={onCancel}
               onDraft={() => onDraft(getValues())}
-              isEditing={editIndex !== undefined}
+              isEditing={editIndex !== undefined || isDraft}
               isSubmitting={isSubmitting}
               hasErrors={Object.keys(errors).length > 0}
+              isDraft={isDraft}
+              onCompleteDraft={onCompleteDraft ? () => onCompleteDraft(getValues()) : undefined}
+              onDelete={onDelete}
             />
           </Box>
         </Paper>

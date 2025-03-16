@@ -348,6 +348,7 @@ export default () => {
             location_city: location.city,
             location_state: location.state,
             location_state_code: location.state_code,
+            location: sql`CONCAT(${location.city}, ', ', ${location.state_code})`,
           })
           .from(submission)
           .innerJoin(position, eq(submission.position_id, position.id))
