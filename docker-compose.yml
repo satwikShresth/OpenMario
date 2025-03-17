@@ -26,7 +26,7 @@ services:
       dockerfile: Dockerfile
       platforms:
         - linux/amd64
-    image: ss5278/openmario:backend
+    image: ss5278/openmario:prestart
     container_name: prestart
     restart: no
     depends_on:
