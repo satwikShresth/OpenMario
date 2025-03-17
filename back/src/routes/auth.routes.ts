@@ -85,7 +85,6 @@ export default () => {
     "/login/:token",
     zodParamsValidator(
       z.object({ token: z.string() }).transform(async ({ token }) => {
-        console.log(token);
         return await verify(token, config.JWT_MAGIC_SECRET);
       }),
     ),

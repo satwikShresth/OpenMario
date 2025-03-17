@@ -1,13 +1,14 @@
+import './app.css';
 import { RouterProvider, createRouter } from '@tanstack/react-router';
 import { routeTree } from './routeTree.gen';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import AppThemeProvider from '#/utils/useThemeProvider';
-import './app.css';
 import { CssBaseline } from '@mui/material';
-import { SnackbarProvider } from 'notistack';
+import { closeSnackbar, SnackbarProvider } from 'notistack';
 import ErrorBoundary from './components/Error/Boundary';
 import { ErrorPage } from './components/Error/Page';
 import { QueryBoundary } from './components/Error/QueryBoundry';
+import { CircleX, X } from 'lucide-react';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -47,9 +48,14 @@ const App = () => {
         <QueryBoundary>
           <QueryClientProvider client={queryClient}>
             <SnackbarProvider
+              action={(snackbarId) => (
+                <button onClick={() => closeSnackbar(snackbarId)}>
+                  <CircleX size={20} style={{ marginRight: 2 }} />
+                </button>
+              )}
               maxSnack={3}
               anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-              autoHideDuration={8000}
+              autoHideDuration={3000}
             >
               <RouterProvider router={router} />
             </SnackbarProvider>

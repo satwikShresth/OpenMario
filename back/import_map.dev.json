@@ -1,0 +1,12 @@
+{
+  "imports": {
+    "swagger-ui-express": "npm:swagger-ui-express@^5.0.1",
+    "@std/testing": "jsr:@std/testing@^1.0.9",
+    "@std/expect": "jsr:@std/expect@^1.0.11",
+    "@libsql/client": "npm:@libsql/client@^0.14.0",
+    "express-jsdoc-swagger": "npm:express-jsdoc-swagger@^1.8.0",
+    "@types/express": "npm:@types/express@^5.0.0",
+    "drizzle-kit": "npm:drizzle-kit@^0.30.1",
+    "@types/jest": "npm:@types/jest@^29.5.14"
+  }
+}

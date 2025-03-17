@@ -320,7 +320,6 @@ export default () => {
       async (req: RequestParamsId, res: Response) => {
         const { ids } = req?.validated?.query as SubmissionMeIds;
         const { user_id } = req?.auth!;
-        console.log(ids);
 
         if (ids && ids?.length > 0) {
           await db

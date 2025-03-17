@@ -24,7 +24,7 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
         sx={{
           display: 'flex',
           flexDirection: 'column',
-          minHeight: '100vh' // This ensures footer gets pushed to the bottom
+          minHeight: '100vh'
         }}
       >
         <Nav onLoginClick={handleOpenLoginModal} />

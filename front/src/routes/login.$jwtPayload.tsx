@@ -4,7 +4,6 @@ import { useQueryClient } from '@tanstack/react-query'
 import { Box, Typography, CircularProgress, Button, Paper } from '@mui/material'
 import { Home as HomeIcon } from 'lucide-react'
 
-// Common component that will be used for all states
 const AuthStatusContainer = ({ title, message, isLoading, error, disabled = false }) => {
   return (
     <Box sx={{
@@ -31,7 +30,15 @@ const AuthStatusContainer = ({ title, message, isLoading, error, disabled = fals
           justifyContent: 'space-between',
           height: '100%'
         }}>
-          <Box sx={{ textAlign: 'center', width: '100%', flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+          <Box sx={{
+            textAlign: 'center',
+            width: '100%',
+            flex: 1,
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            alignItems: 'center'
+          }}>
             {isLoading && <CircularProgress size={40} sx={{ mb: 3 }} />}
             <Typography variant="h6" gutterBottom color={error ? "error" : "primary"}>
               {title}
@@ -44,7 +51,6 @@ const AuthStatusContainer = ({ title, message, isLoading, error, disabled = fals
               {message}
             </Typography>
           </Box>
-
           <Box sx={{ width: '100%', mt: 3 }}>
             <Button
               variant="contained"
@@ -63,7 +69,6 @@ const AuthStatusContainer = ({ title, message, isLoading, error, disabled = fals
     </Box>
   )
 }
-
 export const Route = createFileRoute('/login/$jwtPayload')({
   loader: async ({ params: { jwtPayload }, context: { queryClient } }) => {
     await queryClient.fetchQuery({

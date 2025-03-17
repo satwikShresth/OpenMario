@@ -1,7 +1,6 @@
 import express, { NextFunction, Request, Response } from "express";
-import { debugMiddlewares } from "#utils";
-//import morgan from 'morgan';
-//import { expressjwt } from 'express-jwt';
+//import { debugMiddlewares } from "#utils";
+import morgan from "morgan";
 import routes from "#routes";
 import { JWT_CLIENT_SECRET as secret } from "#/config/index.ts";
 import { expressjwt } from "express-jwt";
@@ -12,10 +11,8 @@ const protocol = "http";
 const app = express();
 
 app.use(express.json());
-//app.use(morgan(':method :url :status :response-time ms'));
-
-debugMiddlewares(app);
-
+app.use(morgan(":method :url :status :response-time ms"));
+//debugMiddlewares(app);
 app.use(
   "/v1",
   expressjwt({
@@ -33,7 +30,7 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 });
 
 app.use((error: Error, _req: Request, res: Response, next: NextFunction) => {
-  console.log(error);
+  console.error(`Error: ${error}`);
   return error.name === "UnauthorizedError"
     ? res.status(401).send("invalid token...")
     : next(error);
