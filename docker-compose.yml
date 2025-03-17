@@ -23,7 +23,7 @@ services:
   prestart:
     build: 
       context: ./back
-      dockerfile: Dockerfile
+      dockerfile: dockerfile.prestart
       platforms:
         - linux/amd64
     image: ss5278/openmario:prestart

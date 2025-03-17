@@ -14,7 +14,7 @@ app.use(express.json());
 app.use(morgan(":method :url :status :response-time ms"));
 //debugMiddlewares(app);
 app.use(
-  "/api/v1",
+  "/v1",
   expressjwt({
     secret,
     algorithms: ["HS256"],

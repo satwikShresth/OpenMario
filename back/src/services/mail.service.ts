@@ -1,11 +1,10 @@
 import formData from "form-data";
 import Mailgun from "mailgun.js";
-import { IMailgunClient } from "mailgun.js/Interfaces/MailgunClient/index.js";
 import verify_email from "#email/verify_email.ts";
 
 class EmailService {
   private senderEmail: string;
-  private mgMail: IMailgunClient;
+  private mgMail: any;
 
   constructor(key: string | null, senderEmail: string) {
     this.senderEmail = senderEmail;
