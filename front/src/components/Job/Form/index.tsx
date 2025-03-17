@@ -304,7 +304,7 @@ const JobForm: React.FC<{
                   label="Location"
                   control={control}
                   icon={<MapPin size={18} />}
-                  options={positionQuery?.data && locationQuery?.data?.map((item) => item.name) || []}
+                  options={locationQuery?.data && locationQuery?.data?.map((item) => item.name) || []}
                   loading={locationQuery.isFetching}
                   getOptionLabel={(option) => option ?? ""}
                   isOptionEqualToValue={(option, value) => option === value}
