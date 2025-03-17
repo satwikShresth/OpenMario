@@ -37,7 +37,7 @@ export const Route = createFileRoute('/submission/')({
         query: { ids: submissionIds }
       }),
       staleTime: 6000,
-      enabled: isLoggedIn() && submissionIds.length > 0,
+      enabled: isLoggedIn(),
     });
 
     useEffect(() => {

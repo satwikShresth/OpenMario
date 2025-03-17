@@ -21,7 +21,7 @@ class EmailService {
   }
 
   private createMagicLink(token: string): string {
-    return `${Deno.env.get("APP_URL") || "localhost"}api/v1/auth/login/${token}`;
+    return `${Deno.env.get("APP_URL") || "localhost"}/login/${token}`;
   }
 
   public async sendVerificationEmail(to: string, token: string) {

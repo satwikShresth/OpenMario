@@ -94,7 +94,6 @@ export default () => {
       }),
     ),
     async (req: RequestParamsId, res: Response) => {
-      console.log(req?.validated?.params);
       const { email, username } = req?.validated?.params;
 
       return await db

@@ -12,6 +12,7 @@ const app = express();
 
 app.use(express.json());
 app.use(morgan(":method :url :status :response-time ms"));
+app.set("trust proxy", "loopback, linklocal, uniquelocal");
 //debugMiddlewares(app);
 app.use(
   "/v1",

@@ -57,10 +57,7 @@ export default () => {
         .where(query)
         .orderBy(order)
         .limit(limit)
-        .then((results) => {
-          console.log(results);
-          return results;
-        })
+        .then((results) => results)
         .then((results) => res.status(200).json(results))
         .catch(({ message }) => res.status(409).json({ message }));
     },
