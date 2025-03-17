@@ -2,12 +2,10 @@
 import { Response, Router } from "express";
 import { company, db, location, position, submission } from "#db";
 import {
-  JwtPayload,
   RequestParamsId,
   type SubmissionAggregate,
   SubmissionAggregateSchema,
   SubmissionAggregateUpdate,
-  SubmissionAggregateUpdateSchema,
   SubmissionInsert,
   SubmissionMeIds,
   SubmissionMeIdsSchema,
@@ -19,7 +17,6 @@ import {
   zodQueryValidator,
 } from "#/middleware/validation.middleware.ts";
 import { and, eq, inArray, isNull, or, sql } from "drizzle-orm";
-import { Request } from "express-jwt";
 
 const getPositionId = async (insertData: SubmissionAggregate) =>
   await db

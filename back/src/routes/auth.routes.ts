@@ -11,6 +11,14 @@ import * as config from "#/config/index.ts";
 import { eq } from "drizzle-orm";
 import { z } from "zod";
 import { sign, verify } from "jsonwebtoken";
+import { rateLimit } from "express-rate-limit";
+
+const limiter = rateLimit({
+  windowMs: 25 * 1000,
+  limit: 1,
+  standardHeaders: "draft-8",
+  legacyHeaders: false,
+});
 
 export default () => {
   const router = Router();
@@ -40,6 +48,7 @@ export default () => {
    */
   router.post(
     "/login",
+    limiter,
     zodBodyValidator(
       LoginSchema.transform(({ email }) => ({
         email,

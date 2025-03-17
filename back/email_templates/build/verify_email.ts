@@ -323,7 +323,7 @@ export default (magic_link: string, project_name: string) =>
                               <div
                                 style="font-family:Arial, Helvetica, sans-serif;font-size:14px;line-height:1;text-align:center;color:#555555;"
                               >
-                                This magic link will expire in 24 hours.
+                                This magic link will expire in 5 mins.
                               </div>
                             </td>
                           </tr>

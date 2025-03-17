@@ -11,6 +11,7 @@
     "drizzle-zod": "npm:drizzle-zod@^0.6.1",
     "express": "npm:express@5.0.0",
     "express-jwt": "npm:express-jwt@^8.5.1",
+    "express-rate-limit": "npm:express-rate-limit@^7.5.0",
     "form-data": "npm:form-data@^4.0.2",
     "jsonwebtoken": "npm:jsonwebtoken@^9.0.2",
     "jwt-express": "npm:jwt-express@^1.1.0",
