@@ -20,44 +20,6 @@
       </mj-column>
     </mj-section>
     
-    <!-- Copyable Magic Link Field -->
-    <mj-section padding="20px" background-color="#fff">
-      <mj-column vertical-align="middle" width="100%">
-        <mj-text align="center" font-size="14px" font-weight="bold" padding="10px 25px" font-family="Arial, Helvetica, sans-serif" color="#555">Copy Magic Link:</mj-text>
-        
-        <!-- Using HTML for creating a copyable input field -->
-        <mj-raw>
-          <div style="text-align: center; padding: 10px;">
-            <div style="display: inline-flex; max-width: 100%; margin: 0 auto;">
-              <input type="text" value="${magic_link}" id="magicLinkInput" readonly 
-                style="width: 250px; padding: 10px; border: 1px solid #ccc; border-radius: 4px 0 0 4px; font-family: monospace; font-size: 12px; overflow: hidden; text-overflow: ellipsis;" 
-                onclick="this.select();" />
-              <button onclick="copyMagicLink()" 
-                style="background-color: #2196F3; color: white; border: none; border-radius: 0 4px 4px 0; padding: 10px 15px; cursor: pointer; font-family: Arial, sans-serif; font-size: 14px;">
-                Copy
-              </button>
-            </div>
-            <div id="copyMessage" style="color: #4CAF50; font-size: 12px; margin-top: 5px; display: none;">Copied to clipboard!</div>
-            <script>
-              function copyMagicLink() {
-                var copyText = document.getElementById("magicLinkInput");
-                copyText.select();
-                document.execCommand("copy");
-                
-                var copyMessage = document.getElementById("copyMessage");
-                copyMessage.style.display = "block";
-                setTimeout(function() { 
-                  copyMessage.style.display = "none"; 
-                }, 2000);
-              }
-            </script>
-          </div>
-        </mj-raw>
-        
-        <mj-text align="center" font-size="12px" padding="5px 25px" font-family="Arial, Helvetica, sans-serif" color="#777">(Click to select, or use the copy button)</mj-text>
-      </mj-column>
-    </mj-section>
-    
     <mj-section background-color="#fff" padding="0 20px 40px 20px">
       <mj-column vertical-align="middle" width="100%">
         <mj-spacer height="20px" />

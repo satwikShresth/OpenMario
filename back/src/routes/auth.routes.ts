@@ -15,9 +15,6 @@ import { sign, verify } from "jsonwebtoken";
 export default () => {
   const router = Router();
 
-  const createMagicLink = (token: string): string =>
-    `${config.APP_URL}api/v1/auth/login/${token}`;
-
   /**
    * POST /auth/login
    * @summary Request a magic link for authentication
@@ -56,8 +53,7 @@ export default () => {
         noTimestamp: true,
       });
 
-      const magiclink = createMagicLink(token);
-      return (await emailService.sendVerificationEmail(email, magiclink))
+      return (await emailService.sendVerificationEmail(email, token))
         ? res.status(200).json({ message: "Magic link sent to your email" })
         : res.status(409).json({ message: "Failed to send email" });
     },

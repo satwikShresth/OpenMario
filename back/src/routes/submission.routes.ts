@@ -275,7 +275,6 @@ export default () => {
                 .json({ message: "Updated position successfully" }),
             );
         } catch ({ message }) {
-          console.log(message);
           return res.status(409).json({ message });
         }
       },
