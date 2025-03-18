@@ -37,7 +37,7 @@ const Pagination: React.FC<{ table: Table<typeof TableConfig>, query: any }> =
           </Typography>
           <Select
             value={pageSize}
-            onChange={e => table.setPageSize(Number(e.target.value))}
+            onChange={e => { table.setPageIndex(0); table.setPageSize(Number(e.target.value)) }}
             size="small"
             sx={{
               minWidth: 80

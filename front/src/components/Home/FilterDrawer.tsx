@@ -32,6 +32,8 @@ const FilterDrawer = () => {
   const currentLocation = useFilterStore((state) => state.location);
   const currentDistinct = useFilterStore((state) => state.distinct);
   const {
+    pageSize,
+    setPagination,
     setYear,
     setCoopYear,
     setCoopCycle,
@@ -155,6 +157,8 @@ const FilterDrawer = () => {
     if (positionValues) setPosition(makeSureArray(positionValues));
     if (locationValues) setLocation(makeSureArray(locationValues));
     if (distinctValue !== undefined) setDistinct(distinctValue);
+    setPagination({ pageIndex: 0, pageSize })
+
   }, [
     yearRange,
     coopYearValues,
