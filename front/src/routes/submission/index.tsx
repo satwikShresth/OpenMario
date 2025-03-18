@@ -64,7 +64,7 @@ export const Route = createFileRoute('/submission/')({
             coop_cycle: job.coop_cycle || 'Fall/Winter',
             coop_year: job.coop_year || '1st',
             year: job.year || new Date().getFullYear(),
-            compensation: job.compensation ? parseFloat(job.compensation.replace('$', '')) : 10.00,
+            compensation: job.compensation ? parseFloat(job.compensation.replace('$', '')) : 10,
             other_compensation: job.other_compensation || '',
             details: `Employer ID: ${job.employer_id || 'N/A'}, Position ID: ${job.position_id || 'N/A'}, Job Length: ${job.job_length || 'N/A'}, Coop Round: ${job.coop_round || 'N/A'}`
           });
