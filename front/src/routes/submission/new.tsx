@@ -30,7 +30,7 @@ export default function FormPageComponent() {
     coop_cycle: 'Fall/Winter',
     coop_year: '1st',
     year: new Date().getFullYear(),
-    compensation: "10.00",
+    compensation: 10.00,
     other_compensation: '',
     details: `Employer ID: 'N/A', Position ID: 'N/A', Job Length: 'N/A', Coop Round: 'N/A'`
   };

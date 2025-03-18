@@ -19,8 +19,6 @@ export const CompensationField: React.FC<CompensationFieldProps> = ({
     setIsEditing(!isEditing);
   };
 
-  const safeValue = value === null ? 0 : value;
-
   return (
     <Box sx={{ width: '100%' }}>
       <Controller
@@ -88,7 +86,6 @@ export const CompensationField: React.FC<CompensationFieldProps> = ({
         min={0}
         max={100}
         step={0.5}
-        currentValue={safeValue}
         valueLabelFormat={(value) => `$${value.toFixed(2)}`}
         marks={[
           { value: 0, label: '$0' },
