@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Controller } from 'react-hook-form';
 import { Box, TextField, Autocomplete, CircularProgress } from '@mui/material';
 import type { Submission } from '#/types';
@@ -45,15 +45,50 @@ export const AutocompleteFieldWithIcon = <T extends object>({
   ...props
 }: AutocompleteFieldWithIconProps<T>) => {
   const { loadOptions, dependsOn, ...filteredProps } = props as any;
+  const [inputValue, setInputValue] = useState('');
+  const [customError, setCustomError] = useState('');
 
   return (
     <Controller
       name={name}
       control={control}
-      rules={rules}
+      rules={{
+        ...rules,
+        validate: (value) => {
+          // Skip validation for empty values
+          if (!inputValue || inputValue === '') return true;
+
+          // Validate that the value exists in options
+          const valueExists = options.some(option =>
+            getOptionLabel(option as T).toLowerCase() === inputValue.toLowerCase()
+          );
+
+          return valueExists || 'Value must match one of the available options';
+        }
+      }}
       render={({ field, fieldState }) => {
-        const { onChange, value, ref, ...restField } = field;
+        const { onChange, value, ref, onBlur, ...restField } = field;
         const controlledValue = value === null || value === undefined ? "" : value;
+
+        // Custom onBlur handler that checks for errors
+        const handleBlur = (event) => {
+          if (inputValue && inputValue !== '') {
+            const valueExists = options.some(option =>
+              getOptionLabel(option as T).toLowerCase() === inputValue.toLowerCase()
+            );
+
+            if (!valueExists) {
+              setCustomError('Value must match one of the available options');
+            } else {
+              setCustomError('');
+            }
+          } else {
+            setCustomError('');
+          }
+
+          // Call the original onBlur
+          onBlur();
+        };
 
         return (
           <Autocomplete
@@ -67,12 +102,34 @@ export const AutocompleteFieldWithIcon = <T extends object>({
               return getOptionLabel(option as T);
             }}
             isOptionEqualToValue={isOptionEqualToValue}
-            onInputChange={onInputChange}
+            onInputChange={(event, newInputValue) => {
+              setInputValue(newInputValue);
+
+              // Update the form value in real-time as user types
+              if (freeSolo) {
+                onChange(newInputValue === "" && nullable ? null : newInputValue);
+              }
+
+              // Call the custom onInputChange handler if provided
+              if (onInputChange) {
+                onInputChange(event, newInputValue);
+              }
+            }}
+            inputValue={inputValue}
             filterOptions={filterOptions}
             onChange={(event, newValue) => {
               // Use the actual newValue (even if empty string) or null if nullable is true
               onChange(newValue === "" && nullable ? null : newValue);
+
+              // Clear any custom errors when selection changes
+              setCustomError('');
+
+              // Also update the input value when selection changes
+              if (newValue !== null && typeof newValue === 'object') {
+                setInputValue(getOptionLabel(newValue as T));
+              }
             }}
+            onBlur={handleBlur}
             disabled={disabled}
             value={controlledValue}
             noOptionsText={noOptionsText}
@@ -90,8 +147,8 @@ export const AutocompleteFieldWithIcon = <T extends object>({
                   </Box>
                 }
                 placeholder={placeholder}
-                error={error || !!fieldState.error}
-                helperText={helperText || fieldState.error?.message || ""}
+                error={error || !!fieldState.error || !!customError}
+                helperText={helperText || fieldState.error?.message || customError || ""}
                 InputProps={{
                   ...params.InputProps,
                   endAdornment: (
@@ -105,12 +162,10 @@ export const AutocompleteFieldWithIcon = <T extends object>({
             )}
             renderOption={(props, option) => {
               if (option === null || option === undefined) return null;
-
               const optionLabel = getOptionLabel(option as T);
               const optionKey = typeof option === 'object' && option !== null
                 ? (option as any).id || optionLabel
                 : String(optionLabel);
-
               return (
                 <li {...props} key={optionKey}>
                   {optionLabel}

@@ -103,9 +103,8 @@ export default () => {
                     .values({ name: company_name, owner_id: user_id })
                     .returning({
                       id: company.id,
-                      owner: sql`CASE WHEN ${company.owner_id} = ${user_id} THEN true ELSE false END`,
                     })
-                    .then(([{ id, owner }]) => ({ id, owner })),
+                    .then(([{ id }]) => id),
             );
 
           return await db
