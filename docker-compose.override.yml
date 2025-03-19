@@ -6,6 +6,8 @@ services:
       - .env.dev
 
   backend:
+    ports:
+      - "3000:3000"
     command:
       - deno
       - task
