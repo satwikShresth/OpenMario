@@ -5,7 +5,6 @@
   "imports": {
     "@asteasolutions/zod-to-openapi": "npm:@asteasolutions/zod-to-openapi@^7.3.0",
     "@electric-sql/pglite": "npm:@electric-sql/pglite@^0.2.15",
-    "@sendgrid/mail": "npm:@sendgrid/mail@^8.1.4",
     "axios": "npm:axios@^1.7.9",
     "drizzle-orm": "npm:drizzle-orm@^0.38.3",
     "drizzle-zod": "npm:drizzle-zod@^0.6.1",
