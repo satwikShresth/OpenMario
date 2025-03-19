@@ -13,8 +13,8 @@
     "npm:@types/node@*": "22.5.4",
     "npm:axios@^1.7.9": "1.7.9",
     "npm:better-auth@^1.2.3": "1.2.3",
-    "npm:drizzle-orm@~0.38.3": "0.38.3_@libsql+client@0.14.0",
-    "npm:drizzle-zod@~0.6.1": "0.6.1_drizzle-orm@0.38.3__@libsql+client@0.14.0_zod@3.24.1_@libsql+client@0.14.0",
+    "npm:drizzle-orm@~0.40.1": "0.40.1_@electric-sql+pglite@0.2.15_@libsql+client@0.14.0_pg@8.13.3",
+    "npm:drizzle-zod@~0.6.1": "0.6.1_drizzle-orm@0.40.1__@electric-sql+pglite@0.2.15__@libsql+client@0.14.0__pg@8.13.3_zod@3.24.1_@electric-sql+pglite@0.2.15_@libsql+client@0.14.0_pg@8.13.3",
     "npm:express-jwt@^8.5.1": "8.5.1",
     "npm:express-rate-limit@^7.5.0": "7.5.0_express@5.0.0",
     "npm:express@5.0.0": "5.0.0",
@@ -925,16 +925,18 @@
         "pg"
       ]
     },
-    "drizzle-orm@0.38.3_@libsql+client@0.14.0": {
-      "integrity": "sha512-w41Y+PquMpSff/QDRGdItG0/aWca+/J3Sda9PPGkTxBtjWQvgU1jxlFBXdjog5tYvTu58uvi3PwR1NuCx0KeZg==",
+    "drizzle-orm@0.40.1_@electric-sql+pglite@0.2.15_@libsql+client@0.14.0_pg@8.13.3": {
+      "integrity": "sha512-aPNhtiJiPfm3qxz1czrnIDkfvkSdKGXYeZkpG55NPTVI186LmK2fBLMi4dsHpPHlJrZeQ92D322YFPHADBALew==",
       "dependencies": [
-        "@libsql/client"
+        "@electric-sql/pglite",
+        "@libsql/client",
+        "pg"
       ]
     },
-    "drizzle-zod@0.6.1_drizzle-orm@0.38.3__@libsql+client@0.14.0_zod@3.24.1_@libsql+client@0.14.0": {
+    "drizzle-zod@0.6.1_drizzle-orm@0.40.1__@electric-sql+pglite@0.2.15__@libsql+client@0.14.0__pg@8.13.3_zod@3.24.1_@electric-sql+pglite@0.2.15_@libsql+client@0.14.0_pg@8.13.3": {
       "integrity": "sha512-huEbUgnsuR8tupnmLiyB2F1I2H9dswI3GfM36IbIqx9i0YUeYjRsDpJVyFVeziUvI1ogT9JHRL2Q03cC4QmvxA==",
       "dependencies": [
-        "drizzle-orm@0.38.3_@libsql+client@0.14.0",
+        "drizzle-orm@0.40.1_@electric-sql+pglite@0.2.15_@libsql+client@0.14.0_pg@8.13.3",
         "zod"
       ]
     },
@@ -2034,7 +2036,7 @@
       "npm:@asteasolutions/zod-to-openapi@^7.3.0",
       "npm:@electric-sql/pglite@~0.2.15",
       "npm:axios@^1.7.9",
-      "npm:drizzle-orm@~0.38.3",
+      "npm:drizzle-orm@~0.40.1",
       "npm:drizzle-zod@~0.6.1",
       "npm:express-jwt@^8.5.1",
       "npm:express-rate-limit@^7.5.0",

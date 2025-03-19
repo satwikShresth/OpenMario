@@ -2,9 +2,11 @@
 FROM denoland/deno:latest AS builder
 WORKDIR /app
 COPY . .
+ENV DENO_DIR=/app/.deno_cache
 RUN deno install
 RUN deno cache src/server.ts
 
 FROM denoland/deno:latest
 WORKDIR /app
+ENV DENO_DIR=/app/.deno_cache
 COPY --from=builder /app .
