@@ -2,8 +2,8 @@ import { Config, defineConfig } from "drizzle-kit";
 
 export default defineConfig({
   dialect: "postgresql",
-  out: "./database/migrations",
-  schema: "./src/db/schema.ts",
+  out: "./database/openmario/migrations",
+  schema: "./src/db/openmario/schema.ts",
   migrations: {
     schema: "public",
   },
