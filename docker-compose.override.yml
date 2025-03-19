@@ -1,0 +1,22 @@
+services:
+  database:
+    ports:
+      - "5432:5432"
+    env_file:
+      - .env.dev
+
+  backend:
+    command:
+      - deno
+      - task
+      - start
+    env_file:
+      - .env.dev
+
+  reverse-proxy:
+    build: 
+      args:
+          - VITE_API_URL=http://localhost:3000/v1
+          - NODE_ENV=development
+    env_file:
+      - .env.dev
