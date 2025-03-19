@@ -20,27 +20,27 @@ services:
       - POSTGRES_USER=${POSTGRES_USER?Variable not set}
       - POSTGRES_DB=${POSTGRES_DB?Variable not set}
 
-  prestart:
-    build: 
-      context: ./back
-      dockerfile: dockerfile.prestart
-      platforms:
-        - linux/amd64
-    image: ss5278/openmario:prestart
-    container_name: prestart
-    restart: no
-    depends_on:
-      database:
-        condition: service_healthy
-        restart: true
-    command:
-      - deno
-      - task
-      - prestart
-    networks:
-      - app_network 
-    env_file:
-      - .env
+  # prestart:
+  #   build: 
+  #     context: ./back
+  #     dockerfile: dockerfile.prestart
+  #     platforms:
+  #       - linux/amd64
+  #   image: ss5278/openmario:prestart
+  #   container_name: prestart
+  #   restart: no
+  #   depends_on:
+  #     database:
+  #       condition: service_healthy
+  #       restart: true
+  #   command:
+  #     - deno
+  #     - task
+  #     - prestart
+  #   networks:
+  #     - app_network 
+  #   env_file:
+  #     - .env
 
 
   backend:
@@ -56,8 +56,8 @@ services:
       database:
         condition: service_healthy
         restart: true
-      prestart:
-        condition: service_completed_successfully
+      # prestart:
+      #   condition: service_completed_successfully
     command:
       - "./openmario"
     networks:
