@@ -1,6 +1,6 @@
 import { join } from "jsr:@std/path";
-import { major, minor  } from "../../src/db/schema.ts";
-import { db } from "../../src/db/index.ts";
+import { major, minor } from "../../../src/db/index.ts";
+import { db } from "../../../src/db/index.ts";
 
 async function parseFile(filename: string): Promise<string[]> {
   const content = await Deno.readTextFile(filename);
@@ -10,7 +10,7 @@ async function parseFile(filename: string): Promise<string[]> {
     .filter((line) => line.length > 0);
 }
 
-const assets = join(Deno.cwd(), "database", "seeds", "assets");
+const assets = join(Deno.cwd(), "database", "openmario", "seeds", "assets");
 
 export async function seedMajorsMinors() {
   try {
@@ -19,7 +19,7 @@ export async function seedMajorsMinors() {
 
     const majorData: {
       name: string;
-      program_level:  string;
+      program_level: string;
     }[] = [
       ...gMajors.map((name) => ({
         name: name.trim(),
@@ -53,7 +53,8 @@ export async function seedMajorsMinors() {
     const batchSize = 100;
     for (let i = 0; i < majorData.length; i += batchSize) {
       const batch = majorData.slice(i, i + batchSize);
-      await db.insert(major)
+      await db
+        .insert(major)
         .values(batch)
         .onConflictDoNothing({ target: [major.name] });
 
@@ -63,7 +64,8 @@ export async function seedMajorsMinors() {
     // Insert minors in batches
     for (let i = 0; i < minorData.length; i += batchSize) {
       const batch = minorData.slice(i, i + batchSize);
-      await db.insert(minor)
+      await db
+        .insert(minor)
         .values(batch)
         .onConflictDoNothing({ target: [minor.name] });
 

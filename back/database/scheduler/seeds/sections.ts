@@ -5,7 +5,7 @@ import {
   section_instructor,
   sections,
 } from "../../../src/db/scheduler/schema.ts";
-import { db } from "../../../src/db/scheduler/index.ts";
+import { db } from "../../../src/db/index.ts";
 import { and, eq } from "drizzle-orm";
 const days_to_num = {
   Monday: 1,
@@ -69,39 +69,42 @@ async function processSections() {
   await Promise.all(promises);
   return sections_;
 }
-const sections_ = await processSections();
-sections_.forEach(async ({ instructors: instructorNames, ...insertData }) => {
-  const instructor_ids =
-    instructorNames?.length > 0
-      ? await Promise.all(
-          instructorNames.map(
-            async (name) =>
-              await db
-                .select({ id: instructors.id })
-                .from(instructors)
-                .where(eq(instructors.name, name))
-                .then(([{ id }]) => id),
-          ),
-        )
-      : null;
 
-  try {
-    const [{ section_id }] = await db
-      .insert(sections)
-      .values(insertData)
-      .returning({ section_id: sections.crn });
+export default async () => {
+  const sections_ = await processSections();
+  sections_.forEach(async ({ instructors: instructorNames, ...insertData }) => {
+    const instructor_ids =
+      instructorNames?.length > 0
+        ? await Promise.all(
+            instructorNames.map(
+              async (name) =>
+                await db
+                  .select({ id: instructors.id })
+                  .from(instructors)
+                  .where(eq(instructors.name, name))
+                  .then(([{ id }]) => id),
+            ),
+          )
+        : null;
 
-    if (instructor_ids !== null) {
-      await db.insert(section_instructor).values(
-        instructor_ids.map((instructor_id) => ({
-          instructor_id,
-          section_id,
-        })),
-      );
+    try {
+      const [{ section_id }] = await db
+        .insert(sections)
+        .values(insertData)
+        .returning({ section_id: sections.crn });
+
+      if (instructor_ids !== null) {
+        await db.insert(section_instructor).values(
+          instructor_ids.map((instructor_id) => ({
+            instructor_id,
+            section_id,
+          })),
+        );
+      }
+    } catch (error) {
+      console.log(error);
+      console.log(`Issue with`);
+      console.log(insertData);
     }
-  } catch (error) {
-    console.log(error);
-    console.log(`Issue with`);
-    console.log(insertData);
-  }
-});
+  });
+};

@@ -1,4 +1,22 @@
 services:
+  meilisearch:
+    image: getmeili/meilisearch:v1.13.3
+    container_name: meilisearch
+    restart: always
+    networks:
+      - app_network 
+    env_file:
+      - .env
+    volumes:
+      - meilisearch_data:/data.ms
+    environment:
+      - MEILI_NO_ANALYTICS=${MEILI_NO_ANALYTICS:-true}
+      - MEILI_ENV=${MEILI_ENV?Variable not set}
+    healthcheck:
+        test: set -o pipefail;curl -fsS http://localhost:7700/health | grep -q '{"status":"available"}'
+        retries: 3
+        timeout: 5s
+
   database:
     image: postgres:latest
     restart: always
@@ -20,27 +38,28 @@ services:
       - POSTGRES_USER=${POSTGRES_USER?Variable not set}
       - POSTGRES_DB=${POSTGRES_DB?Variable not set}
 
-  # prestart:
-  #   build: 
-  #     context: ./back
-  #     dockerfile: dockerfile.prestart
-  #     platforms:
-  #       - linux/amd64
-  #   image: ss5278/openmario:prestart
-  #   container_name: prestart
-  #   restart: no
-  #   depends_on:
-  #     database:
-  #       condition: service_healthy
-  #       restart: true
-  #   command:
-  #     - deno
-  #     - task
-  #     - prestart
-  #   networks:
-  #     - app_network 
-  #   env_file:
-  #     - .env
+
+  prestart:
+    build: 
+      context: ./back
+      dockerfile: dockerfile.prestart
+      platforms:
+        - linux/amd64
+    image: ss5278/openmario:prestart
+    container_name: prestart
+    restart: no
+    depends_on:
+      database:
+        condition: service_healthy
+        restart: true
+    command:
+      - deno
+      - task
+      - prestart
+    networks:
+      - app_network 
+    env_file:
+      - .env
 
 
   backend:
@@ -56,15 +75,17 @@ services:
       database:
         condition: service_healthy
         restart: true
-      # prestart:
-      #   condition: service_completed_successfully
+      prestart:
+        condition: service_completed_successfully
     command:
-      - "./openmario"
+      - deno
+      - task
+      - start
     networks:
       - app_network 
     env_file:
       - .env
-
+  #
   reverse-proxy:
     build: 
       context: ./front
@@ -90,9 +111,11 @@ services:
       - app_network 
 
 volumes:
+  external-db-data:
   app-db-data:
   caddy_data:
   caddy_config:
+  meilisearch_data:
 
 networks:
   app_network:

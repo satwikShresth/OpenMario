@@ -2,17 +2,18 @@ import {
   boolean,
   doublePrecision,
   integer,
-  pgEnum,
-  pgTable,
   primaryKey,
   serial,
   text,
   time,
   unique,
   uuid,
+  pgSchema,
 } from "drizzle-orm/pg-core";
 
-export const instruction_method_enum = pgEnum("instruction_method", [
+export const scheduler = pgSchema("scheduler");
+
+export const instruction_method_enum = scheduler.enum("instruction_method", [
   "instruction",
   "Community Based Learning",
   "Face To Face",
@@ -23,7 +24,7 @@ export const instruction_method_enum = pgEnum("instruction_method", [
   "Remote Synchronous",
 ]);
 
-export const department_enum = pgEnum("department", [
+export const department_enum = scheduler.enum("department", [
   "Accounting",
   "Anthropology",
   "Architecture",
@@ -86,7 +87,7 @@ export const department_enum = pgEnum("department", [
   "Theater",
 ]);
 
-export const instruction_type_enum = pgEnum("instruction_type", [
+export const instruction_type_enum = scheduler.enum("instruction_type", [
   "instruction",
   "Career Integrated Experience",
   "Clinical",
@@ -125,12 +126,12 @@ export const instruction_type_enum = pgEnum("instruction_type", [
   "Thesis",
 ]);
 
-export const colleges = pgTable("colleges", {
+export const colleges = scheduler.table("colleges", {
   id: text().primaryKey(),
   name: text().notNull().unique(),
 });
 
-export const subjects = pgTable("subjects", {
+export const subjects = scheduler.table("subjects", {
   id: text().primaryKey(),
   name: text().notNull().unique(),
   college_id: text()
@@ -138,7 +139,7 @@ export const subjects = pgTable("subjects", {
     .notNull(),
 });
 
-export const courses = pgTable(
+export const courses = scheduler.table(
   "courses",
   {
     id: uuid().defaultRandom().primaryKey(),
@@ -159,7 +160,7 @@ export const courses = pgTable(
   (table) => [unique().on(table.subject_id, table.course_number)],
 );
 
-export const sections = pgTable(
+export const sections = scheduler.table(
   "sections",
   {
     crn: integer().notNull().primaryKey(),
@@ -185,7 +186,7 @@ export const sections = pgTable(
   ],
 );
 
-export const instructors = pgTable("instructors", {
+export const instructors = scheduler.table("instructors", {
   id: serial().primaryKey(),
   name: text().notNull(),
   avg_difficulty: doublePrecision(),
@@ -196,7 +197,7 @@ export const instructors = pgTable("instructors", {
   department: department_enum(),
 });
 
-export const section_instructor = pgTable(
+export const section_instructor = scheduler.table(
   "section_instructor",
   {
     section_id: integer()

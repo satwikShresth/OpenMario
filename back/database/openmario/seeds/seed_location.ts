@@ -1,5 +1,5 @@
-import { location } from "../../src/db/schema.ts";
-import { db } from "../../src/db/index.ts";
+import { location } from "../../../src/db/index.ts";
+import { db } from "../../../src/db/index.ts";
 import { parse } from "jsr:@std/csv";
 import { join } from "jsr:@std/path";
 
@@ -7,7 +7,14 @@ export async function seedLocation() {
   try {
     // Read the CSV file
     const text = await Deno.readTextFile(
-      join(Deno.cwd(), "database", "seeds", "assets", "us_cities.csv"),
+      join(
+        Deno.cwd(),
+        "database",
+        "openmario",
+        "seeds",
+        "assets",
+        "us_cities.csv",
+      ),
     );
 
     // Parse CSV content
@@ -28,9 +35,12 @@ export async function seedLocation() {
     for (let i = 0; i < locationData.length; i += batchSize) {
       const batch = locationData.slice(i, i + batchSize);
 
-      await db.insert(location)
+      await db
+        .insert(location)
         .values(batch)
-        .onConflictDoNothing({ target: [location.state_code, location.state, location.city] });
+        .onConflictDoNothing({
+          target: [location.state_code, location.state, location.city],
+        });
 
       console.log(`Inserted batch ${Math.floor(i / batchSize) + 1}`);
     }

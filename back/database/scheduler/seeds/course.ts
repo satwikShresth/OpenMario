@@ -1,5 +1,5 @@
 import * as schema from "../../../src/db/scheduler/schema.ts";
-import { db } from "../../../src/db/scheduler/index.ts";
+import { db } from "../../../src/db/index.ts";
 import data from "./assets/courses.json" with { type: "json" };
 
 const seed = async () => {
@@ -82,4 +82,4 @@ const seedCourses = async (data) => {
   return courseMap;
 };
 
-seed().catch(console.error);
+export default seed;

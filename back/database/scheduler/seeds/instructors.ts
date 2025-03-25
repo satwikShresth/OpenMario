@@ -1,8 +1,9 @@
 import instructors from "./assets/instructors.json" with { type: "json" };
 import * as schema from "../../../src/db/scheduler/schema.ts";
-import { db } from "../../../src/db/scheduler/index.ts";
+import { db } from "../../../src/db/index.ts";
 
-await db
-  .insert(schema.instructors)
-  .values(instructors)
-  .catch((error) => console.log(error));
+export default async () =>
+  await db
+    .insert(schema.instructors)
+    .values(instructors)
+    .catch((error) => console.log(error));
