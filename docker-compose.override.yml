@@ -5,6 +5,14 @@ services:
     env_file:
       - .env.dev
 
+  prestart:
+    command:
+      - deno
+      - task
+      - prestart
+    env_file:
+      - .env.dev
+
   backend:
     command:
       - deno
