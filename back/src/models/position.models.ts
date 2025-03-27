@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { extendZodWithOpenApi } from '@asteasolutions/zod-to-openapi';
-import { company, position } from '#/db/schema.ts';
+import { company, position } from '#/db/index.ts';
 import { createInsertSchema, createSelectSchema } from 'drizzle-zod';
 import { ZodTypeAny } from 'zod';
 

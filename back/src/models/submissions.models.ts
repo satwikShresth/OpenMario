@@ -1,8 +1,8 @@
 import { z } from 'zod';
 import { extendZodWithOpenApi } from '@asteasolutions/zod-to-openapi';
 import { and, Column, eq, like, or, SQL, sql } from 'drizzle-orm';
-import * as undergrad from '#/db/undergraduate.data.ts';
-import * as grad from '#/db/graduate.data.ts';
+import * as undergrad from '#/db/openmario/undergraduate.data.ts';
+import * as grad from '#/db/openmario/graduate.data.ts';
 import { company, coop_cycle, coop_year, location, position, program_level, submission } from '#db';
 import { createInsertSchema, createSelectSchema, createUpdateSchema } from 'drizzle-zod';
 import { name } from '#/models/position.models.ts';
