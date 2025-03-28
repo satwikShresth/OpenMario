@@ -1,46 +1,55 @@
 {
-  "id": "00000000-0000-0000-0000-000000000000",
-  "prevId": "",
+  "id": "5b642568-d19a-4009-8476-79d9cf12da6c",
+  "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
-    "public.metadata": {
-      "name": "metadata",
+    "public.colleges": {
+      "name": "colleges",
       "schema": "",
       "columns": {
-        "key": {
-          "name": "key",
-          "type": "varchar(255)",
-          "primaryKey": false,
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
           "notNull": true
         },
-        "value": {
-          "name": "value",
+        "name": {
+          "name": "name",
           "type": "text",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         }
       },
       "indexes": {},
       "foreignKeys": {},
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
-      "checkConstraints": {},
+      "uniqueConstraints": {
+        "colleges_name_unique": {
+          "name": "colleges_name_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "name"
+          ]
+        }
+      },
       "policies": {},
+      "checkConstraints": {},
       "isRLSEnabled": false
     },
     "public.courses": {
       "name": "courses",
       "schema": "",
       "columns": {
-        "crn": {
-          "name": "crn",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
         },
-        "subject_code": {
-          "name": "subject_code",
+        "subject_id": {
+          "name": "subject_id",
           "type": "text",
           "primaryKey": false,
           "notNull": true
@@ -51,69 +60,144 @@
           "primaryKey": false,
           "notNull": true
         },
-        "instruction_type": {
-          "name": "instruction_type",
+        "title": {
+          "name": "title",
           "type": "text",
           "primaryKey": false,
           "notNull": true
         },
-        "instruction_method": {
-          "name": "instruction_method",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "section": {
-          "name": "section",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "enroll": {
-          "name": "enroll",
+        "description": {
+          "name": "description",
           "type": "text",
           "primaryKey": false,
           "notNull": false
-        },
-        "max_enroll": {
-          "name": "max_enroll",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "course_title": {
-          "name": "course_title",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
         },
         "credits": {
           "name": "credits",
+          "type": "double precision",
+          "primaryKey": false,
+          "notNull": false,
+          "default": 0
+        },
+        "credit_range": {
+          "name": "credit_range",
           "type": "text",
           "primaryKey": false,
           "notNull": false
         },
-        "prereqs": {
-          "name": "prereqs",
+        "repeat_status": {
+          "name": "repeat_status",
           "type": "text",
           "primaryKey": false,
           "notNull": false
         },
-        "start_time": {
-          "name": "start_time",
-          "type": "time",
+        "prerequisites": {
+          "name": "prerequisites",
+          "type": "text",
           "primaryKey": false,
           "notNull": false
         },
-        "end_time": {
-          "name": "end_time",
-          "type": "time",
+        "corequisites": {
+          "name": "corequisites",
+          "type": "text",
           "primaryKey": false,
           "notNull": false
         },
-        "days": {
-          "name": "days",
-          "type": "text[]",
+        "restrictions": {
+          "name": "restrictions",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "writing_intensive": {
+          "name": "writing_intensive",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false,
+          "default": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "courses_subject_id_subjects_id_fk": {
+          "name": "courses_subject_id_subjects_id_fk",
+          "tableFrom": "courses",
+          "tableTo": "subjects",
+          "columnsFrom": [
+            "subject_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "restrict",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "courses_subject_id_course_number_unique": {
+          "name": "courses_subject_id_course_number_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "subject_id",
+            "course_number"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.instructors": {
+      "name": "instructors",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "avg_difficulty": {
+          "name": "avg_difficulty",
+          "type": "double precision",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "avg_rating": {
+          "name": "avg_rating",
+          "type": "double precision",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "num_ratings": {
+          "name": "num_ratings",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "rmp_legacy_id": {
+          "name": "rmp_legacy_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "rmp_id": {
+          "name": "rmp_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "department": {
+          "name": "department",
+          "type": "department",
+          "typeSchema": "public",
           "primaryKey": false,
           "notNull": false
         }
@@ -121,17 +205,32 @@
       "indexes": {},
       "foreignKeys": {},
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
-      "checkConstraints": {},
+      "uniqueConstraints": {
+        "instructors_rmp_legacy_id_unique": {
+          "name": "instructors_rmp_legacy_id_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "rmp_legacy_id"
+          ]
+        },
+        "instructors_rmp_id_unique": {
+          "name": "instructors_rmp_id_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "rmp_id"
+          ]
+        }
+      },
       "policies": {},
+      "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "public.course_instructor": {
-      "name": "course_instructor",
+    "public.section_instructor": {
+      "name": "section_instructor",
       "schema": "",
       "columns": {
-        "course_id": {
-          "name": "course_id",
+        "section_id": {
+          "name": "section_id",
           "type": "integer",
           "primaryKey": false,
           "notNull": true
@@ -145,13 +244,12 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "course_instructor_course_id_fkey": {
-          "name": "course_instructor_course_id_fkey",
-          "tableFrom": "course_instructor",
-          "tableTo": "courses",
-          "schemaTo": "public",
+        "section_instructor_section_id_sections_crn_fk": {
+          "name": "section_instructor_section_id_sections_crn_fk",
+          "tableFrom": "section_instructor",
+          "tableTo": "sections",
           "columnsFrom": [
-            "course_id"
+            "section_id"
           ],
           "columnsTo": [
             "crn"
@@ -159,11 +257,10 @@
           "onDelete": "no action",
           "onUpdate": "no action"
         },
-        "course_instructor_instructor_id_fkey": {
-          "name": "course_instructor_instructor_id_fkey",
-          "tableFrom": "course_instructor",
+        "section_instructor_instructor_id_instructors_id_fk": {
+          "name": "section_instructor_instructor_id_instructors_id_fk",
+          "tableFrom": "section_instructor",
           "tableTo": "instructors",
-          "schemaTo": "public",
           "columnsFrom": [
             "instructor_id"
           ],
@@ -174,171 +271,71 @@
           "onUpdate": "no action"
         }
       },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
-      "checkConstraints": {},
-      "policies": {},
-      "isRLSEnabled": false
-    },
-    "public.instructors": {
-      "name": "instructors",
-      "schema": "",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "serial",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "name": {
-          "name": "name",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "avg_difficulty": {
-          "name": "avg_difficulty",
-          "type": "numeric",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "avg_rating": {
-          "name": "avg_rating",
-          "type": "numeric",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "num_ratings": {
-          "name": "num_ratings",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "rmp_id": {
-          "name": "rmp_id",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": false
+      "compositePrimaryKeys": {
+        "section_instructor_section_id_instructor_id_pk": {
+          "name": "section_instructor_section_id_instructor_id_pk",
+          "columns": [
+            "section_id",
+            "instructor_id"
+          ]
         }
       },
-      "indexes": {},
-      "foreignKeys": {},
-      "compositePrimaryKeys": {},
       "uniqueConstraints": {},
-      "checkConstraints": {},
       "policies": {},
+      "checkConstraints": {},
       "isRLSEnabled": false
-    }
-  },
-  "enums": {},
-  "schemas": {},
-  "sequences": {},
-  "roles": {},
-  "policies": {},
-  "views": {
-    "public.all_course_instructor_data": {
-      "name": "all_course_instructor_data",
-      "schema": "public",
+    },
+    "public.sections": {
+      "name": "sections",
+      "schema": "",
       "columns": {
-        "instructor_id": {
-          "name": "instructor_id",
+        "crn": {
+          "name": "crn",
           "type": "integer",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "instructor_name": {
-          "name": "instructor_name",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "instructor_rmp_id": {
-          "name": "instructor_rmp_id",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "avg_difficulty": {
-          "name": "avg_difficulty",
-          "type": "numeric",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "avg_rating": {
-          "name": "avg_rating",
-          "type": "numeric",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "num_ratings": {
-          "name": "num_ratings",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": false
+          "primaryKey": true,
+          "notNull": true
         },
         "course_id": {
           "name": "course_id",
-          "type": "integer",
+          "type": "uuid",
           "primaryKey": false,
-          "notNull": false
-        },
-        "subject_code": {
-          "name": "subject_code",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "course_number": {
-          "name": "course_number",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "instruction_type": {
-          "name": "instruction_type",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "instruction_method": {
-          "name": "instruction_method",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "section": {
           "name": "section",
           "type": "text",
           "primaryKey": false,
+          "notNull": true
+        },
+        "instruction_type": {
+          "name": "instruction_type",
+          "type": "instruction_type",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "instruction_method": {
+          "name": "instruction_method",
+          "type": "instruction_method",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "credits": {
+          "name": "credits",
+          "type": "double precision",
+          "primaryKey": false,
           "notNull": false
         },
         "enroll": {
           "name": "enroll",
-          "type": "text",
+          "type": "integer",
           "primaryKey": false,
           "notNull": false
         },
         "max_enroll": {
           "name": "max_enroll",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "course_title": {
-          "name": "course_title",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "credits": {
-          "name": "credits",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "prereqs": {
-          "name": "prereqs",
-          "type": "text",
+          "type": "integer",
           "primaryKey": false,
           "notNull": false
         },
@@ -359,38 +356,281 @@
           "type": "text[]",
           "primaryKey": false,
           "notNull": false
+        },
+        "term_id": {
+          "name": "term_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
         }
       },
-      "isExisting": false,
-      "definition": "SELECT i.id AS instructor_id, i.name AS instructor_name, i.rmp_id AS instructor_rmp_id, i.avg_difficulty, i.avg_rating, i.num_ratings, c.crn AS course_id, c.subject_code, c.course_number, c.instruction_type, c.instruction_method, c.section, c.enroll, c.max_enroll, c.course_title, c.credits, c.prereqs, c.start_time, c.end_time, c.days FROM courses c LEFT JOIN course_instructor ci ON c.crn = ci.course_id LEFT JOIN instructors i ON i.id = ci.instructor_id",
-      "materialized": false
+      "indexes": {},
+      "foreignKeys": {
+        "sections_course_id_courses_id_fk": {
+          "name": "sections_course_id_courses_id_fk",
+          "tableFrom": "sections",
+          "tableTo": "courses",
+          "columnsFrom": [
+            "course_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "restrict",
+          "onUpdate": "no action"
+        },
+        "sections_term_id_terms_id_fk": {
+          "name": "sections_term_id_terms_id_fk",
+          "tableFrom": "sections",
+          "tableTo": "terms",
+          "columnsFrom": [
+            "term_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "restrict",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "sections_section_course_id_unique": {
+          "name": "sections_section_course_id_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "section",
+            "course_id"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.subjects": {
+      "name": "subjects",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "college_id": {
+          "name": "college_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "subjects_college_id_colleges_id_fk": {
+          "name": "subjects_college_id_colleges_id_fk",
+          "tableFrom": "subjects",
+          "tableTo": "colleges",
+          "columnsFrom": [
+            "college_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "restrict",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "subjects_name_unique": {
+          "name": "subjects_name_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "name"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.terms": {
+      "name": "terms",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "start_date": {
+          "name": "start_date",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "end_date": {
+          "name": "end_date",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
     }
   },
+  "enums": {
+    "public.department": {
+      "name": "department",
+      "schema": "public",
+      "values": [
+        "Accounting",
+        "Anthropology",
+        "Architecture",
+        "Art History",
+        "Biological Sciences",
+        "Biology",
+        "Business",
+        "Chemical Engineering",
+        "Chemistry",
+        "Communication",
+        "Computer Science",
+        "Criminal Justice",
+        "Culinary Arts",
+        "Cultural Science",
+        "Decision Science",
+        "Design",
+        "Digital Media",
+        "Economics",
+        "Education",
+        "Engineering",
+        "English",
+        "Family Studies & Social Work",
+        "Film",
+        "Finance",
+        "Fine Arts",
+        "Geology",
+        "Graphic Arts",
+        "Health Science",
+        "History",
+        "Hospitality",
+        "Humanities",
+        "Information Science",
+        "Japanese",
+        "Journalism",
+        "Languages",
+        "Law",
+        "Library  Information Science",
+        "Library & Information Science",
+        "Literature",
+        "Management",
+        "Marketing",
+        "Materials Science",
+        "Mathematics",
+        "Media Arts & Design",
+        "Medicine",
+        "Music",
+        "Not Specified",
+        "Nursing",
+        "Philosophy",
+        "Photography",
+        "Physics",
+        "Political Science",
+        "Psychology",
+        "Public Health",
+        "Science",
+        "Social Work",
+        "Sociology",
+        "Statistics",
+        "Student Services",
+        "Theater"
+      ]
+    },
+    "public.instruction_method": {
+      "name": "instruction_method",
+      "schema": "public",
+      "values": [
+        "instruction",
+        "Community Based Learning",
+        "Face To Face",
+        "Hybrid",
+        "Online-Asynchronous",
+        "Online-Synchronous",
+        "Remote Asynchronous",
+        "Remote Synchronous"
+      ]
+    },
+    "public.instruction_type": {
+      "name": "instruction_type",
+      "schema": "public",
+      "values": [
+        "instruction",
+        "Career Integrated Experience",
+        "Clinical",
+        "Dissertation",
+        "Integrated Lecture & Lab",
+        "Internship/Clerkship/Preceptor",
+        "Lab",
+        "Lab & Studio",
+        "Lecture",
+        "Lecture & Clinical",
+        "Lecture & Lab",
+        "Lecture, Lab & Studio",
+        "Lecture & Practicum",
+        "Lecture & Recitation",
+        "Lecture & Seminar",
+        "Lecture & Studio",
+        "Medical Rotation",
+        "Performance",
+        "Practice",
+        "Practicum",
+        "Practicum & Clinical",
+        "Private Lesson",
+        "Recitation/Discussion",
+        "Recitation & Lab",
+        "Research",
+        "Seminar",
+        "Seminar & Clinical",
+        "Seminar & Research",
+        "Special Topics",
+        "Special Topics-Lab",
+        "Special Topics-Lecture",
+        "Special Topics-Lecture & Lab",
+        "Special Topics-Seminar",
+        "Studio",
+        "Study Abroad",
+        "Thesis"
+      ]
+    }
+  },
+  "schemas": {},
+  "sequences": {},
+  "roles": {},
+  "policies": {},
+  "views": {},
   "_meta": {
+    "columns": {},
     "schemas": {},
-    "tables": {},
-    "columns": {}
-  },
-  "internal": {
-    "tables": {
-      "courses": {
-        "columns": {
-          "days": {
-            "isArray": true,
-            "dimensions": 1,
-            "rawType": "text"
-          }
-        }
-      },
-      "all_course_instructor_data": {
-        "columns": {
-          "days": {
-            "isArray": true,
-            "dimensions": 0,
-            "rawType": "text"
-          }
-        }
-      }
-    }
+    "tables": {}
   }
 }

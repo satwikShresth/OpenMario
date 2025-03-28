@@ -38,9 +38,9 @@
     "exclude": ["src/static"]
   },
   "tasks": {
-    "dev:migrate": "deno run --env-file=../.env -A npm:drizzle-kit migrate",
-    "dev:migrate:gen": "deno run --env-file=../.env -A npm:drizzle-kit generate --name ",
-    "dev:migrate:gen:custom": "deno run --env-file=../.env -A npm:drizzle-kit generate --custom --name=",
+    "dev:migrate": "deno run --env-file=../.env -A npm:drizzle-kit --config=openmario.config.ts migrate",
+    "dev:migrate:gen": "deno run --env-file=../.env -A npm:drizzle-kit --config=openmario.config.ts generate --name ",
+    "dev:migrate:gen:custom": "deno run --env-file=../.env -A npm:drizzle-kit --config=openmario.config.ts generate --custom --name=",
     "dev:seed": "deno run --env-file=../.env -A ./database/seeds/seed.ts",
     "watch": "deno -A --env-file=../.env --watch src/server.ts",
     "build": "deno check src",

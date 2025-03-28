@@ -1,0 +1,2 @@
+ALTER TABLE "sections" DROP CONSTRAINT "sections_section_course_id_term_unique";--> statement-breakpoint
+ALTER TABLE "sections" ADD CONSTRAINT "sections_section_course_id_term_instruction_type_unique" UNIQUE("section","course_id","term","instruction_type");

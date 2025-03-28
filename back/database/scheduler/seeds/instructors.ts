@@ -1,0 +1,8 @@
+import instructors from "./assets/instructors.json" with { type: "json" };
+import * as schema from "../../../src/db/scheduler/schema.ts";
+import { db } from "../../../src/db/scheduler/index.ts";
+
+await db
+  .insert(schema.instructors)
+  .values(instructors)
+  .catch((error) => console.log(error));

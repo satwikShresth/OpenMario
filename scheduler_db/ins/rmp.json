@@ -1,0 +1,7152 @@
+[
+  {
+    "avg_difficulty": 4.3,
+    "avg_rating": 1,
+    "department": "Engineering",
+    "rmp_id": "VGVhY2hlci0yMzQ3NzE5",
+    "rmp_legacy_id": 2347719,
+    "num_ratings": 24,
+    "id": 2276,
+    "name": "Gail L Rosen"
+  },
+  {
+    "avg_difficulty": 4,
+    "avg_rating": 2.2,
+    "department": "Biology",
+    "rmp_id": "VGVhY2hlci00NTQ3MTQ=",
+    "rmp_legacy_id": 454714,
+    "num_ratings": 117,
+    "id": 683,
+    "name": "Laura E Duwel"
+  },
+  {
+    "avg_difficulty": 2.5,
+    "avg_rating": 3.9,
+    "department": "Psychology",
+    "rmp_id": "VGVhY2hlci0xNDE3MDc5",
+    "rmp_legacy_id": 1417079,
+    "num_ratings": 15,
+    "id": 1422,
+    "name": "John Kounios"
+  },
+  {
+    "avg_difficulty": 2.5,
+    "avg_rating": 4.3,
+    "department": "Biology",
+    "rmp_id": "VGVhY2hlci0xMzEwNDE3",
+    "rmp_legacy_id": 1310417,
+    "num_ratings": 69,
+    "id": 559,
+    "name": "Meshagae E Hunte-Brown"
+  },
+  {
+    "avg_difficulty": 2.1,
+    "avg_rating": 4.8,
+    "department": "Business",
+    "rmp_id": "VGVhY2hlci05MjQxNjk=",
+    "rmp_legacy_id": 924169,
+    "num_ratings": 59,
+    "id": 1623,
+    "name": "Jodi K Cataline"
+  },
+  {
+    "avg_difficulty": 1.4,
+    "avg_rating": 4.4,
+    "department": "English",
+    "rmp_id": "VGVhY2hlci0xNjk4MDM5",
+    "rmp_legacy_id": 1698039,
+    "num_ratings": 35,
+    "id": 1095,
+    "name": "Timothy M Fitts"
+  },
+  {
+    "avg_difficulty": 3.6,
+    "avg_rating": 2.2,
+    "department": "English",
+    "rmp_id": "VGVhY2hlci0xOTkwMzg0",
+    "rmp_legacy_id": 1990384,
+    "num_ratings": 30,
+    "id": 1015,
+    "name": "Sheila F Sandapen"
+  },
+  {
+    "avg_difficulty": 2.9,
+    "avg_rating": 4.8,
+    "department": "Law",
+    "rmp_id": "VGVhY2hlci0yODQ1MDcy",
+    "rmp_legacy_id": 2845072,
+    "num_ratings": 23,
+    "id": 1672,
+    "name": "Leslie Kramer"
+  },
+  {
+    "avg_difficulty": 3.5,
+    "avg_rating": 3.7,
+    "department": "Accounting",
+    "rmp_id": "VGVhY2hlci0yMjMxMzQ0",
+    "rmp_legacy_id": 2231344,
+    "num_ratings": 20,
+    "id": 1557,
+    "name": "Xin Dai"
+  },
+  {
+    "avg_difficulty": 3,
+    "avg_rating": 4.1,
+    "department": "Health Science",
+    "rmp_id": "VGVhY2hlci0yNjE5MTcx",
+    "rmp_legacy_id": 2619171,
+    "num_ratings": 16,
+    "id": 2806,
+    "name": "Micah J Meltzer"
+  },
+  {
+    "avg_difficulty": 3.3,
+    "avg_rating": 3.9,
+    "department": "Nursing",
+    "rmp_id": "VGVhY2hlci0yMjc5MTM5",
+    "rmp_legacy_id": 2279139,
+    "num_ratings": 10,
+    "id": 2889,
+    "name": "Jane F Donovan"
+  },
+  {
+    "avg_difficulty": 3.9,
+    "avg_rating": 3.5,
+    "department": "History",
+    "rmp_id": "VGVhY2hlci0yNzU3Nzgy",
+    "rmp_legacy_id": 2757782,
+    "num_ratings": 8,
+    "id": 1187,
+    "name": "Toni F Pitock"
+  },
+  {
+    "avg_difficulty": 3.6,
+    "avg_rating": 3.1,
+    "department": "Music",
+    "rmp_id": "VGVhY2hlci0yODUxOTMy",
+    "rmp_legacy_id": 2851932,
+    "num_ratings": 7,
+    "id": 380,
+    "name": "Kaisha A Blackstone"
+  },
+  {
+    "avg_difficulty": 2.6,
+    "avg_rating": 2.9,
+    "department": "Graphic Arts",
+    "rmp_id": "VGVhY2hlci0zMDE2Nzg1",
+    "rmp_legacy_id": 3016785,
+    "num_ratings": 7,
+    "id": 538,
+    "name": "Christine R Bailey"
+  },
+  {
+    "avg_difficulty": 2,
+    "avg_rating": 5,
+    "department": "Psychology",
+    "rmp_id": "VGVhY2hlci0yODM1NzUz",
+    "rmp_legacy_id": 2835753,
+    "num_ratings": 6,
+    "id": 1423,
+    "name": "Lee L Rogers"
+  },
+  {
+    "avg_difficulty": 4.3,
+    "avg_rating": 2.8,
+    "department": "Engineering",
+    "rmp_id": "VGVhY2hlci0yNDY4NDA4",
+    "rmp_legacy_id": 2468408,
+    "num_ratings": 4,
+    "id": 2312,
+    "name": "James L Tangorra"
+  },
+  {
+    "avg_difficulty": 3,
+    "avg_rating": 2.3,
+    "department": "Management",
+    "rmp_id": "VGVhY2hlci0yODA2NTQ0",
+    "rmp_legacy_id": 2806544,
+    "num_ratings": 3,
+    "id": 1726,
+    "name": "Lawrence K Duke"
+  },
+  {
+    "avg_difficulty": 1.7,
+    "avg_rating": 4.7,
+    "department": "Criminal Justice",
+    "rmp_id": "VGVhY2hlci0yNzI0NDI4",
+    "rmp_legacy_id": 2724428,
+    "num_ratings": 3,
+    "id": 991,
+    "name": "Kris Unsworth"
+  },
+  {
+    "avg_difficulty": 3.8,
+    "avg_rating": 2.6,
+    "department": "History",
+    "rmp_id": "VGVhY2hlci0xMTAyMjU5",
+    "rmp_legacy_id": 1102259,
+    "num_ratings": 46,
+    "id": 1180,
+    "name": "Jonson W Miller"
+  },
+  {
+    "avg_difficulty": 3.9,
+    "avg_rating": 2.4,
+    "department": "Biological Sciences",
+    "rmp_id": "VGVhY2hlci0yNzQ2Njc4",
+    "rmp_legacy_id": 2746678,
+    "num_ratings": 45,
+    "id": 566,
+    "name": "Manuel A Seman Senderos"
+  },
+  {
+    "avg_difficulty": 3.5,
+    "avg_rating": 4.4,
+    "department": "Biology",
+    "rmp_id": "VGVhY2hlci02NjE1Mzk=",
+    "rmp_legacy_id": 661539,
+    "num_ratings": 29,
+    "id": 2813,
+    "name": "Mary E Flynn"
+  },
+  {
+    "avg_difficulty": 2.6,
+    "avg_rating": 3,
+    "department": "Health Science",
+    "rmp_id": "VGVhY2hlci0xNDAxODkx",
+    "rmp_legacy_id": 1401891,
+    "num_ratings": 21,
+    "id": 2836,
+    "name": "Nyree Dardarian"
+  },
+  {
+    "avg_difficulty": 3.3,
+    "avg_rating": 2.6,
+    "department": "Education",
+    "rmp_id": "VGVhY2hlci0xMjU3MzMy",
+    "rmp_legacy_id": 1257332,
+    "num_ratings": 20,
+    "id": 719,
+    "name": "Amit Basu"
+  },
+  {
+    "avg_difficulty": 3.6,
+    "avg_rating": 2.9,
+    "department": "Engineering",
+    "rmp_id": "VGVhY2hlci0yODc4MjMx",
+    "rmp_legacy_id": 2878231,
+    "num_ratings": 14,
+    "id": 2423,
+    "name": "Joshua C Agar"
+  },
+  {
+    "avg_difficulty": 3.7,
+    "avg_rating": 2.3,
+    "department": "Mathematics",
+    "rmp_id": "VGVhY2hlci0xMDYwNTE3",
+    "rmp_legacy_id": 1060517,
+    "num_ratings": 14,
+    "id": 1280,
+    "name": "Yixin Guo"
+  },
+  {
+    "avg_difficulty": 4.1,
+    "avg_rating": 2.9,
+    "department": "Mathematics",
+    "rmp_id": "VGVhY2hlci0yODk0MTA3",
+    "rmp_legacy_id": 2894107,
+    "num_ratings": 13,
+    "id": 1239,
+    "name": "Anthony J D'Alesandro"
+  },
+  {
+    "avg_difficulty": 2.6,
+    "avg_rating": 4.9,
+    "department": "Art History",
+    "rmp_id": "VGVhY2hlci0yNTgxMzcw",
+    "rmp_legacy_id": 2581370,
+    "num_ratings": 9,
+    "id": 74,
+    "name": "Joseph H Larnerd"
+  },
+  {
+    "avg_difficulty": 2.8,
+    "avg_rating": 3.7,
+    "department": "Nursing",
+    "rmp_id": "VGVhY2hlci0yNzE0OTQw",
+    "rmp_legacy_id": 2714940,
+    "num_ratings": 9,
+    "id": 2896,
+    "name": "Maura A Nitka"
+  },
+  {
+    "avg_difficulty": 4,
+    "avg_rating": 4.4,
+    "department": "Digital Media",
+    "rmp_id": "VGVhY2hlci0yNDkxODgz",
+    "rmp_legacy_id": 2491883,
+    "num_ratings": 8,
+    "id": 148,
+    "name": "Philip J Sinatra"
+  },
+  {
+    "avg_difficulty": 2.3,
+    "avg_rating": 5,
+    "department": "English",
+    "rmp_id": "VGVhY2hlci0yOTg1NDky",
+    "rmp_legacy_id": 2985492,
+    "num_ratings": 7,
+    "id": 1024,
+    "name": "Krista R Beucler"
+  },
+  {
+    "avg_difficulty": 3.4,
+    "avg_rating": 4.9,
+    "department": "Nursing",
+    "rmp_id": "VGVhY2hlci0yMTE4Mzg3",
+    "rmp_legacy_id": 2118387,
+    "num_ratings": 7,
+    "id": 2911,
+    "name": "Danielle A Devine"
+  },
+  {
+    "avg_difficulty": 2.2,
+    "avg_rating": 3.7,
+    "department": "Digital Media",
+    "rmp_id": "VGVhY2hlci0xNzk2OTc4",
+    "rmp_legacy_id": 1796978,
+    "num_ratings": 6,
+    "id": 142,
+    "name": "Jervis W Thompson"
+  },
+  {
+    "avg_difficulty": 3.3,
+    "avg_rating": 2.7,
+    "department": "Communication",
+    "rmp_id": "VGVhY2hlci0yOTE4MDk0",
+    "rmp_legacy_id": 2918094,
+    "num_ratings": 3,
+    "id": 930,
+    "name": "Pamela Z Poe"
+  },
+  {
+    "avg_difficulty": 4,
+    "avg_rating": 1,
+    "department": "Nursing",
+    "rmp_id": "VGVhY2hlci0zMDgxOTQ2",
+    "rmp_legacy_id": 3081946,
+    "num_ratings": 1,
+    "id": 2906,
+    "name": "Hailey Park"
+  },
+  {
+    "avg_difficulty": 5,
+    "avg_rating": 2,
+    "department": "Physics",
+    "rmp_id": "VGVhY2hlci0zMDgxNzg3",
+    "rmp_legacy_id": 3081787,
+    "num_ratings": 1,
+    "id": 1393,
+    "name": "Bryan VanSaders"
+  },
+  {
+    "avg_difficulty": 3.5,
+    "avg_rating": 3.5,
+    "department": "Mathematics",
+    "rmp_id": "VGVhY2hlci0xMDg3Mjgw",
+    "rmp_legacy_id": 1087280,
+    "num_ratings": 58,
+    "id": 1240,
+    "name": "Richard D White"
+  },
+  {
+    "avg_difficulty": 4.2,
+    "avg_rating": 1.7,
+    "department": "English",
+    "rmp_id": "VGVhY2hlci02ODE0NjI=",
+    "rmp_legacy_id": 681462,
+    "num_ratings": 37,
+    "id": 1112,
+    "name": "Doreen A Saar"
+  },
+  {
+    "avg_difficulty": 1.8,
+    "avg_rating": 3.9,
+    "department": "Business",
+    "rmp_id": "VGVhY2hlci0yNDYyNzI0",
+    "rmp_legacy_id": 2462724,
+    "num_ratings": 36,
+    "id": 1660,
+    "name": "Eydis E Olsen-Robinson"
+  },
+  {
+    "avg_difficulty": 3.4,
+    "avg_rating": 2.9,
+    "department": "Economics",
+    "rmp_id": "VGVhY2hlci0xNzA5MTU3",
+    "rmp_legacy_id": 1709157,
+    "num_ratings": 29,
+    "id": 1618,
+    "name": "Sebastien J Bradley"
+  },
+  {
+    "avg_difficulty": 3.7,
+    "avg_rating": 4,
+    "department": "Economics",
+    "rmp_id": "VGVhY2hlci0yMjM4OTU0",
+    "rmp_legacy_id": 2238954,
+    "num_ratings": 18,
+    "id": 1608,
+    "name": "Andre Kurmann"
+  },
+  {
+    "avg_difficulty": 2.9,
+    "avg_rating": 4.5,
+    "department": "Decision Science",
+    "rmp_id": "VGVhY2hlci0yNDk4Njg4",
+    "rmp_legacy_id": 2498688,
+    "num_ratings": 17,
+    "id": 1584,
+    "name": "Anna G Devlin"
+  },
+  {
+    "avg_difficulty": 2.5,
+    "avg_rating": 5,
+    "department": "Languages",
+    "rmp_id": "VGVhY2hlci0yMzM1MzIz",
+    "rmp_legacy_id": 2335323,
+    "num_ratings": 12,
+    "id": 1511,
+    "name": "Steve Dolph"
+  },
+  {
+    "avg_difficulty": 2,
+    "avg_rating": 4.3,
+    "department": "Engineering",
+    "rmp_id": "VGVhY2hlci0yOTM4OTgz",
+    "rmp_legacy_id": 2938983,
+    "num_ratings": 4,
+    "id": 2170,
+    "name": "Kathleen M Short"
+  },
+  {
+    "avg_difficulty": 2.3,
+    "avg_rating": 4.3,
+    "department": "Engineering",
+    "rmp_id": "VGVhY2hlci0yNTc0NzQ2",
+    "rmp_legacy_id": 2574746,
+    "num_ratings": 4,
+    "id": 2434,
+    "name": "Emin C Kumbur"
+  },
+  {
+    "avg_difficulty": 2.8,
+    "avg_rating": 4.7,
+    "department": "Engineering",
+    "rmp_id": "VGVhY2hlci0xMjI3MzEy",
+    "rmp_legacy_id": 1227312,
+    "num_ratings": 37,
+    "id": 2199,
+    "name": "Christopher W Peters"
+  },
+  {
+    "avg_difficulty": 2.7,
+    "avg_rating": 4.6,
+    "department": "Chemistry",
+    "rmp_id": "VGVhY2hlci0yNjg3MjYx",
+    "rmp_legacy_id": 2687261,
+    "num_ratings": 33,
+    "id": 837,
+    "name": "Reza Farasat"
+  },
+  {
+    "avg_difficulty": 1.7,
+    "avg_rating": 5,
+    "department": "Communication",
+    "rmp_id": "VGVhY2hlci0yMjY0MzQw",
+    "rmp_legacy_id": 2264340,
+    "num_ratings": 33,
+    "id": 890,
+    "name": "Scott D Tattar"
+  },
+  {
+    "avg_difficulty": 4,
+    "avg_rating": 2,
+    "department": "English",
+    "rmp_id": "VGVhY2hlci0xMTg5Njg2",
+    "rmp_legacy_id": 1189686,
+    "num_ratings": 17,
+    "id": 1119,
+    "name": "Jennifer D Yusin"
+  },
+  {
+    "avg_difficulty": 3.8,
+    "avg_rating": 4.1,
+    "department": "Nursing",
+    "rmp_id": "VGVhY2hlci0yMjM3MTEw",
+    "rmp_legacy_id": 2237110,
+    "num_ratings": 17,
+    "id": 2914,
+    "name": "Maureen M Gonzales"
+  },
+  {
+    "avg_difficulty": 2.3,
+    "avg_rating": 2.5,
+    "department": "Marketing",
+    "rmp_id": "VGVhY2hlci0yMDU0NzI0",
+    "rmp_legacy_id": 2054724,
+    "num_ratings": 16,
+    "id": 1717,
+    "name": "Boryana V Dimitrova"
+  },
+  {
+    "avg_difficulty": 4.6,
+    "avg_rating": 2.9,
+    "department": "Biology",
+    "rmp_id": "VGVhY2hlci0xNjE5OTIx",
+    "rmp_legacy_id": 1619921,
+    "num_ratings": 10,
+    "id": 1142,
+    "name": "Michael P O'Connor"
+  },
+  {
+    "avg_difficulty": 3.5,
+    "avg_rating": 4.2,
+    "department": "Computer Science",
+    "rmp_id": "VGVhY2hlci0yODM2MjQ2",
+    "rmp_legacy_id": 2836246,
+    "num_ratings": 6,
+    "id": 1868,
+    "name": "Brian S Mitchell"
+  },
+  {
+    "avg_difficulty": 2.9,
+    "avg_rating": 4.7,
+    "department": "Mathematics",
+    "rmp_id": "VGVhY2hlci05MTE5NDA=",
+    "rmp_legacy_id": 911940,
+    "num_ratings": 65,
+    "id": 1253,
+    "name": "Daryl L Falco"
+  },
+  {
+    "avg_difficulty": 4.2,
+    "avg_rating": 1.9,
+    "department": "Mathematics",
+    "rmp_id": "VGVhY2hlci0yMzQ2ODQx",
+    "rmp_legacy_id": 2346841,
+    "num_ratings": 33,
+    "id": 1217,
+    "name": "Olga I Trubina"
+  },
+  {
+    "avg_difficulty": 1.8,
+    "avg_rating": 4.6,
+    "department": "Sociology",
+    "rmp_id": "VGVhY2hlci0yNDc0MjIw",
+    "rmp_legacy_id": 2474220,
+    "num_ratings": 23,
+    "id": 1491,
+    "name": "Jessica A Cohen"
+  },
+  {
+    "avg_difficulty": 2,
+    "avg_rating": 4.8,
+    "department": "Marketing",
+    "rmp_id": "VGVhY2hlci0yNzYyNzEx",
+    "rmp_legacy_id": 2762711,
+    "num_ratings": 12,
+    "id": 1715,
+    "name": "Jillian L Hmurovic"
+  },
+  {
+    "avg_difficulty": 3.9,
+    "avg_rating": 2.8,
+    "department": "Mathematics",
+    "rmp_id": "VGVhY2hlci0xNjUzMTc4",
+    "rmp_legacy_id": 1653178,
+    "num_ratings": 9,
+    "id": 1299,
+    "name": "Pok-Yin T Yu"
+  },
+  {
+    "avg_difficulty": 2.6,
+    "avg_rating": 4.2,
+    "department": "English",
+    "rmp_id": "VGVhY2hlci0yODkxNTc0",
+    "rmp_legacy_id": 2891574,
+    "num_ratings": 5,
+    "id": 1041,
+    "name": "Jonathan E Hobratsch"
+  },
+  {
+    "avg_difficulty": 2.6,
+    "avg_rating": 3.8,
+    "department": "Cultural Science",
+    "rmp_id": "VGVhY2hlci0yODIwOTc3",
+    "rmp_legacy_id": 2820977,
+    "num_ratings": 5,
+    "id": 1801,
+    "name": "Tariem A Burroughs"
+  },
+  {
+    "avg_difficulty": 2.5,
+    "avg_rating": 5,
+    "department": "English",
+    "rmp_id": "VGVhY2hlci0yNzkyMDU5",
+    "rmp_legacy_id": 2792059,
+    "num_ratings": 4,
+    "id": 1012,
+    "name": "Anthony B Chatfield"
+  },
+  {
+    "avg_difficulty": 2,
+    "avg_rating": 4,
+    "department": "Biology",
+    "rmp_id": "VGVhY2hlci0zMDgxMDUx",
+    "rmp_legacy_id": 3081051,
+    "num_ratings": 1,
+    "id": 1138,
+    "name": "Robert Newby"
+  },
+  {
+    "avg_difficulty": 3.9,
+    "avg_rating": 1.6,
+    "department": "Mathematics",
+    "rmp_id": "VGVhY2hlci0yMjc2Nzcy",
+    "rmp_legacy_id": 2276772,
+    "num_ratings": 71,
+    "id": 1237,
+    "name": "Joel Pereira"
+  },
+  {
+    "avg_difficulty": 2.7,
+    "avg_rating": 3.6,
+    "department": "Mathematics",
+    "rmp_id": "VGVhY2hlci0yMDUzMzk5",
+    "rmp_legacy_id": 2053399,
+    "num_ratings": 23,
+    "id": 1241,
+    "name": "Guang Yang"
+  },
+  {
+    "avg_difficulty": 3.7,
+    "avg_rating": 2.6,
+    "department": "Business",
+    "rmp_id": "VGVhY2hlci0yNzcxODg0",
+    "rmp_legacy_id": 2771884,
+    "num_ratings": 11,
+    "id": 1820,
+    "name": "John H Wilson"
+  },
+  {
+    "avg_difficulty": 2,
+    "avg_rating": 3.4,
+    "department": "Business",
+    "rmp_id": "VGVhY2hlci0yNjAwMTMw",
+    "rmp_legacy_id": 2600130,
+    "num_ratings": 7,
+    "id": 1821,
+    "name": "Scott M Quitel"
+  },
+  {
+    "avg_difficulty": 2.8,
+    "avg_rating": 4.8,
+    "department": "Nursing",
+    "rmp_id": "VGVhY2hlci0yODc2OTQw",
+    "rmp_legacy_id": 2876940,
+    "num_ratings": 5,
+    "id": 2882,
+    "name": "Elizabeth A Ward"
+  },
+  {
+    "avg_difficulty": 3.1,
+    "avg_rating": 4.8,
+    "department": "Law",
+    "rmp_id": "VGVhY2hlci03MTg1NTg=",
+    "rmp_legacy_id": 718558,
+    "num_ratings": 86,
+    "id": 1667,
+    "name": "Andrew S Genetta"
+  },
+  {
+    "avg_difficulty": 2.6,
+    "avg_rating": 3.8,
+    "department": "Information Science",
+    "rmp_id": "VGVhY2hlci0yNzczMjU2",
+    "rmp_legacy_id": 2773256,
+    "num_ratings": 56,
+    "id": 1575,
+    "name": "AJ Raven"
+  },
+  {
+    "avg_difficulty": 3.5,
+    "avg_rating": 2.2,
+    "department": "Computer Science",
+    "rmp_id": "VGVhY2hlci04MTM4NDE=",
+    "rmp_legacy_id": 813841,
+    "num_ratings": 56,
+    "id": 1834,
+    "name": "Adelaida A Medlock"
+  },
+  {
+    "avg_difficulty": 2.7,
+    "avg_rating": 3.4,
+    "department": "Mathematics",
+    "rmp_id": "VGVhY2hlci0xMTA5ODE5",
+    "rmp_legacy_id": 1109819,
+    "num_ratings": 51,
+    "id": 1215,
+    "name": "Oksana P Odintsova"
+  },
+  {
+    "avg_difficulty": 4.3,
+    "avg_rating": 2.3,
+    "department": "Philosophy",
+    "rmp_id": "VGVhY2hlci0xMjUzNzQ2",
+    "rmp_legacy_id": 1253746,
+    "num_ratings": 47,
+    "id": 1205,
+    "name": "Peter Amato"
+  },
+  {
+    "avg_difficulty": 2.8,
+    "avg_rating": 3.9,
+    "department": "History",
+    "rmp_id": "VGVhY2hlci0xODI1NzY=",
+    "rmp_legacy_id": 182576,
+    "num_ratings": 40,
+    "id": 70,
+    "name": "Joseph F Gregory"
+  },
+  {
+    "avg_difficulty": 4.4,
+    "avg_rating": 2.4,
+    "department": "Computer Science",
+    "rmp_id": "VGVhY2hlci0yNjIyNDE2",
+    "rmp_legacy_id": 2622416,
+    "num_ratings": 32,
+    "id": 1862,
+    "name": "Steve Earth"
+  },
+  {
+    "avg_difficulty": 3.6,
+    "avg_rating": 3,
+    "department": "Business",
+    "rmp_id": "VGVhY2hlci0yMDUwNDk4",
+    "rmp_legacy_id": 2050498,
+    "num_ratings": 32,
+    "id": 1734,
+    "name": "Min Wang"
+  },
+  {
+    "avg_difficulty": 2.5,
+    "avg_rating": 4.8,
+    "department": "Business",
+    "rmp_id": "VGVhY2hlci0yOTg0MTYz",
+    "rmp_legacy_id": 2984163,
+    "num_ratings": 30,
+    "id": 1727,
+    "name": "Carter W Murdoch"
+  },
+  {
+    "avg_difficulty": 2.5,
+    "avg_rating": 4,
+    "department": "Physics",
+    "rmp_id": "VGVhY2hlci0xNDIzMDU5",
+    "rmp_legacy_id": 1423059,
+    "num_ratings": 25,
+    "id": 1362,
+    "name": "Eric D Scheidly"
+  },
+  {
+    "avg_difficulty": 3.1,
+    "avg_rating": 2.7,
+    "department": "English",
+    "rmp_id": "VGVhY2hlci0yNjg2Mzcw",
+    "rmp_legacy_id": 2686370,
+    "num_ratings": 15,
+    "id": 1055,
+    "name": "Bob T Finegan"
+  },
+  {
+    "avg_difficulty": 2.6,
+    "avg_rating": 4.6,
+    "department": "Public Health",
+    "rmp_id": "VGVhY2hlci0yNDM2ODMx",
+    "rmp_legacy_id": 2436831,
+    "num_ratings": 5,
+    "id": 2557,
+    "name": "Thersa M Sweet"
+  },
+  {
+    "avg_difficulty": 4.1,
+    "avg_rating": 1.8,
+    "department": "Decision Science",
+    "rmp_id": "VGVhY2hlci0yMzkxMzQw",
+    "rmp_legacy_id": 2391340,
+    "num_ratings": 64,
+    "id": 1576,
+    "name": "Matthew J Reindorp"
+  },
+  {
+    "avg_difficulty": 3.4,
+    "avg_rating": 2.7,
+    "department": "Chemistry",
+    "rmp_id": "VGVhY2hlci0xOTY3MjE5",
+    "rmp_legacy_id": 1967219,
+    "num_ratings": 54,
+    "id": 823,
+    "name": "Lee W Hoffman"
+  },
+  {
+    "avg_difficulty": 2.9,
+    "avg_rating": 4.8,
+    "department": "Mathematics",
+    "rmp_id": "VGVhY2hlci0yNTQyNzg0",
+    "rmp_legacy_id": 2542784,
+    "num_ratings": 36,
+    "id": 1243,
+    "name": "Jeffrey M LaComb"
+  },
+  {
+    "avg_difficulty": 2.7,
+    "avg_rating": 4.6,
+    "department": "Business",
+    "rmp_id": "VGVhY2hlci05MjQxNzc=",
+    "rmp_legacy_id": 924177,
+    "num_ratings": 33,
+    "id": 1541,
+    "name": "Dana C D'Angelo"
+  },
+  {
+    "avg_difficulty": 2.8,
+    "avg_rating": 4.4,
+    "department": "Biological Sciences",
+    "rmp_id": "VGVhY2hlci0yNDM4NjYz",
+    "rmp_legacy_id": 2438663,
+    "num_ratings": 33,
+    "id": 580,
+    "name": "Monica M Togna"
+  },
+  {
+    "avg_difficulty": 3.4,
+    "avg_rating": 1.8,
+    "department": "Computer Science",
+    "rmp_id": "VGVhY2hlci0yODQwODcx",
+    "rmp_legacy_id": 2840871,
+    "num_ratings": 26,
+    "id": 1838,
+    "name": "Daniel W Moix"
+  },
+  {
+    "avg_difficulty": 4.2,
+    "avg_rating": 1.4,
+    "department": "Biology",
+    "rmp_id": "VGVhY2hlci0yOTc4ODcx",
+    "rmp_legacy_id": 2978871,
+    "num_ratings": 23,
+    "id": 564,
+    "name": "Usha Sankar"
+  },
+  {
+    "avg_difficulty": 2.5,
+    "avg_rating": 4.4,
+    "department": "English",
+    "rmp_id": "VGVhY2hlci0yNTYzMTE5",
+    "rmp_legacy_id": 2563119,
+    "num_ratings": 23,
+    "id": 1016,
+    "name": "Christine M Davids"
+  },
+  {
+    "avg_difficulty": 2.2,
+    "avg_rating": 3.8,
+    "department": "English",
+    "rmp_id": "VGVhY2hlci0yMjM2OTY4",
+    "rmp_legacy_id": 2236968,
+    "num_ratings": 17,
+    "id": 1067,
+    "name": "Fred Siegel"
+  },
+  {
+    "avg_difficulty": 2.4,
+    "avg_rating": 4.4,
+    "department": "English",
+    "rmp_id": "VGVhY2hlci0yNzczNDk2",
+    "rmp_legacy_id": 2773496,
+    "num_ratings": 11,
+    "id": 1021,
+    "name": "Von Wise"
+  },
+  {
+    "avg_difficulty": 1.8,
+    "avg_rating": 5,
+    "department": "Accounting",
+    "rmp_id": "VGVhY2hlci0zMDUyNzMz",
+    "rmp_legacy_id": 3052733,
+    "num_ratings": 8,
+    "id": 1542,
+    "name": "Tom M Baselice"
+  },
+  {
+    "avg_difficulty": 2.4,
+    "avg_rating": 5,
+    "department": "Management",
+    "rmp_id": "VGVhY2hlci0yOTQ1MzMy",
+    "rmp_legacy_id": 2945332,
+    "num_ratings": 5,
+    "id": 1685,
+    "name": "Ram Arthanari"
+  },
+  {
+    "avg_difficulty": 1.5,
+    "avg_rating": 5,
+    "department": "Nursing",
+    "rmp_id": "VGVhY2hlci0yNzE4MzA4",
+    "rmp_legacy_id": 2718308,
+    "num_ratings": 4,
+    "id": 2694,
+    "name": "Melanie E Henderson"
+  },
+  {
+    "avg_difficulty": 2.3,
+    "avg_rating": 5,
+    "department": "Business",
+    "rmp_id": "VGVhY2hlci0yNjgwNzM1",
+    "rmp_legacy_id": 2680735,
+    "num_ratings": 4,
+    "id": 1829,
+    "name": "Damian Salas"
+  },
+  {
+    "avg_difficulty": 1.5,
+    "avg_rating": 5,
+    "department": "Business",
+    "rmp_id": "VGVhY2hlci0yMDk4NDI0",
+    "rmp_legacy_id": 2098424,
+    "num_ratings": 4,
+    "id": 1828,
+    "name": "Zahed Subhan"
+  },
+  {
+    "avg_difficulty": 2.7,
+    "avg_rating": 4.3,
+    "department": "Media Arts & Design",
+    "rmp_id": "VGVhY2hlci0yOTQyMjQy",
+    "rmp_legacy_id": 2942242,
+    "num_ratings": 3,
+    "id": 508,
+    "name": "Matthew Higgins"
+  },
+  {
+    "avg_difficulty": 2.2,
+    "avg_rating": 4.2,
+    "department": "English",
+    "rmp_id": "VGVhY2hlci0xNTMyNjEz",
+    "rmp_legacy_id": 1532613,
+    "num_ratings": 42,
+    "id": 1040,
+    "name": "Valerie A Booth"
+  },
+  {
+    "avg_difficulty": 1.6,
+    "avg_rating": 4.7,
+    "department": "Information Science",
+    "rmp_id": "VGVhY2hlci0yNDQyNDkx",
+    "rmp_legacy_id": 2442491,
+    "num_ratings": 35,
+    "id": 1964,
+    "name": "Andrew J Kane"
+  },
+  {
+    "avg_difficulty": 3,
+    "avg_rating": 4,
+    "department": "English",
+    "rmp_id": "VGVhY2hlci0xNjk2MjMy",
+    "rmp_legacy_id": 1696232,
+    "num_ratings": 24,
+    "id": 1065,
+    "name": "Matthew R Smith"
+  },
+  {
+    "avg_difficulty": 3.3,
+    "avg_rating": 3.1,
+    "department": "Mathematics",
+    "rmp_id": "VGVhY2hlci0yOTYyODcx",
+    "rmp_legacy_id": 2962871,
+    "num_ratings": 10,
+    "id": 1265,
+    "name": "Ramesh Garimella"
+  },
+  {
+    "avg_difficulty": 3.9,
+    "avg_rating": 3.8,
+    "department": "Finance",
+    "rmp_id": "VGVhY2hlci0yNzczMzUw",
+    "rmp_legacy_id": 2773350,
+    "num_ratings": 8,
+    "id": 1636,
+    "name": "Martin R Thomas"
+  },
+  {
+    "avg_difficulty": 3.9,
+    "avg_rating": 3.3,
+    "department": "Management",
+    "rmp_id": "VGVhY2hlci0yNTc2NDQz",
+    "rmp_legacy_id": 2576443,
+    "num_ratings": 7,
+    "id": 1689,
+    "name": "Daniel Albert"
+  },
+  {
+    "avg_difficulty": 3.7,
+    "avg_rating": 3.1,
+    "department": "Business",
+    "rmp_id": "VGVhY2hlci0xOTI1NzI2",
+    "rmp_legacy_id": 1925726,
+    "num_ratings": 7,
+    "id": 1578,
+    "name": "Hande Y Benson"
+  },
+  {
+    "avg_difficulty": 3.7,
+    "avg_rating": 2.3,
+    "department": "Mathematics",
+    "rmp_id": "VGVhY2hlci0yODYzOTAy",
+    "rmp_legacy_id": 2863902,
+    "num_ratings": 3,
+    "id": 1288,
+    "name": "Darij Grinberg"
+  },
+  {
+    "avg_difficulty": 2.8,
+    "avg_rating": 2.1,
+    "department": "English",
+    "rmp_id": "VGVhY2hlci0yOTU5NDI1",
+    "rmp_legacy_id": 2959425,
+    "num_ratings": 16,
+    "id": 1048,
+    "name": "Llana Carroll"
+  },
+  {
+    "avg_difficulty": 2.2,
+    "avg_rating": 2.4,
+    "department": "Fine Arts",
+    "rmp_id": "VGVhY2hlci0yMzMzMTk3",
+    "rmp_legacy_id": 2333197,
+    "num_ratings": 10,
+    "id": 167,
+    "name": "Brea M Heidelberg"
+  },
+  {
+    "avg_difficulty": 3.2,
+    "avg_rating": 3.6,
+    "department": "Engineering",
+    "rmp_id": "VGVhY2hlci04OTUwMDE=",
+    "rmp_legacy_id": 895001,
+    "num_ratings": 9,
+    "id": 2209,
+    "name": "Thomas A Chmielewski"
+  },
+  {
+    "avg_difficulty": 3,
+    "avg_rating": 2.3,
+    "department": "Engineering",
+    "rmp_id": "VGVhY2hlci05NTAzMTU=",
+    "rmp_legacy_id": 950315,
+    "num_ratings": 4,
+    "id": 2398,
+    "name": "Yury Gogotsi"
+  },
+  {
+    "avg_difficulty": 1.5,
+    "avg_rating": 5,
+    "department": "Psychology",
+    "rmp_id": "VGVhY2hlci0yODU4NDky",
+    "rmp_legacy_id": 2858492,
+    "num_ratings": 4,
+    "id": 1440,
+    "name": "Eric A Zillmer"
+  },
+  {
+    "avg_difficulty": 4.5,
+    "avg_rating": 3,
+    "department": "Finance",
+    "rmp_id": "VGVhY2hlci0yOTM4NjI1",
+    "rmp_legacy_id": 2938625,
+    "num_ratings": 2,
+    "id": 1640,
+    "name": "Paolo F Volpin"
+  },
+  {
+    "avg_difficulty": 1.5,
+    "avg_rating": 5,
+    "department": "English",
+    "rmp_id": "VGVhY2hlci0zMDc3NDU0",
+    "rmp_legacy_id": 3077454,
+    "num_ratings": 2,
+    "id": 1030,
+    "name": "Kristen Lee"
+  },
+  {
+    "avg_difficulty": 2,
+    "avg_rating": 4.6,
+    "department": "History",
+    "rmp_id": "VGVhY2hlci0xMDExODk4",
+    "rmp_legacy_id": 1011898,
+    "num_ratings": 28,
+    "id": 1185,
+    "name": "Lloyd T Ackert"
+  },
+  {
+    "avg_difficulty": 4,
+    "avg_rating": 2.2,
+    "department": "Languages",
+    "rmp_id": "VGVhY2hlci0xNzg0NjAw",
+    "rmp_legacy_id": 1784600,
+    "num_ratings": 15,
+    "id": 1517,
+    "name": "Maria de la luz Matus-Mendoza"
+  },
+  {
+    "avg_difficulty": 2.6,
+    "avg_rating": 4.4,
+    "department": "Information Science",
+    "rmp_id": "VGVhY2hlci0yNzY0MjY4",
+    "rmp_legacy_id": 2764268,
+    "num_ratings": 42,
+    "id": 1982,
+    "name": "Milad Toutounchian"
+  },
+  {
+    "avg_difficulty": 3.5,
+    "avg_rating": 2.9,
+    "department": "Physics",
+    "rmp_id": "VGVhY2hlci0yNzIwNzcw",
+    "rmp_legacy_id": 2720770,
+    "num_ratings": 17,
+    "id": 1359,
+    "name": "Jesse Goldman"
+  },
+  {
+    "avg_difficulty": 3,
+    "avg_rating": 2.5,
+    "department": "Film",
+    "rmp_id": "VGVhY2hlci0yODgwNzI5",
+    "rmp_legacy_id": 2880729,
+    "num_ratings": 2,
+    "id": 227,
+    "name": "Nicholas J Natalicchio"
+  },
+  {
+    "avg_difficulty": 2.9,
+    "avg_rating": 4.6,
+    "department": "Chemistry",
+    "rmp_id": "VGVhY2hlci01ODY3OTA=",
+    "rmp_legacy_id": 586790,
+    "num_ratings": 79,
+    "id": 827,
+    "name": "Daniel King"
+  },
+  {
+    "avg_difficulty": 3,
+    "avg_rating": 2.2,
+    "department": "Fine Arts",
+    "rmp_id": "VGVhY2hlci0yNTM5MjYx",
+    "rmp_legacy_id": 2539261,
+    "num_ratings": 5,
+    "id": 516,
+    "name": "Peter A Hoffmann"
+  },
+  {
+    "avg_difficulty": 3.3,
+    "avg_rating": 1.7,
+    "department": "Computer Science",
+    "rmp_id": "VGVhY2hlci0yNTU4MDg4",
+    "rmp_legacy_id": 2558088,
+    "num_ratings": 76,
+    "id": 1839,
+    "name": "Tammy R Pirmann"
+  },
+  {
+    "avg_difficulty": 2.8,
+    "avg_rating": 4.6,
+    "department": "Mathematics",
+    "rmp_id": "VGVhY2hlci0yODIxNjky",
+    "rmp_legacy_id": 2821692,
+    "num_ratings": 31,
+    "id": 1258,
+    "name": "Andrew Klimas"
+  },
+  {
+    "avg_difficulty": 4.4,
+    "avg_rating": 1,
+    "department": "Biological Sciences",
+    "rmp_id": "VGVhY2hlci0yNTc4MDM3",
+    "rmp_legacy_id": 2578037,
+    "num_ratings": 22,
+    "id": 754,
+    "name": "Jacob A Russell"
+  },
+  {
+    "avg_difficulty": 3.8,
+    "avg_rating": 3.2,
+    "department": "Nursing",
+    "rmp_id": "VGVhY2hlci0yODc5NTE0",
+    "rmp_legacy_id": 2879514,
+    "num_ratings": 9,
+    "id": 2887,
+    "name": "Shelley L Hickey"
+  },
+  {
+    "avg_difficulty": 4.5,
+    "avg_rating": 1.1,
+    "department": "Biological Sciences",
+    "rmp_id": "VGVhY2hlci0yOTAyNzkx",
+    "rmp_legacy_id": 2902791,
+    "num_ratings": 8,
+    "id": 1166,
+    "name": "Jocelyn Sessa"
+  },
+  {
+    "avg_difficulty": 3.1,
+    "avg_rating": 3.7,
+    "department": "Engineering",
+    "rmp_id": "VGVhY2hlci0yMDg0NTgw",
+    "rmp_legacy_id": 2084580,
+    "num_ratings": 15,
+    "id": 2422,
+    "name": "Andrei G Jablokow"
+  },
+  {
+    "avg_difficulty": 2.2,
+    "avg_rating": 4.2,
+    "department": "Design",
+    "rmp_id": "VGVhY2hlci0xMTgyMjk0",
+    "rmp_legacy_id": 1182294,
+    "num_ratings": 11,
+    "id": 127,
+    "name": "Joseph H Hancock"
+  },
+  {
+    "avg_difficulty": 3.3,
+    "avg_rating": 5,
+    "department": "Business",
+    "rmp_id": "VGVhY2hlci0yODkwMTU3",
+    "rmp_legacy_id": 2890157,
+    "num_ratings": 3,
+    "id": 1696,
+    "name": "Rajiv Nag"
+  },
+  {
+    "avg_difficulty": 2.9,
+    "avg_rating": 4.9,
+    "department": "Business",
+    "rmp_id": "VGVhY2hlci0yMDIzMDg5",
+    "rmp_legacy_id": 2023089,
+    "num_ratings": 55,
+    "id": 1550,
+    "name": "JT J Thazhathel"
+  },
+  {
+    "avg_difficulty": 2,
+    "avg_rating": 4.3,
+    "department": "Law",
+    "rmp_id": "VGVhY2hlci0zMDM3MzU5",
+    "rmp_legacy_id": 3037359,
+    "num_ratings": 3,
+    "id": 3435,
+    "name": "Rachel R Germany"
+  },
+  {
+    "avg_difficulty": 2.8,
+    "avg_rating": 4.7,
+    "department": "Biology",
+    "rmp_id": "VGVhY2hlci0yMTEwODI5",
+    "rmp_legacy_id": 2110829,
+    "num_ratings": 37,
+    "id": 579,
+    "name": "Kevin P Smith"
+  },
+  {
+    "avg_difficulty": 2.2,
+    "avg_rating": 4.8,
+    "department": "English",
+    "rmp_id": "VGVhY2hlci0yMjk0NzMz",
+    "rmp_legacy_id": 2294733,
+    "num_ratings": 21,
+    "id": 1011,
+    "name": "Alexis R Apfelbaum"
+  },
+  {
+    "avg_difficulty": 2.6,
+    "avg_rating": 3.5,
+    "department": "Physics",
+    "rmp_id": "VGVhY2hlci0yMzAyODk2",
+    "rmp_legacy_id": 2302896,
+    "num_ratings": 27,
+    "id": 1354,
+    "name": "Christina E Love"
+  },
+  {
+    "avg_difficulty": 3.7,
+    "avg_rating": 2.9,
+    "department": "Chemistry",
+    "rmp_id": "VGVhY2hlci0yOTc3NjM1",
+    "rmp_legacy_id": 2977635,
+    "num_ratings": 17,
+    "id": 790,
+    "name": "Yang Yang"
+  },
+  {
+    "avg_difficulty": 2.9,
+    "avg_rating": 3.2,
+    "department": "English",
+    "rmp_id": "VGVhY2hlci0xMDQ4MzUx",
+    "rmp_legacy_id": 1048351,
+    "num_ratings": 16,
+    "id": 1050,
+    "name": "Ted C Fristrom"
+  },
+  {
+    "avg_difficulty": 3.2,
+    "avg_rating": 4.2,
+    "department": "Computer Science",
+    "rmp_id": "VGVhY2hlci0yNzM0ODA2",
+    "rmp_legacy_id": 2734806,
+    "num_ratings": 13,
+    "id": 2048,
+    "name": "Chad E Peiper"
+  },
+  {
+    "avg_difficulty": 4,
+    "avg_rating": 2.1,
+    "department": "Communication",
+    "rmp_id": "VGVhY2hlci0xMzQxMDg5",
+    "rmp_legacy_id": 1341089,
+    "num_ratings": 47,
+    "id": 889,
+    "name": "Karen M Cristiano"
+  },
+  {
+    "avg_difficulty": 2.5,
+    "avg_rating": 1.4,
+    "department": "Engineering",
+    "rmp_id": "VGVhY2hlci0yNzM3NTc5",
+    "rmp_legacy_id": 2737579,
+    "num_ratings": 8,
+    "id": 2254,
+    "name": "Jennifer S Atchison"
+  },
+  {
+    "avg_difficulty": 3.8,
+    "avg_rating": 1.7,
+    "department": "Digital Media",
+    "rmp_id": "VGVhY2hlci0yODMxNTI3",
+    "rmp_legacy_id": 2831527,
+    "num_ratings": 6,
+    "id": 6,
+    "name": "Alexus D Aiken"
+  },
+  {
+    "avg_difficulty": 2.8,
+    "avg_rating": 4.3,
+    "department": "Computer Science",
+    "rmp_id": "VGVhY2hlci0yMTUyMzA3",
+    "rmp_legacy_id": 2152307,
+    "num_ratings": 59,
+    "id": 1864,
+    "name": "Mark W Boady"
+  },
+  {
+    "avg_difficulty": 1.6,
+    "avg_rating": 4.8,
+    "department": "English",
+    "rmp_id": "VGVhY2hlci0xMzY3ODMw",
+    "rmp_legacy_id": 1367830,
+    "num_ratings": 36,
+    "id": 1042,
+    "name": "Cassandra J Hirsch"
+  },
+  {
+    "avg_difficulty": 2.7,
+    "avg_rating": 3.8,
+    "department": "Philosophy",
+    "rmp_id": "VGVhY2hlci0yMzk0NzM4",
+    "rmp_legacy_id": 2394738,
+    "num_ratings": 34,
+    "id": 1319,
+    "name": "Harper M Kirk"
+  },
+  {
+    "avg_difficulty": 3.4,
+    "avg_rating": 2,
+    "department": "Information Science",
+    "rmp_id": "VGVhY2hlci0yNzAwNzY5",
+    "rmp_legacy_id": 2700769,
+    "num_ratings": 24,
+    "id": 2009,
+    "name": "Bo Song"
+  },
+  {
+    "avg_difficulty": 1.2,
+    "avg_rating": 4.6,
+    "department": "Student Services",
+    "rmp_id": "VGVhY2hlci0yNzc2MTc3",
+    "rmp_legacy_id": 2776177,
+    "num_ratings": 14,
+    "id": 1790,
+    "name": "Brittany H Root"
+  },
+  {
+    "avg_difficulty": 3,
+    "avg_rating": 2.7,
+    "department": "Languages",
+    "rmp_id": "VGVhY2hlci0yODA3NTYw",
+    "rmp_legacy_id": 2807560,
+    "num_ratings": 6,
+    "id": 1155,
+    "name": "Parfait Kouacou"
+  },
+  {
+    "avg_difficulty": 1,
+    "avg_rating": 3,
+    "department": "Computer Science",
+    "rmp_id": "VGVhY2hlci0yOTQ3OTYw",
+    "rmp_legacy_id": 2947960,
+    "num_ratings": 2,
+    "id": 1981,
+    "name": "Briana Green"
+  },
+  {
+    "avg_difficulty": 1,
+    "avg_rating": 5,
+    "department": "Information Science",
+    "rmp_id": "VGVhY2hlci0zMDc3NTE5",
+    "rmp_legacy_id": 3077519,
+    "num_ratings": 1,
+    "id": 1987,
+    "name": "Pragati Awasthi"
+  },
+  {
+    "avg_difficulty": 3,
+    "avg_rating": 5,
+    "department": "Information Science",
+    "rmp_id": "VGVhY2hlci0zMDc3NTE1",
+    "rmp_legacy_id": 3077515,
+    "num_ratings": 1,
+    "id": 2006,
+    "name": "Mike J Galloway"
+  },
+  {
+    "avg_difficulty": 4.1,
+    "avg_rating": 1.9,
+    "department": "Mathematics",
+    "rmp_id": "VGVhY2hlci0yNTE4OTEx",
+    "rmp_legacy_id": 2518911,
+    "num_ratings": 26,
+    "id": 2817,
+    "name": "Jodie L Haak"
+  },
+  {
+    "avg_difficulty": 4,
+    "avg_rating": 2.8,
+    "department": "English",
+    "rmp_id": "VGVhY2hlci0yMzEyMDYx",
+    "rmp_legacy_id": 2312061,
+    "num_ratings": 17,
+    "id": 1100,
+    "name": "Maria Volynsky"
+  },
+  {
+    "avg_difficulty": 1.3,
+    "avg_rating": 5,
+    "department": "English",
+    "rmp_id": "VGVhY2hlci0zMDQ3NzIz",
+    "rmp_legacy_id": 3047723,
+    "num_ratings": 3,
+    "id": 1018,
+    "name": "Erin E Mccourt"
+  },
+  {
+    "avg_difficulty": 1.5,
+    "avg_rating": 4.5,
+    "department": "English",
+    "rmp_id": "VGVhY2hlci0yOTk2MzYy",
+    "rmp_legacy_id": 2996362,
+    "num_ratings": 2,
+    "id": 1029,
+    "name": "Phillip E Garcia"
+  },
+  {
+    "avg_difficulty": 2.5,
+    "avg_rating": 4.4,
+    "department": "Management",
+    "rmp_id": "VGVhY2hlci0yMTU3NTU1",
+    "rmp_legacy_id": 2157555,
+    "num_ratings": 17,
+    "id": 1746,
+    "name": "Cuneyt Gozu"
+  },
+  {
+    "avg_difficulty": 2.2,
+    "avg_rating": 5,
+    "department": "Information Science",
+    "rmp_id": "VGVhY2hlci0yODk4MjA4",
+    "rmp_legacy_id": 2898208,
+    "num_ratings": 5,
+    "id": 2017,
+    "name": "John S Seberger"
+  },
+  {
+    "avg_difficulty": 2.7,
+    "avg_rating": 4.3,
+    "department": "Health Science",
+    "rmp_id": "VGVhY2hlci0zMDA3NjA2",
+    "rmp_legacy_id": 3007606,
+    "num_ratings": 3,
+    "id": 2811,
+    "name": "Steve Vitti"
+  },
+  {
+    "avg_difficulty": 2.2,
+    "avg_rating": 4.7,
+    "department": "English",
+    "rmp_id": "VGVhY2hlci02MTM5MzU=",
+    "rmp_legacy_id": 613935,
+    "num_ratings": 26,
+    "id": 551,
+    "name": "Vincent V Williams"
+  },
+  {
+    "avg_difficulty": 2.2,
+    "avg_rating": 3.9,
+    "department": "English",
+    "rmp_id": "VGVhY2hlci0yNDEyOTI5",
+    "rmp_legacy_id": 2412929,
+    "num_ratings": 24,
+    "id": 1026,
+    "name": "Craig E Laird"
+  },
+  {
+    "avg_difficulty": 2.5,
+    "avg_rating": 3.7,
+    "department": "Communication",
+    "rmp_id": "VGVhY2hlci0xOTA5NjA0",
+    "rmp_legacy_id": 1909604,
+    "num_ratings": 15,
+    "id": 1224,
+    "name": "Susanne B Kriete"
+  },
+  {
+    "avg_difficulty": 1,
+    "avg_rating": 4.9,
+    "department": "Business",
+    "rmp_id": "VGVhY2hlci0yODU0NTgw",
+    "rmp_legacy_id": 2854580,
+    "num_ratings": 8,
+    "id": 1800,
+    "name": "Christian J Maxey"
+  },
+  {
+    "avg_difficulty": 3.7,
+    "avg_rating": 4.6,
+    "department": "Chemistry",
+    "rmp_id": "VGVhY2hlci0xNTU3NzQ4",
+    "rmp_legacy_id": 1557748,
+    "num_ratings": 20,
+    "id": 843,
+    "name": "Jun Xi"
+  },
+  {
+    "avg_difficulty": 2.6,
+    "avg_rating": 4.3,
+    "department": "Mathematics",
+    "rmp_id": "VGVhY2hlci0xMDg5NDgx",
+    "rmp_legacy_id": 1089481,
+    "num_ratings": 62,
+    "id": 1242,
+    "name": "Raymond J Favocci"
+  },
+  {
+    "avg_difficulty": 2.9,
+    "avg_rating": 3,
+    "department": "English",
+    "rmp_id": "VGVhY2hlci0yMzIzNTkz",
+    "rmp_legacy_id": 2323593,
+    "num_ratings": 36,
+    "id": 1031,
+    "name": "Judith M Curlee"
+  },
+  {
+    "avg_difficulty": 2.9,
+    "avg_rating": 3.2,
+    "department": "Philosophy",
+    "rmp_id": "VGVhY2hlci0yMzE1MzE1",
+    "rmp_legacy_id": 2315315,
+    "num_ratings": 24,
+    "id": 1172,
+    "name": "David S Seltzer"
+  },
+  {
+    "avg_difficulty": 2,
+    "avg_rating": 2.8,
+    "department": "Engineering",
+    "rmp_id": "VGVhY2hlci0yNjEzNTg4",
+    "rmp_legacy_id": 2613588,
+    "num_ratings": 17,
+    "id": 2178,
+    "name": "Johanna P Casale"
+  },
+  {
+    "avg_difficulty": 2.5,
+    "avg_rating": 3.6,
+    "department": "Economics",
+    "rmp_id": "VGVhY2hlci0xMjU3MTEz",
+    "rmp_legacy_id": 1257113,
+    "num_ratings": 20,
+    "id": 1597,
+    "name": "Shawkat M Hammoudeh"
+  },
+  {
+    "avg_difficulty": 2.4,
+    "avg_rating": 3.3,
+    "department": "Psychology",
+    "rmp_id": "VGVhY2hlci0xNzgyNjU4",
+    "rmp_legacy_id": 1782658,
+    "num_ratings": 42,
+    "id": 1447,
+    "name": "Dorothy R Charbonnier"
+  },
+  {
+    "avg_difficulty": 2.9,
+    "avg_rating": 3.5,
+    "department": "Psychology",
+    "rmp_id": "VGVhY2hlci0yMjQxODAw",
+    "rmp_legacy_id": 2241800,
+    "num_ratings": 35,
+    "id": 1430,
+    "name": "Danette Morrison"
+  },
+  {
+    "avg_difficulty": 3.2,
+    "avg_rating": 3.4,
+    "department": "Science",
+    "rmp_id": "VGVhY2hlci01NjQ2OA==",
+    "rmp_legacy_id": 56468,
+    "num_ratings": 17,
+    "id": 3180,
+    "name": "Donald L McEachron"
+  },
+  {
+    "avg_difficulty": 3.7,
+    "avg_rating": 4.9,
+    "department": "Finance",
+    "rmp_id": "VGVhY2hlci01ODk2NTA=",
+    "rmp_legacy_id": 589650,
+    "num_ratings": 10,
+    "id": 1631,
+    "name": "Daniel Dorn"
+  },
+  {
+    "avg_difficulty": 4,
+    "avg_rating": 2.7,
+    "department": "Finance",
+    "rmp_id": "VGVhY2hlci0yOTg2NjAw",
+    "rmp_legacy_id": 2986600,
+    "num_ratings": 3,
+    "id": 1641,
+    "name": "Tricia J Robak"
+  },
+  {
+    "avg_difficulty": 2.3,
+    "avg_rating": 5,
+    "department": "Business",
+    "rmp_id": "VGVhY2hlci0zMDM1NzAw",
+    "rmp_legacy_id": 3035700,
+    "num_ratings": 3,
+    "id": 1826,
+    "name": "Chuck N Sacco"
+  },
+  {
+    "avg_difficulty": 4,
+    "avg_rating": 1,
+    "department": "Business",
+    "rmp_id": "VGVhY2hlci0zMDM1NzI3",
+    "rmp_legacy_id": 3035727,
+    "num_ratings": 3,
+    "id": 1830,
+    "name": "Barrie E Litzky"
+  },
+  {
+    "avg_difficulty": 3.8,
+    "avg_rating": 3.5,
+    "department": "Engineering",
+    "rmp_id": "VGVhY2hlci0yOTg1MjI3",
+    "rmp_legacy_id": 2985227,
+    "num_ratings": 4,
+    "id": 2479,
+    "name": "Ahmad R Najafi"
+  },
+  {
+    "avg_difficulty": 3.5,
+    "avg_rating": 3.4,
+    "department": "History",
+    "rmp_id": "VGVhY2hlci05NjM4MjA=",
+    "rmp_legacy_id": 963820,
+    "num_ratings": 22,
+    "id": 1190,
+    "name": "Jonathan W Seitz"
+  },
+  {
+    "avg_difficulty": 4,
+    "avg_rating": 1.2,
+    "department": "Communication",
+    "rmp_id": "VGVhY2hlci0zMDMzMzM2",
+    "rmp_legacy_id": 3033336,
+    "num_ratings": 6,
+    "id": 885,
+    "name": "Essien O Essien"
+  },
+  {
+    "avg_difficulty": 3.8,
+    "avg_rating": 4.2,
+    "department": "Physics",
+    "rmp_id": "VGVhY2hlci0yMzU0ODQw",
+    "rmp_legacy_id": 2354840,
+    "num_ratings": 5,
+    "id": 1373,
+    "name": "Gordon T Richards"
+  },
+  {
+    "avg_difficulty": 3,
+    "avg_rating": 5,
+    "department": "Physics",
+    "rmp_id": "VGVhY2hlci0yNzM0Mzk3",
+    "rmp_legacy_id": 2734397,
+    "num_ratings": 3,
+    "id": 1381,
+    "name": "Luis R Cruz Cruz"
+  },
+  {
+    "avg_difficulty": 2.6,
+    "avg_rating": 5,
+    "department": "Nursing",
+    "rmp_id": "VGVhY2hlci0yODIwMDI5",
+    "rmp_legacy_id": 2820029,
+    "num_ratings": 19,
+    "id": 2886,
+    "name": "Joyce Brill"
+  },
+  {
+    "avg_difficulty": 3.8,
+    "avg_rating": 2.2,
+    "department": "Music",
+    "rmp_id": "VGVhY2hlci0yNzg5Nzk1",
+    "rmp_legacy_id": 2789795,
+    "num_ratings": 5,
+    "id": 324,
+    "name": "Brent White"
+  },
+  {
+    "avg_difficulty": 1,
+    "avg_rating": 4,
+    "department": "Film",
+    "rmp_id": "VGVhY2hlci0zMDc1Mjkw",
+    "rmp_legacy_id": 3075290,
+    "num_ratings": 1,
+    "id": 212,
+    "name": "Joe R Marsini"
+  },
+  {
+    "avg_difficulty": 2.9,
+    "avg_rating": 3.5,
+    "department": "Digital Media",
+    "rmp_id": "VGVhY2hlci0yNDQ5Nzg5",
+    "rmp_legacy_id": 2449789,
+    "num_ratings": 8,
+    "id": 267,
+    "name": "Chester Cunanan"
+  },
+  {
+    "avg_difficulty": 3.9,
+    "avg_rating": 2.5,
+    "department": "Physics",
+    "rmp_id": "VGVhY2hlci0xOTkxOTEx",
+    "rmp_legacy_id": 1991911,
+    "num_ratings": 8,
+    "id": 1392,
+    "name": "Brigita Urbanc"
+  },
+  {
+    "avg_difficulty": 1.4,
+    "avg_rating": 5,
+    "department": "English",
+    "rmp_id": "VGVhY2hlci0yODQwMTM2",
+    "rmp_legacy_id": 2840136,
+    "num_ratings": 5,
+    "id": 1010,
+    "name": "Karen A Stegeman"
+  },
+  {
+    "avg_difficulty": 1.7,
+    "avg_rating": 5,
+    "department": "Health Science",
+    "rmp_id": "VGVhY2hlci0zMDE3ODM1",
+    "rmp_legacy_id": 3017835,
+    "num_ratings": 3,
+    "id": 2810,
+    "name": "Meghan E Smith"
+  },
+  {
+    "avg_difficulty": 1,
+    "avg_rating": 1,
+    "department": "Family Studies & Social Work",
+    "rmp_id": "VGVhY2hlci0yODk0Nzgy",
+    "rmp_legacy_id": 2894782,
+    "num_ratings": 3,
+    "id": 1813,
+    "name": "Rayna Hughes"
+  },
+  {
+    "avg_difficulty": 2.7,
+    "avg_rating": 3.9,
+    "department": "Mathematics",
+    "rmp_id": "VGVhY2hlci0yMzQ2ODYy",
+    "rmp_legacy_id": 2346862,
+    "num_ratings": 37,
+    "id": 1276,
+    "name": "Matthew J Ziemke"
+  },
+  {
+    "avg_difficulty": 3.9,
+    "avg_rating": 2.5,
+    "department": "Nursing",
+    "rmp_id": "VGVhY2hlci0yODgzODY5",
+    "rmp_legacy_id": 2883869,
+    "num_ratings": 8,
+    "id": 2937,
+    "name": "Elizabeth Hammond-Ritschard"
+  },
+  {
+    "avg_difficulty": 3.6,
+    "avg_rating": 2.5,
+    "department": "Engineering",
+    "rmp_id": "VGVhY2hlci0yMDE4NjYz",
+    "rmp_legacy_id": 2018663,
+    "num_ratings": 8,
+    "id": 2156,
+    "name": "Abieyuwa O Aghayere"
+  },
+  {
+    "avg_difficulty": 3.3,
+    "avg_rating": 5,
+    "department": "Finance",
+    "rmp_id": "VGVhY2hlci0yNzQyNzkx",
+    "rmp_legacy_id": 2742791,
+    "num_ratings": 4,
+    "id": 1646,
+    "name": "Gregory P Nini"
+  },
+  {
+    "avg_difficulty": 4.3,
+    "avg_rating": 2.2,
+    "department": "Accounting",
+    "rmp_id": "VGVhY2hlci0yMzg0NjI5",
+    "rmp_legacy_id": 2384629,
+    "num_ratings": 44,
+    "id": 1562,
+    "name": "Maureen P Breen"
+  },
+  {
+    "avg_difficulty": 4.3,
+    "avg_rating": 2.3,
+    "department": "Physics",
+    "rmp_id": "VGVhY2hlci02NTMyMzc=",
+    "rmp_legacy_id": 653237,
+    "num_ratings": 35,
+    "id": 1364,
+    "name": "Frank A Ferrone"
+  },
+  {
+    "avg_difficulty": 2.5,
+    "avg_rating": 4.8,
+    "department": "English",
+    "rmp_id": "VGVhY2hlci0yOTg4Nzcz",
+    "rmp_legacy_id": 2988773,
+    "num_ratings": 6,
+    "id": 1034,
+    "name": "Greg Probst"
+  },
+  {
+    "avg_difficulty": 3,
+    "avg_rating": 4.4,
+    "department": "Chemistry",
+    "rmp_id": "VGVhY2hlci0xNTM3ODEw",
+    "rmp_legacy_id": 1537810,
+    "num_ratings": 117,
+    "id": 791,
+    "name": "Monica Ilies"
+  },
+  {
+    "avg_difficulty": 4.2,
+    "avg_rating": 1.7,
+    "department": "Engineering",
+    "rmp_id": "VGVhY2hlci0yNDYxMzg1",
+    "rmp_legacy_id": 2461385,
+    "num_ratings": 46,
+    "id": 2152,
+    "name": "Shannon L Capps"
+  },
+  {
+    "avg_difficulty": 2.3,
+    "avg_rating": 2,
+    "department": "Computer Science",
+    "rmp_id": "VGVhY2hlci0zMDIwNzEz",
+    "rmp_legacy_id": 3020713,
+    "num_ratings": 3,
+    "id": 1950,
+    "name": "Emanuel S Lazar"
+  },
+  {
+    "avg_difficulty": 4.3,
+    "avg_rating": 1.5,
+    "department": "Mathematics",
+    "rmp_id": "VGVhY2hlci0yMzQwNTgz",
+    "rmp_legacy_id": 2340583,
+    "num_ratings": 51,
+    "id": 2165,
+    "name": "Michael O Ryan"
+  },
+  {
+    "avg_difficulty": 1.5,
+    "avg_rating": 4.9,
+    "department": "Not Specified",
+    "rmp_id": "VGVhY2hlci05MDEyNzk=",
+    "rmp_legacy_id": 901279,
+    "num_ratings": 33,
+    "id": 1652,
+    "name": "Eric E Rios"
+  },
+  {
+    "avg_difficulty": 2.8,
+    "avg_rating": 3.4,
+    "department": "Literature",
+    "rmp_id": "VGVhY2hlci0xNDM4OA==",
+    "rmp_legacy_id": 14388,
+    "num_ratings": 34,
+    "id": 1043,
+    "name": "Donna L Rondolone"
+  },
+  {
+    "avg_difficulty": 4.1,
+    "avg_rating": 2.2,
+    "department": "Computer Science",
+    "rmp_id": "VGVhY2hlci00MzU2MzY=",
+    "rmp_legacy_id": 435636,
+    "num_ratings": 78,
+    "id": 1858,
+    "name": "Kurt Schmidt"
+  },
+  {
+    "avg_difficulty": 3.8,
+    "avg_rating": 3.4,
+    "department": "Engineering",
+    "rmp_id": "VGVhY2hlci05NjcxMTc=",
+    "rmp_legacy_id": 967117,
+    "num_ratings": 21,
+    "id": 2370,
+    "name": "Richard Knight"
+  },
+  {
+    "avg_difficulty": 1.4,
+    "avg_rating": 4.8,
+    "department": "Theater",
+    "rmp_id": "VGVhY2hlci0yNDY5MzM2",
+    "rmp_legacy_id": 2469336,
+    "num_ratings": 5,
+    "id": 484,
+    "name": "David L White"
+  },
+  {
+    "avg_difficulty": 3.2,
+    "avg_rating": 3.2,
+    "department": "Economics",
+    "rmp_id": "VGVhY2hlci0zNTM3MA==",
+    "rmp_legacy_id": 35370,
+    "num_ratings": 54,
+    "id": 1594,
+    "name": "Stephen Joyce"
+  },
+  {
+    "avg_difficulty": 2.4,
+    "avg_rating": 4,
+    "department": "Psychology",
+    "rmp_id": "VGVhY2hlci03MTE3OTk=",
+    "rmp_legacy_id": 711799,
+    "num_ratings": 19,
+    "id": 1424,
+    "name": "Ludo C Scheffer"
+  },
+  {
+    "avg_difficulty": 3.1,
+    "avg_rating": 4.6,
+    "department": "Languages",
+    "rmp_id": "VGVhY2hlci0yNjc0NDkw",
+    "rmp_legacy_id": 2674490,
+    "num_ratings": 7,
+    "id": 881,
+    "name": "Ni Ou"
+  },
+  {
+    "avg_difficulty": 2,
+    "avg_rating": 2,
+    "department": "Psychology",
+    "rmp_id": "VGVhY2hlci0yMzU0NjE2",
+    "rmp_legacy_id": 2354616,
+    "num_ratings": 4,
+    "id": 1462,
+    "name": "Christina O Nash"
+  },
+  {
+    "avg_difficulty": 2.3,
+    "avg_rating": 3.7,
+    "department": "Psychology",
+    "rmp_id": "VGVhY2hlci0xOTg1Mzg0",
+    "rmp_legacy_id": 1985384,
+    "num_ratings": 3,
+    "id": 1473,
+    "name": "Kirk Heilbrun"
+  },
+  {
+    "avg_difficulty": 2,
+    "avg_rating": 5,
+    "department": "Engineering",
+    "rmp_id": "VGVhY2hlci0yOTc3Nzkx",
+    "rmp_legacy_id": 2977791,
+    "num_ratings": 2,
+    "id": 2120,
+    "name": "Peter Deak"
+  },
+  {
+    "avg_difficulty": 4,
+    "avg_rating": 5,
+    "department": "History",
+    "rmp_id": "VGVhY2hlci0yOTYwMzc2",
+    "rmp_legacy_id": 2960376,
+    "num_ratings": 2,
+    "id": 550,
+    "name": "Nic John F Ramos"
+  },
+  {
+    "avg_difficulty": 3.5,
+    "avg_rating": 5,
+    "department": "English",
+    "rmp_id": "VGVhY2hlci0yNzc4NDgz",
+    "rmp_legacy_id": 2778483,
+    "num_ratings": 2,
+    "id": 549,
+    "name": "Jakeya Caruthers"
+  },
+  {
+    "avg_difficulty": 1.7,
+    "avg_rating": 5,
+    "department": "Communication",
+    "rmp_id": "VGVhY2hlci0yOTk3MDEy",
+    "rmp_legacy_id": 2997012,
+    "num_ratings": 6,
+    "id": 1212,
+    "name": "John Timlin"
+  },
+  {
+    "avg_difficulty": 3.7,
+    "avg_rating": 3.1,
+    "department": "Chemistry",
+    "rmp_id": "VGVhY2hlci0yNjY4MjA1",
+    "rmp_legacy_id": 2668205,
+    "num_ratings": 53,
+    "id": 810,
+    "name": "Jamie L Ludwig"
+  },
+  {
+    "avg_difficulty": 2.5,
+    "avg_rating": 4.4,
+    "department": "Biology",
+    "rmp_id": "VGVhY2hlci0yNDk3NTg2",
+    "rmp_legacy_id": 2497586,
+    "num_ratings": 15,
+    "id": 680,
+    "name": "Matthew T McDonald"
+  },
+  {
+    "avg_difficulty": 2.6,
+    "avg_rating": 4.4,
+    "department": "Business",
+    "rmp_id": "VGVhY2hlci02MDgwNTA=",
+    "rmp_legacy_id": 608050,
+    "num_ratings": 7,
+    "id": 1658,
+    "name": "Murugan Anandarajan"
+  },
+  {
+    "avg_difficulty": 4.1,
+    "avg_rating": 3.2,
+    "department": "Law",
+    "rmp_id": "VGVhY2hlci01ODM3MDU=",
+    "rmp_legacy_id": 583705,
+    "num_ratings": 43,
+    "id": 1670,
+    "name": "Steven R Sher"
+  },
+  {
+    "avg_difficulty": 3.8,
+    "avg_rating": 3.8,
+    "department": "Health Science",
+    "rmp_id": "VGVhY2hlci0yMjYzNjU5",
+    "rmp_legacy_id": 2263659,
+    "num_ratings": 23,
+    "id": 2821,
+    "name": "Michael L Bruneau"
+  },
+  {
+    "avg_difficulty": 1.7,
+    "avg_rating": 4.6,
+    "department": "Business",
+    "rmp_id": "VGVhY2hlci0yMDU4NDk2",
+    "rmp_legacy_id": 2058496,
+    "num_ratings": 23,
+    "id": 1661,
+    "name": "Bernard Rayca"
+  },
+  {
+    "avg_difficulty": 3,
+    "avg_rating": 4.1,
+    "department": "Statistics",
+    "rmp_id": "VGVhY2hlci0yMTE1MDk0",
+    "rmp_legacy_id": 2115094,
+    "num_ratings": 22,
+    "id": 1583,
+    "name": "Christopher T Gaffney"
+  },
+  {
+    "avg_difficulty": 4.1,
+    "avg_rating": 4.3,
+    "department": "Health Science",
+    "rmp_id": "VGVhY2hlci0xNTE2MjMw",
+    "rmp_legacy_id": 1516230,
+    "num_ratings": 12,
+    "id": 2840,
+    "name": "Stephen F Gambescia"
+  },
+  {
+    "avg_difficulty": 2.2,
+    "avg_rating": 3.6,
+    "department": "Business",
+    "rmp_id": "VGVhY2hlci0yNzcxODA3",
+    "rmp_legacy_id": 2771807,
+    "num_ratings": 5,
+    "id": 1587,
+    "name": "Wenjing Shen"
+  },
+  {
+    "avg_difficulty": 2.3,
+    "avg_rating": 4.5,
+    "department": "Philosophy",
+    "rmp_id": "VGVhY2hlci0yOTg3OTM2",
+    "rmp_legacy_id": 2987936,
+    "num_ratings": 4,
+    "id": 1333,
+    "name": "Alyssa Haney"
+  },
+  {
+    "avg_difficulty": 2.2,
+    "avg_rating": 3.8,
+    "department": "English",
+    "rmp_id": "VGVhY2hlci0xMjcwNzY2",
+    "rmp_legacy_id": 1270766,
+    "num_ratings": 41,
+    "id": 2276,
+    "name": "Gail L Rosen"
+  },
+  {
+    "avg_difficulty": 3.2,
+    "avg_rating": 4,
+    "department": "Physics",
+    "rmp_id": "VGVhY2hlci0yMjYwMzEw",
+    "rmp_legacy_id": 2260310,
+    "num_ratings": 19,
+    "id": 1361,
+    "name": "Rachael M Kratzer"
+  },
+  {
+    "avg_difficulty": 3.7,
+    "avg_rating": 3.7,
+    "department": "Decision Science",
+    "rmp_id": "VGVhY2hlci0yNTc2NDQ1",
+    "rmp_legacy_id": 2576445,
+    "num_ratings": 6,
+    "id": 1737,
+    "name": "Seung-Lae Kim"
+  },
+  {
+    "avg_difficulty": 1.8,
+    "avg_rating": 4.8,
+    "department": "Humanities",
+    "rmp_id": "VGVhY2hlci00ODk5MDY=",
+    "rmp_legacy_id": 489906,
+    "num_ratings": 47,
+    "id": 1058,
+    "name": "Kenneth Bingham"
+  },
+  {
+    "avg_difficulty": 2,
+    "avg_rating": 4.7,
+    "department": "Criminal Justice",
+    "rmp_id": "VGVhY2hlci0yODA1Nzk1",
+    "rmp_legacy_id": 2805795,
+    "num_ratings": 3,
+    "id": 994,
+    "name": "Shannon K Jacobsen"
+  },
+  {
+    "avg_difficulty": 3,
+    "avg_rating": 5,
+    "department": "Economics",
+    "rmp_id": "VGVhY2hlci0yOTM4OTEw",
+    "rmp_legacy_id": 2938910,
+    "num_ratings": 1,
+    "id": 1607,
+    "name": "Ricardo Serrano-Padial"
+  },
+  {
+    "avg_difficulty": 3.9,
+    "avg_rating": 1.6,
+    "department": "Philosophy",
+    "rmp_id": "VGVhY2hlci0xMDMwOTQ5",
+    "rmp_legacy_id": 1030949,
+    "num_ratings": 45,
+    "id": 1327,
+    "name": "Amy S Bush"
+  },
+  {
+    "avg_difficulty": 3.9,
+    "avg_rating": 1.4,
+    "department": "Mathematics",
+    "rmp_id": "VGVhY2hlci0yNzUyOTcw",
+    "rmp_legacy_id": 2752970,
+    "num_ratings": 29,
+    "id": 1223,
+    "name": "Patricia D Bobo"
+  },
+  {
+    "avg_difficulty": 2.3,
+    "avg_rating": 4.6,
+    "department": "Psychology",
+    "rmp_id": "VGVhY2hlci0yNDMyMTA4",
+    "rmp_legacy_id": 2432108,
+    "num_ratings": 16,
+    "id": 1427,
+    "name": "Megan L Meyer"
+  },
+  {
+    "avg_difficulty": 3.1,
+    "avg_rating": 4.9,
+    "department": "Finance",
+    "rmp_id": "VGVhY2hlci0yMzkwOTg4",
+    "rmp_legacy_id": 2390988,
+    "num_ratings": 7,
+    "id": 1633,
+    "name": "Naveen D Daniel"
+  },
+  {
+    "avg_difficulty": 1.6,
+    "avg_rating": 5,
+    "department": "Languages",
+    "rmp_id": "VGVhY2hlci0yNzgwMjUx",
+    "rmp_legacy_id": 2780251,
+    "num_ratings": 5,
+    "id": 553,
+    "name": "Simone Schlichting-Artur"
+  },
+  {
+    "avg_difficulty": 1,
+    "avg_rating": 5,
+    "department": "Biological Sciences",
+    "rmp_id": "VGVhY2hlci0zMDY4MjQw",
+    "rmp_legacy_id": 3068240,
+    "num_ratings": 1,
+    "id": 1137,
+    "name": "Neeti Bathala"
+  },
+  {
+    "avg_difficulty": 2.6,
+    "avg_rating": 3.7,
+    "department": "English",
+    "rmp_id": "VGVhY2hlci03MTM1MTQ=",
+    "rmp_legacy_id": 713514,
+    "num_ratings": 68,
+    "id": 1038,
+    "name": "Robert A Watts"
+  },
+  {
+    "avg_difficulty": 1.5,
+    "avg_rating": 4.5,
+    "department": "English",
+    "rmp_id": "VGVhY2hlci0xODc4Njcx",
+    "rmp_legacy_id": 1878671,
+    "num_ratings": 26,
+    "id": 1052,
+    "name": "Jill R Moses"
+  },
+  {
+    "avg_difficulty": 3.5,
+    "avg_rating": 2.7,
+    "department": "Music",
+    "rmp_id": "VGVhY2hlci03MzU4NjI=",
+    "rmp_legacy_id": 735862,
+    "num_ratings": 20,
+    "id": 336,
+    "name": "Luke A Abruzzo"
+  },
+  {
+    "avg_difficulty": 3.8,
+    "avg_rating": 3.5,
+    "department": "Nursing",
+    "rmp_id": "VGVhY2hlci0yNjgwNzc0",
+    "rmp_legacy_id": 2680774,
+    "num_ratings": 40,
+    "id": 2815,
+    "name": "Anne M Dower"
+  },
+  {
+    "avg_difficulty": 4.2,
+    "avg_rating": 4.5,
+    "department": "Computer Science",
+    "rmp_id": "VGVhY2hlci0yNzI0NDQw",
+    "rmp_legacy_id": 2724440,
+    "num_ratings": 15,
+    "id": 1855,
+    "name": "Yusuf Osmanlioglu"
+  },
+  {
+    "avg_difficulty": 2.8,
+    "avg_rating": 2.1,
+    "department": "Design",
+    "rmp_id": "VGVhY2hlci0yNTgxOTY0",
+    "rmp_legacy_id": 2581964,
+    "num_ratings": 9,
+    "id": 540,
+    "name": "Raja Y Schaar"
+  },
+  {
+    "avg_difficulty": 1.8,
+    "avg_rating": 4.3,
+    "department": "Management",
+    "rmp_id": "VGVhY2hlci0yMzU3MTE5",
+    "rmp_legacy_id": 2357119,
+    "num_ratings": 24,
+    "id": 1704,
+    "name": "Samir N Shah"
+  },
+  {
+    "avg_difficulty": 1.8,
+    "avg_rating": 4.3,
+    "department": "Communication",
+    "rmp_id": "VGVhY2hlci0yNzQzNTMz",
+    "rmp_legacy_id": 2743533,
+    "num_ratings": 6,
+    "id": 902,
+    "name": "Eric W Herr"
+  },
+  {
+    "avg_difficulty": 2.7,
+    "avg_rating": 4.6,
+    "department": "Mathematics",
+    "rmp_id": "VGVhY2hlci0xMTgzNjA2",
+    "rmp_legacy_id": 1183606,
+    "num_ratings": 65,
+    "id": 1260,
+    "name": "Jason S Aran"
+  },
+  {
+    "avg_difficulty": 2.4,
+    "avg_rating": 4.8,
+    "department": "Criminal Justice",
+    "rmp_id": "VGVhY2hlci0yMjI5OTc0",
+    "rmp_legacy_id": 2229974,
+    "num_ratings": 19,
+    "id": 990,
+    "name": "Ashley L Dickinson"
+  },
+  {
+    "avg_difficulty": 3.6,
+    "avg_rating": 4.8,
+    "department": "Design",
+    "rmp_id": "VGVhY2hlci0yODQyNTM4",
+    "rmp_legacy_id": 2842538,
+    "num_ratings": 8,
+    "id": 509,
+    "name": "Ricardo Zapata"
+  },
+  {
+    "avg_difficulty": 2.5,
+    "avg_rating": 5,
+    "department": "Mathematics",
+    "rmp_id": "VGVhY2hlci0yODg0NDI1",
+    "rmp_legacy_id": 2884425,
+    "num_ratings": 16,
+    "id": 1228,
+    "name": "Caitlin Klimas"
+  },
+  {
+    "avg_difficulty": 1,
+    "avg_rating": 5,
+    "department": "Nursing",
+    "rmp_id": "VGVhY2hlci0yODYyODI3",
+    "rmp_legacy_id": 2862827,
+    "num_ratings": 1,
+    "id": 2909,
+    "name": "Joyce A Welliver"
+  },
+  {
+    "avg_difficulty": 3.7,
+    "avg_rating": 3.4,
+    "department": "Mathematics",
+    "rmp_id": "VGVhY2hlci0yMjkxNjA0",
+    "rmp_legacy_id": 2291604,
+    "num_ratings": 43,
+    "id": 1235,
+    "name": "Kumar S Virbhadra"
+  },
+  {
+    "avg_difficulty": 2.4,
+    "avg_rating": 4.6,
+    "department": "English",
+    "rmp_id": "VGVhY2hlci0yMTA4NTU2",
+    "rmp_legacy_id": 2108556,
+    "num_ratings": 23,
+    "id": 1101,
+    "name": "Karen S Nulton"
+  },
+  {
+    "avg_difficulty": 3,
+    "avg_rating": 1.9,
+    "department": "Sociology",
+    "rmp_id": "VGVhY2hlci0yNTMwMzI2",
+    "rmp_legacy_id": 2530326,
+    "num_ratings": 21,
+    "id": 1493,
+    "name": "Sarah S Hosman"
+  },
+  {
+    "avg_difficulty": 3.5,
+    "avg_rating": 2.1,
+    "department": "Business",
+    "rmp_id": "VGVhY2hlci0yNzA1NDM5",
+    "rmp_legacy_id": 2705439,
+    "num_ratings": 21,
+    "id": 1634,
+    "name": "Maneesh L Chhabria"
+  },
+  {
+    "avg_difficulty": 2.6,
+    "avg_rating": 4.5,
+    "department": "Nursing",
+    "rmp_id": "VGVhY2hlci0yMDIyOTkx",
+    "rmp_legacy_id": 2022991,
+    "num_ratings": 18,
+    "id": 2814,
+    "name": "William J D'Andrea"
+  },
+  {
+    "avg_difficulty": 3.7,
+    "avg_rating": 4,
+    "department": "Computer Science",
+    "rmp_id": "VGVhY2hlci0yNzI2MDMy",
+    "rmp_legacy_id": 2726032,
+    "num_ratings": 12,
+    "id": 1926,
+    "name": "Preetha Chatterjee"
+  },
+  {
+    "avg_difficulty": 3.6,
+    "avg_rating": 4.7,
+    "department": "Law",
+    "rmp_id": "VGVhY2hlci03ODg4",
+    "rmp_legacy_id": 7888,
+    "num_ratings": 25,
+    "id": 1669,
+    "name": "Richard P Freedman"
+  },
+  {
+    "avg_difficulty": 3.3,
+    "avg_rating": 2.6,
+    "department": "Philosophy",
+    "rmp_id": "VGVhY2hlci0xODAyNTA3",
+    "rmp_legacy_id": 1802507,
+    "num_ratings": 19,
+    "id": 1336,
+    "name": "Eric F Fleming"
+  },
+  {
+    "avg_difficulty": 4.2,
+    "avg_rating": 1.3,
+    "department": "Mathematics",
+    "rmp_id": "VGVhY2hlci0yNzM3OTM0",
+    "rmp_legacy_id": 2737934,
+    "num_ratings": 9,
+    "id": 1257,
+    "name": "Rolando Placeres Jimenez"
+  },
+  {
+    "avg_difficulty": 4.2,
+    "avg_rating": 1.9,
+    "department": "Computer Science",
+    "rmp_id": "VGVhY2hlci0yOTM5NjQ0",
+    "rmp_legacy_id": 2939644,
+    "num_ratings": 9,
+    "id": 1891,
+    "name": "Nadya B Sultanik"
+  },
+  {
+    "avg_difficulty": 3.3,
+    "avg_rating": 2.8,
+    "department": "Communication",
+    "rmp_id": "VGVhY2hlci0xODQ1MTkz",
+    "rmp_legacy_id": 1845193,
+    "num_ratings": 8,
+    "id": 895,
+    "name": "Asta Zelenkauskaite"
+  },
+  {
+    "avg_difficulty": 3.7,
+    "avg_rating": 3.1,
+    "department": "Computer Science",
+    "rmp_id": "VGVhY2hlci0yMzExMDYz",
+    "rmp_legacy_id": 2311063,
+    "num_ratings": 7,
+    "id": 1930,
+    "name": "Jeremy R Johnson"
+  },
+  {
+    "avg_difficulty": 3.7,
+    "avg_rating": 5,
+    "department": "Computer Science",
+    "rmp_id": "VGVhY2hlci0yMzM5MjAw",
+    "rmp_legacy_id": 2339200,
+    "num_ratings": 6,
+    "id": 1927,
+    "name": "Vasilis Gkatzelis"
+  },
+  {
+    "avg_difficulty": 2.5,
+    "avg_rating": 4,
+    "department": "Sociology",
+    "rmp_id": "VGVhY2hlci0zMDUzNTE5",
+    "rmp_legacy_id": 3053519,
+    "num_ratings": 2,
+    "id": 1494,
+    "name": "Gorkem Dagdelen"
+  },
+  {
+    "avg_difficulty": 2.7,
+    "avg_rating": 3,
+    "department": "English",
+    "rmp_id": "VGVhY2hlci01MzUwNzA=",
+    "rmp_legacy_id": 535070,
+    "num_ratings": 7,
+    "id": 1536,
+    "name": "Miriam N Kotzin"
+  },
+  {
+    "avg_difficulty": 3,
+    "avg_rating": 4.6,
+    "department": "Mathematics",
+    "rmp_id": "VGVhY2hlci0xODAzNDgy",
+    "rmp_legacy_id": 1803482,
+    "num_ratings": 5,
+    "id": 1301,
+    "name": "David M Ambrose"
+  },
+  {
+    "avg_difficulty": 2,
+    "avg_rating": 5,
+    "department": "Finance",
+    "rmp_id": "VGVhY2hlci0yNjQ0OTc2",
+    "rmp_legacy_id": 2644976,
+    "num_ratings": 1,
+    "id": 1626,
+    "name": "Wahib M Ghazni"
+  },
+  {
+    "avg_difficulty": 3.4,
+    "avg_rating": 2.4,
+    "department": "English",
+    "rmp_id": "VGVhY2hlci0yMTEzNzI0",
+    "rmp_legacy_id": 2113724,
+    "num_ratings": 22,
+    "id": 1022,
+    "name": "Errol C Sull"
+  },
+  {
+    "avg_difficulty": 4,
+    "avg_rating": 3.1,
+    "department": "Art History",
+    "rmp_id": "VGVhY2hlci0yNTI2OTA1",
+    "rmp_legacy_id": 2526905,
+    "num_ratings": 19,
+    "id": 71,
+    "name": "Linda Kim"
+  },
+  {
+    "avg_difficulty": 2.8,
+    "avg_rating": 2,
+    "department": "Architecture",
+    "rmp_id": "VGVhY2hlci0yNDY5NDIy",
+    "rmp_legacy_id": 2469422,
+    "num_ratings": 5,
+    "id": 541,
+    "name": "Erik P Sundquist"
+  },
+  {
+    "avg_difficulty": 2.8,
+    "avg_rating": 3.5,
+    "department": "English",
+    "rmp_id": "VGVhY2hlci0yNTI3MDU4",
+    "rmp_legacy_id": 2527058,
+    "num_ratings": 4,
+    "id": 1121,
+    "name": "Deirdre H McMahon"
+  },
+  {
+    "avg_difficulty": 3.8,
+    "avg_rating": 4,
+    "department": "Architecture",
+    "rmp_id": "VGVhY2hlci0zMDEyNzcy",
+    "rmp_legacy_id": 3012772,
+    "num_ratings": 4,
+    "id": 20,
+    "name": "Daniel E Coslett"
+  },
+  {
+    "avg_difficulty": 1,
+    "avg_rating": 5,
+    "department": "Japanese",
+    "rmp_id": "VGVhY2hlci0zMDQyMDc4",
+    "rmp_legacy_id": 3042078,
+    "num_ratings": 1,
+    "id": 1195,
+    "name": "Chihiro Williams"
+  },
+  {
+    "avg_difficulty": 2.4,
+    "avg_rating": 4.5,
+    "department": "Fine Arts",
+    "rmp_id": "VGVhY2hlci0xMzA3MTY0",
+    "rmp_legacy_id": 1307164,
+    "num_ratings": 12,
+    "id": 515,
+    "name": "Jacob K Lunderby"
+  },
+  {
+    "avg_difficulty": 1.2,
+    "avg_rating": 5,
+    "department": "Psychology",
+    "rmp_id": "VGVhY2hlci0zMDUwNzc2",
+    "rmp_legacy_id": 3050776,
+    "num_ratings": 5,
+    "id": 1471,
+    "name": "John D Medaglia"
+  },
+  {
+    "avg_difficulty": 3.3,
+    "avg_rating": 4.7,
+    "department": "Computer Science",
+    "rmp_id": "VGVhY2hlci0yNjY2OTM0",
+    "rmp_legacy_id": 2666934,
+    "num_ratings": 3,
+    "id": 1884,
+    "name": "Ehsan B Khosroshahi"
+  },
+  {
+    "avg_difficulty": 1.9,
+    "avg_rating": 4.4,
+    "department": "Mathematics",
+    "rmp_id": "VGVhY2hlci04MTAyMDE=",
+    "rmp_legacy_id": 810201,
+    "num_ratings": 20,
+    "id": 1305,
+    "name": "June K Gordon"
+  },
+  {
+    "avg_difficulty": 4.7,
+    "avg_rating": 1.6,
+    "department": "Chemistry",
+    "rmp_id": "VGVhY2hlci0yNjQyMDA3",
+    "rmp_legacy_id": 2642007,
+    "num_ratings": 18,
+    "id": 832,
+    "name": "Fraser F Fleming"
+  },
+  {
+    "avg_difficulty": 2.1,
+    "avg_rating": 4.4,
+    "department": "Health Science",
+    "rmp_id": "VGVhY2hlci0yMjY1NTk1",
+    "rmp_legacy_id": 2265595,
+    "num_ratings": 15,
+    "id": 2831,
+    "name": "Jesse F Ballenger"
+  },
+  {
+    "avg_difficulty": 2.5,
+    "avg_rating": 5,
+    "department": "Digital Media",
+    "rmp_id": "VGVhY2hlci0yOTI0Mjc2",
+    "rmp_legacy_id": 2924276,
+    "num_ratings": 4,
+    "id": 238,
+    "name": "Darya Ramezani"
+  },
+  {
+    "avg_difficulty": 2,
+    "avg_rating": 4.7,
+    "department": "Digital Media",
+    "rmp_id": "VGVhY2hlci0zMDU3MjU2",
+    "rmp_legacy_id": 3057256,
+    "num_ratings": 3,
+    "id": 234,
+    "name": "Steven E Denisevicz"
+  },
+  {
+    "avg_difficulty": 4.5,
+    "avg_rating": 1,
+    "department": "Public Health",
+    "rmp_id": "VGVhY2hlci0yOTk2OTMy",
+    "rmp_legacy_id": 2996932,
+    "num_ratings": 2,
+    "id": 2517,
+    "name": "Ana P Martinez-Donate"
+  },
+  {
+    "avg_difficulty": 3,
+    "avg_rating": 3.5,
+    "department": "Computer Science",
+    "rmp_id": "VGVhY2hlci0zMDI4MTk4",
+    "rmp_legacy_id": 3028198,
+    "num_ratings": 2,
+    "id": 1859,
+    "name": "Joseph A Gallego Mejia"
+  },
+  {
+    "avg_difficulty": 2,
+    "avg_rating": 1,
+    "department": "Film",
+    "rmp_id": "VGVhY2hlci0zMDYwNzY0",
+    "rmp_legacy_id": 3060764,
+    "num_ratings": 1,
+    "id": 458,
+    "name": "Matthew J Kaufhold"
+  },
+  {
+    "avg_difficulty": 3,
+    "avg_rating": 5,
+    "department": "Digital Media",
+    "rmp_id": "VGVhY2hlci0zMDYwODA4",
+    "rmp_legacy_id": 3060808,
+    "num_ratings": 1,
+    "id": 18,
+    "name": "Sir Neistadt"
+  },
+  {
+    "avg_difficulty": 3,
+    "avg_rating": 4,
+    "department": "Digital Media",
+    "rmp_id": "VGVhY2hlci0zMDYwODE3",
+    "rmp_legacy_id": 3060817,
+    "num_ratings": 1,
+    "id": 143,
+    "name": "Tony A Rowe"
+  },
+  {
+    "avg_difficulty": 2.1,
+    "avg_rating": 4.5,
+    "department": "Philosophy",
+    "rmp_id": "VGVhY2hlci0yNDMyMTE0",
+    "rmp_legacy_id": 2432114,
+    "num_ratings": 11,
+    "id": 1321,
+    "name": "Patrick M Denehy"
+  },
+  {
+    "avg_difficulty": 3.6,
+    "avg_rating": 2.4,
+    "department": "Media Arts & Design",
+    "rmp_id": "VGVhY2hlci0yNjM2Mjgx",
+    "rmp_legacy_id": 2636281,
+    "num_ratings": 9,
+    "id": 235,
+    "name": "Jessica E Creane"
+  },
+  {
+    "avg_difficulty": 2.7,
+    "avg_rating": 2.3,
+    "department": "Film",
+    "rmp_id": "VGVhY2hlci0yMzUwMzY5",
+    "rmp_legacy_id": 2350369,
+    "num_ratings": 3,
+    "id": 219,
+    "name": "Andrew B Susskind"
+  },
+  {
+    "avg_difficulty": 2.4,
+    "avg_rating": 4.1,
+    "department": "Mathematics",
+    "rmp_id": "VGVhY2hlci03NTUyMTg=",
+    "rmp_legacy_id": 755218,
+    "num_ratings": 52,
+    "id": 1293,
+    "name": "Jeanne M Steuber"
+  },
+  {
+    "avg_difficulty": 3.9,
+    "avg_rating": 2,
+    "department": "Nursing",
+    "rmp_id": "VGVhY2hlci0yNDk4NTUx",
+    "rmp_legacy_id": 2498551,
+    "num_ratings": 28,
+    "id": 2907,
+    "name": "Tasha K Martin-Peters"
+  },
+  {
+    "avg_difficulty": 3.2,
+    "avg_rating": 4.4,
+    "department": "Humanities",
+    "rmp_id": "VGVhY2hlci0yMTAwNjA4",
+    "rmp_legacy_id": 2100608,
+    "num_ratings": 25,
+    "id": 1213,
+    "name": "William A Albertson"
+  },
+  {
+    "avg_difficulty": 4.9,
+    "avg_rating": 1.2,
+    "department": "Engineering",
+    "rmp_id": "VGVhY2hlci0xNTQ0ODE3",
+    "rmp_legacy_id": 1544817,
+    "num_ratings": 21,
+    "id": 2433,
+    "name": "David L Miller"
+  },
+  {
+    "avg_difficulty": 3.8,
+    "avg_rating": 3.2,
+    "department": "Nursing",
+    "rmp_id": "VGVhY2hlci0yMjAyMjEx",
+    "rmp_legacy_id": 2202211,
+    "num_ratings": 12,
+    "id": 2680,
+    "name": "Sally K Miller"
+  },
+  {
+    "avg_difficulty": 3.3,
+    "avg_rating": 4,
+    "department": "Management",
+    "rmp_id": "VGVhY2hlci0yOTg2NTk3",
+    "rmp_legacy_id": 2986597,
+    "num_ratings": 3,
+    "id": 1769,
+    "name": "Jeff F Levine"
+  },
+  {
+    "avg_difficulty": 3,
+    "avg_rating": 4.2,
+    "department": "Mathematics",
+    "rmp_id": "VGVhY2hlci0yNTAwOTg2",
+    "rmp_legacy_id": 2500986,
+    "num_ratings": 29,
+    "id": 1284,
+    "name": "Fernando Carreon"
+  },
+  {
+    "avg_difficulty": 1.2,
+    "avg_rating": 4.5,
+    "department": "Economics",
+    "rmp_id": "VGVhY2hlci0yNTk5NTA5",
+    "rmp_legacy_id": 2599509,
+    "num_ratings": 13,
+    "id": 1665,
+    "name": "Ohyun Kwon"
+  },
+  {
+    "avg_difficulty": 1.9,
+    "avg_rating": 5,
+    "department": "Hospitality",
+    "rmp_id": "VGVhY2hlci0yNTY3ODAz",
+    "rmp_legacy_id": 2567803,
+    "num_ratings": 7,
+    "id": 2851,
+    "name": "Paul G O'Neill"
+  },
+  {
+    "avg_difficulty": 2.2,
+    "avg_rating": 4.4,
+    "department": "Communication",
+    "rmp_id": "VGVhY2hlci0yNzYyNDg3",
+    "rmp_legacy_id": 2762487,
+    "num_ratings": 5,
+    "id": 900,
+    "name": "Janna M MacPherson"
+  },
+  {
+    "avg_difficulty": 2.7,
+    "avg_rating": 4.7,
+    "department": "Chemistry",
+    "rmp_id": "VGVhY2hlci01MzI2MzU=",
+    "rmp_legacy_id": 532635,
+    "num_ratings": 41,
+    "id": 809,
+    "name": "Susan A Rutkowsky"
+  },
+  {
+    "avg_difficulty": 1.9,
+    "avg_rating": 4.6,
+    "department": "English",
+    "rmp_id": "VGVhY2hlci0yNzU1OTMy",
+    "rmp_legacy_id": 2755932,
+    "num_ratings": 14,
+    "id": 1014,
+    "name": "Erica Kleckner"
+  },
+  {
+    "avg_difficulty": 3,
+    "avg_rating": 1,
+    "department": "Public Health",
+    "rmp_id": "VGVhY2hlci0zMDUyNzc2",
+    "rmp_legacy_id": 3052776,
+    "num_ratings": 2,
+    "id": 2510,
+    "name": "Elizabeth S Valdez"
+  },
+  {
+    "avg_difficulty": 2.7,
+    "avg_rating": 4.4,
+    "department": "English",
+    "rmp_id": "VGVhY2hlci0yNjcxNTgw",
+    "rmp_legacy_id": 2671580,
+    "num_ratings": 16,
+    "id": 1080,
+    "name": "Rob W Zawatski"
+  },
+  {
+    "avg_difficulty": 1.6,
+    "avg_rating": 5,
+    "department": "Criminal Justice",
+    "rmp_id": "VGVhY2hlci0yOTA0NDIz",
+    "rmp_legacy_id": 2904423,
+    "num_ratings": 5,
+    "id": 3165,
+    "name": "Catherine Clare Strange"
+  },
+  {
+    "avg_difficulty": 4,
+    "avg_rating": 3.6,
+    "department": "Film",
+    "rmp_id": "VGVhY2hlci0yNDY4MjI5",
+    "rmp_legacy_id": 2468229,
+    "num_ratings": 5,
+    "id": 444,
+    "name": "Jeffrey A Stanley"
+  },
+  {
+    "avg_difficulty": 3.2,
+    "avg_rating": 3.5,
+    "department": "Nursing",
+    "rmp_id": "VGVhY2hlci0xMzEzMTAw",
+    "rmp_legacy_id": 1313100,
+    "num_ratings": 36,
+    "id": 2805,
+    "name": "Michael L Kirifides"
+  },
+  {
+    "avg_difficulty": 2.6,
+    "avg_rating": 4.9,
+    "department": "Accounting",
+    "rmp_id": "VGVhY2hlci0yNTcwOTU1",
+    "rmp_legacy_id": 2570955,
+    "num_ratings": 14,
+    "id": 1539,
+    "name": "Mary L Howard"
+  },
+  {
+    "avg_difficulty": 3.9,
+    "avg_rating": 2.8,
+    "department": "Design",
+    "rmp_id": "VGVhY2hlci0yNTI2OTQ5",
+    "rmp_legacy_id": 2526949,
+    "num_ratings": 12,
+    "id": 498,
+    "name": "Mike M Geno"
+  },
+  {
+    "avg_difficulty": 2,
+    "avg_rating": 5,
+    "department": "Music",
+    "rmp_id": "VGVhY2hlci0yMTI3MDk1",
+    "rmp_legacy_id": 2127095,
+    "num_ratings": 4,
+    "id": 334,
+    "name": "Gregory J Wright"
+  },
+  {
+    "avg_difficulty": 3.3,
+    "avg_rating": 2.3,
+    "department": "Engineering",
+    "rmp_id": "VGVhY2hlci0yNjU2NzMw",
+    "rmp_legacy_id": 2656730,
+    "num_ratings": 3,
+    "id": 2364,
+    "name": "Richard Y Chiou"
+  },
+  {
+    "avg_difficulty": 3,
+    "avg_rating": 5,
+    "department": "Science",
+    "rmp_id": "VGVhY2hlci0zMDUyNjQ2",
+    "rmp_legacy_id": 3052646,
+    "num_ratings": 1,
+    "id": 3175,
+    "name": "Joseph J Sarver"
+  },
+  {
+    "avg_difficulty": 3.2,
+    "avg_rating": 3.9,
+    "department": "Mathematics",
+    "rmp_id": "VGVhY2hlci05NTk5ODI=",
+    "rmp_legacy_id": 959982,
+    "num_ratings": 53,
+    "id": 1221,
+    "name": "Anatolii Grinshpan"
+  },
+  {
+    "avg_difficulty": 3.1,
+    "avg_rating": 3.5,
+    "department": "Biology",
+    "rmp_id": "VGVhY2hlci0xMTg4NTkw",
+    "rmp_legacy_id": 1188590,
+    "num_ratings": 21,
+    "id": 744,
+    "name": "Jennifer S Stanford"
+  },
+  {
+    "avg_difficulty": 2.5,
+    "avg_rating": 5,
+    "department": "Communication",
+    "rmp_id": "VGVhY2hlci0zMDE5MTAz",
+    "rmp_legacy_id": 3019103,
+    "num_ratings": 2,
+    "id": 904,
+    "name": "Qingyue Sun"
+  },
+  {
+    "avg_difficulty": 2,
+    "avg_rating": 3.7,
+    "department": "Public Health",
+    "rmp_id": "VGVhY2hlci0yODg4Njk0",
+    "rmp_legacy_id": 2888694,
+    "num_ratings": 3,
+    "id": 2559,
+    "name": "Longjian Liu"
+  },
+  {
+    "avg_difficulty": 2.4,
+    "avg_rating": 3.9,
+    "department": "English",
+    "rmp_id": "VGVhY2hlci0yNzg5NjE=",
+    "rmp_legacy_id": 278961,
+    "num_ratings": 57,
+    "id": 1061,
+    "name": "Donald A Riggs"
+  },
+  {
+    "avg_difficulty": 2.2,
+    "avg_rating": 3.1,
+    "department": "Engineering",
+    "rmp_id": "VGVhY2hlci01NjUzNzM=",
+    "rmp_legacy_id": 565373,
+    "num_ratings": 6,
+    "id": 2388,
+    "name": "Caroline L Schauer"
+  },
+  {
+    "avg_difficulty": 5,
+    "avg_rating": 1,
+    "department": "Materials Science",
+    "rmp_id": "VGVhY2hlci0zMDMxOTA1",
+    "rmp_legacy_id": 3031905,
+    "num_ratings": 2,
+    "id": 2392,
+    "name": "Wei-Heng Shih"
+  },
+  {
+    "avg_difficulty": 1,
+    "avg_rating": 5,
+    "department": "Materials Science",
+    "rmp_id": "VGVhY2hlci0zMDMxOTA3",
+    "rmp_legacy_id": 3031907,
+    "num_ratings": 1,
+    "id": 2315,
+    "name": "Steven J May"
+  },
+  {
+    "avg_difficulty": 3,
+    "avg_rating": 2,
+    "department": "Engineering",
+    "rmp_id": "VGVhY2hlci0yNzY3MTky",
+    "rmp_legacy_id": 2767192,
+    "num_ratings": 1,
+    "id": 2367,
+    "name": "Irina N Ciobanescu Husanu"
+  },
+  {
+    "avg_difficulty": 3.1,
+    "avg_rating": 3.6,
+    "department": "Communication",
+    "rmp_id": "VGVhY2hlci00MzcxNjc=",
+    "rmp_legacy_id": 437167,
+    "num_ratings": 17,
+    "id": 912,
+    "name": "Alexander G Nikolaev"
+  },
+  {
+    "avg_difficulty": 5,
+    "avg_rating": 1,
+    "department": "Student Services",
+    "rmp_id": "VGVhY2hlci0yNjM3NjYw",
+    "rmp_legacy_id": 2637660,
+    "num_ratings": 3,
+    "id": 1804,
+    "name": "Dionne C Gordon-Starks"
+  },
+  {
+    "avg_difficulty": 1.5,
+    "avg_rating": 4.8,
+    "department": "Business",
+    "rmp_id": "VGVhY2hlci0yNTE3OTI0",
+    "rmp_legacy_id": 2517924,
+    "num_ratings": 8,
+    "id": 1647,
+    "name": "Susan A Epstein"
+  },
+  {
+    "avg_difficulty": 3.7,
+    "avg_rating": 2.4,
+    "department": "Medicine",
+    "rmp_id": "VGVhY2hlci05NjAzNTQ=",
+    "rmp_legacy_id": 960354,
+    "num_ratings": 19,
+    "id": 2221,
+    "name": "Leonid Hrebien"
+  },
+  {
+    "avg_difficulty": 3,
+    "avg_rating": 3.5,
+    "department": "Nursing",
+    "rmp_id": "VGVhY2hlci0zMDE5ODcx",
+    "rmp_legacy_id": 3019871,
+    "num_ratings": 2,
+    "id": 2899,
+    "name": "Beth D Chiatti"
+  },
+  {
+    "avg_difficulty": 3.7,
+    "avg_rating": 4.5,
+    "department": "Nursing",
+    "rmp_id": "VGVhY2hlci05NjEzNTc=",
+    "rmp_legacy_id": 961357,
+    "num_ratings": 23,
+    "id": 2905,
+    "name": "Ann V Thiel-Barrett"
+  },
+  {
+    "avg_difficulty": 1.5,
+    "avg_rating": 3,
+    "department": "Theater",
+    "rmp_id": "VGVhY2hlci0yNTI0MzE3",
+    "rmp_legacy_id": 2524317,
+    "num_ratings": 2,
+    "id": 487,
+    "name": "Nick J Anselmo"
+  },
+  {
+    "avg_difficulty": 2,
+    "avg_rating": 5,
+    "department": "Economics",
+    "rmp_id": "VGVhY2hlci0yODkyNzEx",
+    "rmp_legacy_id": 2892711,
+    "num_ratings": 3,
+    "id": 1593,
+    "name": "Yin Zhang"
+  },
+  {
+    "avg_difficulty": 4,
+    "avg_rating": 5,
+    "department": "Design",
+    "rmp_id": "VGVhY2hlci0yMzU1NjI1",
+    "rmp_legacy_id": 2355625,
+    "num_ratings": 3,
+    "id": 126,
+    "name": "Dan B Newman"
+  },
+  {
+    "avg_difficulty": 2.5,
+    "avg_rating": 2,
+    "department": "Engineering",
+    "rmp_id": "VGVhY2hlci0yNzQxMTM4",
+    "rmp_legacy_id": 2741138,
+    "num_ratings": 2,
+    "id": 3182,
+    "name": "Ming Xiao"
+  },
+  {
+    "avg_difficulty": 2.9,
+    "avg_rating": 3.4,
+    "department": "English",
+    "rmp_id": "VGVhY2hlci0yMjk1MDU5",
+    "rmp_legacy_id": 2295059,
+    "num_ratings": 23,
+    "id": 1078,
+    "name": "Keith J DeRenzo"
+  },
+  {
+    "avg_difficulty": 1.5,
+    "avg_rating": 5,
+    "department": "Law",
+    "rmp_id": "VGVhY2hlci0yOTY3ODQ2",
+    "rmp_legacy_id": 2967846,
+    "num_ratings": 4,
+    "id": 3434,
+    "name": "Andrew J Leahey"
+  },
+  {
+    "avg_difficulty": 2,
+    "avg_rating": 4.4,
+    "department": "Communication",
+    "rmp_id": "VGVhY2hlci0yNDUxODQ4",
+    "rmp_legacy_id": 2451848,
+    "num_ratings": 15,
+    "id": 927,
+    "name": "John A Shiffert"
+  },
+  {
+    "avg_difficulty": 1,
+    "avg_rating": 3.5,
+    "department": "Sociology",
+    "rmp_id": "VGVhY2hlci0yOTE5MDg5",
+    "rmp_legacy_id": 2919089,
+    "num_ratings": 2,
+    "id": 1499,
+    "name": "Giuseppe J Salomone"
+  },
+  {
+    "avg_difficulty": 3.8,
+    "avg_rating": 3.9,
+    "department": "Biology",
+    "rmp_id": "VGVhY2hlci0xMjEyNDkx",
+    "rmp_legacy_id": 1212491,
+    "num_ratings": 10,
+    "id": 735,
+    "name": "Nianli Sang"
+  },
+  {
+    "avg_difficulty": 2,
+    "avg_rating": 4.5,
+    "department": "Communication",
+    "rmp_id": "VGVhY2hlci0yODEyNDA3",
+    "rmp_legacy_id": 2812407,
+    "num_ratings": 10,
+    "id": 906,
+    "name": "Luis A Grande"
+  },
+  {
+    "avg_difficulty": 2.7,
+    "avg_rating": 1.6,
+    "department": "Mathematics",
+    "rmp_id": "VGVhY2hlci0xOTEwMDM4",
+    "rmp_legacy_id": 1910038,
+    "num_ratings": 14,
+    "id": 1307,
+    "name": "Eric J Schmutz"
+  },
+  {
+    "avg_difficulty": 2,
+    "avg_rating": 4,
+    "department": "Philosophy",
+    "rmp_id": "VGVhY2hlci0yNzAzMjc1",
+    "rmp_legacy_id": 2703275,
+    "num_ratings": 6,
+    "id": 1332,
+    "name": "Nathan T Hanna"
+  },
+  {
+    "avg_difficulty": 3.8,
+    "avg_rating": 3.8,
+    "department": "Engineering",
+    "rmp_id": "VGVhY2hlci0yODYxOTY5",
+    "rmp_legacy_id": 2861969,
+    "num_ratings": 11,
+    "id": 2192,
+    "name": "Anup Das"
+  },
+  {
+    "avg_difficulty": 3.1,
+    "avg_rating": 3.1,
+    "department": "Physics",
+    "rmp_id": "VGVhY2hlci03NTc3MDk=",
+    "rmp_legacy_id": 757709,
+    "num_ratings": 22,
+    "id": 1351,
+    "name": "Som D Tyagi"
+  },
+  {
+    "avg_difficulty": 2.5,
+    "avg_rating": 2.5,
+    "department": "Computer Science",
+    "rmp_id": "VGVhY2hlci0yNzY0MjY3",
+    "rmp_legacy_id": 2764267,
+    "num_ratings": 2,
+    "id": 1991,
+    "name": "Lei Wang"
+  },
+  {
+    "avg_difficulty": 3.2,
+    "avg_rating": 4.5,
+    "department": "Information Science",
+    "rmp_id": "VGVhY2hlci0yNjEyMjg0",
+    "rmp_legacy_id": 2612284,
+    "num_ratings": 13,
+    "id": 1983,
+    "name": "Bhupesh Y Shetty"
+  },
+  {
+    "avg_difficulty": 3.9,
+    "avg_rating": 3.1,
+    "department": "Computer Science",
+    "rmp_id": "VGVhY2hlci0yNzExNzk2",
+    "rmp_legacy_id": 2711796,
+    "num_ratings": 20,
+    "id": 2013,
+    "name": "Hegler Correa Tissot"
+  },
+  {
+    "avg_difficulty": 4.3,
+    "avg_rating": 4.3,
+    "department": "Graphic Arts",
+    "rmp_id": "VGVhY2hlci0yMjIzODQ1",
+    "rmp_legacy_id": 2223845,
+    "num_ratings": 3,
+    "id": 15,
+    "name": "Dave A Mauriello"
+  },
+  {
+    "avg_difficulty": 5,
+    "avg_rating": 5,
+    "department": "Business",
+    "rmp_id": "VGVhY2hlci0yOTQ3NzQ2",
+    "rmp_legacy_id": 2947746,
+    "num_ratings": 1,
+    "id": 1795,
+    "name": "Masuma Salam"
+  },
+  {
+    "avg_difficulty": 2.1,
+    "avg_rating": 5,
+    "department": "Health Science",
+    "rmp_id": "VGVhY2hlci0yMjc3ODcz",
+    "rmp_legacy_id": 2277873,
+    "num_ratings": 9,
+    "id": 2835,
+    "name": "Kevin J Mitchell"
+  },
+  {
+    "avg_difficulty": 2.5,
+    "avg_rating": 4.8,
+    "department": "Nursing",
+    "rmp_id": "VGVhY2hlci0xNDE3NzEw",
+    "rmp_legacy_id": 1417710,
+    "num_ratings": 12,
+    "id": 2913,
+    "name": "Mary E Yost"
+  },
+  {
+    "avg_difficulty": 2.4,
+    "avg_rating": 4.6,
+    "department": "Art History",
+    "rmp_id": "VGVhY2hlci0yNjA2ODc4",
+    "rmp_legacy_id": 2606878,
+    "num_ratings": 8,
+    "id": 69,
+    "name": "Sarina R Miller"
+  },
+  {
+    "avg_difficulty": 1.3,
+    "avg_rating": 5,
+    "department": "Management",
+    "rmp_id": "VGVhY2hlci0yOTE0NTUw",
+    "rmp_legacy_id": 2914550,
+    "num_ratings": 3,
+    "id": 1768,
+    "name": "Sarah C Napoli"
+  },
+  {
+    "avg_difficulty": 3,
+    "avg_rating": 2,
+    "department": "Information Science",
+    "rmp_id": "VGVhY2hlci0zMDI5Njgx",
+    "rmp_legacy_id": 3029681,
+    "num_ratings": 1,
+    "id": 1957,
+    "name": "Andrew W Calhoun"
+  },
+  {
+    "avg_difficulty": 5,
+    "avg_rating": 1,
+    "department": "Engineering",
+    "rmp_id": "VGVhY2hlci0zMDI5MjMz",
+    "rmp_legacy_id": 3029233,
+    "num_ratings": 1,
+    "id": 2302,
+    "name": "Juan O De La Fuente Valadez"
+  },
+  {
+    "avg_difficulty": 3.3,
+    "avg_rating": 1.6,
+    "department": "Library  Information Science",
+    "rmp_id": "VGVhY2hlci0yMTAwMjk1",
+    "rmp_legacy_id": 2100295,
+    "num_ratings": 18,
+    "id": 1974,
+    "name": "Erjia Yan"
+  },
+  {
+    "avg_difficulty": 3.7,
+    "avg_rating": 4.3,
+    "department": "Computer Science",
+    "rmp_id": "VGVhY2hlci0yNzA2OTY3",
+    "rmp_legacy_id": 2706967,
+    "num_ratings": 15,
+    "id": 1895,
+    "name": "Sean P Grimes"
+  },
+  {
+    "avg_difficulty": 2.6,
+    "avg_rating": 4.8,
+    "department": "Fine Arts",
+    "rmp_id": "VGVhY2hlci0yMDU1Njkz",
+    "rmp_legacy_id": 2055693,
+    "num_ratings": 5,
+    "id": 3264,
+    "name": "Louise A Whitelaw"
+  },
+  {
+    "avg_difficulty": 3.2,
+    "avg_rating": 4.8,
+    "department": "Biological Sciences",
+    "rmp_id": "VGVhY2hlci0yNDM2ODM3",
+    "rmp_legacy_id": 2436837,
+    "num_ratings": 9,
+    "id": 698,
+    "name": "Jerome J Ricard"
+  },
+  {
+    "avg_difficulty": 2.1,
+    "avg_rating": 3.6,
+    "department": "Science",
+    "rmp_id": "VGVhY2hlci0yNjc5Njcz",
+    "rmp_legacy_id": 2679673,
+    "num_ratings": 8,
+    "id": 2991,
+    "name": "Andrea G Irvine"
+  },
+  {
+    "avg_difficulty": 2.4,
+    "avg_rating": 3.6,
+    "department": "Hospitality",
+    "rmp_id": "VGVhY2hlci01OTQ4Nzk=",
+    "rmp_legacy_id": 594879,
+    "num_ratings": 13,
+    "id": 2783,
+    "name": "Charles B Ziccardi"
+  },
+  {
+    "avg_difficulty": 2.3,
+    "avg_rating": 4.7,
+    "department": "Computer Science",
+    "rmp_id": "VGVhY2hlci0yNzc1ODg2",
+    "rmp_legacy_id": 2775886,
+    "num_ratings": 6,
+    "id": 1962,
+    "name": "Christopher L Stevens"
+  },
+  {
+    "avg_difficulty": 3.1,
+    "avg_rating": 3.5,
+    "department": "Philosophy",
+    "rmp_id": "VGVhY2hlci0yNTAyMjUy",
+    "rmp_legacy_id": 2502252,
+    "num_ratings": 12,
+    "id": 1341,
+    "name": "Daniel P Touey"
+  },
+  {
+    "avg_difficulty": 2.5,
+    "avg_rating": 3.5,
+    "department": "Statistics",
+    "rmp_id": "VGVhY2hlci0yNzc5MTI0",
+    "rmp_legacy_id": 2779124,
+    "num_ratings": 2,
+    "id": 1579,
+    "name": "Edward D Arnheiter"
+  },
+  {
+    "avg_difficulty": 3.5,
+    "avg_rating": 3.7,
+    "department": "Nursing",
+    "rmp_id": "VGVhY2hlci0yNjcwMjUw",
+    "rmp_legacy_id": 2670250,
+    "num_ratings": 10,
+    "id": 2894,
+    "name": "Kathleen A Clark"
+  },
+  {
+    "avg_difficulty": 2.5,
+    "avg_rating": 2.7,
+    "department": "Business",
+    "rmp_id": "VGVhY2hlci0yNjAyMTQx",
+    "rmp_legacy_id": 2602141,
+    "num_ratings": 13,
+    "id": 1688,
+    "name": "Homer Jamasbi"
+  },
+  {
+    "avg_difficulty": 2.8,
+    "avg_rating": 2.3,
+    "department": "Communication",
+    "rmp_id": "VGVhY2hlci0yODQ4MDQ2",
+    "rmp_legacy_id": 2848046,
+    "num_ratings": 6,
+    "id": 920,
+    "name": "Alice Liu"
+  },
+  {
+    "avg_difficulty": 1.3,
+    "avg_rating": 5,
+    "department": "Psychology",
+    "rmp_id": "VGVhY2hlci0yOTE1MzE4",
+    "rmp_legacy_id": 2915318,
+    "num_ratings": 4,
+    "id": 1441,
+    "name": "Sughra A Husain"
+  },
+  {
+    "avg_difficulty": 2.2,
+    "avg_rating": 4.8,
+    "department": "Information Science",
+    "rmp_id": "VGVhY2hlci0yNzk3NjI5",
+    "rmp_legacy_id": 2797629,
+    "num_ratings": 6,
+    "id": 2016,
+    "name": "Yuan An"
+  },
+  {
+    "avg_difficulty": 2,
+    "avg_rating": 4.5,
+    "department": "Computer Science",
+    "rmp_id": "VGVhY2hlci0yODk0Nzc3",
+    "rmp_legacy_id": 2894777,
+    "num_ratings": 2,
+    "id": 2012,
+    "name": "Mat R Kelly"
+  },
+  {
+    "avg_difficulty": 1,
+    "avg_rating": 5,
+    "department": "Business",
+    "rmp_id": "VGVhY2hlci0yNzQ1MTU5",
+    "rmp_legacy_id": 2745159,
+    "num_ratings": 3,
+    "id": 2653,
+    "name": "Daniel E Freeman"
+  },
+  {
+    "avg_difficulty": 2.4,
+    "avg_rating": 4.8,
+    "department": "Business",
+    "rmp_id": "VGVhY2hlci0yMjUzNzc1",
+    "rmp_legacy_id": 2253775,
+    "num_ratings": 17,
+    "id": 1678,
+    "name": "Stanley K Ridgley"
+  },
+  {
+    "avg_difficulty": 1.9,
+    "avg_rating": 4.6,
+    "department": "Digital Media",
+    "rmp_id": "VGVhY2hlci0yODg0MTE0",
+    "rmp_legacy_id": 2884114,
+    "num_ratings": 9,
+    "id": 231,
+    "name": "Adrian T Sandoval"
+  },
+  {
+    "avg_difficulty": 2.3,
+    "avg_rating": 4,
+    "department": "Science",
+    "rmp_id": "VGVhY2hlci0yNzMxMjYy",
+    "rmp_legacy_id": 2731262,
+    "num_ratings": 3,
+    "id": 3001,
+    "name": "Susan M McGinley"
+  },
+  {
+    "avg_difficulty": 2.5,
+    "avg_rating": 5,
+    "department": "English",
+    "rmp_id": "VGVhY2hlci0yNjIzMDIw",
+    "rmp_legacy_id": 2623020,
+    "num_ratings": 4,
+    "id": 1317,
+    "name": "Bryan K Sacks"
+  },
+  {
+    "avg_difficulty": 3.7,
+    "avg_rating": 2.3,
+    "department": "Accounting",
+    "rmp_id": "VGVhY2hlci0xOTIxNjk4",
+    "rmp_legacy_id": 1921698,
+    "num_ratings": 20,
+    "id": 1581,
+    "name": "Benjamin Lev"
+  },
+  {
+    "avg_difficulty": 1,
+    "avg_rating": 5,
+    "department": "Health Science",
+    "rmp_id": "VGVhY2hlci0yOTk3Njc1",
+    "rmp_legacy_id": 2997675,
+    "num_ratings": 1,
+    "id": 2803,
+    "name": "Jacqueline Phillips"
+  },
+  {
+    "avg_difficulty": 2.9,
+    "avg_rating": 4.7,
+    "department": "Engineering",
+    "rmp_id": "VGVhY2hlci0xNTA5NjA5",
+    "rmp_legacy_id": 1509609,
+    "num_ratings": 14,
+    "id": 2188,
+    "name": "Baris Taskin"
+  },
+  {
+    "avg_difficulty": 2.3,
+    "avg_rating": 4.5,
+    "department": "Psychology",
+    "rmp_id": "VGVhY2hlci0xNTc5ODU0",
+    "rmp_legacy_id": 1579854,
+    "num_ratings": 6,
+    "id": 2693,
+    "name": "Veronica D Carey"
+  },
+  {
+    "avg_difficulty": 2.5,
+    "avg_rating": 4.8,
+    "department": "Business",
+    "rmp_id": "VGVhY2hlci0yNTUwMzYx",
+    "rmp_legacy_id": 2550361,
+    "num_ratings": 4,
+    "id": 1767,
+    "name": "Lawrence B Cohen"
+  },
+  {
+    "avg_difficulty": 3,
+    "avg_rating": 4.6,
+    "department": "Engineering",
+    "rmp_id": "VGVhY2hlci0xODkzMjYw",
+    "rmp_legacy_id": 1893260,
+    "num_ratings": 8,
+    "id": 776,
+    "name": "Aaron T Fafarman"
+  },
+  {
+    "avg_difficulty": 1.7,
+    "avg_rating": 5,
+    "department": "Biological Sciences",
+    "rmp_id": "VGVhY2hlci0yNTcyNDIx",
+    "rmp_legacy_id": 2572421,
+    "num_ratings": 3,
+    "id": 1129,
+    "name": "Jason D Weckstein"
+  },
+  {
+    "avg_difficulty": 2.6,
+    "avg_rating": 3.2,
+    "department": "Philosophy",
+    "rmp_id": "VGVhY2hlci02MDgzNDU=",
+    "rmp_legacy_id": 608345,
+    "num_ratings": 34,
+    "id": 1127,
+    "name": "Stacey E Ake"
+  },
+  {
+    "avg_difficulty": 2.5,
+    "avg_rating": 5,
+    "department": "Languages",
+    "rmp_id": "VGVhY2hlci0yODgzMzgx",
+    "rmp_legacy_id": 2883381,
+    "num_ratings": 2,
+    "id": 883,
+    "name": "Hechun Ping"
+  },
+  {
+    "avg_difficulty": 2,
+    "avg_rating": 5,
+    "department": "Languages",
+    "rmp_id": "VGVhY2hlci0zMDEyNzYz",
+    "rmp_legacy_id": 3012763,
+    "num_ratings": 2,
+    "id": 1196,
+    "name": "Natalie N Mancini"
+  },
+  {
+    "avg_difficulty": 3,
+    "avg_rating": 4,
+    "department": "Biological Sciences",
+    "rmp_id": "VGVhY2hlci0yNjY0NjI5",
+    "rmp_legacy_id": 2664629,
+    "num_ratings": 3,
+    "id": 53,
+    "name": "Sean O'Donnell"
+  },
+  {
+    "avg_difficulty": 2.9,
+    "avg_rating": 2.5,
+    "department": "Computer Science",
+    "rmp_id": "VGVhY2hlci0xOTQwMDY5",
+    "rmp_legacy_id": 1940069,
+    "num_ratings": 15,
+    "id": 2095,
+    "name": "Filippos I Vokolos"
+  },
+  {
+    "avg_difficulty": 2.4,
+    "avg_rating": 5,
+    "department": "Information Science",
+    "rmp_id": "VGVhY2hlci0yNjg5MzEz",
+    "rmp_legacy_id": 2689313,
+    "num_ratings": 5,
+    "id": 2022,
+    "name": "Joseph D Adair"
+  },
+  {
+    "avg_difficulty": 3.5,
+    "avg_rating": 1,
+    "department": "Information Science",
+    "rmp_id": "VGVhY2hlci0yNjk4NTc4",
+    "rmp_legacy_id": 2698578,
+    "num_ratings": 2,
+    "id": 2098,
+    "name": "Thomas M Shortell"
+  },
+  {
+    "avg_difficulty": 1,
+    "avg_rating": 4.5,
+    "department": "Communication",
+    "rmp_id": "VGVhY2hlci0yODczMzgx",
+    "rmp_legacy_id": 2873381,
+    "num_ratings": 2,
+    "id": 1819,
+    "name": "Zoraida Cordero"
+  },
+  {
+    "avg_difficulty": 3.6,
+    "avg_rating": 2,
+    "department": "Public Health",
+    "rmp_id": "VGVhY2hlci0yMjk2Mzk2",
+    "rmp_legacy_id": 2296396,
+    "num_ratings": 5,
+    "id": 2595,
+    "name": "Darryl R Brown"
+  },
+  {
+    "avg_difficulty": 2,
+    "avg_rating": 5,
+    "department": "Decision Science",
+    "rmp_id": "VGVhY2hlci0yODM4OTIw",
+    "rmp_legacy_id": 2838920,
+    "num_ratings": 1,
+    "id": 1708,
+    "name": "Orakwue B Arinze"
+  },
+  {
+    "avg_difficulty": 3.4,
+    "avg_rating": 3.3,
+    "department": "Engineering",
+    "rmp_id": "VGVhY2hlci0yNTkxNzY=",
+    "rmp_legacy_id": 259176,
+    "num_ratings": 28,
+    "id": 2430,
+    "name": "Bakhtier Farouk"
+  },
+  {
+    "avg_difficulty": 2.7,
+    "avg_rating": 4.1,
+    "department": "Law",
+    "rmp_id": "VGVhY2hlci0yNDUyOTUy",
+    "rmp_legacy_id": 2452952,
+    "num_ratings": 7,
+    "id": 1677,
+    "name": "Natalie B Pedersen"
+  },
+  {
+    "avg_difficulty": 2.1,
+    "avg_rating": 4.3,
+    "department": "Accounting",
+    "rmp_id": "VGVhY2hlci0yOTE0OTkx",
+    "rmp_legacy_id": 2914991,
+    "num_ratings": 7,
+    "id": 1546,
+    "name": "Dan Dai"
+  },
+  {
+    "avg_difficulty": 3,
+    "avg_rating": 4,
+    "department": "Biology",
+    "rmp_id": "VGVhY2hlci0zMDE5NDg4",
+    "rmp_legacy_id": 3019488,
+    "num_ratings": 1,
+    "id": 738,
+    "name": "Fred C Krebs"
+  },
+  {
+    "avg_difficulty": 3,
+    "avg_rating": 3,
+    "department": "Engineering",
+    "rmp_id": "VGVhY2hlci0zMDE1MTkw",
+    "rmp_legacy_id": 3015190,
+    "num_ratings": 1,
+    "id": 2289,
+    "name": "James K Lill"
+  },
+  {
+    "avg_difficulty": 3.8,
+    "avg_rating": 1.9,
+    "department": "Nursing",
+    "rmp_id": "VGVhY2hlci0yNjE4OTA5",
+    "rmp_legacy_id": 2618909,
+    "num_ratings": 10,
+    "id": 2892,
+    "name": "Linda M Celia"
+  },
+  {
+    "avg_difficulty": 3.5,
+    "avg_rating": 4.5,
+    "department": "Mathematics",
+    "rmp_id": "VGVhY2hlci0yOTkyOTk3",
+    "rmp_legacy_id": 2992997,
+    "num_ratings": 2,
+    "id": 1310,
+    "name": "Benjamin C Boniece"
+  },
+  {
+    "avg_difficulty": 2.5,
+    "avg_rating": 4.5,
+    "department": "Computer Science",
+    "rmp_id": "VGVhY2hlci0yOTY4NDA4",
+    "rmp_legacy_id": 2968408,
+    "num_ratings": 2,
+    "id": 1945,
+    "name": "Kaidi Xu"
+  },
+  {
+    "avg_difficulty": 4,
+    "avg_rating": 1,
+    "department": "Engineering",
+    "rmp_id": "VGVhY2hlci0zMDE5NDEz",
+    "rmp_legacy_id": 3019413,
+    "num_ratings": 1,
+    "id": 3226,
+    "name": "Vikas Bhandawat"
+  },
+  {
+    "avg_difficulty": 3,
+    "avg_rating": 3.4,
+    "department": "Journalism",
+    "rmp_id": "VGVhY2hlci0yODI3NjE5",
+    "rmp_legacy_id": 2827619,
+    "num_ratings": 5,
+    "id": 892,
+    "name": "Maggie S Riegel"
+  },
+  {
+    "avg_difficulty": 4,
+    "avg_rating": 4,
+    "department": "Finance",
+    "rmp_id": "VGVhY2hlci0zMDE5Mjg2",
+    "rmp_legacy_id": 3019286,
+    "num_ratings": 1,
+    "id": 1638,
+    "name": "Michelle B Lowry"
+  },
+  {
+    "avg_difficulty": 3.5,
+    "avg_rating": 3.1,
+    "department": "Engineering",
+    "rmp_id": "VGVhY2hlci0yNTMwOTU3",
+    "rmp_legacy_id": 2530957,
+    "num_ratings": 12,
+    "id": 3174,
+    "name": "Ahmet Sacan"
+  },
+  {
+    "avg_difficulty": 3,
+    "avg_rating": 5,
+    "department": "Nursing",
+    "rmp_id": "VGVhY2hlci0yODI3NTY1",
+    "rmp_legacy_id": 2827565,
+    "num_ratings": 4,
+    "id": 2903,
+    "name": "Tina S Solomon"
+  },
+  {
+    "avg_difficulty": 3.9,
+    "avg_rating": 4.9,
+    "department": "Languages",
+    "rmp_id": "VGVhY2hlci0xODg5MDQ1",
+    "rmp_legacy_id": 1889045,
+    "num_ratings": 7,
+    "id": 1197,
+    "name": "Hiromi Koyama"
+  },
+  {
+    "avg_difficulty": 2.2,
+    "avg_rating": 3.1,
+    "department": "Humanities",
+    "rmp_id": "VGVhY2hlci04OTAzMjk=",
+    "rmp_legacy_id": 890329,
+    "num_ratings": 5,
+    "id": 2834,
+    "name": "Constance K Perry"
+  },
+  {
+    "avg_difficulty": 3.6,
+    "avg_rating": 3.8,
+    "department": "Information Science",
+    "rmp_id": "VGVhY2hlci05NTc4NzA=",
+    "rmp_legacy_id": 957870,
+    "num_ratings": 11,
+    "id": 2000,
+    "name": "Il-Yeol Song"
+  },
+  {
+    "avg_difficulty": 4.3,
+    "avg_rating": 3.3,
+    "department": "Philosophy",
+    "rmp_id": "VGVhY2hlci0yNDY1MTM4",
+    "rmp_legacy_id": 2465138,
+    "num_ratings": 7,
+    "id": 1328,
+    "name": "Flavia Padovani"
+  },
+  {
+    "avg_difficulty": 3.3,
+    "avg_rating": 4.3,
+    "department": "Film",
+    "rmp_id": "VGVhY2hlci0yNzExMzI2",
+    "rmp_legacy_id": 2711326,
+    "num_ratings": 4,
+    "id": 460,
+    "name": "Yvonne D Leach"
+  },
+  {
+    "avg_difficulty": 1.8,
+    "avg_rating": 4.1,
+    "department": "Music",
+    "rmp_id": "VGVhY2hlci04NTI1Nzc=",
+    "rmp_legacy_id": 852577,
+    "num_ratings": 25,
+    "id": 322,
+    "name": "Scott D Bacon"
+  },
+  {
+    "avg_difficulty": 4,
+    "avg_rating": 3.8,
+    "department": "History",
+    "rmp_id": "VGVhY2hlci0yMTAzNzcz",
+    "rmp_legacy_id": 2103773,
+    "num_ratings": 5,
+    "id": 1178,
+    "name": "Kathryn Steen"
+  },
+  {
+    "avg_difficulty": 1.8,
+    "avg_rating": 4,
+    "department": "Management",
+    "rmp_id": "VGVhY2hlci0yMTQzMjAz",
+    "rmp_legacy_id": 2143203,
+    "num_ratings": 5,
+    "id": 1657,
+    "name": "David B Kurz"
+  },
+  {
+    "avg_difficulty": 4.2,
+    "avg_rating": 1.4,
+    "department": "Business",
+    "rmp_id": "VGVhY2hlci02NDA4ODc=",
+    "rmp_legacy_id": 640887,
+    "num_ratings": 17,
+    "id": 1757,
+    "name": "Fariborz Y Partovi"
+  },
+  {
+    "avg_difficulty": 3,
+    "avg_rating": 3.4,
+    "department": "Languages",
+    "rmp_id": "VGVhY2hlci0yNTIxNzAz",
+    "rmp_legacy_id": 2521703,
+    "num_ratings": 10,
+    "id": 1514,
+    "name": "Celeste D Mann"
+  },
+  {
+    "avg_difficulty": 3.5,
+    "avg_rating": 4,
+    "department": "Computer Science",
+    "rmp_id": "VGVhY2hlci0yNjY5Nzk2",
+    "rmp_legacy_id": 2669796,
+    "num_ratings": 6,
+    "id": 2018,
+    "name": "Weimao Ke"
+  },
+  {
+    "avg_difficulty": 2.1,
+    "avg_rating": 4.1,
+    "department": "Psychology",
+    "rmp_id": "VGVhY2hlci03MzMxOTI=",
+    "rmp_legacy_id": 733192,
+    "num_ratings": 33,
+    "id": 1428,
+    "name": "Maureen Gibney"
+  },
+  {
+    "avg_difficulty": 3.3,
+    "avg_rating": 4.8,
+    "department": "Sociology",
+    "rmp_id": "VGVhY2hlci0yNTc3Nzcz",
+    "rmp_legacy_id": 2577773,
+    "num_ratings": 6,
+    "id": 1173,
+    "name": "Nada Matta"
+  },
+  {
+    "avg_difficulty": 3.8,
+    "avg_rating": 1.8,
+    "department": "Computer Science",
+    "rmp_id": "VGVhY2hlci0yNzI5NDA4",
+    "rmp_legacy_id": 2729408,
+    "num_ratings": 12,
+    "id": 2089,
+    "name": "Reza Moradinezhad"
+  },
+  {
+    "avg_difficulty": 2.2,
+    "avg_rating": 4.7,
+    "department": "Public Health",
+    "rmp_id": "VGVhY2hlci0yNzM3MTcw",
+    "rmp_legacy_id": 2737170,
+    "num_ratings": 6,
+    "id": 2592,
+    "name": "Sandra L Bloom"
+  },
+  {
+    "avg_difficulty": 3.1,
+    "avg_rating": 3.6,
+    "department": "Computer Science",
+    "rmp_id": "VGVhY2hlci0yMTUyMjAz",
+    "rmp_legacy_id": 2152203,
+    "num_ratings": 21,
+    "id": 1876,
+    "name": "Matthew J Burlick"
+  },
+  {
+    "avg_difficulty": 1.6,
+    "avg_rating": 4.2,
+    "department": "Digital Media",
+    "rmp_id": "VGVhY2hlci0yMjYxNTc1",
+    "rmp_legacy_id": 2261575,
+    "num_ratings": 5,
+    "id": 266,
+    "name": "Paul Phan"
+  },
+  {
+    "avg_difficulty": 4.1,
+    "avg_rating": 4,
+    "department": "Design",
+    "rmp_id": "VGVhY2hlci0xNzM2NTEz",
+    "rmp_legacy_id": 1736513,
+    "num_ratings": 16,
+    "id": 521,
+    "name": "Mark T Stockton"
+  },
+  {
+    "avg_difficulty": 2.2,
+    "avg_rating": 4.3,
+    "department": "Business",
+    "rmp_id": "VGVhY2hlci0yNjQ1NDE0",
+    "rmp_legacy_id": 2645414,
+    "num_ratings": 6,
+    "id": 1649,
+    "name": "Marisol Medina"
+  },
+  {
+    "avg_difficulty": 2,
+    "avg_rating": 5,
+    "department": "Marketing",
+    "rmp_id": "VGVhY2hlci0yNTk2NTAw",
+    "rmp_legacy_id": 2596500,
+    "num_ratings": 2,
+    "id": 1718,
+    "name": "YanLiu Huang"
+  },
+  {
+    "avg_difficulty": 1.5,
+    "avg_rating": 5,
+    "department": "Management",
+    "rmp_id": "VGVhY2hlci0yODc3MjA2",
+    "rmp_legacy_id": 2877206,
+    "num_ratings": 2,
+    "id": 1694,
+    "name": "Suresh Chandran"
+  },
+  {
+    "avg_difficulty": 3,
+    "avg_rating": 1,
+    "department": "Engineering",
+    "rmp_id": "VGVhY2hlci0yNjcyMTg0",
+    "rmp_legacy_id": 2672184,
+    "num_ratings": 2,
+    "id": 2363,
+    "name": "Michael J Vincent"
+  },
+  {
+    "avg_difficulty": 4.4,
+    "avg_rating": 3.7,
+    "department": "Fine Arts",
+    "rmp_id": "VGVhY2hlci0xOTY4OTM0",
+    "rmp_legacy_id": 1968934,
+    "num_ratings": 28,
+    "id": 506,
+    "name": "Joshua A Weiss"
+  },
+  {
+    "avg_difficulty": 2.7,
+    "avg_rating": 4.5,
+    "department": "Business",
+    "rmp_id": "VGVhY2hlci0yNjUwOTIw",
+    "rmp_legacy_id": 2650920,
+    "num_ratings": 6,
+    "id": 1703,
+    "name": "Bruce A Pashko"
+  },
+  {
+    "avg_difficulty": 4.4,
+    "avg_rating": 1.5,
+    "department": "Business",
+    "rmp_id": "VGVhY2hlci0xNDY3MjEw",
+    "rmp_legacy_id": 1467210,
+    "num_ratings": 12,
+    "id": 1753,
+    "name": "Avijit Banerjee"
+  },
+  {
+    "avg_difficulty": 4.5,
+    "avg_rating": 1.6,
+    "department": "Engineering",
+    "rmp_id": "VGVhY2hlci00ODEzNjQ=",
+    "rmp_legacy_id": 481364,
+    "num_ratings": 10,
+    "id": 1390,
+    "name": "Jonathan E Spanier"
+  },
+  {
+    "avg_difficulty": 2.5,
+    "avg_rating": 5,
+    "department": "Fine Arts",
+    "rmp_id": "VGVhY2hlci0yNjMyNDE4",
+    "rmp_legacy_id": 2632418,
+    "num_ratings": 2,
+    "id": 525,
+    "name": "David C Wilson"
+  },
+  {
+    "avg_difficulty": 3.3,
+    "avg_rating": 3.3,
+    "department": "Engineering",
+    "rmp_id": "VGVhY2hlci0yNTU5MDM1",
+    "rmp_legacy_id": 2559035,
+    "num_ratings": 21,
+    "id": 2124,
+    "name": "Aviel Chaimovich"
+  },
+  {
+    "avg_difficulty": 2.5,
+    "avg_rating": 3.9,
+    "department": "Communication",
+    "rmp_id": "VGVhY2hlci0yNDM2ODI3",
+    "rmp_legacy_id": 2436827,
+    "num_ratings": 11,
+    "id": 922,
+    "name": "Rosemary E Rys"
+  },
+  {
+    "avg_difficulty": 2.3,
+    "avg_rating": 4.6,
+    "department": "Communication",
+    "rmp_id": "VGVhY2hlci0yMjQ3NzAy",
+    "rmp_legacy_id": 2247702,
+    "num_ratings": 7,
+    "id": 942,
+    "name": "Hyunmin Lee"
+  },
+  {
+    "avg_difficulty": 4,
+    "avg_rating": 2.6,
+    "department": "Computer Science",
+    "rmp_id": "VGVhY2hlci0xODg1Njk2",
+    "rmp_legacy_id": 1885696,
+    "num_ratings": 5,
+    "id": 1924,
+    "name": "David E Breen"
+  },
+  {
+    "avg_difficulty": 3.5,
+    "avg_rating": 2.8,
+    "department": "Education",
+    "rmp_id": "VGVhY2hlci0yNTEyMjgw",
+    "rmp_legacy_id": 2512280,
+    "num_ratings": 4,
+    "id": 3342,
+    "name": "Michael J Haslip"
+  },
+  {
+    "avg_difficulty": 3,
+    "avg_rating": 3.8,
+    "department": "Finance",
+    "rmp_id": "VGVhY2hlci0yNjc2NTU4",
+    "rmp_legacy_id": 2676558,
+    "num_ratings": 6,
+    "id": 1615,
+    "name": "Bang Jeon"
+  },
+  {
+    "avg_difficulty": 1.8,
+    "avg_rating": 5,
+    "department": "English",
+    "rmp_id": "VGVhY2hlci0yOTQxMDE3",
+    "rmp_legacy_id": 2941017,
+    "num_ratings": 4,
+    "id": 1817,
+    "name": "Adam L Zahn"
+  },
+  {
+    "avg_difficulty": 3.2,
+    "avg_rating": 4.6,
+    "department": "Political Science",
+    "rmp_id": "VGVhY2hlci0yOTgyNjY0",
+    "rmp_legacy_id": 2982664,
+    "num_ratings": 5,
+    "id": 1413,
+    "name": "Sara K McGuire"
+  },
+  {
+    "avg_difficulty": 5,
+    "avg_rating": 4,
+    "department": "Information Science",
+    "rmp_id": "VGVhY2hlci0yODMzMDky",
+    "rmp_legacy_id": 2833092,
+    "num_ratings": 1,
+    "id": 2034,
+    "name": "Alexander H Poole"
+  },
+  {
+    "avg_difficulty": 2,
+    "avg_rating": 4,
+    "department": "Music",
+    "rmp_id": "VGVhY2hlci0yODMzOTMw",
+    "rmp_legacy_id": 2833930,
+    "num_ratings": 2,
+    "id": 339,
+    "name": "Dennis H Fortune"
+  },
+  {
+    "avg_difficulty": 3,
+    "avg_rating": 3,
+    "department": "Communication",
+    "rmp_id": "VGVhY2hlci0yOTkxNTcy",
+    "rmp_legacy_id": 2991572,
+    "num_ratings": 3,
+    "id": 939,
+    "name": "David Frank"
+  },
+  {
+    "avg_difficulty": 4,
+    "avg_rating": 5,
+    "department": "Digital Media",
+    "rmp_id": "VGVhY2hlci0yOTk5MjMw",
+    "rmp_legacy_id": 2999230,
+    "num_ratings": 1,
+    "id": 12,
+    "name": "Milady S Bridges"
+  },
+  {
+    "avg_difficulty": 3,
+    "avg_rating": 5,
+    "department": "Health Science",
+    "rmp_id": "VGVhY2hlci0zMDAzMjAx",
+    "rmp_legacy_id": 3003201,
+    "num_ratings": 1,
+    "id": 3014,
+    "name": "Heather L Brossman"
+  },
+  {
+    "avg_difficulty": 3.4,
+    "avg_rating": 3.2,
+    "department": "Education",
+    "rmp_id": "VGVhY2hlci0yNzE0NzI5",
+    "rmp_legacy_id": 2714729,
+    "num_ratings": 12,
+    "id": 1027,
+    "name": "Michelle L Kline-Peterson"
+  },
+  {
+    "avg_difficulty": 1.8,
+    "avg_rating": 5,
+    "department": "Music",
+    "rmp_id": "VGVhY2hlci0yODUxOTUw",
+    "rmp_legacy_id": 2851950,
+    "num_ratings": 4,
+    "id": 393,
+    "name": "Monika A Julien"
+  },
+  {
+    "avg_difficulty": 3.6,
+    "avg_rating": 4.4,
+    "department": "Biology",
+    "rmp_id": "VGVhY2hlci0yNjY5OTI4",
+    "rmp_legacy_id": 2669928,
+    "num_ratings": 14,
+    "id": 739,
+    "name": "Ryan J Petrie"
+  },
+  {
+    "avg_difficulty": 3,
+    "avg_rating": 4.5,
+    "department": "Business",
+    "rmp_id": "VGVhY2hlci0xNjYwOTky",
+    "rmp_legacy_id": 1660992,
+    "num_ratings": 2,
+    "id": 1692,
+    "name": "Dali Ma"
+  },
+  {
+    "avg_difficulty": 3.6,
+    "avg_rating": 4.2,
+    "department": "Design",
+    "rmp_id": "VGVhY2hlci0yNjA2OTQ4",
+    "rmp_legacy_id": 2606948,
+    "num_ratings": 5,
+    "id": 117,
+    "name": "Nick A Cassway"
+  },
+  {
+    "avg_difficulty": 3,
+    "avg_rating": 5,
+    "department": "Music",
+    "rmp_id": "VGVhY2hlci0yOTk3ODE4",
+    "rmp_legacy_id": 2997818,
+    "num_ratings": 1,
+    "id": 386,
+    "name": "Ivan Barias"
+  },
+  {
+    "avg_difficulty": 1.5,
+    "avg_rating": 4.8,
+    "department": "English",
+    "rmp_id": "VGVhY2hlci03ODk4NDQ=",
+    "rmp_legacy_id": 789844,
+    "num_ratings": 14,
+    "id": 1008,
+    "name": "Elizabeth J Thorpe"
+  },
+  {
+    "avg_difficulty": 2.8,
+    "avg_rating": 3.2,
+    "department": "English",
+    "rmp_id": "VGVhY2hlci0yNTU5ODg5",
+    "rmp_legacy_id": 2559889,
+    "num_ratings": 12,
+    "id": 1013,
+    "name": "Melanie L Farley"
+  },
+  {
+    "avg_difficulty": 3.2,
+    "avg_rating": 3.6,
+    "department": "Design",
+    "rmp_id": "VGVhY2hlci0yNDkwMzM3",
+    "rmp_legacy_id": 2490337,
+    "num_ratings": 5,
+    "id": 504,
+    "name": "Lisa B Sylvester"
+  },
+  {
+    "avg_difficulty": 4.6,
+    "avg_rating": 1.3,
+    "department": "Engineering",
+    "rmp_id": "VGVhY2hlci0xOTEwMDQw",
+    "rmp_legacy_id": 1910040,
+    "num_ratings": 18,
+    "id": 2191,
+    "name": "Andrew R Cohen"
+  },
+  {
+    "avg_difficulty": 3.6,
+    "avg_rating": 4.1,
+    "department": "Computer Science",
+    "rmp_id": "VGVhY2hlci0yNDQ2MTQ5",
+    "rmp_legacy_id": 2446149,
+    "num_ratings": 9,
+    "id": 1877,
+    "name": "Geoffrey B Mainland"
+  },
+  {
+    "avg_difficulty": 4.2,
+    "avg_rating": 1.7,
+    "department": "English",
+    "rmp_id": "VGVhY2hlci0zNDI4OTc=",
+    "rmp_legacy_id": 342897,
+    "num_ratings": 39,
+    "id": 1025,
+    "name": "Eva M Thury"
+  },
+  {
+    "avg_difficulty": 3.4,
+    "avg_rating": 2.1,
+    "department": "Engineering",
+    "rmp_id": "VGVhY2hlci0yMTExMTM1",
+    "rmp_legacy_id": 2111135,
+    "num_ratings": 7,
+    "id": 2486,
+    "name": "Sorin Siegler"
+  },
+  {
+    "avg_difficulty": 3,
+    "avg_rating": 4,
+    "department": "Biology",
+    "rmp_id": "VGVhY2hlci0yOTg1NTQ4",
+    "rmp_legacy_id": 2985548,
+    "num_ratings": 1,
+    "id": 751,
+    "name": "Megan Phifer-Rixey"
+  },
+  {
+    "avg_difficulty": 2.2,
+    "avg_rating": 4.4,
+    "department": "Languages",
+    "rmp_id": "VGVhY2hlci0yODQwNTc0",
+    "rmp_legacy_id": 2840574,
+    "num_ratings": 5,
+    "id": 1206,
+    "name": "Sunmi Jung J Oh"
+  },
+  {
+    "avg_difficulty": 4.2,
+    "avg_rating": 2.8,
+    "department": "Engineering",
+    "rmp_id": "VGVhY2hlci0xNzgxMzEz",
+    "rmp_legacy_id": 1781313,
+    "num_ratings": 5,
+    "id": 2144,
+    "name": "Jason B Baxter"
+  },
+  {
+    "avg_difficulty": 3.4,
+    "avg_rating": 3.2,
+    "department": "English",
+    "rmp_id": "VGVhY2hlci0yNDYxNzg1",
+    "rmp_legacy_id": 2461785,
+    "num_ratings": 5,
+    "id": 1518,
+    "name": "Elizabeth Kimball"
+  },
+  {
+    "avg_difficulty": 4,
+    "avg_rating": 5,
+    "department": "Chemical Engineering",
+    "rmp_id": "VGVhY2hlci0yNjc5NjAy",
+    "rmp_legacy_id": 2679602,
+    "num_ratings": 3,
+    "id": 2138,
+    "name": "Joshua Lequieu"
+  },
+  {
+    "avg_difficulty": 2.3,
+    "avg_rating": 4.3,
+    "department": "Decision Science",
+    "rmp_id": "VGVhY2hlci0yNzczNDA1",
+    "rmp_legacy_id": 2773405,
+    "num_ratings": 3,
+    "id": 1702,
+    "name": "Qizhi Dai"
+  },
+  {
+    "avg_difficulty": 3,
+    "avg_rating": 5,
+    "department": "Engineering",
+    "rmp_id": "VGVhY2hlci0yOTkyMjA1",
+    "rmp_legacy_id": 2992205,
+    "num_ratings": 1,
+    "id": 2208,
+    "name": "Matthew C Stamm"
+  },
+  {
+    "avg_difficulty": 3.5,
+    "avg_rating": 2.9,
+    "department": "Engineering",
+    "rmp_id": "VGVhY2hlci0yMjA4MTE1",
+    "rmp_legacy_id": 2208115,
+    "num_ratings": 12,
+    "id": 2438,
+    "name": "Matthew McCarthy"
+  },
+  {
+    "avg_difficulty": 1,
+    "avg_rating": 5,
+    "department": "Music",
+    "rmp_id": "VGVhY2hlci0yOTkyMDk2",
+    "rmp_legacy_id": 2992096,
+    "num_ratings": 1,
+    "id": 344,
+    "name": "Wanda L Canfield"
+  },
+  {
+    "avg_difficulty": 5,
+    "avg_rating": 1,
+    "department": "Mathematics",
+    "rmp_id": "VGVhY2hlci0yOTQ0ODYx",
+    "rmp_legacy_id": 2944861,
+    "num_ratings": 3,
+    "id": 1314,
+    "name": "Georgi Medvedev"
+  },
+  {
+    "avg_difficulty": 1.9,
+    "avg_rating": 3.6,
+    "department": "Computer Science",
+    "rmp_id": "VGVhY2hlci0yMjg0NTA3",
+    "rmp_legacy_id": 2284507,
+    "num_ratings": 28,
+    "id": 2106,
+    "name": "William T Ahern"
+  },
+  {
+    "avg_difficulty": 2.1,
+    "avg_rating": 2.2,
+    "department": "Information Science",
+    "rmp_id": "VGVhY2hlci0xMzY0NTMy",
+    "rmp_legacy_id": 1364532,
+    "num_ratings": 8,
+    "id": 1970,
+    "name": "Michelle L Rogers"
+  },
+  {
+    "avg_difficulty": 3,
+    "avg_rating": 5,
+    "department": "Engineering",
+    "rmp_id": "VGVhY2hlci0xNzY4OTcx",
+    "rmp_legacy_id": 1768971,
+    "num_ratings": 1,
+    "id": 2473,
+    "name": "Patrick L Gurian"
+  },
+  {
+    "avg_difficulty": 2,
+    "avg_rating": 2,
+    "department": "Engineering",
+    "rmp_id": "VGVhY2hlci0yNjY0Njk4",
+    "rmp_legacy_id": 2664698,
+    "num_ratings": 2,
+    "id": 3157,
+    "name": "Jeffrey C Birou"
+  },
+  {
+    "avg_difficulty": 2,
+    "avg_rating": 5,
+    "department": "Student Services",
+    "rmp_id": "VGVhY2hlci0yOTg2NTk4",
+    "rmp_legacy_id": 2986598,
+    "num_ratings": 1,
+    "id": 1797,
+    "name": "Jaylynn Dixon"
+  },
+  {
+    "avg_difficulty": 2.3,
+    "avg_rating": 5,
+    "department": "English",
+    "rmp_id": "VGVhY2hlci0yOTQ2OTc1",
+    "rmp_legacy_id": 2946975,
+    "num_ratings": 3,
+    "id": 1049,
+    "name": "Katherine Karlin"
+  },
+  {
+    "avg_difficulty": 2.3,
+    "avg_rating": 4.3,
+    "department": "Digital Media",
+    "rmp_id": "VGVhY2hlci0yODg0MTEx",
+    "rmp_legacy_id": 2884111,
+    "num_ratings": 3,
+    "id": 3,
+    "name": "Michael T Sulesky"
+  },
+  {
+    "avg_difficulty": 2,
+    "avg_rating": 5,
+    "department": "Digital Media",
+    "rmp_id": "VGVhY2hlci0yODY0NTU0",
+    "rmp_legacy_id": 2864554,
+    "num_ratings": 2,
+    "id": 147,
+    "name": "Nicholas E Jushchyshyn"
+  },
+  {
+    "avg_difficulty": 3,
+    "avg_rating": 3.7,
+    "department": "English",
+    "rmp_id": "VGVhY2hlci0xOTM3MzMy",
+    "rmp_legacy_id": 1937332,
+    "num_ratings": 8,
+    "id": 1104,
+    "name": "Keunah Han"
+  },
+  {
+    "avg_difficulty": 3,
+    "avg_rating": 4.3,
+    "department": "Mathematics",
+    "rmp_id": "VGVhY2hlci0yMDU5MTQy",
+    "rmp_legacy_id": 2059142,
+    "num_ratings": 9,
+    "id": 1279,
+    "name": "Xiaoming Song"
+  },
+  {
+    "avg_difficulty": 1,
+    "avg_rating": 5,
+    "department": "Social Work",
+    "rmp_id": "VGVhY2hlci0yOTg3NTUx",
+    "rmp_legacy_id": 2987551,
+    "num_ratings": 1,
+    "id": 1803,
+    "name": "Maya L Stallings"
+  },
+  {
+    "avg_difficulty": 2,
+    "avg_rating": 1,
+    "department": "Nursing",
+    "rmp_id": "VGVhY2hlci0yNDQwMjcx",
+    "rmp_legacy_id": 2440271,
+    "num_ratings": 1,
+    "id": 2859,
+    "name": "Alecia S Fox"
+  },
+  {
+    "avg_difficulty": 2.3,
+    "avg_rating": 5,
+    "department": "Computer Science",
+    "rmp_id": "VGVhY2hlci0yNzk2ODk5",
+    "rmp_legacy_id": 2796899,
+    "num_ratings": 8,
+    "id": 1995,
+    "name": "Michael S Cordano"
+  },
+  {
+    "avg_difficulty": 3.5,
+    "avg_rating": 4,
+    "department": "Biological Sciences",
+    "rmp_id": "VGVhY2hlci0yNDU0OTE1",
+    "rmp_legacy_id": 2454915,
+    "num_ratings": 2,
+    "id": 1152,
+    "name": "Gary Rosenberg"
+  },
+  {
+    "avg_difficulty": 2.6,
+    "avg_rating": 2.6,
+    "department": "Philosophy",
+    "rmp_id": "VGVhY2hlci0xMjU4NzAw",
+    "rmp_legacy_id": 1258700,
+    "num_ratings": 12,
+    "id": 1335,
+    "name": "James A Stieb"
+  },
+  {
+    "avg_difficulty": 3,
+    "avg_rating": 4.6,
+    "department": "Graphic Arts",
+    "rmp_id": "VGVhY2hlci0yMjQyNDkw",
+    "rmp_legacy_id": 2242490,
+    "num_ratings": 5,
+    "id": 261,
+    "name": "Mark E Willie"
+  },
+  {
+    "avg_difficulty": 3.3,
+    "avg_rating": 4,
+    "department": "Design",
+    "rmp_id": "VGVhY2hlci0yNDQyMzc3",
+    "rmp_legacy_id": 2442377,
+    "num_ratings": 4,
+    "id": 426,
+    "name": "Michael D Glaser"
+  },
+  {
+    "avg_difficulty": 3.6,
+    "avg_rating": 4.5,
+    "department": "Fine Arts",
+    "rmp_id": "VGVhY2hlci0yMzEyMzIz",
+    "rmp_legacy_id": 2312323,
+    "num_ratings": 14,
+    "id": 518,
+    "name": "Elaine M Erne"
+  },
+  {
+    "avg_difficulty": 2.1,
+    "avg_rating": 3.7,
+    "department": "Biology",
+    "rmp_id": "VGVhY2hlci0yMjM5Mzg0",
+    "rmp_legacy_id": 2239384,
+    "num_ratings": 7,
+    "id": 675,
+    "name": "Alison E Moyer"
+  },
+  {
+    "avg_difficulty": 2.3,
+    "avg_rating": 4.1,
+    "department": "English",
+    "rmp_id": "VGVhY2hlci03OTQzNTc=",
+    "rmp_legacy_id": 794357,
+    "num_ratings": 31,
+    "id": 1072,
+    "name": "Henry Israeli"
+  },
+  {
+    "avg_difficulty": 2.9,
+    "avg_rating": 4.1,
+    "department": "English",
+    "rmp_id": "VGVhY2hlci0yNTQwMjM1",
+    "rmp_legacy_id": 2540235,
+    "num_ratings": 8,
+    "id": 1105,
+    "name": "Margene L Petersen"
+  },
+  {
+    "avg_difficulty": 4.7,
+    "avg_rating": 2,
+    "department": "Economics",
+    "rmp_id": "VGVhY2hlci0yNjQ2Njk3",
+    "rmp_legacy_id": 2646697,
+    "num_ratings": 6,
+    "id": 1610,
+    "name": "Constantinos Syropoulos"
+  },
+  {
+    "avg_difficulty": 3.3,
+    "avg_rating": 3.3,
+    "department": "Computer Science",
+    "rmp_id": "VGVhY2hlci0yNjcyOTEz",
+    "rmp_legacy_id": 2672913,
+    "num_ratings": 3,
+    "id": 1948,
+    "name": "David J Comroe"
+  },
+  {
+    "avg_difficulty": 2.9,
+    "avg_rating": 3.2,
+    "department": "Management",
+    "rmp_id": "VGVhY2hlci0xODAzMDQz",
+    "rmp_legacy_id": 1803043,
+    "num_ratings": 8,
+    "id": 1697,
+    "name": "Daniel Tzabbar"
+  },
+  {
+    "avg_difficulty": 2.7,
+    "avg_rating": 2.3,
+    "department": "Engineering",
+    "rmp_id": "VGVhY2hlci0xMzIxMjE=",
+    "rmp_legacy_id": 132121,
+    "num_ratings": 15,
+    "id": 2197,
+    "name": "Prawat Nagvajara"
+  },
+  {
+    "avg_difficulty": 3.4,
+    "avg_rating": 3.8,
+    "department": "Engineering",
+    "rmp_id": "VGVhY2hlci0yMjc4NzY2",
+    "rmp_legacy_id": 2278766,
+    "num_ratings": 8,
+    "id": 2457,
+    "name": "Ajmal Yousuff"
+  },
+  {
+    "avg_difficulty": 2,
+    "avg_rating": 4,
+    "department": "Business",
+    "rmp_id": "VGVhY2hlci0yNzEwMDMy",
+    "rmp_legacy_id": 2710032,
+    "num_ratings": 2,
+    "id": 395,
+    "name": "Javier L Rodriguez"
+  },
+  {
+    "avg_difficulty": 2.4,
+    "avg_rating": 4.6,
+    "department": "English",
+    "rmp_id": "VGVhY2hlci0yODI2OTQ3",
+    "rmp_legacy_id": 2826947,
+    "num_ratings": 5,
+    "id": 1064,
+    "name": "Lisa A DiMaio"
+  },
+  {
+    "avg_difficulty": 2.7,
+    "avg_rating": 4,
+    "department": "Biological Sciences",
+    "rmp_id": "VGVhY2hlci0yMzczMTc5",
+    "rmp_legacy_id": 2373179,
+    "num_ratings": 3,
+    "id": 1135,
+    "name": "Marina Potapova"
+  },
+  {
+    "avg_difficulty": 4,
+    "avg_rating": 2,
+    "department": "Computer Science",
+    "rmp_id": "VGVhY2hlci0yOTcyNzAx",
+    "rmp_legacy_id": 2972701,
+    "num_ratings": 1,
+    "id": 1887,
+    "name": "Samantha R Bewley"
+  },
+  {
+    "avg_difficulty": 5,
+    "avg_rating": 1,
+    "department": "Communication",
+    "rmp_id": "VGVhY2hlci0yOTcyMjA3",
+    "rmp_legacy_id": 2972207,
+    "num_ratings": 1,
+    "id": 916,
+    "name": "Bernat Ivancsics"
+  },
+  {
+    "avg_difficulty": 3,
+    "avg_rating": 4,
+    "department": "Nursing",
+    "rmp_id": "VGVhY2hlci0yMzUxNzEx",
+    "rmp_legacy_id": 2351711,
+    "num_ratings": 3,
+    "id": 2895,
+    "name": "Kristen McLaughlin"
+  },
+  {
+    "avg_difficulty": 4.1,
+    "avg_rating": 3.1,
+    "department": "English",
+    "rmp_id": "VGVhY2hlci01MzU5OTU=",
+    "rmp_legacy_id": 535995,
+    "num_ratings": 17,
+    "id": 1527,
+    "name": "Scott Warnock"
+  },
+  {
+    "avg_difficulty": 4,
+    "avg_rating": 2.2,
+    "department": "Mathematics",
+    "rmp_id": "VGVhY2hlci0xMzQ0ODg5",
+    "rmp_legacy_id": 1344889,
+    "num_ratings": 12,
+    "id": 1298,
+    "name": "Boris L Kheyfets"
+  },
+  {
+    "avg_difficulty": 3,
+    "avg_rating": 5,
+    "department": "Public Health",
+    "rmp_id": "VGVhY2hlci0yOTAyNzE0",
+    "rmp_legacy_id": 2902714,
+    "num_ratings": 2,
+    "id": 2643,
+    "name": "Nicole S Weber"
+  },
+  {
+    "avg_difficulty": 3,
+    "avg_rating": 4,
+    "department": "Economics",
+    "rmp_id": "VGVhY2hlci0yMTA2MTE2",
+    "rmp_legacy_id": 2106116,
+    "num_ratings": 5,
+    "id": 1599,
+    "name": "Marco Airaudo"
+  },
+  {
+    "avg_difficulty": 2.4,
+    "avg_rating": 4.6,
+    "department": "Management",
+    "rmp_id": "VGVhY2hlci0yNzI2MTI5",
+    "rmp_legacy_id": 2726129,
+    "num_ratings": 5,
+    "id": 166,
+    "name": "Shannon Lacek"
+  },
+  {
+    "avg_difficulty": 2.5,
+    "avg_rating": 5,
+    "department": "Business",
+    "rmp_id": "VGVhY2hlci0yODI0Njg3",
+    "rmp_legacy_id": 2824687,
+    "num_ratings": 2,
+    "id": 1656,
+    "name": "Xavier M Johnson"
+  },
+  {
+    "avg_difficulty": 4.5,
+    "avg_rating": 1,
+    "department": "Engineering",
+    "rmp_id": "VGVhY2hlci0yOTQ2Mzkx",
+    "rmp_legacy_id": 2946391,
+    "num_ratings": 2,
+    "id": 2229,
+    "name": "Gennady Friedman"
+  },
+  {
+    "avg_difficulty": 3.8,
+    "avg_rating": 3,
+    "department": "Engineering",
+    "rmp_id": "VGVhY2hlci05NjEyMzA=",
+    "rmp_legacy_id": 961230,
+    "num_ratings": 6,
+    "id": 2212,
+    "name": "John M Walsh"
+  },
+  {
+    "avg_difficulty": 3.1,
+    "avg_rating": 3.9,
+    "department": "Geology",
+    "rmp_id": "VGVhY2hlci0yMTc5NDU0",
+    "rmp_legacy_id": 2179454,
+    "num_ratings": 7,
+    "id": 1165,
+    "name": "Loyc Vanderkluysen"
+  },
+  {
+    "avg_difficulty": 3.3,
+    "avg_rating": 3,
+    "department": "Engineering",
+    "rmp_id": "VGVhY2hlci0yNzQ1MTYy",
+    "rmp_legacy_id": 2745162,
+    "num_ratings": 3,
+    "id": 2310,
+    "name": "Gongyao Zhou"
+  },
+  {
+    "avg_difficulty": 3.7,
+    "avg_rating": 3.1,
+    "department": "Accounting",
+    "rmp_id": "VGVhY2hlci0yNDYxNjQz",
+    "rmp_legacy_id": 2461643,
+    "num_ratings": 9,
+    "id": 1563,
+    "name": "Stephen B Bates"
+  },
+  {
+    "avg_difficulty": 3,
+    "avg_rating": 3.3,
+    "department": "Engineering",
+    "rmp_id": "VGVhY2hlci0xOTIyNzQw",
+    "rmp_legacy_id": 1922740,
+    "num_ratings": 4,
+    "id": 2304,
+    "name": "Grace G Hsuan"
+  },
+  {
+    "avg_difficulty": 4.7,
+    "avg_rating": 1,
+    "department": "Mathematics",
+    "rmp_id": "VGVhY2hlci0yOTU0NTI0",
+    "rmp_legacy_id": 2954524,
+    "num_ratings": 6,
+    "id": 1311,
+    "name": "James E Pascoe"
+  },
+  {
+    "avg_difficulty": 3.7,
+    "avg_rating": 2.3,
+    "department": "Public Health",
+    "rmp_id": "VGVhY2hlci0yNzQyOTI4",
+    "rmp_legacy_id": 2742928,
+    "num_ratings": 3,
+    "id": 2495,
+    "name": "Michael T LeVasseur"
+  },
+  {
+    "avg_difficulty": 3.5,
+    "avg_rating": 1.8,
+    "department": "Music",
+    "rmp_id": "VGVhY2hlci0yODI1OTA2",
+    "rmp_legacy_id": 2825906,
+    "num_ratings": 4,
+    "id": 347,
+    "name": "James C McKinney"
+  },
+  {
+    "avg_difficulty": 1.3,
+    "avg_rating": 5,
+    "department": "Sociology",
+    "rmp_id": "VGVhY2hlci0yODE1MzY2",
+    "rmp_legacy_id": 2815366,
+    "num_ratings": 3,
+    "id": 1492,
+    "name": "Masako Endo"
+  },
+  {
+    "avg_difficulty": 4.9,
+    "avg_rating": 1.6,
+    "department": "Marketing",
+    "rmp_id": "VGVhY2hlci0yMTE0NTYx",
+    "rmp_legacy_id": 2114561,
+    "num_ratings": 7,
+    "id": 1730,
+    "name": "Michaela M Draganska"
+  },
+  {
+    "avg_difficulty": 4,
+    "avg_rating": 3.4,
+    "department": "Management",
+    "rmp_id": "VGVhY2hlci0xMTAzNTY1",
+    "rmp_legacy_id": 1103565,
+    "num_ratings": 6,
+    "id": 2842,
+    "name": "Fred J DiCostanzo"
+  },
+  {
+    "avg_difficulty": 2.9,
+    "avg_rating": 3,
+    "department": "Philosophy",
+    "rmp_id": "VGVhY2hlci0yNDc1MDk=",
+    "rmp_legacy_id": 247509,
+    "num_ratings": 36,
+    "id": 1326,
+    "name": "Roger J Magyar"
+  },
+  {
+    "avg_difficulty": 3,
+    "avg_rating": 2.3,
+    "department": "Communication",
+    "rmp_id": "VGVhY2hlci0yOTAyNjM2",
+    "rmp_legacy_id": 2902636,
+    "num_ratings": 4,
+    "id": 915,
+    "name": "Nahyun Kim"
+  },
+  {
+    "avg_difficulty": 1,
+    "avg_rating": 5,
+    "department": "Public Health",
+    "rmp_id": "VGVhY2hlci0yODU4NDk2",
+    "rmp_legacy_id": 2858496,
+    "num_ratings": 1,
+    "id": 2511,
+    "name": "Melissa J Kaufman"
+  },
+  {
+    "avg_difficulty": 3.3,
+    "avg_rating": 4.3,
+    "department": "Psychology",
+    "rmp_id": "VGVhY2hlci0yMzk5OTgw",
+    "rmp_legacy_id": 2399980,
+    "num_ratings": 4,
+    "id": 1463,
+    "name": "Michael E Keesler"
+  },
+  {
+    "avg_difficulty": 3.3,
+    "avg_rating": 4.4,
+    "department": "Information Science",
+    "rmp_id": "VGVhY2hlci0yNDYyODM1",
+    "rmp_legacy_id": 2462835,
+    "num_ratings": 14,
+    "id": 2005,
+    "name": "Tim J Gorichanaz"
+  },
+  {
+    "avg_difficulty": 2,
+    "avg_rating": 5,
+    "department": "Engineering",
+    "rmp_id": "VGVhY2hlci0yODU2MTky",
+    "rmp_legacy_id": 2856192,
+    "num_ratings": 1,
+    "id": 2439,
+    "name": "Alexander Fridman"
+  },
+  {
+    "avg_difficulty": 2,
+    "avg_rating": 4.7,
+    "department": "Communication",
+    "rmp_id": "VGVhY2hlci0yNTA4NDQz",
+    "rmp_legacy_id": 2508443,
+    "num_ratings": 3,
+    "id": 919,
+    "name": "Elizabeth L Kaminsky"
+  },
+  {
+    "avg_difficulty": 2.8,
+    "avg_rating": 3.3,
+    "department": "Biology",
+    "rmp_id": "VGVhY2hlci02NTMyNDA=",
+    "rmp_legacy_id": 653240,
+    "num_ratings": 10,
+    "id": 740,
+    "name": "Felice Elefant"
+  },
+  {
+    "avg_difficulty": 4.4,
+    "avg_rating": 2.6,
+    "department": "Engineering",
+    "rmp_id": "VGVhY2hlci0zNTYzMjM=",
+    "rmp_legacy_id": 356323,
+    "num_ratings": 11,
+    "id": 2203,
+    "name": "Fernand S Cohen"
+  },
+  {
+    "avg_difficulty": 2,
+    "avg_rating": 5,
+    "department": "Student Services",
+    "rmp_id": "VGVhY2hlci0yOTE3MDEy",
+    "rmp_legacy_id": 2917012,
+    "num_ratings": 1,
+    "id": 3147,
+    "name": "Katie S Barak"
+  },
+  {
+    "avg_difficulty": 2,
+    "avg_rating": 5,
+    "department": "Computer Science",
+    "rmp_id": "VGVhY2hlci0yNzMzMjQy",
+    "rmp_legacy_id": 2733242,
+    "num_ratings": 3,
+    "id": 2031,
+    "name": "Spencer L Hopkins"
+  },
+  {
+    "avg_difficulty": 3.2,
+    "avg_rating": 3.4,
+    "department": "Economics",
+    "rmp_id": "VGVhY2hlci0xNjc0MTg5",
+    "rmp_legacy_id": 1674189,
+    "num_ratings": 17,
+    "id": 1595,
+    "name": "Mian Dai"
+  },
+  {
+    "avg_difficulty": 3,
+    "avg_rating": 5,
+    "department": "Hospitality",
+    "rmp_id": "VGVhY2hlci0yNzQ1MTc1",
+    "rmp_legacy_id": 2745175,
+    "num_ratings": 2,
+    "id": 2852,
+    "name": "Serena R Zelezny"
+  },
+  {
+    "avg_difficulty": 3.8,
+    "avg_rating": 2.2,
+    "department": "Engineering",
+    "rmp_id": "VGVhY2hlci0yMDY0NjU1",
+    "rmp_legacy_id": 2064655,
+    "num_ratings": 9,
+    "id": 2129,
+    "name": "Maureen H Tang"
+  },
+  {
+    "avg_difficulty": 4,
+    "avg_rating": 2.3,
+    "department": "Chemical Engineering",
+    "rmp_id": "VGVhY2hlci0yNTI0ODA1",
+    "rmp_legacy_id": 2524805,
+    "num_ratings": 4,
+    "id": 2126,
+    "name": "Joshua D Snyder"
+  },
+  {
+    "avg_difficulty": 2,
+    "avg_rating": 5,
+    "department": "Culinary Arts",
+    "rmp_id": "VGVhY2hlci0yODkyMjAz",
+    "rmp_legacy_id": 2892203,
+    "num_ratings": 2,
+    "id": 2790,
+    "name": "Jonathan M Deutsch"
+  },
+  {
+    "avg_difficulty": 4,
+    "avg_rating": 5,
+    "department": "Accounting",
+    "rmp_id": "VGVhY2hlci0yOTI3OTc1",
+    "rmp_legacy_id": 2927975,
+    "num_ratings": 1,
+    "id": 1569,
+    "name": "Barbara M Grein"
+  },
+  {
+    "avg_difficulty": 2.5,
+    "avg_rating": 5,
+    "department": "Engineering",
+    "rmp_id": "VGVhY2hlci0yOTIyNzU0",
+    "rmp_legacy_id": 2922754,
+    "num_ratings": 2,
+    "id": 2444,
+    "name": "Euisun Kim"
+  },
+  {
+    "avg_difficulty": 2.4,
+    "avg_rating": 1.9,
+    "department": "Biology",
+    "rmp_id": "VGVhY2hlci0yMTY4NTkw",
+    "rmp_legacy_id": 2168590,
+    "num_ratings": 7,
+    "id": 684,
+    "name": "Heather J Gwin"
+  },
+  {
+    "avg_difficulty": 3,
+    "avg_rating": 5,
+    "department": "Design",
+    "rmp_id": "VGVhY2hlci0yMzAwMzk4",
+    "rmp_legacy_id": 2300398,
+    "num_ratings": 1,
+    "id": 184,
+    "name": "Jaeyoon Jeong"
+  },
+  {
+    "avg_difficulty": 3,
+    "avg_rating": 5,
+    "department": "Education",
+    "rmp_id": "VGVhY2hlci0yOTEzMjAx",
+    "rmp_legacy_id": 2913201,
+    "num_ratings": 1,
+    "id": 3347,
+    "name": "Kristine S Grant"
+  },
+  {
+    "avg_difficulty": 2,
+    "avg_rating": 2.5,
+    "department": "Design",
+    "rmp_id": "VGVhY2hlci0yOTExOTQ4",
+    "rmp_legacy_id": 2911948,
+    "num_ratings": 2,
+    "id": 270,
+    "name": "Kimberly M Montes"
+  },
+  {
+    "avg_difficulty": 1.2,
+    "avg_rating": 4.8,
+    "department": "Information Science",
+    "rmp_id": "VGVhY2hlci0yNzUwOTMz",
+    "rmp_legacy_id": 2750933,
+    "num_ratings": 11,
+    "id": 1952,
+    "name": "Michelle A Tarbutton"
+  },
+  {
+    "avg_difficulty": 4.3,
+    "avg_rating": 2.8,
+    "department": "Engineering",
+    "rmp_id": "VGVhY2hlci02MzU0OTY=",
+    "rmp_legacy_id": 635496,
+    "num_ratings": 9,
+    "id": 2242,
+    "name": "Bahram Nabet"
+  },
+  {
+    "avg_difficulty": 2.5,
+    "avg_rating": 1.8,
+    "department": "Information Science",
+    "rmp_id": "VGVhY2hlci0xNzU0NDIx",
+    "rmp_legacy_id": 1754421,
+    "num_ratings": 4,
+    "id": 2062,
+    "name": "Aleksandra Sarcevic"
+  },
+  {
+    "avg_difficulty": 1,
+    "avg_rating": 5,
+    "department": "Design",
+    "rmp_id": "VGVhY2hlci0yNDkyNzU4",
+    "rmp_legacy_id": 2492758,
+    "num_ratings": 1,
+    "id": 132,
+    "name": "Mark E Petrovich"
+  },
+  {
+    "avg_difficulty": 4,
+    "avg_rating": 3.8,
+    "department": "Accounting",
+    "rmp_id": "VGVhY2hlci05NjkxOTk=",
+    "rmp_legacy_id": 969199,
+    "num_ratings": 21,
+    "id": 1784,
+    "name": "Stacy A Kline"
+  },
+  {
+    "avg_difficulty": 3.7,
+    "avg_rating": 3.7,
+    "department": "Design",
+    "rmp_id": "VGVhY2hlci0xMzg0NDcw",
+    "rmp_legacy_id": 1384470,
+    "num_ratings": 6,
+    "id": 141,
+    "name": "Troy W Finamore"
+  },
+  {
+    "avg_difficulty": 1.9,
+    "avg_rating": 4.5,
+    "department": "Mathematics",
+    "rmp_id": "VGVhY2hlci0yNDM0Mg==",
+    "rmp_legacy_id": 24342,
+    "num_ratings": 17,
+    "id": 1290,
+    "name": "Robert A Hicks"
+  },
+  {
+    "avg_difficulty": 4,
+    "avg_rating": 2.1,
+    "department": "Management",
+    "rmp_id": "VGVhY2hlci0yNTc2NDQy",
+    "rmp_legacy_id": 2576442,
+    "num_ratings": 7,
+    "id": 1681,
+    "name": "Jeongsik Lee"
+  },
+  {
+    "avg_difficulty": 3.8,
+    "avg_rating": 1.8,
+    "department": "Engineering",
+    "rmp_id": "VGVhY2hlci0yMDIyNDE2",
+    "rmp_legacy_id": 2022416,
+    "num_ratings": 6,
+    "id": 2150,
+    "name": "Robert H Swan"
+  },
+  {
+    "avg_difficulty": 4,
+    "avg_rating": 3,
+    "department": "Fine Arts",
+    "rmp_id": "VGVhY2hlci0yOTE0ODQ5",
+    "rmp_legacy_id": 2914849,
+    "num_ratings": 1,
+    "id": 517,
+    "name": "Sterling L Shaw"
+  },
+  {
+    "avg_difficulty": 3.5,
+    "avg_rating": 3,
+    "department": "Engineering",
+    "rmp_id": "VGVhY2hlci0yNjAxOTcz",
+    "rmp_legacy_id": 2601973,
+    "num_ratings": 4,
+    "id": 2190,
+    "name": "Ioannis Savidis"
+  },
+  {
+    "avg_difficulty": 2,
+    "avg_rating": 5,
+    "department": "Theater",
+    "rmp_id": "VGVhY2hlci0yNDYyODQy",
+    "rmp_legacy_id": 2462842,
+    "num_ratings": 2,
+    "id": 486,
+    "name": "Gerre M Garrett"
+  },
+  {
+    "avg_difficulty": 1.5,
+    "avg_rating": 4.5,
+    "department": "Music",
+    "rmp_id": "VGVhY2hlci0xNjU0OTcx",
+    "rmp_legacy_id": 1654971,
+    "num_ratings": 8,
+    "id": 342,
+    "name": "Brian M Dilts"
+  },
+  {
+    "avg_difficulty": 4.8,
+    "avg_rating": 4,
+    "department": "Engineering",
+    "rmp_id": "VGVhY2hlci0xODI4NjUx",
+    "rmp_legacy_id": 1828651,
+    "num_ratings": 4,
+    "id": 2198,
+    "name": "Afshin S Daryoush"
+  },
+  {
+    "avg_difficulty": 3.5,
+    "avg_rating": 2,
+    "department": "Computer Science",
+    "rmp_id": "VGVhY2hlci0yNzg3NTU3",
+    "rmp_legacy_id": 2787557,
+    "num_ratings": 4,
+    "id": 2032,
+    "name": "Shadi Rezapour"
+  },
+  {
+    "avg_difficulty": 2,
+    "avg_rating": 5,
+    "department": "Biology",
+    "rmp_id": "VGVhY2hlci0yOTA3MDM2",
+    "rmp_legacy_id": 2907036,
+    "num_ratings": 1,
+    "id": 742,
+    "name": "Tali Gidalevitz"
+  },
+  {
+    "avg_difficulty": 2.5,
+    "avg_rating": 4,
+    "department": "Psychology",
+    "rmp_id": "VGVhY2hlci0yMzUwMjQ2",
+    "rmp_legacy_id": 2350246,
+    "num_ratings": 4,
+    "id": 1429,
+    "name": "Paul C Gondek"
+  },
+  {
+    "avg_difficulty": 3,
+    "avg_rating": 3,
+    "department": "Mathematics",
+    "rmp_id": "VGVhY2hlci0yODg5NDk0",
+    "rmp_legacy_id": 2889494,
+    "num_ratings": 2,
+    "id": 1273,
+    "name": "Jingni Xiao"
+  },
+  {
+    "avg_difficulty": 4,
+    "avg_rating": 1.6,
+    "department": "Information Science",
+    "rmp_id": "VGVhY2hlci0xNDYyNzk5",
+    "rmp_legacy_id": 1462799,
+    "num_ratings": 11,
+    "id": 2085,
+    "name": "Rosina O Weber"
+  },
+  {
+    "avg_difficulty": 2,
+    "avg_rating": 5,
+    "department": "Computer Science",
+    "rmp_id": "VGVhY2hlci0yNjcyODM5",
+    "rmp_legacy_id": 2672839,
+    "num_ratings": 3,
+    "id": 1899,
+    "name": "Sam M Bever"
+  },
+  {
+    "avg_difficulty": 3,
+    "avg_rating": 3,
+    "department": "Digital Media",
+    "rmp_id": "VGVhY2hlci0yODUwMjgw",
+    "rmp_legacy_id": 2850280,
+    "num_ratings": 1,
+    "id": 145,
+    "name": "Frank J Lee"
+  },
+  {
+    "avg_difficulty": 2.5,
+    "avg_rating": 3.1,
+    "department": "Photography",
+    "rmp_id": "VGVhY2hlci0xODg0NjQ2",
+    "rmp_legacy_id": 1884646,
+    "num_ratings": 4,
+    "id": 405,
+    "name": "Joy Moody"
+  },
+  {
+    "avg_difficulty": 1.4,
+    "avg_rating": 5,
+    "department": "English",
+    "rmp_id": "VGVhY2hlci0yNzcyNTIw",
+    "rmp_legacy_id": 2772520,
+    "num_ratings": 7,
+    "id": 1020,
+    "name": "Leah V Mele"
+  },
+  {
+    "avg_difficulty": 3.3,
+    "avg_rating": 5,
+    "department": "Fine Arts",
+    "rmp_id": "VGVhY2hlci0yODkxMzYw",
+    "rmp_legacy_id": 2891360,
+    "num_ratings": 3,
+    "id": 239,
+    "name": "Gene A Santiago-Holt"
+  },
+  {
+    "avg_difficulty": 1.9,
+    "avg_rating": 4.7,
+    "department": "Nursing",
+    "rmp_id": "VGVhY2hlci0xMjg2OTA1",
+    "rmp_legacy_id": 1286905,
+    "num_ratings": 14,
+    "id": 2839,
+    "name": "Daniel L Cevallos"
+  },
+  {
+    "avg_difficulty": 1.1,
+    "avg_rating": 4.4,
+    "department": "Philosophy",
+    "rmp_id": "VGVhY2hlci0xOTcyMDg2",
+    "rmp_legacy_id": 1972086,
+    "num_ratings": 8,
+    "id": 1146,
+    "name": "Andrew F Smith"
+  },
+  {
+    "avg_difficulty": 2.7,
+    "avg_rating": 2.8,
+    "department": "Music",
+    "rmp_id": "VGVhY2hlci04MDk1MTY=",
+    "rmp_legacy_id": 809516,
+    "num_ratings": 10,
+    "id": 331,
+    "name": "Bruce Kaminsky"
+  },
+  {
+    "avg_difficulty": 2,
+    "avg_rating": 4,
+    "department": "Engineering",
+    "rmp_id": "VGVhY2hlci0yODg4NDg1",
+    "rmp_legacy_id": 2888485,
+    "num_ratings": 1,
+    "id": 2147,
+    "name": "Adams E Rackes"
+  },
+  {
+    "avg_difficulty": 1.8,
+    "avg_rating": 2.6,
+    "department": "Music",
+    "rmp_id": "VGVhY2hlci0yMjIyNDU2",
+    "rmp_legacy_id": 2222456,
+    "num_ratings": 5,
+    "id": 376,
+    "name": "Cyrille L Taillandier"
+  },
+  {
+    "avg_difficulty": 4,
+    "avg_rating": 4.3,
+    "department": "Engineering",
+    "rmp_id": "VGVhY2hlci0yNzAxNzA0",
+    "rmp_legacy_id": 2701704,
+    "num_ratings": 3,
+    "id": 2420,
+    "name": "Alan C Lau"
+  },
+  {
+    "avg_difficulty": 3.5,
+    "avg_rating": 3.1,
+    "department": "Business",
+    "rmp_id": "VGVhY2hlci02NTU4NDk=",
+    "rmp_legacy_id": 655849,
+    "num_ratings": 17,
+    "id": 1589,
+    "name": "Merrill W Liechty"
+  },
+  {
+    "avg_difficulty": 2.8,
+    "avg_rating": 4.7,
+    "department": "Film",
+    "rmp_id": "VGVhY2hlci0xNzM5Mjcw",
+    "rmp_legacy_id": 1739270,
+    "num_ratings": 6,
+    "id": 214,
+    "name": "Jocelyn R Tarquini"
+  },
+  {
+    "avg_difficulty": 3.6,
+    "avg_rating": 2.7,
+    "department": "Nursing",
+    "rmp_id": "VGVhY2hlci0xNjc3MDI1",
+    "rmp_legacy_id": 1677025,
+    "num_ratings": 16,
+    "id": 2942,
+    "name": "Dana C Kemery"
+  },
+  {
+    "avg_difficulty": 4,
+    "avg_rating": 4,
+    "department": "Music",
+    "rmp_id": "VGVhY2hlci0yMDYxNDg3",
+    "rmp_legacy_id": 2061487,
+    "num_ratings": 3,
+    "id": 326,
+    "name": "Rosalind M Erwin"
+  },
+  {
+    "avg_difficulty": 3.1,
+    "avg_rating": 4.2,
+    "department": "Chemistry",
+    "rmp_id": "VGVhY2hlci0xNzkwMjI2",
+    "rmp_legacy_id": 1790226,
+    "num_ratings": 7,
+    "id": 857,
+    "name": "Haifeng Ji"
+  },
+  {
+    "avg_difficulty": 3.2,
+    "avg_rating": 3,
+    "department": "Statistics",
+    "rmp_id": "VGVhY2hlci0xOTcyMDgx",
+    "rmp_legacy_id": 1972081,
+    "num_ratings": 11,
+    "id": 1586,
+    "name": "Jinwook Lee"
+  },
+  {
+    "avg_difficulty": 1.7,
+    "avg_rating": 5,
+    "department": "Management",
+    "rmp_id": "VGVhY2hlci0yNjQwNzA1",
+    "rmp_legacy_id": 2640705,
+    "num_ratings": 3,
+    "id": 165,
+    "name": "Jeanne M Waite"
+  },
+  {
+    "avg_difficulty": 2,
+    "avg_rating": 3,
+    "department": "Nursing",
+    "rmp_id": "VGVhY2hlci0xNzQ0MDYz",
+    "rmp_legacy_id": 1744063,
+    "num_ratings": 2,
+    "id": 2864,
+    "name": "Kate J Morse"
+  },
+  {
+    "avg_difficulty": 3,
+    "avg_rating": 4,
+    "department": "Engineering",
+    "rmp_id": "VGVhY2hlci0yODU4ODY0",
+    "rmp_legacy_id": 2858864,
+    "num_ratings": 1,
+    "id": 2317,
+    "name": "Bruce A Eisenstein"
+  },
+  {
+    "avg_difficulty": 2.5,
+    "avg_rating": 2.5,
+    "department": "Health Science",
+    "rmp_id": "VGVhY2hlci0yNTA5MzE1",
+    "rmp_legacy_id": 2509315,
+    "num_ratings": 2,
+    "id": 2838,
+    "name": "Kristine A Mulhorn"
+  },
+  {
+    "avg_difficulty": 2.5,
+    "avg_rating": 5,
+    "department": "Media Arts & Design",
+    "rmp_id": "VGVhY2hlci0yNjI0MDQ0",
+    "rmp_legacy_id": 2624044,
+    "num_ratings": 2,
+    "id": 122,
+    "name": "Alphonso D McClendon"
+  },
+  {
+    "avg_difficulty": 4.4,
+    "avg_rating": 2.7,
+    "department": "Engineering",
+    "rmp_id": "VGVhY2hlci0xMzI5NTk0",
+    "rmp_legacy_id": 1329594,
+    "num_ratings": 16,
+    "id": 2418,
+    "name": "Jonathan Awerbuch"
+  },
+  {
+    "avg_difficulty": 3.5,
+    "avg_rating": 3,
+    "department": "Chemistry",
+    "rmp_id": "VGVhY2hlci0yNjAyMjE0",
+    "rmp_legacy_id": 2602214,
+    "num_ratings": 2,
+    "id": 879,
+    "name": "Ezra Wood"
+  },
+  {
+    "avg_difficulty": 2.4,
+    "avg_rating": 4.8,
+    "department": "Languages",
+    "rmp_id": "VGVhY2hlci0yMzc5ODU=",
+    "rmp_legacy_id": 237985,
+    "num_ratings": 22,
+    "id": 1154,
+    "name": "Brenda A Dyer"
+  },
+  {
+    "avg_difficulty": 4,
+    "avg_rating": 2,
+    "department": "Finance",
+    "rmp_id": "VGVhY2hlci0yNzI5MjEy",
+    "rmp_legacy_id": 2729212,
+    "num_ratings": 2,
+    "id": 1632,
+    "name": "Kevin C Roche"
+  },
+  {
+    "avg_difficulty": 2,
+    "avg_rating": 1,
+    "department": "Sociology",
+    "rmp_id": "VGVhY2hlci0yMzUwMzEz",
+    "rmp_legacy_id": 2350313,
+    "num_ratings": 3,
+    "id": 1487,
+    "name": "Mary F Ebeling"
+  },
+  {
+    "avg_difficulty": 4.5,
+    "avg_rating": 1.5,
+    "department": "Culinary Arts",
+    "rmp_id": "VGVhY2hlci0yNzc5ODA1",
+    "rmp_legacy_id": 2779805,
+    "num_ratings": 2,
+    "id": 2788,
+    "name": "Rocco A Lugrine"
+  },
+  {
+    "avg_difficulty": 3.3,
+    "avg_rating": 3,
+    "department": "Music",
+    "rmp_id": "VGVhY2hlci0yMzc3MDM1",
+    "rmp_legacy_id": 2377035,
+    "num_ratings": 4,
+    "id": 329,
+    "name": "Madeleine C Riley"
+  },
+  {
+    "avg_difficulty": 2,
+    "avg_rating": 3,
+    "department": "Theater",
+    "rmp_id": "VGVhY2hlci0yODA5MTU3",
+    "rmp_legacy_id": 2809157,
+    "num_ratings": 1,
+    "id": 470,
+    "name": "Bill J Fennelly"
+  },
+  {
+    "avg_difficulty": 2.5,
+    "avg_rating": 5,
+    "department": "Computer Science",
+    "rmp_id": "VGVhY2hlci0yNjg4MTYz",
+    "rmp_legacy_id": 2688163,
+    "num_ratings": 2,
+    "id": 1959,
+    "name": "Natasha Staples"
+  },
+  {
+    "avg_difficulty": 3.4,
+    "avg_rating": 4,
+    "department": "English",
+    "rmp_id": "VGVhY2hlci0yNzc2MjY=",
+    "rmp_legacy_id": 277626,
+    "num_ratings": 23,
+    "id": 1096,
+    "name": "Scott A Stein"
+  },
+  {
+    "avg_difficulty": 2.2,
+    "avg_rating": 4.3,
+    "department": "Physics",
+    "rmp_id": "VGVhY2hlci0yMzQzOTc2",
+    "rmp_legacy_id": 2343976,
+    "num_ratings": 11,
+    "id": 1380,
+    "name": "Eric T Brewe"
+  },
+  {
+    "avg_difficulty": 1.7,
+    "avg_rating": 3.8,
+    "department": "Management",
+    "rmp_id": "VGVhY2hlci0yMjI4Mzk4",
+    "rmp_legacy_id": 2228398,
+    "num_ratings": 6,
+    "id": 1728,
+    "name": "Carl A Francis"
+  },
+  {
+    "avg_difficulty": 4,
+    "avg_rating": 1,
+    "department": "Engineering",
+    "rmp_id": "VGVhY2hlci0yODA0Mjkz",
+    "rmp_legacy_id": 2804293,
+    "num_ratings": 1,
+    "id": 2187,
+    "name": "Jaudelice C de Oliveira"
+  },
+  {
+    "avg_difficulty": 2.5,
+    "avg_rating": 4,
+    "department": "Design",
+    "rmp_id": "VGVhY2hlci0yODAzODky",
+    "rmp_legacy_id": 2803892,
+    "num_ratings": 2,
+    "id": 281,
+    "name": "Harry J Haon"
+  },
+  {
+    "avg_difficulty": 3,
+    "avg_rating": 3,
+    "department": "Computer Science",
+    "rmp_id": "VGVhY2hlci0yODA1Nzcw",
+    "rmp_legacy_id": 2805770,
+    "num_ratings": 1,
+    "id": 1963,
+    "name": "Gregory W Hislop"
+  },
+  {
+    "avg_difficulty": 1.2,
+    "avg_rating": 5,
+    "department": "Languages",
+    "rmp_id": "VGVhY2hlci0yMTE3OTY1",
+    "rmp_legacy_id": 2117965,
+    "num_ratings": 5,
+    "id": 2755,
+    "name": "Gregory J Lang"
+  },
+  {
+    "avg_difficulty": 2.5,
+    "avg_rating": 4.8,
+    "department": "Communication",
+    "rmp_id": "VGVhY2hlci00MzcxNjY=",
+    "rmp_legacy_id": 437166,
+    "num_ratings": 22,
+    "id": 925,
+    "name": "Ron C Bishop"
+  },
+  {
+    "avg_difficulty": 2,
+    "avg_rating": 4,
+    "department": "English",
+    "rmp_id": "VGVhY2hlci0yNzc1MjIz",
+    "rmp_legacy_id": 2775223,
+    "num_ratings": 2,
+    "id": 1023,
+    "name": "Keli B O'Connor"
+  },
+  {
+    "avg_difficulty": 4.2,
+    "avg_rating": 1.9,
+    "department": "Information Science",
+    "rmp_id": "VGVhY2hlci05MDMzMTY=",
+    "rmp_legacy_id": 903316,
+    "num_ratings": 9,
+    "id": 2075,
+    "name": "Xiaohua Hu"
+  },
+  {
+    "avg_difficulty": 3,
+    "avg_rating": 3.3,
+    "department": "Engineering",
+    "rmp_id": "VGVhY2hlci0xOTEwMDM3",
+    "rmp_legacy_id": 1910037,
+    "num_ratings": 9,
+    "id": 2219,
+    "name": "Nagarajan Kandasamy"
+  },
+  {
+    "avg_difficulty": 2.7,
+    "avg_rating": 3.5,
+    "department": "Physics",
+    "rmp_id": "VGVhY2hlci0yMTM3Mjk5",
+    "rmp_legacy_id": 2137299,
+    "num_ratings": 6,
+    "id": 1376,
+    "name": "Goran T Karapetrov"
+  },
+  {
+    "avg_difficulty": 2.6,
+    "avg_rating": 4.8,
+    "department": "Hospitality",
+    "rmp_id": "VGVhY2hlci0xMTA4ODE1",
+    "rmp_legacy_id": 1108815,
+    "num_ratings": 18,
+    "id": 2794,
+    "name": "Rosemary E Trout"
+  },
+  {
+    "avg_difficulty": 1.5,
+    "avg_rating": 5,
+    "department": "Science",
+    "rmp_id": "VGVhY2hlci0yNzgwMDg2",
+    "rmp_legacy_id": 2780086,
+    "num_ratings": 2,
+    "id": 1144,
+    "name": "Jon K Gelhaus"
+  },
+  {
+    "avg_difficulty": 2,
+    "avg_rating": 1,
+    "department": "Hospitality",
+    "rmp_id": "VGVhY2hlci0yNzgwOTE2",
+    "rmp_legacy_id": 2780916,
+    "num_ratings": 1,
+    "id": 2798,
+    "name": "Michael H Tunick"
+  },
+  {
+    "avg_difficulty": 3,
+    "avg_rating": 3.6,
+    "department": "Computer Science",
+    "rmp_id": "VGVhY2hlci03NTY4Mzk=",
+    "rmp_legacy_id": 756839,
+    "num_ratings": 15,
+    "id": 1885,
+    "name": "Jeff K Salvage"
+  },
+  {
+    "avg_difficulty": 2.4,
+    "avg_rating": 4.1,
+    "department": "Biological Sciences",
+    "rmp_id": "VGVhY2hlci0xODY1ODI4",
+    "rmp_legacy_id": 1865828,
+    "num_ratings": 12,
+    "id": 3173,
+    "name": "Fred D Allen"
+  },
+  {
+    "avg_difficulty": 3.4,
+    "avg_rating": 4.1,
+    "department": "Library & Information Science",
+    "rmp_id": "VGVhY2hlci0xMjk2Mzg1",
+    "rmp_legacy_id": 1296385,
+    "num_ratings": 14,
+    "id": 2040,
+    "name": "Jung-Ran Park"
+  },
+  {
+    "avg_difficulty": 1.5,
+    "avg_rating": 4,
+    "department": "Design",
+    "rmp_id": "VGVhY2hlci0yNzIwMjA2",
+    "rmp_legacy_id": 2720206,
+    "num_ratings": 2,
+    "id": 513,
+    "name": "John McDaniel"
+  },
+  {
+    "avg_difficulty": 2,
+    "avg_rating": 4,
+    "department": "Business",
+    "rmp_id": "VGVhY2hlci0yNzc0Njg0",
+    "rmp_legacy_id": 2774684,
+    "num_ratings": 1,
+    "id": 1789,
+    "name": "Lisa P Stanwyck"
+  },
+  {
+    "avg_difficulty": 3,
+    "avg_rating": 5,
+    "department": "Psychology",
+    "rmp_id": "VGVhY2hlci0yNzczODEx",
+    "rmp_legacy_id": 2773811,
+    "num_ratings": 1,
+    "id": 1475,
+    "name": "Kate N Devlin"
+  },
+  {
+    "avg_difficulty": 3,
+    "avg_rating": 5,
+    "department": "Engineering",
+    "rmp_id": "VGVhY2hlci0yNzI3NDA3",
+    "rmp_legacy_id": 2727407,
+    "num_ratings": 1,
+    "id": 2463,
+    "name": "Alessia Polemi"
+  },
+  {
+    "avg_difficulty": 1,
+    "avg_rating": 4,
+    "department": "Finance",
+    "rmp_id": "VGVhY2hlci0yNzUxNTY3",
+    "rmp_legacy_id": 2751567,
+    "num_ratings": 1,
+    "id": 1628,
+    "name": "Samuel H Szewczyk"
+  },
+  {
+    "avg_difficulty": 3.8,
+    "avg_rating": 4.4,
+    "department": "Design",
+    "rmp_id": "VGVhY2hlci0xODgxNjAz",
+    "rmp_legacy_id": 1881603,
+    "num_ratings": 8,
+    "id": 279,
+    "name": "Ada M Tremonte"
+  },
+  {
+    "avg_difficulty": 2.8,
+    "avg_rating": 3.9,
+    "department": "Photography",
+    "rmp_id": "VGVhY2hlci0xODAzODQx",
+    "rmp_legacy_id": 1803841,
+    "num_ratings": 4,
+    "id": 409,
+    "name": "Kylie K Wright"
+  },
+  {
+    "avg_difficulty": 2,
+    "avg_rating": 4.8,
+    "department": "Mathematics",
+    "rmp_id": "VGVhY2hlci01NjYzMTA=",
+    "rmp_legacy_id": 566310,
+    "num_ratings": 17,
+    "id": 1214,
+    "name": "Marna A Mozeff"
+  },
+  {
+    "avg_difficulty": 2.3,
+    "avg_rating": 5,
+    "department": "Nursing",
+    "rmp_id": "VGVhY2hlci0xMzI3MjA2",
+    "rmp_legacy_id": 1327206,
+    "num_ratings": 6,
+    "id": 2890,
+    "name": "Jennifer R Olszewski"
+  },
+  {
+    "avg_difficulty": 3,
+    "avg_rating": 5,
+    "department": "Psychology",
+    "rmp_id": "VGVhY2hlci0yNzUyMzU5",
+    "rmp_legacy_id": 2752359,
+    "num_ratings": 1,
+    "id": 1467,
+    "name": "Michael R Lowe"
+  },
+  {
+    "avg_difficulty": 2.8,
+    "avg_rating": 3,
+    "department": "Science",
+    "rmp_id": "VGVhY2hlci0yNjUyMjAz",
+    "rmp_legacy_id": 2652203,
+    "num_ratings": 4,
+    "id": 2829,
+    "name": "Brandy-Joe Milliron"
+  },
+  {
+    "avg_difficulty": 2,
+    "avg_rating": 5,
+    "department": "Nursing",
+    "rmp_id": "VGVhY2hlci0yMzMyMjMy",
+    "rmp_legacy_id": 2332232,
+    "num_ratings": 2,
+    "id": 2999,
+    "name": "Beth L Leonberg"
+  },
+  {
+    "avg_difficulty": 2,
+    "avg_rating": 3,
+    "department": "Science",
+    "rmp_id": "VGVhY2hlci0yNzQzNTI5",
+    "rmp_legacy_id": 2743529,
+    "num_ratings": 1,
+    "id": 1412,
+    "name": "Michael C Kaczmarczik"
+  },
+  {
+    "avg_difficulty": 2.9,
+    "avg_rating": 3.9,
+    "department": "Nursing",
+    "rmp_id": "VGVhY2hlci0yMTA4ODIw",
+    "rmp_legacy_id": 2108820,
+    "num_ratings": 7,
+    "id": 2685,
+    "name": "Kathryn T Farrell"
+  },
+  {
+    "avg_difficulty": 3,
+    "avg_rating": 5,
+    "department": "Psychology",
+    "rmp_id": "VGVhY2hlci0yMzk5OTgz",
+    "rmp_legacy_id": 2399983,
+    "num_ratings": 1,
+    "id": 1461,
+    "name": "Jennica M Janssen"
+  },
+  {
+    "avg_difficulty": 3,
+    "avg_rating": 4,
+    "department": "Nursing",
+    "rmp_id": "VGVhY2hlci0yNTkxNTU2",
+    "rmp_legacy_id": 2591556,
+    "num_ratings": 1,
+    "id": 2968,
+    "name": "Marcia Gamaly"
+  },
+  {
+    "avg_difficulty": 3.1,
+    "avg_rating": 2.5,
+    "department": "Nursing",
+    "rmp_id": "VGVhY2hlci0xOTg0NjM2",
+    "rmp_legacy_id": 1984636,
+    "num_ratings": 12,
+    "id": 2884,
+    "name": "Denise Way"
+  },
+  {
+    "avg_difficulty": 3.5,
+    "avg_rating": 5,
+    "department": "Finance",
+    "rmp_id": "VGVhY2hlci0yNTA2Nzg0",
+    "rmp_legacy_id": 2506784,
+    "num_ratings": 2,
+    "id": 1655,
+    "name": "Mary E Mawritz"
+  },
+  {
+    "avg_difficulty": 3,
+    "avg_rating": 3,
+    "department": "Economics",
+    "rmp_id": "VGVhY2hlci0yNzA1NDQy",
+    "rmp_legacy_id": 2705442,
+    "num_ratings": 1,
+    "id": 1613,
+    "name": "Teresa D Harrison"
+  },
+  {
+    "avg_difficulty": 3,
+    "avg_rating": 3,
+    "department": "Management",
+    "rmp_id": "VGVhY2hlci0yNzA1NDQx",
+    "rmp_legacy_id": 2705441,
+    "num_ratings": 1,
+    "id": 1691,
+    "name": "Vadake K Narayanan"
+  },
+  {
+    "avg_difficulty": 3.5,
+    "avg_rating": 4.8,
+    "department": "Design",
+    "rmp_id": "VGVhY2hlci0yNDczMDMx",
+    "rmp_legacy_id": 2473031,
+    "num_ratings": 4,
+    "id": 120,
+    "name": "Maureen C DeSimone"
+  },
+  {
+    "avg_difficulty": 3,
+    "avg_rating": 5,
+    "department": "Nursing",
+    "rmp_id": "VGVhY2hlci0yNDE2MTky",
+    "rmp_legacy_id": 2416192,
+    "num_ratings": 2,
+    "id": 2678,
+    "name": "Anthony M Angelow"
+  },
+  {
+    "avg_difficulty": 1,
+    "avg_rating": 5,
+    "department": "Education",
+    "rmp_id": "VGVhY2hlci0yNjMxOTIz",
+    "rmp_legacy_id": 2631923,
+    "num_ratings": 1,
+    "id": 3381,
+    "name": "Christopher G Wright"
+  },
+  {
+    "avg_difficulty": 3.7,
+    "avg_rating": 3.6,
+    "department": "Nursing",
+    "rmp_id": "VGVhY2hlci0yMzUxNzEw",
+    "rmp_legacy_id": 2351710,
+    "num_ratings": 16,
+    "id": 2901,
+    "name": "Penny E Parker"
+  },
+  {
+    "avg_difficulty": 2,
+    "avg_rating": 5,
+    "department": "Public Health",
+    "rmp_id": "VGVhY2hlci0yNjgxNjQ3",
+    "rmp_legacy_id": 2681647,
+    "num_ratings": 1,
+    "id": 2547,
+    "name": "Jennifer A Taylor"
+  },
+  {
+    "avg_difficulty": 3.6,
+    "avg_rating": 4.9,
+    "department": "Engineering",
+    "rmp_id": "VGVhY2hlci0xMTUyNzE5",
+    "rmp_legacy_id": 1152719,
+    "num_ratings": 5,
+    "id": 2161,
+    "name": "Mira Olson"
+  },
+  {
+    "avg_difficulty": 3.1,
+    "avg_rating": 3.9,
+    "department": "Anthropology",
+    "rmp_id": "VGVhY2hlci00ODM2MDY=",
+    "rmp_legacy_id": 483606,
+    "num_ratings": 7,
+    "id": 948,
+    "name": "Wesley Shumar"
+  },
+  {
+    "avg_difficulty": 5,
+    "avg_rating": 1,
+    "department": "Engineering",
+    "rmp_id": "VGVhY2hlci0yMjA5NTkz",
+    "rmp_legacy_id": 2209593,
+    "num_ratings": 1,
+    "id": 3252,
+    "name": "Margaret A Wheatley"
+  },
+  {
+    "avg_difficulty": 3,
+    "avg_rating": 3,
+    "department": "Engineering",
+    "rmp_id": "VGVhY2hlci0yNjc0NjY1",
+    "rmp_legacy_id": 2674665,
+    "num_ratings": 1,
+    "id": 2119,
+    "name": "Jin Wen"
+  },
+  {
+    "avg_difficulty": 2,
+    "avg_rating": 5,
+    "department": "Education",
+    "rmp_id": "VGVhY2hlci0xNDE0MTA5",
+    "rmp_legacy_id": 1414109,
+    "num_ratings": 3,
+    "id": 3364,
+    "name": "Dominic F Gullo"
+  },
+  {
+    "avg_difficulty": 3.3,
+    "avg_rating": 4.3,
+    "department": "English",
+    "rmp_id": "VGVhY2hlci0yNDYzNTQz",
+    "rmp_legacy_id": 2463543,
+    "num_ratings": 3,
+    "id": 2649,
+    "name": "Maria T Kleponis"
+  },
+  {
+    "avg_difficulty": 3,
+    "avg_rating": 3,
+    "department": "Nursing",
+    "rmp_id": "VGVhY2hlci0xMTI4ODU0",
+    "rmp_legacy_id": 1128854,
+    "num_ratings": 10,
+    "id": 2683,
+    "name": "Joanne F Serembus"
+  },
+  {
+    "avg_difficulty": 2.7,
+    "avg_rating": 4.3,
+    "department": "Engineering",
+    "rmp_id": "VGVhY2hlci0yNTYyMDEz",
+    "rmp_legacy_id": 2562013,
+    "num_ratings": 3,
+    "id": 2145,
+    "name": "Joseph B Hughes"
+  },
+  {
+    "avg_difficulty": 2,
+    "avg_rating": 5,
+    "department": "Public Health",
+    "rmp_id": "VGVhY2hlci0yNjU4MTU5",
+    "rmp_legacy_id": 2658159,
+    "num_ratings": 1,
+    "id": 2540,
+    "name": "Sherry I Brandt-Rauf"
+  },
+  {
+    "avg_difficulty": 4,
+    "avg_rating": 2,
+    "department": "Public Health",
+    "rmp_id": "VGVhY2hlci0yNjU2NzI5",
+    "rmp_legacy_id": 2656729,
+    "num_ratings": 1,
+    "id": 2639,
+    "name": "Alex A Quistberg"
+  },
+  {
+    "avg_difficulty": 1.7,
+    "avg_rating": 4.7,
+    "department": "Communication",
+    "rmp_id": "VGVhY2hlci00NTEyMDY=",
+    "rmp_legacy_id": 451206,
+    "num_ratings": 11,
+    "id": 932,
+    "name": "Joan W Blumberg"
+  },
+  {
+    "avg_difficulty": 4,
+    "avg_rating": 5,
+    "department": "Engineering",
+    "rmp_id": "VGVhY2hlci0yNjQ2MjUz",
+    "rmp_legacy_id": 2646253,
+    "num_ratings": 1,
+    "id": 3187,
+    "name": "Jaimie B Dougherty"
+  },
+  {
+    "avg_difficulty": 2.5,
+    "avg_rating": 5,
+    "department": "Music",
+    "rmp_id": "VGVhY2hlci0yMDc5MjQ2",
+    "rmp_legacy_id": 2079246,
+    "num_ratings": 2,
+    "id": 327,
+    "name": "Eve A Friedman"
+  },
+  {
+    "avg_difficulty": 3.5,
+    "avg_rating": 1,
+    "department": "Graphic Arts",
+    "rmp_id": "VGVhY2hlci0yNjM5MjQ0",
+    "rmp_legacy_id": 2639244,
+    "num_ratings": 2,
+    "id": 256,
+    "name": "Shushi Yoshinaga"
+  },
+  {
+    "avg_difficulty": 1,
+    "avg_rating": 5,
+    "department": "Music",
+    "rmp_id": "VGVhY2hlci0yNjM4MTA5",
+    "rmp_legacy_id": 2638109,
+    "num_ratings": 1,
+    "id": 401,
+    "name": "Jeffrey R Apruzzese"
+  },
+  {
+    "avg_difficulty": 2,
+    "avg_rating": 5,
+    "department": "Nursing",
+    "rmp_id": "VGVhY2hlci0yNjE5MTc0",
+    "rmp_legacy_id": 2619174,
+    "num_ratings": 1,
+    "id": 2699,
+    "name": "Donna M Fahey"
+  },
+  {
+    "avg_difficulty": 5,
+    "avg_rating": 3,
+    "department": "Engineering",
+    "rmp_id": "VGVhY2hlci0yNTYyMDEw",
+    "rmp_legacy_id": 2562010,
+    "num_ratings": 1,
+    "id": 2154,
+    "name": "Franco A Montalto"
+  },
+  {
+    "avg_difficulty": 1,
+    "avg_rating": 5,
+    "department": "Photography",
+    "rmp_id": "VGVhY2hlci0yNTU3Mjk3",
+    "rmp_legacy_id": 2557297,
+    "num_ratings": 1,
+    "id": 414,
+    "name": "Amanda K Tinker"
+  },
+  {
+    "avg_difficulty": 3.3,
+    "avg_rating": 3.7,
+    "department": "Music",
+    "rmp_id": "VGVhY2hlci0yMjI1NDUy",
+    "rmp_legacy_id": 2225452,
+    "num_ratings": 3,
+    "id": 328,
+    "name": "Christopher B Farrell"
+  },
+  {
+    "avg_difficulty": 3.2,
+    "avg_rating": 4,
+    "department": "Engineering",
+    "rmp_id": "VGVhY2hlci0xODY1ODM3",
+    "rmp_legacy_id": 1865837,
+    "num_ratings": 6,
+    "id": 3222,
+    "name": "Hualou Liang"
+  },
+  {
+    "avg_difficulty": 4.3,
+    "avg_rating": 3.3,
+    "department": "Design",
+    "rmp_id": "VGVhY2hlci05OTE4MDI=",
+    "rmp_legacy_id": 991802,
+    "num_ratings": 15,
+    "id": 499,
+    "name": "Sarah J Steinwachs"
+  },
+  {
+    "avg_difficulty": 3.3,
+    "avg_rating": 3,
+    "department": "Nursing",
+    "rmp_id": "VGVhY2hlci0xNzQ2MDIw",
+    "rmp_legacy_id": 1746020,
+    "num_ratings": 3,
+    "id": 2858,
+    "name": "Diane D DePew"
+  },
+  {
+    "avg_difficulty": 3.7,
+    "avg_rating": 3.1,
+    "department": "Chemistry",
+    "rmp_id": "VGVhY2hlci0xMTg0OTY3",
+    "rmp_legacy_id": 1184967,
+    "num_ratings": 9,
+    "id": 860,
+    "name": "Karl Sohlberg"
+  },
+  {
+    "avg_difficulty": 4,
+    "avg_rating": 3.3,
+    "department": "Health Science",
+    "rmp_id": "VGVhY2hlci0xMjU0Mjkx",
+    "rmp_legacy_id": 1254291,
+    "num_ratings": 2,
+    "id": 3015,
+    "name": "Noel M Goodstadt"
+  },
+  {
+    "avg_difficulty": 3.3,
+    "avg_rating": 3.3,
+    "department": "Engineering",
+    "rmp_id": "VGVhY2hlci0xNTA5NjA1",
+    "rmp_legacy_id": 1509605,
+    "num_ratings": 3,
+    "id": 2274,
+    "name": "Youngmoo E Kim"
+  },
+  {
+    "avg_difficulty": 3,
+    "avg_rating": 5,
+    "department": "Engineering",
+    "rmp_id": "VGVhY2hlci0xNzIxMTU0",
+    "rmp_legacy_id": 1721154,
+    "num_ratings": 1,
+    "id": 1878,
+    "name": "Kapil R Dandekar"
+  },
+  {
+    "avg_difficulty": 3.1,
+    "avg_rating": 4.4,
+    "department": "Biology",
+    "rmp_id": "VGVhY2hlci02NTMyMzk=",
+    "rmp_legacy_id": 653239,
+    "num_ratings": 9,
+    "id": 757,
+    "name": "Aleister J Saunders"
+  },
+  {
+    "avg_difficulty": 2,
+    "avg_rating": 2,
+    "department": "History",
+    "rmp_id": "VGVhY2hlci0xNzc4MDQ5",
+    "rmp_legacy_id": 1778049,
+    "num_ratings": 1,
+    "id": 1489,
+    "name": "Jennifer L Britton"
+  },
+  {
+    "avg_difficulty": 3.8,
+    "avg_rating": 1.6,
+    "department": "Education",
+    "rmp_id": "VGVhY2hlci02MzAxMDU=",
+    "rmp_legacy_id": 630105,
+    "num_ratings": 6,
+    "id": 3273,
+    "name": "Sheila R Vaidya"
+  },
+  {
+    "avg_difficulty": 4.7,
+    "avg_rating": 3.7,
+    "department": "Engineering",
+    "rmp_id": "VGVhY2hlci0xMzIzNzA=",
+    "rmp_legacy_id": 132370,
+    "num_ratings": 6,
+    "id": 2372,
+    "name": "Antonios Zavaliangos"
+  },
+  {
+    "avg_difficulty": 4,
+    "avg_rating": 4.7,
+    "department": "Materials Science",
+    "rmp_id": "VGVhY2hlci05OTYwMDQ=",
+    "rmp_legacy_id": 996004,
+    "num_ratings": 3,
+    "id": 2287,
+    "name": "Michel W Barsoum"
+  },
+  {
+    "avg_difficulty": 3.6,
+    "avg_rating": 2.8,
+    "department": "Economics",
+    "rmp_id": "VGVhY2hlci0yNDI1MjU1",
+    "rmp_legacy_id": 2425255,
+    "num_ratings": 18,
+    "id": 1598,
+    "name": "Pia Di Girolamo"
+  },
+  {
+    "avg_difficulty": 2.9,
+    "avg_rating": 3.9,
+    "department": "Mathematics",
+    "rmp_id": "VGVhY2hlci04NzU4ODA=",
+    "rmp_legacy_id": 875880,
+    "num_ratings": 71,
+    "id": 1232,
+    "name": "Adam C Rickert"
+  },
+  {
+    "avg_difficulty": 3.9,
+    "avg_rating": 2,
+    "department": "Graphic Arts",
+    "rmp_id": "VGVhY2hlci0xMzM4OTQ=",
+    "rmp_legacy_id": 133894,
+    "num_ratings": 32,
+    "id": 137,
+    "name": "Glen Muschio"
+  },
+  {
+    "avg_difficulty": 2,
+    "avg_rating": 4.3,
+    "department": "Communication",
+    "rmp_id": "VGVhY2hlci0yNTcyNDgz",
+    "rmp_legacy_id": 2572483,
+    "num_ratings": 3,
+    "id": 886,
+    "name": "Alex R Jenkins"
+  },
+  {
+    "avg_difficulty": 3.6,
+    "avg_rating": 3.6,
+    "department": "Nursing",
+    "rmp_id": "VGVhY2hlci0yMTA4Mzg2",
+    "rmp_legacy_id": 2108386,
+    "num_ratings": 14,
+    "id": 2891,
+    "name": "Mary A Zimmer"
+  },
+  {
+    "avg_difficulty": 2.6,
+    "avg_rating": 4.8,
+    "department": "Mathematics",
+    "rmp_id": "VGVhY2hlci0xNjY5MDY3",
+    "rmp_legacy_id": 1669067,
+    "num_ratings": 80,
+    "id": 1266,
+    "name": "Dimitri Papadopoulos"
+  },
+  {
+    "avg_difficulty": 3.3,
+    "avg_rating": 3.9,
+    "department": "Sociology",
+    "rmp_id": "VGVhY2hlci0yMjQzNzE1",
+    "rmp_legacy_id": 2243715,
+    "num_ratings": 45,
+    "id": 1488,
+    "name": "Brad J Nabors"
+  },
+  {
+    "avg_difficulty": 1,
+    "avg_rating": 5,
+    "department": "Business",
+    "rmp_id": "VGVhY2hlci0zMDgwNTc1",
+    "rmp_legacy_id": 3080575,
+    "num_ratings": 1,
+    "id": 1823,
+    "name": "Robert L Morier"
+  },
+  {
+    "avg_difficulty": 2.7,
+    "avg_rating": 3.4,
+    "department": "Mathematics",
+    "rmp_id": "VGVhY2hlci02OTM5NDc=",
+    "rmp_legacy_id": 693947,
+    "num_ratings": 31,
+    "id": 1303,
+    "name": "Ronald K Perline"
+  },
+  {
+    "avg_difficulty": 4.1,
+    "avg_rating": 1.8,
+    "department": "Mathematics",
+    "rmp_id": "VGVhY2hlci0xNjk5MzEx",
+    "rmp_legacy_id": 1699311,
+    "num_ratings": 7,
+    "id": 1312,
+    "name": "Pawel Hitczenko"
+  },
+  {
+    "avg_difficulty": 3,
+    "avg_rating": 5,
+    "department": "Communication",
+    "rmp_id": "VGVhY2hlci0zMDc2NTI1",
+    "rmp_legacy_id": 3076525,
+    "num_ratings": 2,
+    "id": 888,
+    "name": "Nak Ho Kim"
+  },
+  {
+    "avg_difficulty": 3,
+    "avg_rating": 4.5,
+    "department": "Film",
+    "rmp_id": "VGVhY2hlci0yNDczNzg1",
+    "rmp_legacy_id": 2473785,
+    "num_ratings": 13,
+    "id": 209,
+    "name": "Joseph A DiVita"
+  },
+  {
+    "avg_difficulty": 2.2,
+    "avg_rating": 3.4,
+    "department": "English",
+    "rmp_id": "VGVhY2hlci03MTI5MDg=",
+    "rmp_legacy_id": 712908,
+    "num_ratings": 26,
+    "id": 1054,
+    "name": "Kathleen R Volk Miller"
+  },
+  {
+    "avg_difficulty": 2.6,
+    "avg_rating": 2.9,
+    "department": "English",
+    "rmp_id": "VGVhY2hlci0yOTQ2OTc0",
+    "rmp_legacy_id": 2946974,
+    "num_ratings": 13,
+    "id": 1006,
+    "name": "Dan Featherston"
+  },
+  {
+    "avg_difficulty": 3.2,
+    "avg_rating": 3.8,
+    "department": "Humanities",
+    "rmp_id": "VGVhY2hlci03MDA1MjA=",
+    "rmp_legacy_id": 700520,
+    "num_ratings": 23,
+    "id": 1099,
+    "name": "Daniel W Driscoll"
+  },
+  {
+    "avg_difficulty": 2.1,
+    "avg_rating": 4.9,
+    "department": "Information Science",
+    "rmp_id": "VGVhY2hlci0xOTc3NTAy",
+    "rmp_legacy_id": 1977502,
+    "num_ratings": 14,
+    "id": 1946,
+    "name": "Chris J Carroll"
+  },
+  {
+    "avg_difficulty": 3.5,
+    "avg_rating": 2.8,
+    "department": "Political Science",
+    "rmp_id": "VGVhY2hlci0xMDQ0ODQ5",
+    "rmp_legacy_id": 1044849,
+    "num_ratings": 13,
+    "id": 1483,
+    "name": "Richardson Dilworth"
+  },
+  {
+    "avg_difficulty": 3.7,
+    "avg_rating": 2.9,
+    "department": "Sociology",
+    "rmp_id": "VGVhY2hlci0yODQ5NDI5",
+    "rmp_legacy_id": 2849429,
+    "num_ratings": 10,
+    "id": 3238,
+    "name": "Xiao Huang"
+  },
+  {
+    "avg_difficulty": 2.4,
+    "avg_rating": 4.7,
+    "department": "Materials Science",
+    "rmp_id": "VGVhY2hlci0xOTkxOTE0",
+    "rmp_legacy_id": 1991914,
+    "num_ratings": 17,
+    "id": 2351,
+    "name": "Chris M Weyant"
+  },
+  {
+    "avg_difficulty": 4.3,
+    "avg_rating": 2.1,
+    "department": "Biological Sciences",
+    "rmp_id": "VGVhY2hlci0xNDU1ODU3",
+    "rmp_legacy_id": 1455857,
+    "num_ratings": 46,
+    "id": 694,
+    "name": "Robert P Loudon"
+  },
+  {
+    "avg_difficulty": 4,
+    "avg_rating": 4,
+    "department": "Digital Media",
+    "rmp_id": "VGVhY2hlci0yODQzNDkw",
+    "rmp_legacy_id": 2843490,
+    "num_ratings": 1,
+    "id": 5,
+    "name": "Christopher V Cerrone"
+  },
+  {
+    "avg_difficulty": 3.2,
+    "avg_rating": 2.4,
+    "department": "Criminal Justice",
+    "rmp_id": "VGVhY2hlci0xODgyMTE4",
+    "rmp_legacy_id": 1882118,
+    "num_ratings": 22,
+    "id": 995,
+    "name": "Cynthia R Rickards"
+  },
+  {
+    "avg_difficulty": 3,
+    "avg_rating": 3.5,
+    "department": "Criminal Justice",
+    "rmp_id": "VGVhY2hlci0yMzg0NTUw",
+    "rmp_legacy_id": 2384550,
+    "num_ratings": 2,
+    "id": 2845,
+    "name": "Robert Asante"
+  },
+  {
+    "avg_difficulty": 4,
+    "avg_rating": 2.1,
+    "department": "Graphic Arts",
+    "rmp_id": "VGVhY2hlci0yNjAwODgy",
+    "rmp_legacy_id": 2600882,
+    "num_ratings": 7,
+    "id": 252,
+    "name": "Josh G Gdovin"
+  },
+  {
+    "avg_difficulty": 3.7,
+    "avg_rating": 3.7,
+    "department": "Engineering",
+    "rmp_id": "VGVhY2hlci0yNjc0NjU5",
+    "rmp_legacy_id": 2674659,
+    "num_ratings": 3,
+    "id": 2449,
+    "name": "Pete J Clelland"
+  },
+  {
+    "avg_difficulty": 4.2,
+    "avg_rating": 1.8,
+    "department": "Digital Media",
+    "rmp_id": "VGVhY2hlci0yNjIzMDU5",
+    "rmp_legacy_id": 2623059,
+    "num_ratings": 6,
+    "id": 1,
+    "name": "Dan P Rose"
+  },
+  {
+    "avg_difficulty": 1.3,
+    "avg_rating": 5,
+    "department": "Psychology",
+    "rmp_id": "VGVhY2hlci0yODU5NjE0",
+    "rmp_legacy_id": 2859614,
+    "num_ratings": 4,
+    "id": 1425,
+    "name": "Carrie A Costa Frank"
+  },
+  {
+    "avg_difficulty": 2.8,
+    "avg_rating": 4.3,
+    "department": "Psychology",
+    "rmp_id": "VGVhY2hlci0xODIwMDk2",
+    "rmp_legacy_id": 1820096,
+    "num_ratings": 32,
+    "id": 1446,
+    "name": "Julie M Sluzenski"
+  },
+  {
+    "avg_difficulty": 3.2,
+    "avg_rating": 5,
+    "department": "Engineering",
+    "rmp_id": "VGVhY2hlci0yNzM4MTMy",
+    "rmp_legacy_id": 2738132,
+    "num_ratings": 10,
+    "id": 2115,
+    "name": "Matt C Reichenbach"
+  },
+  {
+    "avg_difficulty": 4,
+    "avg_rating": 2.4,
+    "department": "Political Science",
+    "rmp_id": "VGVhY2hlci0yNjczNzk4",
+    "rmp_legacy_id": 2673798,
+    "num_ratings": 8,
+    "id": 1419,
+    "name": "Jose A Tapia Granados"
+  },
+  {
+    "avg_difficulty": 2.8,
+    "avg_rating": 4.7,
+    "department": "Design",
+    "rmp_id": "VGVhY2hlci0xMjk1MDUx",
+    "rmp_legacy_id": 1295051,
+    "num_ratings": 15,
+    "id": 503,
+    "name": "Rashidah A Salam"
+  },
+  {
+    "avg_difficulty": 2.9,
+    "avg_rating": 2.3,
+    "department": "Philosophy",
+    "rmp_id": "VGVhY2hlci04MTY1OTg=",
+    "rmp_legacy_id": 816598,
+    "num_ratings": 24,
+    "id": 1322,
+    "name": "Carol A Mele"
+  },
+  {
+    "avg_difficulty": 3.4,
+    "avg_rating": 4.2,
+    "department": "Accounting",
+    "rmp_id": "VGVhY2hlci0yMDk2ODA3",
+    "rmp_legacy_id": 2096807,
+    "num_ratings": 18,
+    "id": 1567,
+    "name": "Hiu Lam Choy"
+  },
+  {
+    "avg_difficulty": 2.8,
+    "avg_rating": 4.3,
+    "department": "Digital Media",
+    "rmp_id": "VGVhY2hlci0yNDMxNzI5",
+    "rmp_legacy_id": 2431729,
+    "num_ratings": 4,
+    "id": 139,
+    "name": "Rob E Lloyd"
+  },
+  {
+    "avg_difficulty": 2.7,
+    "avg_rating": 4.5,
+    "department": "Photography",
+    "rmp_id": "VGVhY2hlci0yNTM1NzI1",
+    "rmp_legacy_id": 2535725,
+    "num_ratings": 6,
+    "id": 407,
+    "name": "Eddy J Rhenals-Narvaez"
+  },
+  {
+    "avg_difficulty": 4,
+    "avg_rating": 5,
+    "department": "Physics",
+    "rmp_id": "VGVhY2hlci0yODQ3MTAz",
+    "rmp_legacy_id": 2847103,
+    "num_ratings": 1,
+    "id": 1382,
+    "name": "Michelle J Dolinski"
+  },
+  {
+    "avg_difficulty": 1.6,
+    "avg_rating": 4.8,
+    "department": "Public Health",
+    "rmp_id": "VGVhY2hlci0yMTQ1OTM0",
+    "rmp_legacy_id": 2145934,
+    "num_ratings": 7,
+    "id": 2625,
+    "name": "Jennifer R Breaux-Kutcher"
+  },
+  {
+    "avg_difficulty": 3,
+    "avg_rating": 1,
+    "department": "Music",
+    "rmp_id": "VGVhY2hlci0yOTYwNjc5",
+    "rmp_legacy_id": 2960679,
+    "num_ratings": 1,
+    "id": 3299,
+    "name": "Michael S Franklin"
+  },
+  {
+    "avg_difficulty": 2.8,
+    "avg_rating": 4.5,
+    "department": "Engineering",
+    "rmp_id": "VGVhY2hlci01ODU5NjU=",
+    "rmp_legacy_id": 585965,
+    "num_ratings": 10,
+    "id": 2441,
+    "name": "Young I Cho"
+  },
+  {
+    "avg_difficulty": 4,
+    "avg_rating": 3.8,
+    "department": "Accounting",
+    "rmp_id": "VGVhY2hlci05MTMxNTQ=",
+    "rmp_legacy_id": 913154,
+    "num_ratings": 6,
+    "id": 1787,
+    "name": "Tony P Curatola"
+  },
+  {
+    "avg_difficulty": 3,
+    "avg_rating": 1.5,
+    "department": "Design",
+    "rmp_id": "VGVhY2hlci0yNTQwMzA4",
+    "rmp_legacy_id": 2540308,
+    "num_ratings": 2,
+    "id": 519,
+    "name": "Elizabeth Goldberg-Johnson"
+  },
+  {
+    "avg_difficulty": 3.8,
+    "avg_rating": 3,
+    "department": "Design",
+    "rmp_id": "VGVhY2hlci0yMjM2ODQ2",
+    "rmp_legacy_id": 2236846,
+    "num_ratings": 5,
+    "id": 113,
+    "name": "Chris D Baeza"
+  },
+  {
+    "avg_difficulty": 3.2,
+    "avg_rating": 3.1,
+    "department": "Criminal Justice",
+    "rmp_id": "VGVhY2hlci02MjMyMTM=",
+    "rmp_legacy_id": 623213,
+    "num_ratings": 11,
+    "id": 1000,
+    "name": "Robert D'Ovidio"
+  },
+  {
+    "avg_difficulty": 3,
+    "avg_rating": 2.8,
+    "department": "Engineering",
+    "rmp_id": "VGVhY2hlci05NzQ1MDY=",
+    "rmp_legacy_id": 974506,
+    "num_ratings": 5,
+    "id": 2353,
+    "name": "Charles N Haas"
+  },
+  {
+    "avg_difficulty": 2,
+    "avg_rating": 5,
+    "department": "Fine Arts",
+    "rmp_id": "VGVhY2hlci0yNDI5NzA3",
+    "rmp_legacy_id": 2429707,
+    "num_ratings": 5,
+    "id": 534,
+    "name": "Josh M Zerangue"
+  },
+  {
+    "avg_difficulty": 2.6,
+    "avg_rating": 5,
+    "department": "Film",
+    "rmp_id": "VGVhY2hlci0xMjg3ODAx",
+    "rmp_legacy_id": 1287801,
+    "num_ratings": 9,
+    "id": 201,
+    "name": "David P Deneen"
+  },
+  {
+    "avg_difficulty": 3,
+    "avg_rating": 5,
+    "department": "Culinary Arts",
+    "rmp_id": "VGVhY2hlci0yNzI5Njg0",
+    "rmp_legacy_id": 2729684,
+    "num_ratings": 2,
+    "id": 2784,
+    "name": "Rich V Pepino"
+  },
+  {
+    "avg_difficulty": 4.3,
+    "avg_rating": 1.3,
+    "department": "Biology",
+    "rmp_id": "VGVhY2hlci0yNzM0NzI4",
+    "rmp_legacy_id": 2734728,
+    "num_ratings": 6,
+    "id": 3185,
+    "name": "John F Eberth"
+  },
+  {
+    "avg_difficulty": 3.8,
+    "avg_rating": 3.8,
+    "department": "Engineering",
+    "rmp_id": "VGVhY2hlci0yNjM5MTAz",
+    "rmp_legacy_id": 2639103,
+    "num_ratings": 4,
+    "id": 2281,
+    "name": "Steve P Weber"
+  },
+  {
+    "avg_difficulty": 3.5,
+    "avg_rating": 4.5,
+    "department": "Accounting",
+    "rmp_id": "VGVhY2hlci0yNzExMzk3",
+    "rmp_legacy_id": 2711397,
+    "num_ratings": 4,
+    "id": 2052,
+    "name": "Chaomei Chen"
+  },
+  {
+    "avg_difficulty": 4.2,
+    "avg_rating": 3,
+    "department": "Engineering",
+    "rmp_id": "VGVhY2hlci0yMDU0NDEy",
+    "rmp_legacy_id": 2054412,
+    "num_ratings": 5,
+    "id": 2122,
+    "name": "Nicolas J Alvarez"
+  },
+  {
+    "avg_difficulty": 2.8,
+    "avg_rating": 5,
+    "department": "Marketing",
+    "rmp_id": "VGVhY2hlci0yNDk5NzEx",
+    "rmp_legacy_id": 2499711,
+    "num_ratings": 5,
+    "id": 1732,
+    "name": "Elea M Feit"
+  },
+  {
+    "avg_difficulty": 2.2,
+    "avg_rating": 4.9,
+    "department": "Information Science",
+    "rmp_id": "VGVhY2hlci02ODU5Mzg=",
+    "rmp_legacy_id": 685938,
+    "num_ratings": 5,
+    "id": 2674,
+    "name": "John M Goggins"
+  },
+  {
+    "avg_difficulty": 1.8,
+    "avg_rating": 4.9,
+    "department": "Accounting",
+    "rmp_id": "VGVhY2hlci0yMDkyODA0",
+    "rmp_legacy_id": 2092804,
+    "num_ratings": 18,
+    "id": 2290,
+    "name": "James C Deiner"
+  },
+  {
+    "avg_difficulty": 3,
+    "avg_rating": 4,
+    "department": "Nursing",
+    "rmp_id": "VGVhY2hlci0yNzQzMDg3",
+    "rmp_legacy_id": 2743087,
+    "num_ratings": 1,
+    "id": 2944,
+    "name": "Susan M Solecki"
+  },
+  {
+    "avg_difficulty": 2.7,
+    "avg_rating": 4.5,
+    "department": "Music",
+    "rmp_id": "VGVhY2hlci0yMjIyNDU0",
+    "rmp_legacy_id": 2222454,
+    "num_ratings": 6,
+    "id": 786,
+    "name": "Robert W Weber"
+  },
+  {
+    "avg_difficulty": 4,
+    "avg_rating": 2.3,
+    "department": "Nursing",
+    "rmp_id": "VGVhY2hlci05NDMyNTY=",
+    "rmp_legacy_id": 943256,
+    "num_ratings": 11,
+    "id": 2967,
+    "name": "Alice R Poyss"
+  },
+  {
+    "avg_difficulty": 3.7,
+    "avg_rating": 3.3,
+    "department": "Education",
+    "rmp_id": "VGVhY2hlci0yNjA2Njc2",
+    "rmp_legacy_id": 2606676,
+    "num_ratings": 3,
+    "id": 3258,
+    "name": "Chris M Vorndran"
+  },
+  {
+    "avg_difficulty": 4.4,
+    "avg_rating": 3.1,
+    "department": "Finance",
+    "rmp_id": "VGVhY2hlci03NzUyMzM=",
+    "rmp_legacy_id": 775233,
+    "num_ratings": 7,
+    "id": 28,
+    "name": "David A Beker"
+  },
+  {
+    "avg_difficulty": 3,
+    "avg_rating": 2.5,
+    "department": "Information Science",
+    "rmp_id": "VGVhY2hlci0xOTkzMzQw",
+    "rmp_legacy_id": 1993340,
+    "num_ratings": 2,
+    "id": 2088,
+    "name": "Christopher C Yang"
+  },
+  {
+    "avg_difficulty": 3,
+    "avg_rating": 2.5,
+    "department": "Information Science",
+    "rmp_id": "VGVhY2hlci0xOTkzMzQw",
+    "rmp_legacy_id": 1993340,
+    "num_ratings": 2,
+    "id": 2351,
+    "name": "Chris M Weyant"
+  },
+  {
+    "avg_difficulty": 3.8,
+    "avg_rating": 3.1,
+    "department": "Physics",
+    "rmp_id": "VGVhY2hlci00NTYzODE=",
+    "rmp_legacy_id": 456381,
+    "num_ratings": 14,
+    "id": 898,
+    "name": "Michael Cavacini"
+  },
+  {
+    "avg_difficulty": 3.2,
+    "avg_rating": 1.3,
+    "department": "Education",
+    "rmp_id": "VGVhY2hlci0yOTUwMTY=",
+    "rmp_legacy_id": 295016,
+    "num_ratings": 5,
+    "id": 3271,
+    "name": "Fredricka K Reisman"
+  },
+  {
+    "avg_difficulty": 3,
+    "avg_rating": 4.8,
+    "department": "Political Science",
+    "rmp_id": "VGVhY2hlci0xMjYzMjQ3",
+    "rmp_legacy_id": 1263247,
+    "num_ratings": 2,
+    "id": 986,
+    "name": "Jon W McGoran"
+  }
+]
