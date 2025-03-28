@@ -9,7 +9,7 @@ import { AutocompleteFieldWithIcon, TextFieldWithIcon, DropdownField, SliderFiel
 import { SectionHeader } from './SectionHeader';
 import { FormActions } from './FormActions';
 import { COOP_CYCLES, COOP_YEARS, PROGRAM_LEVELS } from '#/types';
-import { getAutocompleteCompanyOptions, getAutocompleteLocationOptions, getAutocompletePositionOptions, postCompanyPositionMutation } from '#client/react-query.gen';
+import { getAutocompleteCompanyOptions, getAutocompleteCompanyQueryKey, getAutocompleteLocationOptions, getAutocompletePositionOptions, getAutocompletePositionQueryKey, postCompanyPositionMutation } from '#client/react-query.gen';
 import { PositionSchema, type Position } from '#/utils/validators';
 import CompanyPositionModal, { type CompanyPosition } from './CompanyPositionModal';
 import { useSnackbar } from 'notistack';
@@ -61,15 +61,20 @@ const JobForm: React.FC<{
       defaultValues: formDefaultValues
     });
 
-    const [searches, setSearches] = useState({ company: '', position: '', location: '' });
+    const [searches, setSearches] = useState({ company: formDefaultValues.company, position: formDefaultValues.position, location: formDefaultValues.location });
     const compensation = watch('compensation');
     const workHours = watch('work_hours');
     const selectedCompany = watch('company');
+
+    // Add watches for key form values
+    const watchedCompany = watch('company');
+    const watchedPosition = watch('position');
+    const watchedLocation = watch('location');
+
     const isSubmittingRef = useRef(false);
     const weeklyPay = useMemo(() => compensation !== null ? compensation * workHours : null, [compensation, workHours]);
     const isSubmitting = isSubmittingProp || formIsSubmitting;
 
-    // Handle external validation errors
     useEffect(() => {
       if (externalErrors && externalErrors.length > 0) {
         externalErrors.forEach(({ field, message }) => {
@@ -79,7 +84,6 @@ const JobForm: React.FC<{
             loc: 'location'
           };
 
-          // Map API field names to form field names
           const formField = fieldMapping[field] || field;
 
           if (formField) {
@@ -99,6 +103,61 @@ const JobForm: React.FC<{
       }
     }, [submitError, enqueueSnackbar]);
 
+    // NEW: Effect to synchronize company form value with search state
+    useEffect(() => {
+      if (watchedCompany) {
+        const companyValue = typeof watchedCompany === 'object' && watchedCompany !== null
+          ? watchedCompany.name
+          : watchedCompany;
+
+        if (companyValue && companyValue.length >= 3 && companyValue !== searches.company) {
+          setSearches(prev => ({ ...prev, company: companyValue }));
+
+          // Force refetch company data
+          queryClient.invalidateQueries({
+            queryKey: getAutocompleteCompanyQueryKey({
+              query: { comp: companyValue }
+            }).queryKey
+          });
+        }
+      }
+    }, [watchedCompany, queryClient, searches.company]);
+
+    // NEW: Effect to synchronize position form value with search state
+    useEffect(() => {
+      if (watchedPosition && typeof watchedPosition === 'string' && watchedPosition.length >= 3) {
+        if (watchedPosition !== searches.position) {
+          setSearches(prev => ({ ...prev, position: watchedPosition }));
+
+          // Only invalidate if we have a company
+          if (watchedCompany) {
+            const companyValue = typeof watchedCompany === 'object' && watchedCompany !== null
+              ? watchedCompany.name
+              : watchedCompany;
+
+            queryClient.invalidateQueries({
+              queryKey: getAutocompletePositionQueryKey({
+                query: { comp: companyValue, pos: watchedPosition }
+              }).queryKey
+            });
+          }
+        }
+      }
+    }, [watchedPosition, watchedCompany, queryClient, searches.position]);
+
+    // NEW: Effect to synchronize location form value with search state
+    useEffect(() => {
+      if (watchedLocation && typeof watchedLocation === 'string' && watchedLocation.length >= 3) {
+        if (watchedLocation !== searches.location) {
+          setSearches(prev => ({ ...prev, location: watchedLocation }));
+
+          queryClient.invalidateQueries({
+            queryKey: ['autocompleteLocationOptions', { loc: watchedLocation }]
+          });
+        }
+      }
+    }, [watchedLocation, queryClient, searches.location]);
+
     const debouncedSearch = useCallback(
       debounce((field: string, value: string) => {
         setSearches(prev => ({ ...prev, [field]: value }));
@@ -111,7 +170,7 @@ const JobForm: React.FC<{
         query: { comp: searches.company }
       }),
       enabled: searches.company.length >= 3,
-      staleTime: 30000,
+      staleTime: 3000,
       placeholderData: (previousData) => previousData
     });
 
@@ -127,7 +186,7 @@ const JobForm: React.FC<{
         }
       }),
       enabled: !!selectedCompany && searches.position.length >= 3,
-      staleTime: 30000,
+      staleTime: 3000,
       placeholderData: (previousData) => previousData
     });
 
@@ -138,7 +197,7 @@ const JobForm: React.FC<{
         }
       }),
       enabled: searches.location.length >= 3,
-      staleTime: 30000,
+      staleTime: 3000,
       placeholderData: (previousData) => previousData
     });
 
@@ -191,23 +250,40 @@ const JobForm: React.FC<{
       setModalOpen(false);
     };
 
+    // UPDATED: handleAddCompanyPosition function
     const handleAddCompanyPosition = async (data: CompanyPosition, onReset, onClose) => {
-      setValue('company', data.company);
-      setValue('position', data.position);
-
-      await queryClient.invalidateQueries({
-        queryKey: ['autocompleteCompanyOptions']
+      // First set form values with all options enabled
+      setValue('company', data.company, {
+        shouldValidate: true,
+        shouldDirty: true,
+        shouldTouch: true
       });
 
-      await queryClient.invalidateQueries({
-        queryKey: ['autocompletePositionOptions']
+      setValue('position', data.position, {
+        shouldValidate: true,
+        shouldDirty: true,
+        shouldTouch: true
       });
+
+      // The useEffect hooks above will take care of updating searches state
+      // and invalidating queries, so we don't need to do it manually here
 
       return postMutation.mutate({
         body: { company: data.company, position: data.position }
       }, {
         onSuccess: ({ company_id, position_id }) => {
           enqueueSnackbar('Company Position added successfully', { variant: 'success' });
+
+          // Manually trigger a refetch of position options to ensure data is fresh
+          if (data.company && data.company.length >= 3 && data.position && data.position.length >= 3) {
+            queryClient.refetchQueries({
+              queryKey: getAutocompletePositionQueryKey({
+                query: { comp: data.company, pos: data.position }
+              }).queryKey,
+              exact: true
+            });
+          }
+
           onReset();
           onClose();
         },
@@ -262,7 +338,7 @@ const JobForm: React.FC<{
                   control={control}
                   icon={<Building size={18} />}
                   options={companyQuery?.data && companyQuery?.data?.map((item) => item.name) || []}
-                  loading={companyQuery?.isLoading}
+                  loading={companyQuery?.isFetching}
                   getOptionLabel={(option) => option ?? ""}
                   isOptionEqualToValue={(option, value) => option === value}
                   onInputChange={(_, value) => {

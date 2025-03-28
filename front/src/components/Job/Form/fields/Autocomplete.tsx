@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Controller } from 'react-hook-form';
 import { Box, TextField, Autocomplete, CircularProgress } from '@mui/material';
 import type { Submission } from '#/types';
@@ -47,6 +47,61 @@ export const AutocompleteFieldWithIcon = <T extends object>({
   const { loadOptions, dependsOn, ...filteredProps } = props as any;
   const [inputValue, setInputValue] = useState('');
   const [customError, setCustomError] = useState('');
+  const [shouldValidate, setShouldValidate] = useState(true);
+
+  // Effect to continuously validate input value against options
+  // But only when not loading and shouldValidate is true
+  useEffect(() => {
+    if (loading) {
+      // Don't validate while loading
+      setCustomError('');
+      return;
+    }
+
+    if (shouldValidate && inputValue && inputValue !== '') {
+      const valueExists = checkValueInOptions(inputValue);
+      if (!valueExists) {
+        setCustomError('Value must match one of the available options');
+      } else {
+        setCustomError('');
+      }
+    } else {
+      setCustomError('');
+    }
+  }, [inputValue, options, getOptionLabel, loading, shouldValidate]);
+
+  // Reset validation state when loading changes with extended delay
+  useEffect(() => {
+    // Always suspend validation when loading starts
+    if (loading) {
+      setShouldValidate(false);
+    } else {
+      // Re-enable validation after loading completes, with a longer delay
+      // to ensure options are fully updated and UI has stabilized
+      const timer = setTimeout(() => {
+        setShouldValidate(true);
+      }, 800); // Increased from 300ms to 800ms for better user experience
+
+      return () => clearTimeout(timer);
+    }
+  }, [loading]);
+
+  // Helper function to normalize strings for comparison
+  const normalizeString = (str: string) => {
+    return str.toLowerCase().trim();
+  };
+
+  // Helper function to check if a value exists in options
+  const checkValueInOptions = (value: string) => {
+    if (!value) return true;
+
+    const normalizedValue = normalizeString(value);
+
+    return options.some(option => {
+      const optionLabel = getOptionLabel(option as T);
+      return normalizeString(optionLabel) === normalizedValue;
+    });
+  };
 
   return (
     <Controller
@@ -55,15 +110,13 @@ export const AutocompleteFieldWithIcon = <T extends object>({
       rules={{
         ...rules,
         validate: (value) => {
+          // Skip validation while loading
+          if (loading) return true;
+
           // Skip validation for empty values
           if (!inputValue || inputValue === '') return true;
 
-          // Validate that the value exists in options
-          const valueExists = options.some(option =>
-            getOptionLabel(option as T).toLowerCase() === inputValue.toLowerCase()
-          );
-
-          return valueExists || 'Value must match one of the available options';
+          return checkValueInOptions(inputValue) || 'Value must match one of the available options';
         }
       }}
       render={({ field, fieldState }) => {
@@ -72,10 +125,11 @@ export const AutocompleteFieldWithIcon = <T extends object>({
 
         // Custom onBlur handler that checks for errors
         const handleBlur = (event) => {
+          // Don't show errors while loading
+          if (loading) return onBlur();
+
           if (inputValue && inputValue !== '') {
-            const valueExists = options.some(option =>
-              getOptionLabel(option as T).toLowerCase() === inputValue.toLowerCase()
-            );
+            const valueExists = checkValueInOptions(inputValue);
 
             if (!valueExists) {
               setCustomError('Value must match one of the available options');
@@ -90,6 +144,26 @@ export const AutocompleteFieldWithIcon = <T extends object>({
           onBlur();
         };
 
+        // Enhanced error handling with loading state tracking
+        // Don't show errors while loading or for a brief period after loading completes
+        const [wasRecentlyLoading, setWasRecentlyLoading] = useState(loading);
+
+        useEffect(() => {
+          if (loading) {
+            setWasRecentlyLoading(true);
+          } else if (wasRecentlyLoading) {
+            // Add delay before allowing errors to show after loading completes
+            const timer = setTimeout(() => {
+              setWasRecentlyLoading(false);
+            }, 600);
+            return () => clearTimeout(timer);
+          }
+        }, [loading]);
+
+        // Only show errors if not loading AND not recently loaded AND has actual errors
+        const showError = !loading && !wasRecentlyLoading && (error || !!fieldState.error || !!customError);
+        const errorMessage = showError ? (helperText || fieldState.error?.message || customError || "") : "";
+
         return (
           <Autocomplete
             {...filteredProps}
@@ -99,18 +173,18 @@ export const AutocompleteFieldWithIcon = <T extends object>({
             getOptionLabel={(option) => {
               // Handle null/undefined option
               if (option === null || option === undefined) return '';
+              // Handle string options for freeSolo mode
+              if (typeof option === 'string') return option;
               return getOptionLabel(option as T);
             }}
             isOptionEqualToValue={isOptionEqualToValue}
             onInputChange={(event, newInputValue) => {
               setInputValue(newInputValue);
 
-              // Update the form value in real-time as user types
               if (freeSolo) {
                 onChange(newInputValue === "" && nullable ? null : newInputValue);
               }
 
-              // Call the custom onInputChange handler if provided
               if (onInputChange) {
                 onInputChange(event, newInputValue);
               }
@@ -125,14 +199,20 @@ export const AutocompleteFieldWithIcon = <T extends object>({
               setCustomError('');
 
               // Also update the input value when selection changes
-              if (newValue !== null && typeof newValue === 'object') {
-                setInputValue(getOptionLabel(newValue as T));
+              if (newValue !== null) {
+                if (typeof newValue === 'object') {
+                  setInputValue(getOptionLabel(newValue as T));
+                } else if (typeof newValue === 'string') {
+                  setInputValue(newValue);
+                }
+              } else {
+                setInputValue('');
               }
             }}
             onBlur={handleBlur}
             disabled={disabled}
             value={controlledValue}
-            noOptionsText={noOptionsText}
+            noOptionsText={loading ? 'Loading...' : noOptionsText}
             freeSolo={freeSolo}
             renderInput={(params) => (
               <TextField
@@ -147,8 +227,8 @@ export const AutocompleteFieldWithIcon = <T extends object>({
                   </Box>
                 }
                 placeholder={placeholder}
-                error={error || !!fieldState.error || !!customError}
-                helperText={helperText || fieldState.error?.message || customError || ""}
+                error={showError}
+                helperText={errorMessage}
                 InputProps={{
                   ...params.InputProps,
                   endAdornment: (
