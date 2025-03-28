@@ -3,7 +3,24 @@ services:
     ports:
       - "5432:5432"
     env_file:
-      - .env.dev
+      - .dev.env
+
+  meilisearch:
+    ports:
+      - "7700:7700"
+    env_file:
+      - .dev.env
+    environment:
+      - MEILI_HOST=${MEILI_HOST?Variable not set}
+      - MEILI_MASTER_KEY=${MEILI_MASTER_KEY?Variable not set}
+      - MEILI_ENV=${MEILI_ENV?Variable not set}
+
+  reverse-proxy:
+    image: caddy:2
+    ports:
+      - "80:80"
+      - "443:443"
+
 
   prestart:
     command:
@@ -11,18 +28,32 @@ services:
       - task
       - prestart
     env_file:
-      - .env.dev
+      - .dev.env
+    environment:
+      - MEILI_HOST=meilisearch:7700
+      - MEILI_MASTER_KEY=${MEILI_MASTER_KEY?Variable not set}
+      - POSTGRES_SERVER=database
 
   backend:
+    ports:
+      - "3000:3000"
     command:
       - "./openmario"
+    develop:
+      watch: 
+        - path: ./back/
+          action: sync
+          target: /app/
+          ignore:
+            - node_modules/
     env_file:
-      - .env.dev
+      - .dev.env
 
-  reverse-proxy:
-    build: 
-      args:
-          - VITE_API_URL=http://localhost:3000/v1
-          - NODE_ENV=development
-    env_file:
-      - .env.dev
+  #
+  # reverse-proxy:
+  #   build: 
+  #     args:
+  #         - VITE_API_URL=http://localhost:3000/v1
+  #         - NODE_ENV=development
+  #   env_file:
+  #     - .dev.env

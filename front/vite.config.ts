@@ -14,6 +14,7 @@ export default defineConfig({
   server: {
     proxy: {
       "/api/v1": "http://localhost:3000",
+      "/api/search": "http://localhost:7700",
     },
   },
   css: {
