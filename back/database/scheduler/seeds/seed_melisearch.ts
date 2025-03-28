@@ -1,14 +1,10 @@
 import { sections, courses, subjects, colleges, instructors, section_instructor } from "../../../src/db/index.ts";
 import { db } from "../../../src/db/index.ts";
 import { eq, and } from "drizzle-orm";
-import { MeiliSearch } from 'meilisearch';
+import { meilisearchService } from '../../../src/services/meilisearch.service.ts';
 
 export default async () => {
-  const meilisearch = new MeiliSearch({
-    host: 'http://localhost:7700',
-    apiKey: 'A8L0x9-E2qolp6X2_zOY3NUo4i92Juex-UZb9OzilTs=',
-  });
-  
+  const meilisearch = meilisearchService.client
   // 1. Index Sections (with course, subject, college, and instructor data)
   await indexSections(meilisearch);
   

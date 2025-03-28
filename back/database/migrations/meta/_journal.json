@@ -85,6 +85,13 @@
       "when": 1743115154179,
       "tag": "0011_making_table_unique_on_multiple_parameter",
       "breakpoints": true
+    },
+    {
+      "idx": 12,
+      "version": "7",
+      "when": 1743190810655,
+      "tag": "0012_adding_indexes",
+      "breakpoints": true
     }
   ]
 }

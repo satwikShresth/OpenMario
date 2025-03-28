@@ -1,5 +1,5 @@
 import { Response, Router } from 'express';
-import { validateUser, zodBodyValidator, zodParamsValidator } from '#/middleware/validation.middleware.ts';
+import { zodBodyValidator, zodParamsValidator } from '#/middleware/validation.middleware.ts';
 import { emailService } from '#/services/mail.service.ts';
 import { LoginSchema, RequestParamsId } from '#models';
 import { db, users } from '#db';
@@ -8,6 +8,7 @@ import { eq } from 'drizzle-orm';
 import { z } from 'zod';
 import { sign, verify } from 'jsonwebtoken';
 import { rateLimit } from 'express-rate-limit';
+import { meilisearchService } from '#/services/meilisearch.service.ts';
 
 const limiter = rateLimit({
    windowMs: 25 * 1000,
@@ -18,6 +19,35 @@ const limiter = rateLimit({
 
 export default () => {
    const router = Router();
+
+   /**
+    * GET /auth/search-token
+    * @summary Get a tenant token for searching, filtering, and sorting (expires in 1 day)
+    * @tags Meilisearch
+    * @return {object} 200 - Success response with tenant token
+    * @example response - 200 - Example success response
+    * {
+    *   "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+    * }
+    * @return {object} 500 - Error response
+    */
+   router.get(
+      '/search-token',
+      async (_req: RequestParamsId, res: Response) =>
+         await meilisearchService
+            .getTenantToken()
+            .then((token) =>
+               !token
+                  ? res.status(500).json({ message: 'Failed to generate tenant token' })
+                  : res.status(200).json({ token })
+            )
+            .catch(
+               (error) => {
+                  console.error('Error generating Meilisearch tenant token:', error);
+                  return res.status(500).json({ message: 'Internal server error' });
+               },
+            ),
+   );
 
    /**
     * POST /auth/login

@@ -2,14 +2,11 @@ import { company, position, job_posting, location, major, job_posting_major } fr
 import { db } from "../../../src/db/index.ts";
 import { eq } from "drizzle-orm";
 import { MeiliSearch } from 'meilisearch';
+import { meilisearchService } from '../../../src/services/meilisearch.service.ts';
 
 export default async () => {
-  const meilisearch = new MeiliSearch({
-    host: 'http://localhost:7700',
-    apiKey: 'A8L0x9-E2qolp6X2_zOY3NUo4i92Juex-UZb9OzilTs=',
-  });
-  
-  const index = await meilisearch.createIndex('job_postings', { primaryKey: 'id' });
+  const meilisearch = meilisearchService.client
+  await meilisearch.createIndex('job_postings', { primaryKey: 'id' });
   
   await meilisearch.index('job_postings').updateSearchableAttributes([
     'position_name',

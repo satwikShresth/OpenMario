@@ -1,8 +1,28 @@
-import { boolean, doublePrecision, integer, pgEnum, pgTable, primaryKey, text, timestamp, unique, uuid, varchar } from 'drizzle-orm/pg-core';
+import {
+   boolean,
+   doublePrecision,
+   integer,
+   pgEnum,
+   pgTable,
+   primaryKey,
+   text,
+   timestamp,
+   unique,
+   uuid,
+   varchar,
+} from 'drizzle-orm/pg-core';
 
-export const job_type = ['Co-op Experience', 'Graduate Co-op Experience', 'Summer-Only Coop'] as const;
+export const job_type = [
+   'Co-op Experience',
+   'Graduate Co-op Experience',
+   'Summer-Only Coop',
+] as const;
 export const experience_level = ['Advanced', 'Beginner', 'Intermediate'] as const;
-export const citizenship_restriction = ['No Restriction', 'Resident Alien (Green Card) or US Citizen', 'US Citizen Only'] as const;
+export const citizenship_restriction = [
+   'No Restriction',
+   'Resident Alien (Green Card) or US Citizen',
+   'US Citizen Only',
+] as const;
 export const job_status = ['Inactive', 'Pending', 'Cancelled', 'Active', 'Delete'] as const;
 export const compensation_status = ['Unpaid Position', 'Hourly Paid or Salaried Position'] as const;
 export const program_level = ['Undergraduate', 'Graduate'] as const;
@@ -17,7 +37,10 @@ export const job_type_enum = pgEnum('job_type', job_type);
 export const experience_level_enum = pgEnum('experience_level', experience_level);
 export const job_status_enum = pgEnum('job_status', job_status);
 export const compensation_status_enum = pgEnum('compensation_status', compensation_status);
-export const citizenship_restriction_enum = pgEnum('citizenship_restriction', citizenship_restriction);
+export const citizenship_restriction_enum = pgEnum(
+   'citizenship_restriction',
+   citizenship_restriction,
+);
 
 export const company = pgTable('company', {
    id: uuid().defaultRandom().primaryKey(),
@@ -150,18 +173,24 @@ export const job_posting = pgTable(
       updated_at: timestamp().defaultNow(),
    },
    (table) => [
-      unique().on(table.position_id, table.location_id, table.year, table.citizenship_restriction, table.minimum_gpa, table.travel_required),
+      unique().on(
+         table.position_id,
+         table.location_id,
+         table.year,
+         table.citizenship_restriction,
+         table.minimum_gpa,
+         table.travel_required,
+      ),
    ],
 );
 
 export const job_experience_levels = pgTable('job_experience_levels', {
-   id: uuid().defaultRandom().primaryKey(),
    job_posting_id: uuid()
       .notNull()
       .references(() => job_posting.id, { onDelete: 'cascade' }),
    experience_level: experience_level_enum().notNull(),
    description: varchar({ length: 500 }),
-});
+}, (table) => [primaryKey({ columns: [table.job_posting_id, table.experience_level] })]);
 
 export const job_posting_major = pgTable(
    'job_posting_major',

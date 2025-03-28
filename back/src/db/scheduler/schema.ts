@@ -1,4 +1,15 @@
-import { boolean, doublePrecision, integer, pgSchema, primaryKey, serial, text, time, unique, uuid } from 'drizzle-orm/pg-core';
+import {
+   boolean,
+   doublePrecision,
+   integer,
+   pgSchema,
+   primaryKey,
+   serial,
+   text,
+   time,
+   unique,
+   uuid,
+} from 'drizzle-orm/pg-core';
 
 export const scheduler = pgSchema('scheduler');
 
