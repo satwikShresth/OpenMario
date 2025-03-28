@@ -71,6 +71,20 @@
       "when": 1743111563559,
       "tag": "0009_making_location_id_null",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1743114592188,
+      "tag": "0010_making_table_unique_on_multiple_parameter",
+      "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "7",
+      "when": 1743115154179,
+      "tag": "0011_making_table_unique_on_multiple_parameter",
+      "breakpoints": true
     }
   ]
 }

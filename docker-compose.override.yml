@@ -10,6 +10,7 @@ services:
       - "7700:7700"
     env_file:
       - .dev.env
+<<<<<<< HEAD
     environment:
       - MEILI_HOST=${MEILI_HOST?Variable not set}
       - MEILI_MASTER_KEY=${MEILI_MASTER_KEY?Variable not set}
@@ -49,6 +50,17 @@ services:
     env_file:
       - .dev.env
 
+=======
+  # backend:
+  #   ports:
+  #     - "3000:3000"
+  #   command:
+  #     - deno
+  #     - task
+  #     - start
+  #   env_file:
+  #     - .dev.env
+>>>>>>> 77826d4b (adding seeding db stuff with melisearch setup)
   #
   # reverse-proxy:
   #   build: 

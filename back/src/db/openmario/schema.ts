@@ -115,38 +115,44 @@ export const minor = pgTable('minor', {
    name: varchar({ length: 255 }).notNull().unique(),
 });
 
-export const job_posting = pgTable('job_posting', {
-   id: uuid().defaultRandom().primaryKey(),
-   position_id: uuid()
-      .notNull()
-      .references(() => position.id, { onDelete: 'cascade' }),
-   location_id: uuid()
-      .references(() => location.id, { onDelete: 'restrict' }),
-   job_type: job_type_enum().notNull(),
-   job_status: job_status_enum().notNull().default('Inactive'),
-   coop_cycle: coop_cycle_type().notNull(),
-   year: integer().notNull(),
-   job_length: integer().notNull().default(2),
-   work_hours: integer().notNull().default(40),
-   openings: integer().default(1),
-   division_description: varchar({ length: 5000 }),
-   position_description: varchar({ length: 5000 }),
-   recommended_qualifications: varchar({ length: 5000 }),
-   minimum_gpa: doublePrecision(),
-   is_nonprofit: boolean().default(false),
-   exposure_hazardous_materials: boolean().default(false),
-   is_research_position: boolean().default(false),
-   is_third_party_employer: boolean().default(false),
-   travel_required: boolean().default(false),
-   citizenship_restriction: citizenship_restriction_enum().notNull(),
-   pre_employment_screening: varchar({ length: 1000 }).default('None'),
-   transportation: varchar({ length: 1000 }),
-   compensation_status: compensation_status_enum().notNull(),
-   compensation_details: varchar({ length: 5000 }),
-   other_compensation: varchar({ length: 5000 }),
-   created_at: timestamp().defaultNow(),
-   updated_at: timestamp().defaultNow(),
-});
+export const job_posting = pgTable(
+   'job_posting',
+   {
+      id: uuid().defaultRandom().primaryKey(),
+      position_id: uuid()
+         .notNull()
+         .references(() => position.id, { onDelete: 'cascade' }),
+      location_id: uuid()
+         .references(() => location.id, { onDelete: 'restrict' }),
+      job_type: job_type_enum().notNull(),
+      job_status: job_status_enum().notNull().default('Inactive'),
+      coop_cycle: coop_cycle_type().notNull(),
+      year: integer().notNull(),
+      job_length: integer().notNull().default(2),
+      work_hours: integer().notNull().default(40),
+      openings: integer().default(1),
+      division_description: varchar({ length: 10000 }),
+      position_description: varchar({ length: 15000 }),
+      recommended_qualifications: varchar({ length: 5000 }),
+      minimum_gpa: doublePrecision(),
+      is_nonprofit: boolean().default(false),
+      exposure_hazardous_materials: boolean().default(false),
+      is_research_position: boolean().default(false),
+      is_third_party_employer: boolean().default(false),
+      travel_required: boolean().default(false),
+      citizenship_restriction: citizenship_restriction_enum().notNull(),
+      pre_employment_screening: varchar({ length: 1000 }).default('None'),
+      transportation: varchar({ length: 1000 }),
+      compensation_status: compensation_status_enum().notNull(),
+      compensation_details: varchar({ length: 5000 }),
+      other_compensation: varchar({ length: 5000 }),
+      created_at: timestamp().defaultNow(),
+      updated_at: timestamp().defaultNow(),
+   },
+   (table) => [
+      unique().on(table.position_id, table.location_id, table.year, table.citizenship_restriction, table.minimum_gpa, table.travel_required),
+   ],
+);
 
 export const job_experience_levels = pgTable('job_experience_levels', {
    id: uuid().defaultRandom().primaryKey(),
