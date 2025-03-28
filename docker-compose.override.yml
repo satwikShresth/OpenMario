@@ -15,9 +15,7 @@ services:
 
   backend:
     command:
-      - deno
-      - task
-      - start
+      - "./openmario"
     env_file:
       - .env.dev
 
