@@ -1,37 +1,46 @@
 services:
+
   database:
     ports:
       - "5432:5432"
-    env_file:
-      - .dev.env
 
   meilisearch:
+    networks:
+      - app_network 
     ports:
       - "7700:7700"
-    env_file:
-      - .dev.env
     environment:
-      - MEILI_HOST=${MEILI_HOST?Variable not set}
-      - MEILI_MASTER_KEY=${MEILI_MASTER_KEY?Variable not set}
-      - MEILI_ENV=${MEILI_ENV?Variable not set}
+      - MEILI_ENV=development
 
-  # prestart:
-  #   command:
-  #     - deno
-  #     - task
-  #     - prestart
-  #   env_file:
-  #     - .dev.env
-  #   environment:
-  #     - MEILI_HOST=meilisearch:7700
-  #     - MEILI_MASTER_KEY=${MEILI_MASTER_KEY?Variable not set}
-  #     - POSTGRES_SERVER=database
+  prestart:
+    build: 
+      context: ./back
+      dockerfile: Dockerfile
+      target: seeding-stage
+      platforms:
+        - linux/amd64
+    command:
+      - deno
+      - task
+      - prestart
+    environment:
+      - DOMAIN=https://localhost
+    profiles:
+      - seed
 
   backend:
+    build: 
+      context: ./back
+      dockerfile: Dockerfile
+      target: development-stage
+      platforms:
+        - linux/amd64
     ports:
       - "3000:3000"
     command:
-      - "./openmario"
+      - deno
+      - run
+      - watch
     develop:
       watch: 
         - path: ./back/
@@ -39,15 +48,14 @@ services:
           target: /app/
           ignore:
             - node_modules/
-    env_file:
-      - .dev.env
+    environment:
+      - DOMAIN=https://localhost
 
-
-  frontend:
+  reverse-proxy:
     build:
+      context: ./front
+      dockerfile: Dockerfile
       target: development-stage
-      args:
-          - NODE_ENV=development
     develop:
       watch: 
         - path: ./front/
@@ -55,8 +63,8 @@ services:
           target: /app/
           ignore:
             - node_modules/
-    env_file:
-      - .dev.env
     environment:
-        - VITE_API_URL=http://localhost
+      - VITE_API_URL=http://backend:3000
+      - VITE_SEARCH_API_URL=http://meilisearch:7700
+      - NODE_ENV=development
     command: npm run dev -- --host 0.0.0.0 --port 80

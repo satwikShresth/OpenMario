@@ -6,17 +6,18 @@ services:
     networks:
       - app_network 
     env_file:
-      - .env
+      - ./.env
     volumes:
       - meilisearch_data:/data.ms
     environment:
       - MEILI_NO_ANALYTICS=${MEILI_NO_ANALYTICS:-true}
-      - MEILI_ENV=${MEILI_ENV?Variable not set}
+      - MEILI_ENV=${MEILI_ENV?MEILI_ENV variable not set}
+      - MEILI_MASTER_KEY=${MEILI_MASTER_KEY?MEILI_MASTER_KEY variable not set}
+      - MEILI_HOST=${MEILI_HOST?MEILI_HOST variable not set}
     healthcheck:
         test: set -o pipefail;curl -fsS http://localhost:7700/health | grep -q '{"status":"available"}'
         retries: 3
         timeout: 5s
-
   database:
     image: postgres:latest
     restart: always
@@ -31,41 +32,49 @@ services:
     volumes:
       - app-db-data:/var/lib/postgresql/data/pgdata
     env_file:
-      - .env
+      - ./.env
     environment:
       - PGDATA=/var/lib/postgresql/data/pgdata
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD?Variable not set}
-      - POSTGRES_USER=${POSTGRES_USER?Variable not set}
-      - POSTGRES_DB=${POSTGRES_DB?Variable not set}
-
-
-  # prestart:
-  #   build: 
-  #     context: ./back
-  #     dockerfile: prestart.dockerfile
-  #     platforms:
-  #       - linux/amd64
-  #   image: ss5278/openmario:prestart
-  #   container_name: prestart
-  #   restart: no
-  #   depends_on:
-  #     database:
-  #       condition: service_healthy
-  #       restart: true
-  #   command:
-  #     - deno
-  #     - task
-  #     - prestart
-  #   networks:
-  #     - app_network 
-  #   env_file:
-  #     - .env
-
-
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD?POSTGRES_PASSWORD variable not set}
+      - POSTGRES_USER=${POSTGRES_USER?POSTGRES_USER variable not set}
+      - POSTGRES_DB=${POSTGRES_DB?POSTGRES_DB variable not set}
+      - POSTGRES_PORT=${POSTGRES_PORT?POSTGRES_PORT variable not set}
+      - POSTGRES_SERVER=${POSTGRES_SERVER?POSTGRES_SERVER variable not set}
+  prestart:
+    build: 
+      context: ./back
+      dockerfile: Dockerfile
+      target: seeding-stage
+      platforms:
+        - linux/amd64
+    image: ss5278/openmario:prestart
+    container_name: prestart
+    restart: no
+    depends_on:
+      database:
+        condition: service_healthy
+        restart: true
+    command:
+      - deno
+      - task
+      - prestart
+    networks:
+      - app_network 
+    env_file:
+      - ./.env
+    environment:
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD?POSTGRES_PASSWORD variable not set}
+      - POSTGRES_USER=${POSTGRES_USER?POSTGRES_USER variable not set}
+      - POSTGRES_DB=${POSTGRES_DB?POSTGRES_DB variable not set}
+      - POSTGRES_PORT=${POSTGRES_PORT?POSTGRES_PORT variable not set}
+      - POSTGRES_SERVER=${POSTGRES_SERVER?POSTGRES_SERVER variable not set}
+    profiles:
+      - seed
   backend:
     build: 
       context: ./back
       dockerfile: Dockerfile
+      target: production-stage 
       platforms:
         - linux/amd64
     image: ss5278/openmario:backend
@@ -75,16 +84,29 @@ services:
       database:
         condition: service_healthy
         restart: true
-      # prestart:
-      #   condition: service_completed_successfully
     command:
       - "./openmario"
     networks:
       - app_network 
     env_file:
-      - .env
-
-
+      - ./.env
+    environment:
+      - PORT=${PORT?PORT variable not set}
+      - HOST=${HOST?HOST variable not set}
+      - JWT_SECRET_MAGIC_LINK=${JWT_SECRET_MAGIC_LINK?JWT_SECRET_MAGIC_LINK variable not set}
+      - JWT_EXPIRATION_MAGIC_LINK=${JWT_EXPIRATION_MAGIC_LINK?JWT_EXPIRATION_MAGIC_LINK variable not set}
+      - JWT_SECRET_CLIENT=${JWT_SECRET_CLIENT?JWT_SECRET_CLIENT variable not set}
+      - JWT_EXPIRATION_CLIENT=${JWT_EXPIRATION_CLIENT?JWT_EXPIRATION_CLIENT variable not set}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD?POSTGRES_PASSWORD variable not set}
+      - POSTGRES_USER=${POSTGRES_USER?POSTGRES_USER variable not set}
+      - POSTGRES_DB=${POSTGRES_DB?POSTGRES_DB variable not set}
+      - POSTGRES_PORT=${POSTGRES_PORT?POSTGRES_PORT variable not set}
+      - POSTGRES_SERVER=${POSTGRES_SERVER?POSTGRES_SERVER variable not set}
+      - EMAIL_API_KEY=${EMAIL_API_KEY?EMAIL_API_KEY variable not set}
+      - SENDER_EMAIL=${SENDER_EMAIL?SENDER_EMAIL variable not set}
+      - DOMAIN=${DOMAIN?DOMAIN variable not set}
+      - MEILI_HOST=${MEILI_HOST?MEILI_HOST variable not set}
+      - MEILI_MASTER_KEY=${MEILI_MASTER_KEY?MEILI_MASTER_KEY variable not set}
   reverse-proxy:
     build: 
       context: ./front
@@ -92,9 +114,6 @@ services:
       target: production-stage
       platforms:
         - linux/amd64
-      args:
-          - VITE_API_URL=/api/v1
-          - NODE_ENV=production
     image: ss5278/openmario:reverse-proxy
     restart: unless-stopped
     ports:
@@ -109,14 +128,18 @@ services:
       - backend
     networks:
       - app_network 
-
+    env_file:
+      - ./.env
+    environment:
+      - VITE_API_URL=${VITE_API_URL?VITE_API_URL variable not set}
+      - VITE_SEARCH_API_URL=${VITE_SEARCH_API_URL?VITE_SEARCH_API_URL variable not set}
+      - NODE_ENV=${NODE_ENV?NODE_ENV variable not set}
 volumes:
   external-db-data:
   app-db-data:
   caddy_data:
   caddy_config:
   meilisearch_data:
-
 networks:
   app_network:
     driver: bridge
