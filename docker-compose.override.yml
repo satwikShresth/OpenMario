@@ -15,24 +15,17 @@ services:
       - MEILI_MASTER_KEY=${MEILI_MASTER_KEY?Variable not set}
       - MEILI_ENV=${MEILI_ENV?Variable not set}
 
-  reverse-proxy:
-    image: caddy:2
-    ports:
-      - "80:80"
-      - "443:443"
-
-
-  prestart:
-    command:
-      - deno
-      - task
-      - prestart
-    env_file:
-      - .dev.env
-    environment:
-      - MEILI_HOST=meilisearch:7700
-      - MEILI_MASTER_KEY=${MEILI_MASTER_KEY?Variable not set}
-      - POSTGRES_SERVER=database
+  # prestart:
+  #   command:
+  #     - deno
+  #     - task
+  #     - prestart
+  #   env_file:
+  #     - .dev.env
+  #   environment:
+  #     - MEILI_HOST=meilisearch:7700
+  #     - MEILI_MASTER_KEY=${MEILI_MASTER_KEY?Variable not set}
+  #     - POSTGRES_SERVER=database
 
   backend:
     ports:
@@ -49,11 +42,21 @@ services:
     env_file:
       - .dev.env
 
-  #
-  # reverse-proxy:
-  #   build: 
-  #     args:
-  #         - VITE_API_URL=http://localhost:3000/v1
-  #         - NODE_ENV=development
-  #   env_file:
-  #     - .dev.env
+
+  frontend:
+    build:
+      target: development-stage
+      args:
+          - NODE_ENV=development
+    develop:
+      watch: 
+        - path: ./front/
+          action: sync
+          target: /app/
+          ignore:
+            - node_modules/
+    env_file:
+      - .dev.env
+    environment:
+        - VITE_API_URL=http://localhost
+    command: npm run dev -- --host 0.0.0.0 --port 80

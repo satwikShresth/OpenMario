@@ -9,5 +9,15 @@ ARG VITE_API_URL=${VITE_API_URL}
 RUN npm run build
 
 
-FROM caddy:latest
+FROM caddy:latest as production-stage
 COPY --from=build-stage /app/dist/ /usr/share/caddy
+
+
+FROM node:20 as development-stage
+WORKDIR /app
+
+COPY package*.json /app/
+
+RUN npm install
+
+COPY ./ /app/
