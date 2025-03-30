@@ -47,7 +47,7 @@ services:
       target: seeding-stage
       platforms:
         - linux/amd64
-    image: ss5278/openmario:prestart
+    image: ${PRESTART_IMAGE?PRESTART_IMAGE variable not set}
     container_name: prestart
     restart: no
     depends_on:
@@ -77,7 +77,7 @@ services:
       target: production-stage 
       platforms:
         - linux/amd64
-    image: ss5278/openmario:backend
+    image: ${BACKEND_IMAGE?POSTGRES_PASSWORD variable not set}
     container_name: backend
     restart: always
     depends_on:
@@ -107,6 +107,7 @@ services:
       - DOMAIN=${DOMAIN?DOMAIN variable not set}
       - MEILI_HOST=${MEILI_HOST?MEILI_HOST variable not set}
       - MEILI_MASTER_KEY=${MEILI_MASTER_KEY?MEILI_MASTER_KEY variable not set}
+
   reverse-proxy:
     build: 
       context: ./front
@@ -114,7 +115,7 @@ services:
       target: production-stage
       platforms:
         - linux/amd64
-    image: ss5278/openmario:reverse-proxy
+    image: ${REVERSE_PROXY_IMAGE?REVERSE_PROXY_IMAGE variable not set}
     restart: unless-stopped
     ports:
       - "80:80"
