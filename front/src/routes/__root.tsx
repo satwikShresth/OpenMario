@@ -28,7 +28,7 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
         }}
       >
         <Nav onLoginClick={handleOpenLoginModal} />
-        <Container maxWidth="lg">
+        <Container maxWidth="xl">
           <Box sx={{ mb: 4, mt: 4 }}>
             <Outlet />
           </Box>

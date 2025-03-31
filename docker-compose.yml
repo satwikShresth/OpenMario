@@ -8,7 +8,7 @@ services:
     env_file:
       - ./.env
     volumes:
-      - meilisearch_data:/data.ms
+      - meilisearch_data:/meili_data
     environment:
       - MEILI_NO_ANALYTICS=${MEILI_NO_ANALYTICS:-true}
       - MEILI_ENV=${MEILI_ENV?MEILI_ENV variable not set}

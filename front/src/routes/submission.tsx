@@ -1,4 +1,5 @@
 import { JobSubmissionProvider } from '#/stores'
+import { Container } from '@mui/material'
 import { Outlet, createFileRoute } from '@tanstack/react-router'
 
 export const Route = createFileRoute('/submission')({
@@ -8,7 +9,9 @@ export const Route = createFileRoute('/submission')({
 function LayoutComponent() {
   return (
     <JobSubmissionProvider>
-      <Outlet />
+      <Container maxWidth="lg">
+        <Outlet />
+      </Container>
     </JobSubmissionProvider>
   )
 }

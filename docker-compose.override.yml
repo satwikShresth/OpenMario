@@ -59,13 +59,12 @@ services:
       context: ./front
       dockerfile: Dockerfile
       target: development-stage
-    develop:
-      watch: 
-        - path: ./front/
-          action: sync
-          target: /app/
-          ignore:
-            - node_modules/
+    volumes:
+      - ./front/src/:/app/src
+      - ./front/public/:/app/public
+      - ./front/.client/:/app/.client
+      - ./front/package.json:/app/package.json
+      - ./front/vite.config.ts:/app/vite.config.ts
     environment:
       - VITE_API_URL=http://backend:3000
       - VITE_SEARCH_API_URL=http://meilisearch:7700

@@ -49,7 +49,7 @@
     "watch": "deno -A --watch src/server.ts",
     "migrate": "deno run -A npm:drizzle-kit migrate",
     "prestart":{
-      "command": "deno run -A ./database/openmario/seeds/index.ts ./database/scheduler/seeds/index.ts",
+      "command": "deno run -A ./database/openmario/seeds/index.ts && deno run -A ./database/scheduler/seeds/index.ts",
       "dependencies": ["migrate"]
     }
     "build": "deno check src",
