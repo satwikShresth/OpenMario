@@ -10,6 +10,7 @@ services:
     ports:
       - "7700:7700"
     environment:
+      - NODE_ENV=development
       - MEILI_ENV=development
 
   prestart:
@@ -24,6 +25,7 @@ services:
       - task
       - prestart
     environment:
+      - NODE_ENV=development
       - DOMAIN=https://localhost
     profiles:
       - seed
@@ -44,11 +46,12 @@ services:
     develop:
       watch: 
         - path: ./back/
-          action: sync
           target: /app/
+          action: sync
           ignore:
             - node_modules/
     environment:
+      - NODE_ENV=development
       - DOMAIN=https://localhost
 
   reverse-proxy:

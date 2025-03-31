@@ -12,6 +12,7 @@ import { db } from "../../../src/db/index.ts";
 import { eq, and } from 'drizzle-orm';
 import jobData from "./assets/job_posting.json" with {type:"json"}
 import locationData from "./assets/cleaned_location.json" with {type:"json"}
+import locationDataCleaned from "./assets/ccleaned_location.json" with {type:"json"}
 import cleanedMajorData from "./assets/cleaned_majors_map.json" with {type:"json"}
 
 const problematicAddressesFile = 'problematic_addresses.txt';
@@ -265,7 +266,10 @@ async function seedDatabase() {
 
       if (locationData[locationString]) {
         // Location exists in the cleaned location data
-        const [city, stateCode] = locationData[locationString].split(', ');
+        const stateCity = locationData[locationString];
+        const value = stateCity in locationDataCleaned ? locationDataCleaned[stateCity] : stateCity;
+
+        const [city, stateCode] = value.split(', ');
         const state = getStateName(stateCode);
 
         locationId = await findOrCreateLocation(city, state, stateCode);

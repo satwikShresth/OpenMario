@@ -1,54 +1,92 @@
-import { NextFunction, Request, Response } from 'express';
+import { Context, Next } from 'hono';
 import { formatZodError } from '#utils';
-import { RequestParamsId } from '#models';
 import { db } from '#db';
 import { eq } from 'drizzle-orm';
+import { z } from 'zod';
 
-const zodValidator = (method: 'query' | 'body' | 'params', schema: any) => async (req: Request, res: Response, next: NextFunction) => {
-   const result = await schema.safeParseAsync(req[method]);
+// Custom middleware for Zod validation
+// Note: This is a fallback in case you don't want to use @hono/zod-validator
+export const zodValidator = (method: 'query' | 'json' | 'param', schema: z.ZodSchema) => {
+   return async (c: Context, next: Next) => {
+      let data;
 
-   if (!result.success) {
-      console.error(formatZodError(result.error).error);
-      return res.status(400).send({
-         type: method,
-         errors: formatZodError(result.error).error,
-      });
-   }
+      // Get data based on method
+      if (method === 'query') {
+         data = c.req.query();
+      } else if (method === 'json') {
+         data = await c.req.json().catch(() => ({}));
+      } else if (method === 'param') {
+         data = c.req.param();
+      }
 
-   if (req.validated === undefined) {
-      req.validated = {};
-   }
+      // Parse with Zod
+      const result = await schema.safeParseAsync(data);
 
-   req.validated[method] = result.data;
-   return next();
+      if (!result.success) {
+         console.error(formatZodError(result.error).error);
+         return c.json({
+            type: method,
+            errors: formatZodError(result.error).error,
+         }, 400);
+      }
+
+      // Store validated data in the context
+      c.set(`valid_${method}`, result.data);
+
+      // Add helper method to retrieve validated data
+      if (!c.req.valid) {
+         c.req.valid = (key: string) => c.get(`valid_${key}`);
+      }
+
+      return next();
+   };
 };
 
-export const zodBodyValidator = (schema: any) => zodValidator('body', schema);
+export const zodBodyValidator = (schema: z.ZodSchema) => zodValidator('json', schema);
+export const zodQueryValidator = (schema: z.ZodSchema) => zodValidator('query', schema);
+export const zodParamsValidator = (schema: z.ZodSchema) => zodValidator('param', schema);
 
-export const zodQueryValidator = (schema: any) => zodValidator('query', schema);
+export const validateOwner = (table: any) => {
+   return async (c: Context, next: Next) => {
+      const current_user_id = c.get('jwtPayload')?.user_id;
+      const item_id = c.req.valid('param')?.id || c.req.param('id');
 
-export const zodParamsValidator = (schema: any) => zodValidator('params', schema);
+      if (!current_user_id || !item_id) {
+         return c.json({ message: 'Missing user ID or item ID' }, 400);
+      }
 
-export const validateOwner = (table: any) => async (req: RequestParamsId, res: Response, next: NextFunction) => {
-   const current_user_id = req?.auth?.user_id!;
-   const item_id = req.validated?.params?.id!;
+      try {
+         const result = await db
+            .select({ user_id: table?.user_id! })
+            .from(table)
+            .where(eq(table.id, item_id));
 
-   return await db
-      .select({ user_id: table?.user_id! })
-      .from(table)
-      .where(eq(table.id, item_id))
-      .then((result) => result[0].user_id === current_user_id)
-      .then((result) => result ? next() : res.status(401).json({ message: 'Unauthorized Access' }))
-      .catch(({ message }) => {
-         res.status(404).json({ message, detail: `Item not found` });
-      });
+         if (result.length === 0) {
+            return c.json({ message: 'Item not found', detail: 'Item not found' }, 404);
+         }
+
+         if (result[0].user_id !== current_user_id) {
+            return c.json({ message: 'Unauthorized Access' }, 401);
+         }
+
+         return next();
+      } catch (error) {
+         return c.json({
+            message: error.message,
+            detail: 'Item not found',
+         }, 404);
+      }
+   };
 };
-export const validateUser = (
-   req: RequestParamsId,
-   res: Response,
-   next: NextFunction,
-) => {
+
+export const validateUser = async (c: Context, next: Next) => {
    console.log('passing');
-   console.log(req?.auth);
-   return req?.auth ? next() : res.status(401).json({ message: 'Unauthorized Access' });
+   console.log(c.get('jwtPayload'));
+
+   if (c.get('jwtPayload')) {
+      return next();
+   }
+
+   return c.json({ message: 'Unauthorized Access' }, 401);
 };
+

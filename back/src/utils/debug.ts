@@ -1,7 +1,10 @@
-//import OPENAPI_SPECS from '../../../openapi.json' with { type: 'json' };
-import { Request } from 'express';
-import morgan from 'morgan';
-import expressJSDocSwagger from 'npm:express-jsdoc-swagger';
+import { Hono } from 'hono';
+import { prettyJSON } from 'hono/pretty-json';
+import { swaggerUI } from 'npm:@hono/swagger-ui';
+import defaultOptions from 'npm:express-jsdoc-swagger/config/default.js';
+import swaggerEventsOptions from 'npm:express-jsdoc-swagger/config/swaggerEvents.js';
+import processSwagger from 'npm:express-jsdoc-swagger/processSwagger.js';
+import swaggerEvents from 'npm:express-jsdoc-swagger/swaggerEvents.js';
 import generateOpenAPIComponents from '#/utils/openapi.ts';
 
 const options = {
@@ -27,26 +30,44 @@ const options = {
    ],
 };
 
-export const debugMiddlewares = (app: any) => {
-   morgan.token('body', (req: Request) => JSON.stringify(req.body));
-   morgan.token('query', (req: Request) => JSON.stringify(req.query));
-   app.use(
-      morgan(
-         ':method :url :status :response-time ms\n{\nbody: :body\nquery: :query\n}',
-      ),
-   );
+export const debugMiddlewares = async (app: Hono<any>) => {
+   const merge = await import('merge');
+   const userOptions = {
+      ...options,
+      baseDir: Deno.cwd(),
+      filesPattern: './src/routes/*.routes.ts',
+      swaggerUIPath: '/v1/docs',
+      exposeSwaggerUI: true,
+      exposeApiDocs: true,
+      apiDocsPath: '/v1/openapi.json',
+   };
 
-   //@ts-ignore: Because this libarary does not have good typiung support
-   expressJSDocSwagger(app)(
+   const events = swaggerEvents(swaggerEventsOptions(userOptions));
+   let openApiSpec = {};
+
+   processSwagger(
       {
-         ...options,
-         baseDir: Deno.cwd(),
-         filesPattern: './src/routes/*.routes.ts',
-         swaggerUIPath: '/v1/docs',
-         exposeSwaggerUI: true,
-         exposeApiDocs: true,
-         apiDocsPath: '/v1/openapi.json',
+         ...defaultOptions,
+         ...userOptions,
       },
-      generateOpenAPIComponents(options),
-   );
+      events.processFile,
+   )
+      .then((result) => {
+         openApiSpec = {
+            ...openApiSpec,
+            ...result.swaggerObject,
+         };
+         openApiSpec = merge.recursive(true, openApiSpec, generateOpenAPIComponents(options));
+         events.finish(openApiSpec, {
+            jsdocInfo: result.jsdocInfo,
+            getPaths: result.getPaths,
+            getComponents: result.getComponents,
+            getTags: result.getTags,
+         });
+      })
+      .catch(events.error);
+
+   app.use('*', prettyJSON());
+   app.get('/doc', (c) => c.json(openApiSpec));
+   app.get('/doc/ui', swaggerUI({ url: '/doc' }));
 };

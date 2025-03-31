@@ -1,96 +1,61 @@
-import { Response, Router } from 'express';
-import { zodBodyValidator, zodParamsValidator } from '#/middleware/validation.middleware.ts';
+import { Hono } from 'hono';
+import { zValidator } from '@hono/zod-validator';
 import { emailService } from '#/services/mail.service.ts';
-import { LoginSchema, RequestParamsId } from '#models';
+import { LoginSchema } from '#models';
 import { db, users } from '#db';
 import * as config from '#/config/index.ts';
 import { eq } from 'drizzle-orm';
-import { z } from 'zod';
 import { sign, verify } from 'jsonwebtoken';
-import { rateLimit } from 'express-rate-limit';
 import { meilisearchService } from '#/services/meilisearch.service.ts';
 
-const limiter = rateLimit({
-   windowMs: 25 * 1000,
-   limit: 1,
-   standardHeaders: 'draft-8',
-   legacyHeaders: false,
-});
-
 export default () => {
-   const router = Router();
+   const router = new Hono();
 
    /**
     * GET /auth/search-token
     * @summary Get a tenant token for searching, filtering, and sorting (expires in 1 day)
     * @tags Meilisearch
-    * @return {object} 200 - Success response with tenant token
-    * @example response - 200 - Example success response
-    * {
-    *   "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
-    * }
-    * @return {object} 500 - Error response
     */
-   router.get(
-      '/search-token',
-      async (_req: RequestParamsId, res: Response) =>
-         await meilisearchService
-            .getTenantToken()
-            .then((token) =>
-               !token
-                  ? res.status(500).json({ message: 'Failed to generate tenant token' })
-                  : res.status(200).json({ token })
-            )
-            .catch(
-               (error) => {
-                  console.error('Error generating Meilisearch tenant token:', error);
-                  return res.status(500).json({ message: 'Internal server error' });
-               },
-            ),
-   );
+   router.get('/search-token', async (c) =>
+      await meilisearchService
+         .getTenantToken()
+         .then((token) =>
+            !token
+               ? c.json({ message: 'Failed to generate tenant token' }, 500)
+               : c.json({ token }, 200)
+         )
+         .catch(
+            (error) => {
+               console.error('Error generating Meilisearch tenant token:', error);
+               return c.json({ message: 'Internal server error' }, 500);
+            },
+         ));
 
    /**
     * POST /auth/login
     * @summary Request a magic link for authentication
     * @tags Auth
     * @param {Login} request.body.required - User email
-    * @return {object} 200 - Success response
-    * @example request - Example request
-    * {"email": "user@example.com"}
-    * @example response - 200 - Example success response
-    * {
-    *   "message": "Magic link sent to your email"
-    * }
-    * @return {object} 400 - Error response
-    * @example response - 400 - Example error response
-    * {
-    *   "message": "Email is required"
-    * }
-    * @return {object} 409 - Database or email error
-    * @example response - 409 - Example error response
-    * {
-    *   "message": "Failed to send email"
-    * }
     */
    router.post(
       '/login',
-      limiter,
-      zodBodyValidator(
+      zValidator(
+         'json',
          LoginSchema.transform(({ email }) => ({
             email,
             username: email.split('@')[0],
          })),
       ),
-      async (req: RequestParamsId, res: Response) => {
-         const { email, username } = req?.validated?.body;
+      async (c) => {
+         const { email, username } = c.req.valid('json');
          const token = await sign({ email, username }, config.JWT_MAGIC_SECRET, {
             expiresIn: config.JWT_MAGIC_EXPIRE,
             noTimestamp: true,
          });
 
          return (await emailService.sendVerificationEmail(email, token))
-            ? res.status(200).json({ message: 'Magic link sent to your email' })
-            : res.status(409).json({ message: 'Failed to send email' });
+            ? c.json({ message: 'Magic link sent to your email' }, 200)
+            : c.json({ message: 'Failed to send email' }, 409);
       },
    );
 
@@ -99,88 +64,59 @@ export default () => {
     * @summary Verify magic link token and authenticate user
     * @tags Auth
     * @param {string} token.path.required - Magic link token
-    * @return {object} 200 - Success response with access token
-    * @example response - 200 - Example success response
-    * {
-    *   "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
-    *   "token_type": "bearer"
-    * }
-    * @return {object} 401 - Invalid token response
-    * @example response - 401 - Example invalid token
-    * {
-    *   "message": "Invalid or expired token"
-    * }
-    * @return {object} 409 - Error response
     */
-   router.get(
-      '/login/:token',
-      zodParamsValidator(
-         z.object({ token: z.string() }).transform(async ({ token }) => {
-            return await verify(token, config.JWT_MAGIC_SECRET);
-         }),
-      ),
-      async (req: RequestParamsId, res: Response) => {
-         const { email, username } = req?.validated?.params;
+   router.get('/login/:token', async (c) => {
+      const token = c.req.param('token');
 
-         return await db
-            .select({ id: users.id, username: users.username, email: users.email })
-            .from(users)
-            .where(eq(users.email, email))
-            .then(async ([existingUser]) =>
-               existingUser ? existingUser : await db
-                  .insert(users)
-                  .values({ username, email })
-                  .returning()
-                  .then(([newUsers]) => newUsers)
-            )
-            .then(({ username, email, id: user_id }) =>
-               res.status(200).json({
-                  access_token: sign(
-                     {
-                        user_id,
-                        username,
-                        email,
-                     },
-                     config.JWT_CLIENT_SECRET,
-                     { expiresIn: config.JWT_CLIENT_EXPIRE },
-                  ),
-                  token_type: 'bearer',
-               })
-            )
-            .catch((error) => {
-               console.log(`Error: ${error}`);
-               return res.status(409).json({ message: 'Failed to Login' });
-            });
-      },
-   );
+      const decodedToken = await verify(token, config.JWT_MAGIC_SECRET)
+         //@ts-ignore: I duuno why
+         .catch((error) =>
+            c.json({ message: 'Invalid or expired token', details: error.message }, 401)
+         );
 
-   ///**
-   // * POST /auth/me
-   // * @summary Request a magic link for authentication
-   // * @tags Auth
-   // * @return {object} 200 - Success response
-   // * @example response - 200 - Example success response
-   // * {
-   // *   "username": "something"
-   // *   "email": "something@something.com"
-   // * }
-   // * @return {object} 400 - Error response
-   // * @example response - 400 - Example error response
-   // * {
-   // *   "message": "Email is required"
-   // * }
-   // * @return {object} 409 - Database or email error
-   // * @example response - 409 - Example error response
-   // * {
-   // *   "message": "Failed to send email"
-   // * }
-   // */
-   //router.post(
-   //  "/me",
-   //  validateUser,
-   //  (req: RequestParamsId, res: Response): Promise<Response> =>
-   //    res.status(200).json(req?.auth),
-   //);
+      const { email, username } = decodedToken as { email: string; username: string };
+
+      return await db
+         .select({ id: users.id, username: users.username, email: users.email })
+         .from(users)
+         .where(eq(users.email, email))
+         .then(async (existingUsers) => {
+            if (existingUsers.length > 0) {
+               return existingUsers[0];
+            }
+
+            return await db
+               .insert(users)
+               .values({ username, email })
+               .returning()
+               .then(([newUser]) => newUser);
+         })
+         .then(({ username, email, id: user_id }) =>
+            c.json({
+               access_token: sign(
+                  {
+                     user_id,
+                     username,
+                     email,
+                  },
+                  config.JWT_CLIENT_SECRET,
+                  { expiresIn: config.JWT_CLIENT_EXPIRE },
+               ),
+               token_type: 'bearer',
+            }, 200)
+         )
+         .catch((error) => {
+            console.log(`Error: ${error}`);
+            return c.json({ message: 'Failed to Login' }, 409);
+         });
+   });
+
+   /* Commented out in the original code
+  router.post('/me',
+    validateUser,
+    async (c) => c.json(c.get('jwtPayload'), 200)
+  );
+  */
 
    return router;
 };

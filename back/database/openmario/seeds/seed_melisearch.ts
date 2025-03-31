@@ -1,7 +1,6 @@
 import { company, position, job_posting, location, major, job_posting_major } from "../../../src/db/index.ts";
 import { db } from "../../../src/db/index.ts";
 import { eq } from "drizzle-orm";
-import { MeiliSearch } from 'meilisearch';
 import { meilisearchService } from '../../../src/services/meilisearch.service.ts';
 
 export default async () => {
@@ -118,5 +117,5 @@ export default async () => {
   // Index the job postings in MeiliSearch
   await meilisearch.index('job_postings').addDocuments(jobPostings);
   
-  console.log("Indexed job postings:", jobPostings);
+  //console.log("Indexed job postings:", jobPostings);
 }

@@ -1,9 +1,9 @@
-import { Request, Response, Router } from 'express';
+import { Hono } from 'hono';
+import { zValidator } from '@hono/zod-validator';
 import { and, eq, or, sql } from 'drizzle-orm';
-import { zodQueryValidator } from '#/middleware/validation.middleware.ts';
 import { company, db, location, position } from '#db';
 import { z } from 'zod';
-import { orderSQL, querySQL, RequestParamsId } from '#models';
+import { orderSQL, querySQL } from '#models';
 
 const queryStringPreprocess = () =>
    z.preprocess(
@@ -17,7 +17,7 @@ const queryStringPreprocess = () =>
    );
 
 export default () => {
-   const router = Router();
+   const router = new Hono();
    const limit = 25;
 
    /**
@@ -40,7 +40,8 @@ export default () => {
     */
    router.get(
       '/company',
-      zodQueryValidator(
+      zValidator(
+         'query',
          z
             .object({ comp: queryStringPreprocess() })
             .transform(({ comp }: { comp: string }) => ({
@@ -48,21 +49,20 @@ export default () => {
                order: orderSQL(company.name, comp),
             })),
       ),
-      async (req: RequestParamsId, res: Response) => {
-         const { query, order } = req?.validated?.query;
+      async (c) => {
+         const { query, order } = c.req.valid('query');
 
          return await db
             .select({ id: company.id, name: company.name })
             .from(company)
             .where(query)
+            //@ts-ignore: I duuno why
             .orderBy(order)
             .limit(limit)
-            .then((results) => results)
-            .then((results) => res.status(200).json(results))
-            .catch(({ message }) => res.status(409).json({ message }));
+            .then((results) => c.json(results, 200))
+            .catch(({ message }) => c.json({ message }, 409));
       },
    );
-
    /**
     * GET /autocomplete/position
     * @summary Search for positions within a specific company
@@ -84,10 +84,11 @@ export default () => {
     */
    router.get(
       '/position',
-      zodQueryValidator(
+      zValidator(
+         'query',
          z
             .object({
-               comp: z.string({ required_error: 'Comapny Name is Requried' }),
+               comp: z.string({ required_error: 'Company Name is Required' }),
                pos: z.preprocess(
                   (name) =>
                      name &&
@@ -105,8 +106,8 @@ export default () => {
                order: orderSQL(position.name, pos),
             })),
       ),
-      async (req: Request, res: Response) => {
-         const { queries, order } = req?.validated?.query;
+      async (c) => {
+         const { queries, order } = c.req.valid('query');
 
          return await db
             .selectDistinctOn([position.name], {
@@ -117,8 +118,8 @@ export default () => {
             .innerJoin(company, eq(position.company_id, company.id))
             .where(and(...queries))
             .limit(limit)
-            .then((results) => res.status(200).json(results))
-            .catch(({ message }) => res.status(409).json({ message }));
+            .then((results) => c.json(results, 200))
+            .catch(({ message }) => c.json({ message }, 409));
       },
    );
 
@@ -142,22 +143,25 @@ export default () => {
     */
    router.get(
       '/location',
-      zodQueryValidator(
-         z.object({ loc: queryStringPreprocess() }).transform(({ loc }) => ({
-            queries: [
-               querySQL(location.city, loc),
-               querySQL(location.state, loc),
-               querySQL(location.state_code, loc),
-            ],
-            order: sql`GREATEST(
-                     similarity(${location.city}, ${loc.trim()}),
-                     similarity(${location.state}, ${loc.trim()}),
-                     similarity(${location.state_code}, ${loc.trim()})
-                  ) DESC`,
-         })),
+      zValidator(
+         'query',
+         z
+            .object({ loc: queryStringPreprocess() })
+            .transform(({ loc }) => ({
+               queries: [
+                  querySQL(location.city, loc),
+                  querySQL(location.state, loc),
+                  querySQL(location.state_code, loc),
+               ],
+               order: sql`GREATEST(
+               similarity(${location.city}, ${loc.trim()}),
+               similarity(${location.state}, ${loc.trim()}),
+               similarity(${location.state_code}, ${loc.trim()})
+               ) DESC`,
+            })),
       ),
-      async (req: Request, res: Response) => {
-         const { queries, order } = req?.validated?.query;
+      async (c) => {
+         const { queries, order } = c.req.valid('query');
 
          return await db
             .select()
@@ -166,14 +170,15 @@ export default () => {
             .limit(limit)
             .orderBy(order)
             .then((results) =>
-               res.status(200).json(
+               c.json(
                   results.map((item) => ({
                      id: item.id,
                      name: `${item.city}, ${item.state_code}`,
                   })),
+                  200,
                )
             )
-            .catch(({ message }) => res.status(409).json({ message }));
+            .catch(({ message }) => c.json({ message }, 409));
       },
    );
 

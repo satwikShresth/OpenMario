@@ -43,7 +43,8 @@ export const parseOptionalInt = (name: string, min: number, max?: number) =>
       .max(max ?? Infinity, max ? `${name} cannot exceed ${max}` : '')
       .optional();
 
-const ensureArray = <T extends z.ZodTypeAny>(schema: T) => z.preprocess((val) => (Array.isArray(val) ? val : [val]), z.array(schema));
+const ensureArray = <T extends z.ZodTypeAny>(schema: T) =>
+   z.preprocess((val) => (Array.isArray(val) ? val : [val]), z.array(schema));
 
 export const SubmissionQuerySchema = z.object({
    company: ensureArray(name(z.string())).optional(),
@@ -106,12 +107,16 @@ export const SubmissionQuery = SubmissionQuerySchema.transform(
    } => {
       const queries: SQL[] = [];
 
-      const companyQueries: SQL[] = query?.company?.map((companyName) => eq(company.name, companyName));
+      const companyQueries: SQL[] = query?.company?.map((companyName) =>
+         eq(company.name, companyName)
+      );
       if (companyQueries?.length!) {
          queries.push(or(...companyQueries)!);
       }
 
-      const positionQueries = query?.position?.map((position_) => querySQL(position.name, position_));
+      const positionQueries = query?.position?.map((position_) =>
+         querySQL(position.name, position_)
+      );
       if (positionQueries?.length) {
          queries.push(or(...positionQueries)!);
       }
@@ -141,13 +146,17 @@ export const SubmissionQuery = SubmissionQuerySchema.transform(
       }
 
       // Coop year queries
-      const coopYearQueries = query?.coop_year?.map((coop_year) => eq(submission.coop_year, coop_year));
+      const coopYearQueries = query?.coop_year?.map((coop_year) =>
+         eq(submission.coop_year, coop_year)
+      );
       if (coopYearQueries?.length) {
          queries.push(or(...coopYearQueries)!);
       }
 
       // Coop cycle queries
-      const coopCycleQueries = query?.coop_cycle?.map((coop_cycle) => eq(submission.coop_cycle, coop_cycle));
+      const coopCycleQueries = query?.coop_cycle?.map((coop_cycle) =>
+         eq(submission.coop_cycle, coop_cycle)
+      );
       if (coopCycleQueries?.length) {
          queries.push(or(...coopCycleQueries)!);
       }
