@@ -21,7 +21,7 @@ import FilterSection from '#/components/search/FitlerSection'
 // Initialize the MeiliSearch client correctly
 const { searchClient } = instantMeiliSearch(
   `${window.location.host}/api/search`,
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWFyY2hSdWxlcyI6eyIqIjp7fX0sImFwaUtleVVpZCI6ImEzZDI4YWVhLWQ0NzgtNDI0Mi1iYzgyLWJjM2M5ODkwYTk0NSIsImV4cCI6MTc0MzU0Mzk1NX0.W4iWyHDtOITdLc_dmsBcIdtRKOWVX-XoYpWtpHlcYJU",
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWFyY2hSdWxlcyI6eyIqIjp7fX0sImFwaUtleVVpZCI6IjQ2ZTEyZjhkLWU1NTItNDY3NC1hMmI1LWMzODU3NjRjNGRkNCIsImV4cCI6MTc0MzU2MjI0NX0.FVTuiMqXqQ5w5HcPtkdorhFCaeAlE8Uoym94KlbBLSk",
   {
     primaryKey: 'id',
     attributesToHighlight: [
@@ -539,10 +539,10 @@ function FiltersPanel({ activeFilters, setActiveFilters }) {
       <FilterSection title="Job Length" attribute="job_length" icon={<Layers />} />
       <FilterSection title="Job Status" attribute="job_status" icon={<Award />} />
       <FilterSection title="Work Hours" attribute="work_hours" icon={<Clock />} />
-      <FilterSection title="Year" attribute="year" icon={<Calendar />} />
+      <FilterSection title="Year" attribute="year" isSlider icon={<Calendar />} />
       <FilterSection title="Type of Organization" attribute="is_nonprofit" icon={<Building />} />
       <FilterSection title="Research Position" attribute="is_research_position" icon={<MapPin />} />
-      <FilterSection title="Minimum GPA" attribute="minimum_gpa" icon={<GraduationCap />} />
+      <FilterSection title="Minimum GPA" attribute="minimum_gpa" step={0.25} isSlider icon={<GraduationCap />} />
       <FilterSection title="Experience Level" attribute="experience_levels" icon={<Award />} />
       <FilterSection title="Compensation" attribute="compensation_status" icon={<Briefcase />} />
 

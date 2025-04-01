@@ -538,7 +538,7 @@ function FiltersPanel({ activeFilters, setActiveFilters }) {
       <FilterSection title="College" attribute="college_name" icon={<School />} searchable={true} />
       <FilterSection title="Instruction Type" attribute="instruction_type" icon={<Users />} />
       <FilterSection title="Instruction Method" attribute="instruction_method" icon={<MapPin />} />
-      <FilterSection title="Credits" attribute="credits" isSlider icon={<Award />} />
+      <FilterSection title="Credits" attribute="credits" isSlider step={.5} icon={<Award />} />
       <FilterSection title="Days" attribute="days" icon={<Calendar />} />
       <FilterSection title="Term" attribute="term" icon={<Layers />} />
       <FilterSection title="Instructor" attribute="instructors.name" icon={<GraduationCap />} searchable={true} />
