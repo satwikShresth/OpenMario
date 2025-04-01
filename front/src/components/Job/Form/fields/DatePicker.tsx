@@ -1,18 +1,24 @@
-import React from 'react';
-import { Controller, type Control, type FieldValues, type Path, type RegisterOptions } from 'react-hook-form';
-import { FormControl, FormHelperText } from '@mui/material';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import { DateTime } from 'luxon';
+import React from "react";
+import {
+  type Control,
+  Controller,
+  type FieldValues,
+  type Path,
+  type RegisterOptions,
+} from "react-hook-form";
+import { FormControl, FormHelperText } from "@mui/material";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { AdapterLuxon } from "@mui/x-date-pickers/AdapterLuxon";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { DateTime } from "luxon";
 // Generic type for any form values
 interface DatePickerFieldProps<T extends FieldValues> {
   name: Path<T>;
   label: string;
   control: Control<T>;
   rules?: RegisterOptions;
-  views?: ('year' | 'month' | 'day')[];
-  openTo?: 'year' | 'month' | 'day';
+  views?: ("year" | "month" | "day")[];
+  openTo?: "year" | "month" | "day";
   disableFuture?: boolean;
   disablePast?: boolean;
   minYear?: number;
@@ -23,8 +29,8 @@ export const DatePickerField = <T extends FieldValues>({
   label,
   control,
   rules,
-  views = ['year'],
-  openTo = 'year',
+  views = ["year"],
+  openTo = "year",
   disableFuture = false,
   disablePast = false,
   minYear,
@@ -63,7 +69,7 @@ export const DatePickerField = <T extends FieldValues>({
                     inputRef: ref,
                     error: !!error,
                     fullWidth: true,
-                  }
+                  },
                 }}
               />
             </LocalizationProvider>

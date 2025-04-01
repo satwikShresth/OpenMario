@@ -1,4 +1,4 @@
-import { TableRow, TableCell, Typography } from "@mui/material";
+import { TableCell, TableRow, Typography } from "@mui/material";
 import { flexRender } from "@tanstack/react-table";
 
 const TableBodyComponent = ({ rows, isLoading, columnLength }) => {
@@ -24,12 +24,12 @@ const TableBodyComponent = ({ rows, isLoading, columnLength }) => {
 
   return (
     <>
-      {rows.map(row => (
+      {rows.map((row) => (
         <TableRow
           key={row.id}
           hover
         >
-          {row.getVisibleCells().map(cell => (
+          {row.getVisibleCells().map((cell) => (
             <TableCell key={cell.id}>
               {flexRender(cell.column.columnDef.cell, cell.getContext())}
             </TableCell>

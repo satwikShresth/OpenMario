@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "noFallthroughCasesInSwitch":true
+    "noFallthroughCasesInSwitch": true
   },
   "imports": {
     "@asteasolutions/zod-to-openapi": "npm:@asteasolutions/zod-to-openapi@^7.3.0",
@@ -24,7 +24,7 @@
     "#db/scheduler": "./src/db/scheduler/index.ts",
     "#utils": "./src/utils/index.ts",
     "#models": "./src/models/index.ts",
-    "#routes": "./src/routes/index.ts",
+    "#routes": "./src/routes/index.ts"
   },
   "fmt": {
     "useTabs": false,
@@ -33,7 +33,7 @@
     "singleQuote": true,
     "lineWidth": 100,
     "proseWrap": "preserve",
-    "include": ["./src/", "./openapi/","./tests/", "*.ts"],
+    "include": ["./src/", "./database/", "./email_templates/","./search_index/", "*.ts"],
     "exclude": ["src/static"]
   },
   "tasks": {
@@ -42,21 +42,30 @@
     "dev:migrate:gen:custom": "deno run --env-file=../.dev.env -A npm:drizzle-kit generate --custom --name=",
     "dev:seed:openmario": "deno run --env-file=../.dev.env -A ./database/openmario/seeds/index.ts",
     "dev:seed:scheduler": "deno run --env-file=../.dev.env -A ./database/scheduler/seeds/index.ts",
-    "seed:openmario": "deno run -A ./database/openmario/seeds/index.ts",
-    "seed:scheduler": "deno run -A ./database/scheduler/seeds/index.ts",
     "dev:watch": "deno -A  --env-file=../.dev.env --watch src/server.ts",
     "install": "deno install --import-map ./import_map.dev.json",
     "watch": "deno -A --watch src/server.ts",
-    "migrate": "deno run -A npm:drizzle-kit migrate",
-    "prestart":{
-      "command": "deno run -A ./database/openmario/seeds/index.ts && deno run -A ./database/scheduler/seeds/index.ts",
-      "dependencies": ["migrate"]
-    }
+    "prod:migrate": "deno run -A npm:drizzle-kit migrate",
+    "prod:seed:openmario": {
+      "command": "deno run -A ./database/openmario/seeds/index.ts",
+      "dependencies": ["prod:migrate"]
+    },
+    "prod:seed:scheduler": {
+      "command": "deno run -A ./database/scheduler/seeds/index.ts",
+      "dependencies": ["prod:migrate"]
+    },
+    "prod:seed:meilisearch": {
+      "command": "deno run -A ./search_index/index.ts",
+      "dependencies": ["prod:seed:openmario","prod:seed:scheduler"]
+    },
+    "prestart": {
+      "command": "echo Migration Seeding Complete !!",
+      "dependencies": ["prod:seed:meilisearch"]
+    },
     "build": "deno check src",
     "seed": "deno run -A ./database/seeds/seed.ts",
     "start": "deno run -A src/server.ts",
-    "test": "deno test -A --env-file=../.env",
-    "gen:openapi": "deno -A ./openapi/index.ts ../openapi.json",
+    "gen:openapi": "deno -A ./openapi/index.ts ../openapi.json"
   },
   "nodeModulesDir": "auto"
 }

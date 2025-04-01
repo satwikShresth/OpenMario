@@ -1,8 +1,8 @@
-import defaultRatings from  "npm:@mtucourses/rate-my-professors";
+import defaultRatings from "npm:@mtucourses/rate-my-professors";
 
 (async () => {
   const ratings = defaultRatings.default;
-  console.log(ratings)
+  console.log(ratings);
   //const schools = await ratings.searchSchool('michigan technological university');
   //
   //console.log(schools);
@@ -17,7 +17,7 @@ import defaultRatings from  "npm:@mtucourses/rate-my-professors";
     ]
   */
 
-  const teachers = await ratings.searchTeacher('mtu shene');
+  const teachers = await ratings.searchTeacher("mtu shene");
 
   console.log(teachers);
   /*
@@ -31,10 +31,10 @@ import defaultRatings from  "npm:@mtucourses/rate-my-professors";
           name: 'Michigan Technological University'
         }
       }
-    ] 
+    ]
   */
 
-  const teacher = await ratings.getTeacher('VGVhY2hlci0yMjkxNjI=');
+  const teacher = await ratings.getTeacher("VGVhY2hlci0yMjkxNjI=");
 
   console.log(teacher);
   /*

@@ -1,5 +1,12 @@
 import { createSelectSchema } from 'drizzle-zod';
-import { coop_cycle_type, coop_year_type, location, major, minor, program_level_type } from '#/db/index.ts';
+import {
+   coop_cycle_type,
+   coop_year_type,
+   location,
+   major,
+   minor,
+   program_level_type,
+} from '#/db/index.ts';
 import { z } from 'zod';
 
 export const MajorSchema = createSelectSchema(major);

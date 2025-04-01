@@ -1,9 +1,18 @@
-import React, { useState, useEffect } from 'react';
-import { Box, Typography, Checkbox, FormControlLabel, TextField, InputAdornment, Button, Slider } from '@mui/material';
-import { useRefinementList, useRange } from 'react-instantsearch';
-import { useTheme } from '@mui/material/styles';
-import { Search } from 'lucide-react';
-import { useAppTheme } from '#/utils';
+import React, { useEffect, useState } from "react";
+import {
+  Box,
+  Button,
+  Checkbox,
+  FormControlLabel,
+  InputAdornment,
+  Slider,
+  TextField,
+  Typography,
+} from "@mui/material";
+import { useRange, useRefinementList } from "react-instantsearch";
+import { useTheme } from "@mui/material/styles";
+import { Search } from "lucide-react";
+import { useAppTheme } from "#/utils";
 
 // Component for list-based refinements
 const FilterList = ({ title, attribute, searchable, icon }) => {
@@ -27,7 +36,7 @@ const FilterList = ({ title, attribute, searchable, icon }) => {
       <Typography
         variant="subtitle1"
         fontWeight="bold"
-        sx={{ mb: 1.5, display: 'flex', alignItems: 'center' }}
+        sx={{ mb: 1.5, display: "flex", alignItems: "center" }}
       >
         {icon && React.cloneElement(icon, {
           size: 18,
@@ -38,11 +47,11 @@ const FilterList = ({ title, attribute, searchable, icon }) => {
       </Typography>
       <Box
         sx={{
-          bgcolor: 'background.paper',
+          bgcolor: "background.paper",
           borderRadius: 2,
           p: 1.5,
-          border: '2px solid black',
-          boxShadow: '0 4px 0 rgba(0,0,0,0.2)',
+          border: "2px solid black",
+          boxShadow: "0 4px 0 rgba(0,0,0,0.2)",
         }}
       >
         {searchable && (
@@ -59,91 +68,108 @@ const FilterList = ({ title, attribute, searchable, icon }) => {
                   </InputAdornment>
                 ),
                 sx: {
-                  borderRadius: '50px',
-                  border: '3px solid black',
-                  boxShadow: '0 4px 0 rgba(0,0,0,0.3)',
-                  '& .MuiOutlinedInput-notchedOutline': { border: 'none' },
-                  '&:hover .MuiOutlinedInput-notchedOutline': { border: 'none' },
-                  '&.Mui-focused .MuiOutlinedInput-notchedOutline': { border: 'none' },
+                  borderRadius: "50px",
+                  border: "3px solid black",
+                  boxShadow: "0 4px 0 rgba(0,0,0,0.3)",
+                  "& .MuiOutlinedInput-notchedOutline": { border: "none" },
+                  "&:hover .MuiOutlinedInput-notchedOutline": {
+                    border: "none",
+                  },
+                  "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                    border: "none",
+                  },
                 },
               }}
               variant="outlined"
             />
           </Box>
         )}
-        <Box sx={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-          {items.length > 0 ? (
-            items.map(item => (
-              <Box
-                key={item.value}
-                sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}
-              >
-                <FormControlLabel
-                  control={
-                    <Checkbox
-                      checked={item.isRefined}
-                      onChange={() => refine(item.value)}
-                      sx={{
-                        '&.MuiCheckbox-root': { color: 'text.secondary' },
-                        '&.Mui-checked': { color: 'primary.main' },
-                        '& .MuiSvgIcon-root': { fontSize: '1.25rem' },
-                      }}
-                    />
-                  }
-                  label={<Typography variant="body2" fontWeight={500}>{item.label}</Typography>}
-                  sx={{ margin: 0, '& .MuiFormControlLabel-label': { fontSize: '0.875rem' } }}
-                />
+        <Box sx={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
+          {items.length > 0
+            ? (
+              items.map((item) => (
                 <Box
+                  key={item.value}
                   sx={{
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    padding: '0.125rem 0.5rem',
-                    borderRadius: '9999px',
-                    fontSize: '0.75rem',
-                    fontWeight: 500,
-                    backgroundColor: theme.palette.grey[100],
-                    color: theme.palette.grey[700],
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
                   }}
                 >
-                  {item.count}
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        checked={item.isRefined}
+                        onChange={() => refine(item.value)}
+                        sx={{
+                          "&.MuiCheckbox-root": { color: "text.secondary" },
+                          "&.Mui-checked": { color: "primary.main" },
+                          "& .MuiSvgIcon-root": { fontSize: "1.25rem" },
+                        }}
+                      />
+                    }
+                    label={
+                      <Typography variant="body2" fontWeight={500}>
+                        {item.label}
+                      </Typography>
+                    }
+                    sx={{
+                      margin: 0,
+                      "& .MuiFormControlLabel-label": { fontSize: "0.875rem" },
+                    }}
+                  />
+                  <Box
+                    sx={{
+                      display: "inline-flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      padding: "0.125rem 0.5rem",
+                      borderRadius: "9999px",
+                      fontSize: "0.75rem",
+                      fontWeight: 500,
+                      backgroundColor: theme.palette.grey[100],
+                      color: theme.palette.grey[700],
+                    }}
+                  >
+                    {item.count}
+                  </Box>
                 </Box>
-              </Box>
-            ))
-          ) : (
-            <Typography
-              variant="body2"
-              sx={{ color: 'text.secondary', fontStyle: 'italic' }}
-            >
-              No results found
-            </Typography>
-          )}
+              ))
+            )
+            : (
+              <Typography
+                variant="body2"
+                sx={{ color: "text.secondary", fontStyle: "italic" }}
+              >
+                No results found
+              </Typography>
+            )}
           {canToggleShowMore && (
             <Button
               onClick={toggleShowMore}
               variant="text"
               size="small"
               sx={{
-                alignSelf: 'flex-start',
+                alignSelf: "flex-start",
                 mt: 1,
-                color: 'primary.main',
+                color: "primary.main",
                 p: 0,
-                minWidth: 'auto',
+                minWidth: "auto",
                 fontWeight: 500,
-                fontSize: '0.875rem',
-                textTransform: 'none',
-                border: 'none',
-                boxShadow: 'none',
-                '&:hover': {
-                  backgroundColor: 'transparent',
-                  textDecoration: 'underline',
-                  transform: 'none',
-                  boxShadow: 'none',
+                fontSize: "0.875rem",
+                textTransform: "none",
+                border: "none",
+                boxShadow: "none",
+                "&:hover": {
+                  backgroundColor: "transparent",
+                  textDecoration: "underline",
+                  transform: "none",
+                  boxShadow: "none",
                 },
-                '&:active': { transform: 'none', boxShadow: 'none' },
+                "&:active": { transform: "none", boxShadow: "none" },
               }}
             >
-              {isShowingMore ? 'Show less' : 'Show more'}
+              {isShowingMore ? "Show less" : "Show more"}
             </Button>
           )}
         </Box>
@@ -191,7 +217,6 @@ const FilterSlider = ({ title, attribute, min, max, step = 1, icon }) => {
     refine(newValue);
   };
 
-
   // Generate marks based on the step value
   const marks = [];
   for (let i = effectiveMin; i <= effectiveMax; i += step) {
@@ -200,7 +225,7 @@ const FilterSlider = ({ title, attribute, min, max, step = 1, icon }) => {
 
   const totalMarks = marks.length;
   if (totalMarks <= 5) {
-    marks.forEach(mark => mark.label = mark.value.toString());
+    marks.forEach((mark) => mark.label = mark.value.toString());
   } else {
     const positions = [
       0,
@@ -209,7 +234,7 @@ const FilterSlider = ({ title, attribute, min, max, step = 1, icon }) => {
       totalMarks - 1,
     ];
 
-    positions.forEach(pos => {
+    positions.forEach((pos) => {
       marks[pos].label = marks[pos].value.toString();
     });
   }
@@ -249,4 +274,3 @@ const FilterSection = (props) => {
 };
 
 export default FilterSection;
-

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { postAuthLoginMutation } from "#client/react-query.gen";
 
@@ -53,8 +53,7 @@ export const useAuth = () => {
         return response;
       })
       .catch((error) => {
-        const errorMessage =
-          error?.response?.data?.message ||
+        const errorMessage = error?.response?.data?.message ||
           "Failed to send login link. Please try again.";
         setError(errorMessage);
         throw new Error(errorMessage);

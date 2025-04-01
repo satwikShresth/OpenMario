@@ -1,0 +1,80 @@
+{
+   "primaryKey": "id",
+   "settings": {
+      "searchableAttributes": [
+         "searchableText",
+         "subject_name",
+         "course_number",
+         "title",
+         "description",
+         "prerequisites",
+         "corequisites",
+         "restrictions"
+      ],
+      "filterableAttributes": [
+         "subject_id",
+         "college_id",
+         "credits",
+         "credit_range",
+         "repeat_status",
+         "writing_intensive",
+         "subject_name",
+         "college_name"
+      ],
+      "sortableAttributes": [
+         "course_number",
+         "credits",
+         "title"
+      ],
+      "displayedAttributes": [
+         "id",
+         "subject_id",
+         "course_number",
+         "title",
+         "description",
+         "credits",
+         "course",
+         "credit_range",
+         "repeat_status",
+         "prerequisites",
+         "corequisites",
+         "restrictions",
+         "writing_intensive",
+         "subject_name",
+         "college_id",
+         "college_name"
+      ],
+      "rankingRules": [
+         "words",
+         "typo",
+         "proximity",
+         "attribute",
+         "sort",
+         "exactness"
+      ],
+      "synonyms": {
+         "programming": ["coding", "development"],
+         "calculus": ["calc"],
+         "statistics": ["stats"],
+         "laboratory": ["lab"]
+      },
+      "stopWords": [
+         "the",
+         "a",
+         "an",
+         "and",
+         "or",
+         "in",
+         "of",
+         "to",
+         "for"
+      ],
+      "pagination": {
+         "maxTotalHits": 5000
+      },
+      "faceting": {
+         "maxValuesPerFacet": 200
+      },
+      "searchCutoffMs": 150
+   }
+}

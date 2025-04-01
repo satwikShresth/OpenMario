@@ -11,7 +11,7 @@ export const filterOptions = (options, { inputValue }) => {
     const sigOption = options.find(
       (option) =>
         (typeof option === "string" ? option : option.name) ===
-        "Susquehanna Int'l Group LLP",
+          "Susquehanna Int'l Group LLP",
     );
     if (sigOption && !filteredOptions.includes(sigOption)) {
       return [sigOption, ...filteredOptions];

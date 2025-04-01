@@ -18,7 +18,7 @@ export async function mergeJsonById(
   );
 
   // Map first data with matches from second data, but always keep name from first object
-  const result = firstData.map(item => {
+  const result = firstData.map((item) => {
     const matchedItem = lookup[item.id];
     if (matchedItem) {
       // Create a copy of matched item without the name field
@@ -41,7 +41,11 @@ export async function mergeJsonById(
 // Example usage
 if (import.meta.url === `file://${process.argv[1]}`) {
   const [first, second, output] = process.argv.slice(2);
-  mergeJsonById(first || 'first.json', second || 'second.json', output || 'merged.json')
-    .then(() => console.log('Files merged successfully!'))
-    .catch(err => console.error('Error:', err));
+  mergeJsonById(
+    first || "first.json",
+    second || "second.json",
+    output || "merged.json",
+  )
+    .then(() => console.log("Files merged successfully!"))
+    .catch((err) => console.error("Error:", err));
 }

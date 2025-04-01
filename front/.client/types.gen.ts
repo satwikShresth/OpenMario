@@ -656,4 +656,3 @@ export type GetSubmissionsMeResponses = {
 
 export type GetSubmissionsMeResponse =
   GetSubmissionsMeResponses[keyof GetSubmissionsMeResponses];
-

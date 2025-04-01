@@ -1,6 +1,6 @@
 import type { CommonData } from "#/types";
 import type { compensation } from "#/utils/validators";
-import { useState, useCallback } from "react";
+import { useCallback, useState } from "react";
 
 export interface Job extends CommonData {
   position?: string;
@@ -52,7 +52,7 @@ export const useJobParser = () => {
         idx < jobStartIndices.length - 1
           ? jobStartIndices[idx + 1]
           : cleanedLines.length,
-      ),
+      )
     );
 
     return jobBlocks
@@ -78,8 +78,9 @@ export const useJobParser = () => {
           const breakIndex = restLines.findIndex(
             (line) => line.includes(":") && !line.startsWith("$"),
           );
-          const sectionContent =
-            breakIndex === -1 ? restLines : restLines.slice(0, breakIndex);
+          const sectionContent = breakIndex === -1
+            ? restLines
+            : restLines.slice(0, breakIndex);
 
           return [
             contentLines[index].replace(`${sectionName}:`, "").trim(),
@@ -109,8 +110,9 @@ export const useJobParser = () => {
           if (hasKeyword("Qualified Alternate")) return "Qualified Alternate";
 
           if (rankingStatusText.includes("Job Offer")) return "Job Offer";
-          if (rankingStatusText.includes("Qualified Alternate"))
+          if (rankingStatusText.includes("Qualified Alternate")) {
             return "Qualified Alternate";
+          }
           if (rankingStatusText.includes("Accepted")) return "Accepted";
 
           return "";
@@ -125,12 +127,12 @@ export const useJobParser = () => {
         const fullWageMatch = fullText.match(patterns.fullWage);
 
         const wageInfo = {
-          compensation:
-            hourlyWage || (fullWageMatch ? `$${fullWageMatch[1]}` : undefined),
-          work_hours:
-            hoursPerWeek || (fullWageMatch ? fullWageMatch[2] : undefined),
-          weekly_pay:
-            weeklyPay || (fullWageMatch ? `$${fullWageMatch[3]}` : undefined),
+          compensation: hourlyWage ||
+            (fullWageMatch ? `$${fullWageMatch[1]}` : undefined),
+          work_hours: hoursPerWeek ||
+            (fullWageMatch ? fullWageMatch[2] : undefined),
+          weekly_pay: weeklyPay ||
+            (fullWageMatch ? `$${fullWageMatch[3]}` : undefined),
         };
 
         const job: Job = {

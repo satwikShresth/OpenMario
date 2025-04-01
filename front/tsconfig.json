@@ -2,7 +2,7 @@
   "include": [
     "**/*",
     "**/.server/**/*",
-    "**/.client/**/*",
+    "**/.client/**/*"
   ],
   "compilerOptions": {
     "lib": ["DOM", "DOM.Iterable", "ES2022"],
@@ -21,7 +21,7 @@
     "verbatimModuleSyntax": true,
     "noEmit": true,
     "resolveJsonModule": true,
-    "skipLibCheck": true,
+    "skipLibCheck": true
     //"strict": true
   }
 }

@@ -4,7 +4,7 @@ services:
     container_name: meilisearch
     restart: always
     networks:
-      - app_network 
+      - app_network
     env_file:
       - ./.env
     volumes:
@@ -15,9 +15,9 @@ services:
       - MEILI_MASTER_KEY=${MEILI_MASTER_KEY?MEILI_MASTER_KEY variable not set}
       - MEILI_HOST=${MEILI_HOST?MEILI_HOST variable not set}
     healthcheck:
-        test: set -o pipefail;curl -fsS http://localhost:7700/health | grep -q '{"status":"available"}'
-        retries: 3
-        timeout: 5s
+      test: set -o pipefail;curl -fsS http://localhost:7700/health | grep -q '{"status":"available"}'
+      retries: 3
+      timeout: 5s
   database:
     image: postgres:latest
     restart: always
@@ -28,7 +28,7 @@ services:
       start_period: 30s
       timeout: 10s
     networks:
-      - app_network 
+      - app_network
     volumes:
       - app-db-data:/var/lib/postgresql/data/pgdata
     env_file:
@@ -41,7 +41,7 @@ services:
       - POSTGRES_PORT=${POSTGRES_PORT?POSTGRES_PORT variable not set}
       - POSTGRES_SERVER=${POSTGRES_SERVER?POSTGRES_SERVER variable not set}
   prestart:
-    build: 
+    build:
       context: ./back
       dockerfile: Dockerfile
       target: seeding-stage
@@ -59,7 +59,7 @@ services:
       - task
       - prestart
     networks:
-      - app_network 
+      - app_network
     env_file:
       - ./.env
     environment:
@@ -71,10 +71,10 @@ services:
     profiles:
       - seed
   backend:
-    build: 
+    build:
       context: ./back
       dockerfile: Dockerfile
-      target: production-stage 
+      target: production-stage
       platforms:
         - linux/amd64
     image: ${BACKEND_IMAGE?POSTGRES_PASSWORD variable not set}
@@ -87,7 +87,7 @@ services:
     command:
       - "./openmario"
     networks:
-      - app_network 
+      - app_network
     env_file:
       - ./.env
     environment:
@@ -109,7 +109,7 @@ services:
       - MEILI_MASTER_KEY=${MEILI_MASTER_KEY?MEILI_MASTER_KEY variable not set}
 
   reverse-proxy:
-    build: 
+    build:
       context: ./front
       dockerfile: Dockerfile
       target: production-stage
@@ -128,7 +128,7 @@ services:
       - database
       - backend
     networks:
-      - app_network 
+      - app_network
     env_file:
       - ./.env
     environment:

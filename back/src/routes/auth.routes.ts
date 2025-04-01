@@ -71,10 +71,16 @@ export default () => {
       const decodedToken = await verify(token, config.JWT_MAGIC_SECRET)
          //@ts-ignore: I duuno why
          .catch((error) =>
-            c.json({ message: 'Invalid or expired token', details: error.message }, 401)
+            c.json(
+               { message: 'Invalid or expired token', details: error.message },
+               401,
+            )
          );
 
-      const { email, username } = decodedToken as { email: string; username: string };
+      const { email, username } = decodedToken as {
+         email: string;
+         username: string;
+      };
 
       return await db
          .select({ id: users.id, username: users.username, email: users.email })

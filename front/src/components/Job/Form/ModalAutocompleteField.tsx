@@ -1,13 +1,7 @@
-import React from 'react';
-import {
-  Box,
-  TextField,
-  Autocomplete,
-  CircularProgress
-} from '@mui/material';
-import { Controller } from 'react-hook-form';
-import { filterOptions } from './filter';
-
+import React from "react";
+import { Autocomplete, Box, CircularProgress, TextField } from "@mui/material";
+import { Controller } from "react-hook-form";
+import { filterOptions } from "./filter";
 
 const ModalAutocompleteField = ({
   name,
@@ -57,7 +51,7 @@ const ModalAutocompleteField = ({
                 inputRef={ref}
                 label={
                   <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                    <Box sx={{ transform: 'translateY(-2px)' }}>
+                    <Box sx={{ transform: "translateY(-2px)" }}>
                       {icon}
                     </Box>
                     {label}
@@ -70,7 +64,9 @@ const ModalAutocompleteField = ({
                   ...params.InputProps,
                   endAdornment: (
                     <React.Fragment>
-                      {loading ? <CircularProgress color="inherit" size={20} /> : null}
+                      {loading
+                        ? <CircularProgress color="inherit" size={20} />
+                        : null}
                       {params.InputProps.endAdornment}
                     </React.Fragment>
                   ),

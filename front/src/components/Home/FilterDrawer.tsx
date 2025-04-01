@@ -1,13 +1,43 @@
-import { useState, useEffect, useCallback } from 'react';
-import { Drawer, IconButton, Box, Typography, Button, Slider, Divider, Grid, RadioGroup, FormControlLabel, Radio, FormControl, FormLabel } from '@mui/material';
-import { Filter, Briefcase, Calendar, School, CalendarDays, X, Building, MapPin } from 'lucide-react';
-import { useFilterStore } from '#/stores/useFilterStore';
-import { useForm, FormProvider } from 'react-hook-form';
-import { COOP_CYCLES, COOP_YEARS, PROGRAM_LEVELS } from '#/types';
-import { useQuery } from '@tanstack/react-query';
-import debounce from 'lodash/debounce';
-import { getAutocompleteCompanyOptions, getAutocompletePositionOptions, getAutocompleteLocationOptions } from '#client/react-query.gen';
-import { DropdownField, MultiselectFieldWithIcon } from '#/components/Job/Form/fields';
+import { useCallback, useEffect, useState } from "react";
+import {
+  Box,
+  Button,
+  Divider,
+  Drawer,
+  FormControl,
+  FormControlLabel,
+  FormLabel,
+  Grid,
+  IconButton,
+  Radio,
+  RadioGroup,
+  Slider,
+  Typography,
+} from "@mui/material";
+import {
+  Briefcase,
+  Building,
+  Calendar,
+  CalendarDays,
+  Filter,
+  MapPin,
+  School,
+  X,
+} from "lucide-react";
+import { useFilterStore } from "#/stores/useFilterStore";
+import { FormProvider, useForm } from "react-hook-form";
+import { COOP_CYCLES, COOP_YEARS, PROGRAM_LEVELS } from "#/types";
+import { useQuery } from "@tanstack/react-query";
+import debounce from "lodash/debounce";
+import {
+  getAutocompleteCompanyOptions,
+  getAutocompleteLocationOptions,
+  getAutocompletePositionOptions,
+} from "#client/react-query.gen";
+import {
+  DropdownField,
+  MultiselectFieldWithIcon,
+} from "#/components/Job/Form/fields";
 
 // Combined form interface
 interface FilterFormData {
@@ -50,12 +80,13 @@ const FilterDrawer = () => {
       company: currentCompany || [],
       position: currentPosition || [],
       location: currentLocation || [],
-      year: currentYear || [new Date().getFullYear() - 5, new Date().getFullYear()],
+      year: currentYear ||
+        [new Date().getFullYear() - 5, new Date().getFullYear()],
       coop_year: currentCoopYear || [],
       coop_cycle: currentCoopCycle || [],
-      program_level: currentProgramLevel || '',
-      distinct: currentDistinct || true
-    }
+      program_level: currentProgramLevel || "",
+      distinct: currentDistinct || true,
+    },
   });
 
   const { control, watch, setValue, reset } = methods;
@@ -68,58 +99,60 @@ const FilterDrawer = () => {
     company: companyValues,
     position: positionValues,
     location: locationValues,
-    distinct: distinctValue
+    distinct: distinctValue,
   } = watch();
 
   const minDistance = 2;
 
   // Search state for autocomplete fields
   const [searchInputs, setSearchInputs] = useState({
-    company: '',
-    position: '',
-    location: ''
+    company: "",
+    position: "",
+    location: "",
   });
 
   const debouncedSearch = useCallback(
     debounce((field, value) => {
-      setSearchInputs(prev => ({ ...prev, [field]: value }));
+      setSearchInputs((prev) => ({ ...prev, [field]: value }));
     }, 300),
-    []
+    [],
   );
-  const debouncedSetYearRange = useCallback(debounce((value) => setYear(value), 300), []);
-
+  const debouncedSetYearRange = useCallback(
+    debounce((value) => setYear(value), 300),
+    [],
+  );
 
   // Queries for autocomplete fields
   const companyQuery = useQuery({
     ...getAutocompleteCompanyOptions({
-      query: { comp: searchInputs.company }
+      query: { comp: searchInputs.company },
     }),
     enabled: searchInputs?.company?.length >= 3,
     staleTime: 30000,
-    placeholderData: (previousData) => previousData
+    placeholderData: (previousData) => previousData,
   });
 
   const positionQuery = useQuery({
     ...getAutocompletePositionOptions({
       query: {
-        comp: '*',
-        pos: searchInputs.position
-      }
+        comp: "*",
+        pos: searchInputs.position,
+      },
     }),
     enabled: searchInputs.position.length >= 3,
     staleTime: 30000,
-    placeholderData: (previousData) => previousData
+    placeholderData: (previousData) => previousData,
   });
 
   const locationQuery = useQuery({
     ...getAutocompleteLocationOptions({
       query: {
-        loc: searchInputs.location || '',
-      }
+        loc: searchInputs.location || "",
+      },
     }),
     enabled: searchInputs.location.length >= 2,
     staleTime: 30000,
-    placeholderData: (previousData) => previousData
+    placeholderData: (previousData) => previousData,
   });
 
   // Handler for year slider
@@ -132,16 +165,22 @@ const FilterDrawer = () => {
       return;
     }
     if (activeThumb === 0) {
-      setValue('year', [Math.min(newValue[0], yearRange[1] - minDistance), yearRange[1]]);
+      setValue("year", [
+        Math.min(newValue[0], yearRange[1] - minDistance),
+        yearRange[1],
+      ]);
     } else {
-      setValue('year', [yearRange[0], Math.max(newValue[1], yearRange[0] + minDistance)]);
+      setValue("year", [
+        yearRange[0],
+        Math.max(newValue[1], yearRange[0] + minDistance),
+      ]);
     }
   }, [setValue, minDistance, yearRange]);
 
   // Handler for distinct radio button
   const handleDistinctChange = (event) => {
-    const newValue = event.target.value === 'true';
-    setValue('distinct', newValue);
+    const newValue = event.target.value === "true";
+    setValue("distinct", newValue);
   };
 
   // Make sure values are arrays
@@ -157,8 +196,7 @@ const FilterDrawer = () => {
     if (positionValues) setPosition(makeSureArray(positionValues));
     if (locationValues) setLocation(makeSureArray(locationValues));
     if (distinctValue !== undefined) setDistinct(distinctValue);
-    setPagination({ pageIndex: 0, pageSize })
-
+    setPagination({ pageIndex: 0, pageSize });
   }, [
     yearRange,
     coopYearValues,
@@ -181,11 +219,14 @@ const FilterDrawer = () => {
   };
 
   // Default year range for display
-  const defaultYearRange = [new Date().getFullYear() - 5, new Date().getFullYear()];
+  const defaultYearRange = [
+    new Date().getFullYear() - 5,
+    new Date().getFullYear(),
+  ];
 
   return (
     <>
-      <Box sx={{ display: 'flex', justifyContent: 'flex-end', mb: 2 }}>
+      <Box sx={{ display: "flex", justifyContent: "flex-end", mb: 2 }}>
         <Button
           variant="outlined"
           startIcon={<Filter size={18} />}
@@ -200,14 +241,21 @@ const FilterDrawer = () => {
         open={open}
         onClose={toggleDrawer}
         sx={{
-          '& .MuiDrawer-paper': {
-            width: { xs: '85%', sm: 350 },
+          "& .MuiDrawer-paper": {
+            width: { xs: "85%", sm: 350 },
             p: 3,
-            boxSizing: 'border-box',
+            boxSizing: "border-box",
           },
         }}
       >
-        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 3 }}>
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            mb: 3,
+          }}
+        >
           <Typography variant="h6">Filters</Typography>
           <IconButton onClick={toggleDrawer} size="small">
             <Typography variant="body2" color="primary">Close</Typography>
@@ -219,7 +267,9 @@ const FilterDrawer = () => {
           <form>
             {/* Query Filters Section */}
             <Box sx={{ mb: 3 }}>
-              <Typography variant="subtitle1" sx={{ mb: 2 }}>Query Filters</Typography>
+              <Typography variant="subtitle1" sx={{ mb: 2 }}>
+                Query Filters
+              </Typography>
               <Grid container spacing={2}>
                 <Grid item xs={12}>
                   <MultiselectFieldWithIcon
@@ -232,7 +282,8 @@ const FilterDrawer = () => {
                     loading={companyQuery?.isLoading}
                     getOptionLabel={(option) => option ?? ""}
                     isOptionEqualToValue={(option, value) => option === value}
-                    onInputChange={(_, value) => debouncedSearch('company', value)}
+                    onInputChange={(_, value) =>
+                      debouncedSearch("company", value)}
                     placeholder="Search for companies..."
                     freeSolo={false}
                   />
@@ -245,11 +296,13 @@ const FilterDrawer = () => {
                     control={control}
                     multiple
                     icon={<Briefcase size={18} />}
-                    options={positionQuery?.data?.map((item) => item.name) || []}
+                    options={positionQuery?.data?.map((item) => item.name) ||
+                      []}
                     loading={positionQuery.isFetching}
                     getOptionLabel={(option) => option ?? ""}
                     isOptionEqualToValue={(option, value) => option === value}
-                    onInputChange={(_, value) => debouncedSearch('position', value)}
+                    onInputChange={(_, value) =>
+                      debouncedSearch("position", value)}
                     placeholder="Search for positions..."
                   />
                 </Grid>
@@ -261,12 +314,13 @@ const FilterDrawer = () => {
                     control={control}
                     multiple
                     icon={<MapPin size={18} />}
-                    options={locationQuery?.data?.map((item) => item.name) || []}
+                    options={locationQuery?.data?.map((item) => item.name) ||
+                      []}
                     loading={locationQuery.isFetching}
                     getOptionLabel={(option) => option ?? ""}
                     isOptionEqualToValue={(option, value) => option === value}
                     onInputChange={(_, value) => {
-                      debouncedSearch('location', value);
+                      debouncedSearch("location", value);
                     }}
                     placeholder="Search for locations..."
                     freeSolo={false}
@@ -278,18 +332,22 @@ const FilterDrawer = () => {
             <Divider sx={{ my: 3 }} />
 
             {/* Additional Filters Section */}
-            <Typography variant="subtitle1" sx={{ mb: 2 }}>Additional Filters</Typography>
+            <Typography variant="subtitle1" sx={{ mb: 2 }}>
+              Additional Filters
+            </Typography>
 
             {/* Year Range Slider */}
             <Box sx={{ mt: 2, mb: 4 }}>
-              <Box sx={{ display: "flex", alignItems: "center", gap: 1, mb: 1 }}>
+              <Box
+                sx={{ display: "flex", alignItems: "center", gap: 1, mb: 1 }}
+              >
                 <CalendarDays size={18} />
                 <Typography variant="body2">
                   Year Range
                 </Typography>
               </Box>
               <Slider
-                getAriaLabel={() => 'Year range'}
+                getAriaLabel={() => "Year range"}
                 value={yearRange || defaultYearRange}
                 onChange={handleYearChange}
                 valueLabelDisplay="auto"
@@ -301,7 +359,11 @@ const FilterDrawer = () => {
                 marks
                 sx={{ mt: 2 }}
               />
-              <Typography variant="caption" color="text.secondary" sx={{ display: 'flex', justifyContent: 'space-between' }}>
+              <Typography
+                variant="caption"
+                color="text.secondary"
+                sx={{ display: "flex", justifyContent: "space-between" }}
+              >
                 <span>{yearRange?.[0] || defaultYearRange[0]}</span>
                 <span>{yearRange?.[1] || defaultYearRange[1]}</span>
               </Typography>
@@ -364,13 +426,19 @@ const FilterDrawer = () => {
                   value={distinctValue.toString()}
                   onChange={handleDistinctChange}
                 >
-                  <FormControlLabel value={true} control={<Radio />} label="On" />
-                  <FormControlLabel value={false} control={<Radio />} label="Off" />
+                  <FormControlLabel
+                    value={true}
+                    control={<Radio />}
+                    label="On"
+                  />
+                  <FormControlLabel
+                    value={false}
+                    control={<Radio />}
+                    label="Off"
+                  />
                 </RadioGroup>
               </FormControl>
             </Box>
-
-
 
             <Box sx={{ mb: 3 }}>
               <Button

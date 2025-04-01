@@ -1,12 +1,11 @@
 services:
-
   database:
     ports:
       - "5432:5432"
 
   meilisearch:
     networks:
-      - app_network 
+      - app_network
     ports:
       - "7700:7700"
     environment:
@@ -14,7 +13,7 @@ services:
       - MEILI_ENV=development
 
   prestart:
-    build: 
+    build:
       context: ./back
       dockerfile: Dockerfile
       target: seeding-stage
@@ -31,7 +30,7 @@ services:
       - seed
 
   backend:
-    build: 
+    build:
       context: ./back
       dockerfile: Dockerfile
       target: development-stage
@@ -44,7 +43,7 @@ services:
       - run
       - watch
     develop:
-      watch: 
+      watch:
         - path: ./back/
           target: /app/
           action: sync

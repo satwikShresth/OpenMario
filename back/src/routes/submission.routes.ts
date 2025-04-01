@@ -151,7 +151,10 @@ export default () => {
                .returning();
 
             const { id, owner_id } = result[0];
-            return c.json({ id, owner_id, message: 'Added position successfully' }, 201);
+            return c.json(
+               { id, owner_id, message: 'Added position successfully' },
+               201,
+            );
          } catch (error) {
             //@ts-ignore: I duuno why
             return c.json({ message: error.message }, 409);
@@ -205,51 +208,56 @@ export default () => {
     * GET /submissions/me
     * @summary Retrieve all co-op submissions owned by the authenticated user
     */
-   router.get('/me', validateUser, zValidator('query', SubmissionMeIdsSchema), async (c) => {
-      const { ids } = c.req.valid('query') as SubmissionMeIds;
-      const user_id = c.get('jwtPayload')?.user_id;
+   router.get(
+      '/me',
+      validateUser,
+      zValidator('query', SubmissionMeIdsSchema),
+      async (c) => {
+         const { ids } = c.req.valid('query') as SubmissionMeIds;
+         const user_id = c.get('jwtPayload')?.user_id;
 
-      try {
-         if (ids && ids?.length > 0) {
-            await db
-               .update(submission)
-               .set({ owner_id: user_id })
-               .where(
-                  and(inArray(submission.id, ids!), isNull(submission.owner_id)),
-               );
+         try {
+            if (ids && ids?.length > 0) {
+               await db
+                  .update(submission)
+                  .set({ owner_id: user_id })
+                  .where(
+                     and(inArray(submission.id, ids!), isNull(submission.owner_id)),
+                  );
+            }
+
+            const data = await db
+               .select({
+                  id: submission.id,
+                  owner_id: submission.owner_id,
+                  year: submission.year,
+                  coop_year: submission.coop_year,
+                  coop_cycle: submission.coop_cycle,
+                  program_level: submission.program_level,
+                  work_hours: submission.work_hours,
+                  compensation: submission.compensation,
+                  other_compensation: submission.other_compensation,
+                  details: submission.details,
+                  company: company.name,
+                  position: position.name,
+                  location_city: location.city,
+                  location_state: location.state,
+                  location_state_code: location.state_code,
+                  location: sql`CONCAT(${location.city}, ', ', ${location.state_code})`,
+               })
+               .from(submission)
+               .innerJoin(position, eq(submission.position_id, position.id))
+               .innerJoin(location, eq(submission.location_id, location.id))
+               .innerJoin(company, eq(position.company_id, company.id))
+               .where(eq(submission.owner_id, user_id));
+
+            return c.json({ data }, 200);
+         } catch (error) {
+            //@ts-ignore: I duuno why
+            return c.json({ message: error.message }, 409);
          }
-
-         const data = await db
-            .select({
-               id: submission.id,
-               owner_id: submission.owner_id,
-               year: submission.year,
-               coop_year: submission.coop_year,
-               coop_cycle: submission.coop_cycle,
-               program_level: submission.program_level,
-               work_hours: submission.work_hours,
-               compensation: submission.compensation,
-               other_compensation: submission.other_compensation,
-               details: submission.details,
-               company: company.name,
-               position: position.name,
-               location_city: location.city,
-               location_state: location.state,
-               location_state_code: location.state_code,
-               location: sql`CONCAT(${location.city}, ', ', ${location.state_code})`,
-            })
-            .from(submission)
-            .innerJoin(position, eq(submission.position_id, position.id))
-            .innerJoin(location, eq(submission.location_id, location.id))
-            .innerJoin(company, eq(position.company_id, company.id))
-            .where(eq(submission.owner_id, user_id));
-
-         return c.json({ data }, 200);
-      } catch (error) {
-         //@ts-ignore: I duuno why
-         return c.json({ message: error.message }, 409);
-      }
-   });
+      },
+   );
 
    return router;
 };

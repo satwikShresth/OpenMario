@@ -1,7 +1,7 @@
-import { html } from "html";
+import { html } from 'html';
 
 export default (magic_link: string, project_name: string) =>
-  html`<!doctype html>
+   html`<!doctype html>
     <html
       lang="und"
       dir="auto"

@@ -1,67 +1,106 @@
-import { createFileRoute } from '@tanstack/react-router'
-import React, { useState, useEffect } from 'react'
+import { createFileRoute } from "@tanstack/react-router";
+import React, { useEffect, useState } from "react";
 import {
-  InstantSearch, SearchBox, InfiniteHits, Stats, RefinementList, SortBy,
-  Highlight // Added Highlight component import
-} from 'react-instantsearch'
-import { instantMeiliSearch } from '@meilisearch/instant-meilisearch'
-import 'instantsearch.css/themes/satellite.css'
+  Highlight, // Added Highlight component import
+  InfiniteHits,
+  InstantSearch,
+  RefinementList,
+  SearchBox,
+  SortBy,
+  Stats,
+} from "react-instantsearch";
+import { instantMeiliSearch } from "@meilisearch/instant-meilisearch";
+import "instantsearch.css/themes/satellite.css";
 import {
-  Card, CardContent, Typography, Chip, Box, Grid, Button, Container,
-  CircularProgress, Divider, Avatar, IconButton, Drawer, useMediaQuery,
-  Fab, useTheme, alpha, Stack
-} from '@mui/material'
+  alpha,
+  Avatar,
+  Box,
+  Button,
+  Card,
+  CardContent,
+  Chip,
+  CircularProgress,
+  Container,
+  Divider,
+  Drawer,
+  Fab,
+  Grid,
+  IconButton,
+  Stack,
+  Typography,
+  useMediaQuery,
+  useTheme,
+} from "@mui/material";
 import {
-  Briefcase, MapPin, Clock, Building, GraduationCap, Calendar, Search as SearchIcon,
-  Filter, SortAsc, ArrowUp, Star, ChevronDown, X, BookOpen, Layers, Menu, Award
-} from 'lucide-react'
-import { useAppTheme } from '#/utils'
-import FilterSection from '#/components/search/FitlerSection'
+  ArrowUp,
+  Award,
+  BookOpen,
+  Briefcase,
+  Building,
+  Calendar,
+  ChevronDown,
+  Clock,
+  Filter,
+  GraduationCap,
+  Layers,
+  MapPin,
+  Menu,
+  Search as SearchIcon,
+  SortAsc,
+  Star,
+  X,
+} from "lucide-react";
+import { useAppTheme } from "#/utils";
+import FilterSection from "#/components/search/FitlerSection";
 
 // Initialize the MeiliSearch client correctly
 const { searchClient } = instantMeiliSearch(
   `${window.location.host}/api/search`,
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWFyY2hSdWxlcyI6eyIqIjp7fX0sImFwaUtleVVpZCI6IjQ2ZTEyZjhkLWU1NTItNDY3NC1hMmI1LWMzODU3NjRjNGRkNCIsImV4cCI6MTc0MzU2MjI0NX0.FVTuiMqXqQ5w5HcPtkdorhFCaeAlE8Uoym94KlbBLSk",
   {
-    primaryKey: 'id',
+    primaryKey: "id",
     attributesToHighlight: [
-      'position_name',
-      'company_name',
-      'position_description',
-      'job_type',
-      'coop_cycle',
-      'majors'
+      "position_name",
+      "company_name",
+      "position_description",
+      "job_type",
+      "coop_cycle",
+      "majors",
     ],
-    highlightPreTag: '<mark>',
-    highlightPostTag: '</mark>'
-  }
-)
+    highlightPreTag: "<mark>",
+    highlightPostTag: "</mark>",
+  },
+);
 
 // Route definition remains the same
-export const Route = createFileRoute('/jobposting/')({
+export const Route = createFileRoute("/jobposting/")({
   pendingComponent: () => {
     const theme = useTheme();
 
     return (
       <Container
         sx={{
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          height: '100vh'
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh",
         }}
       >
-        <Box sx={{ textAlign: 'center' }}>
+        <Box sx={{ textAlign: "center" }}>
           <CircularProgress
             size={60}
             thickness={5}
             sx={{
               mb: 3,
-              color: 'primary.main',
+              color: "primary.main",
             }}
           />
-          <Typography variant="h5" fontWeight="bold" sx={{ mb: 1 }}>Loading Job Search</Typography>
-          <Typography variant="body1" color="text.secondary">Finding the perfect opportunities for you...</Typography>
+          <Typography variant="h5" fontWeight="bold" sx={{ mb: 1 }}>
+            Loading Job Search
+          </Typography>
+          <Typography variant="body1" color="text.secondary">
+            Finding the perfect opportunities for you...
+          </Typography>
         </Box>
       </Container>
     );
@@ -72,33 +111,39 @@ export const Route = createFileRoute('/jobposting/')({
     return (
       <Container
         sx={{
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          height: '100vh'
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh",
         }}
       >
-        <Box sx={{ textAlign: 'center', maxWidth: 500 }}>
+        <Box sx={{ textAlign: "center", maxWidth: 500 }}>
           <Box
             sx={{
               width: 120,
               height: 120,
-              borderRadius: '50%',
-              bgcolor: 'error.light',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
+              borderRadius: "50%",
+              bgcolor: "error.light",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
               mb: 3,
-              mx: 'auto'
+              mx: "auto",
             }}
           >
             <X size={60} color="#fff" />
           </Box>
-          <Typography variant="h4" gutterBottom fontWeight="bold" color="error.main">
+          <Typography
+            variant="h4"
+            gutterBottom
+            fontWeight="bold"
+            color="error.main"
+          >
             Oops! Something went wrong
           </Typography>
-          <Typography variant="body1" sx={{ mb: 4, color: 'text.secondary' }}>
-            {error?.message || 'We encountered an error while loading the job search. Please try again.'}
+          <Typography variant="body1" sx={{ mb: 4, color: "text.secondary" }}>
+            {error?.message ||
+              "We encountered an error while loading the job search. Please try again."}
           </Typography>
           <Button
             variant="contained"
@@ -113,12 +158,12 @@ export const Route = createFileRoute('/jobposting/')({
     );
   },
   component: JobSearchComponent,
-})
+});
 
 // JobSearchComponent remains the same
 function JobSearchComponent() {
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [showBackToTop, setShowBackToTop] = useState(false);
   const [activeFilters, setActiveFilters] = useState(0);
@@ -126,7 +171,9 @@ function JobSearchComponent() {
   // Count active filters
   useEffect(() => {
     const checkActiveFilters = () => {
-      const checkedBoxes = document.querySelectorAll('.ais-RefinementList-checkbox:checked');
+      const checkedBoxes = document.querySelectorAll(
+        ".ais-RefinementList-checkbox:checked",
+      );
       setActiveFilters(checkedBoxes.length);
     };
 
@@ -134,8 +181,8 @@ function JobSearchComponent() {
     setTimeout(checkActiveFilters, 1000);
 
     // Check when clicked
-    document.addEventListener('click', checkActiveFilters);
-    return () => document.removeEventListener('click', checkActiveFilters);
+    document.addEventListener("click", checkActiveFilters);
+    return () => document.removeEventListener("click", checkActiveFilters);
   }, []);
 
   // Show back to top button when scrolled down
@@ -148,14 +195,14 @@ function JobSearchComponent() {
       }
     };
 
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   const scrollToTop = () => {
     window.scrollTo({
       top: 0,
-      behavior: 'smooth'
+      behavior: "smooth",
     });
   };
 
@@ -164,37 +211,46 @@ function JobSearchComponent() {
   };
 
   return (
-    <Box sx={{
-      minHeight: '100vh',
-      pt: 2,
-      pb: 8
-    }}>
+    <Box
+      sx={{
+        minHeight: "100vh",
+        pt: 2,
+        pb: 8,
+      }}
+    >
       <Container maxWidth="xl" sx={{ py: 3, px: { xs: 2, md: 4 } }}>
         <InstantSearch
           searchClient={searchClient}
           indexName="job_postings"
         >
-          <Box sx={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            mb: 4,
-          }}>
-            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              mb: 4,
+            }}
+          >
+            <Box sx={{ display: "flex", alignItems: "center" }}>
               <Box
                 sx={{
                   p: 1.5,
                   mr: 2,
-                  bgcolor: 'primary.main',
-                  borderRadius: '12px',
-                  boxShadow: '0 4px 0 rgba(0,0,0,0.5)',
-                  border: '2px solid black',
+                  bgcolor: "primary.main",
+                  borderRadius: "12px",
+                  boxShadow: "0 4px 0 rgba(0,0,0,0.5)",
+                  border: "2px solid black",
                 }}
               >
                 <Briefcase size={28} color="white" />
               </Box>
               <Box>
-                <Typography variant="h4" component="h1" fontWeight="bold" sx={{ mb: 0.5 }}>
+                <Typography
+                  variant="h4"
+                  component="h1"
+                  fontWeight="bold"
+                  sx={{ mb: 0.5 }}
+                >
                   Find Your Dream Job
                 </Typography>
                 <Typography variant="subtitle1" color="text.secondary">
@@ -214,20 +270,20 @@ function JobSearchComponent() {
                 {activeFilters > 0 && (
                   <Box
                     sx={{
-                      position: 'absolute',
+                      position: "absolute",
                       top: -8,
                       right: -8,
-                      bgcolor: 'secondary.main',
-                      color: 'white',
-                      borderRadius: '50%',
+                      bgcolor: "secondary.main",
+                      color: "white",
+                      borderRadius: "50%",
                       width: 24,
                       height: 24,
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      fontWeight: 'bold',
-                      fontSize: '0.75rem',
-                      border: '2px solid black',
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      fontWeight: "bold",
+                      fontSize: "0.75rem",
+                      border: "2px solid black",
                     }}
                   >
                     {activeFilters}
@@ -241,27 +297,28 @@ function JobSearchComponent() {
           <Box
             sx={{
               mb: 4,
-              position: 'relative',
-              mx: 'auto',
-              maxWidth: '900px',
+              position: "relative",
+              mx: "auto",
+              maxWidth: "900px",
             }}
           >
             <Box
               sx={{
-                position: 'relative',
+                position: "relative",
                 borderRadius: 50,
-                overflow: 'hidden',
-                border: '3px solid black',
-                boxShadow: '0 6px 0 rgba(0,0,0,0.5)',
+                overflow: "hidden",
+                border: "3px solid black",
+                boxShadow: "0 6px 0 rgba(0,0,0,0.5)",
               }}
             >
               <SearchBox
                 placeholder="Search job titles, skills, or companies..."
                 classNames={{
-                  form: 'w-full relative',
-                  input: 'w-full p-5 pl-14 rounded-full text-lg focus:outline-none',
-                  submit: 'hidden',
-                  reset: 'hidden',
+                  form: "w-full relative",
+                  input:
+                    "w-full p-5 pl-14 rounded-full text-lg focus:outline-none",
+                  submit: "hidden",
+                  reset: "hidden",
                 }}
                 autoFocus
               />
@@ -284,12 +341,12 @@ function JobSearchComponent() {
               {/* Results count and sort */}
               <Box
                 sx={{
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
                   mb: 3,
-                  flexWrap: 'wrap',
-                  gap: 2
+                  flexWrap: "wrap",
+                  gap: 2,
                 }}
               >
                 <Box
@@ -298,46 +355,73 @@ function JobSearchComponent() {
                     px: 2.5,
                     py: 1,
                     borderRadius: 50,
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    border: '2px solid black',
-                    boxShadow: '0 4px 0 rgba(0,0,0,0.2)',
+                    display: "inline-flex",
+                    alignItems: "center",
+                    border: "2px solid black",
+                    boxShadow: "0 4px 0 rgba(0,0,0,0.2)",
                   }}
                 >
-                  <Award size={18} color={theme.palette.primary.main} style={{ marginRight: 8 }} />
+                  <Award
+                    size={18}
+                    color={theme.palette.primary.main}
+                    style={{ marginRight: 8 }}
+                  />
                   <Stats
                     translations={{
-                      stats: ({ nbHits }) => `${nbHits.toLocaleString()} positions available`,
+                      stats: ({ nbHits }) =>
+                        `${nbHits.toLocaleString()} positions available`,
                     }}
                     classNames={{
-                      root: 'font-bold',
+                      root: "font-bold",
                     }}
                   />
                 </Box>
 
                 <Box
                   sx={{
-                    position: 'relative',
-                    bgcolor: 'background.paper',
+                    position: "relative",
+                    bgcolor: "background.paper",
                     borderRadius: 50,
-                    border: '2px solid black',
-                    boxShadow: '0 4px 0 rgba(0,0,0,0.2)',
-                    overflow: 'hidden',
+                    border: "2px solid black",
+                    boxShadow: "0 4px 0 rgba(0,0,0,0.2)",
+                    overflow: "hidden",
                   }}
                 >
                   <SortBy
                     items={[
-                      { label: 'Most Relevant', value: 'job_postings' },
-                      { label: 'Year (Newest)', value: 'job_postings:year:desc' },
-                      { label: 'Year (Oldest)', value: 'job_postings:year:asc' },
-                      { label: 'Job Length (Longest)', value: 'job_postings:job_length:desc' },
-                      { label: 'Minimum GPA (Highest)', value: 'job_postings:minimum_gpa:desc' },
-                      { label: 'Work Hours (Most)', value: 'job_postings:work_hours:desc' },
-                      { label: 'Recently Added', value: 'job_postings:created_at:desc' },
-                      { label: 'Recently Updated', value: 'job_postings:updated_at:desc' }
+                      { label: "Most Relevant", value: "job_postings" },
+                      {
+                        label: "Year (Newest)",
+                        value: "job_postings:year:desc",
+                      },
+                      {
+                        label: "Year (Oldest)",
+                        value: "job_postings:year:asc",
+                      },
+                      {
+                        label: "Job Length (Longest)",
+                        value: "job_postings:job_length:desc",
+                      },
+                      {
+                        label: "Minimum GPA (Highest)",
+                        value: "job_postings:minimum_gpa:desc",
+                      },
+                      {
+                        label: "Work Hours (Most)",
+                        value: "job_postings:work_hours:desc",
+                      },
+                      {
+                        label: "Recently Added",
+                        value: "job_postings:created_at:desc",
+                      },
+                      {
+                        label: "Recently Updated",
+                        value: "job_postings:updated_at:desc",
+                      },
                     ]}
                     classNames={{
-                      select: 'py-2 px-10 px-4 rounded-full appearance-none cursor-pointer relative z-10 border-0 bg-transparent font-medium',
+                      select:
+                        "py-2 px-10 px-4 rounded-full appearance-none cursor-pointer relative z-10 border-0 bg-transparent font-medium",
                     }}
                   />
                 </Box>
@@ -348,47 +432,56 @@ function JobSearchComponent() {
                 component={InfiniteHits}
                 hitComponent={JobHit}
                 sx={{
-                  '& .ais-InfiniteHits-list': {
-                    display: 'flex',
-                    flexDirection: 'column',
-                    gap: '1.5rem',
-                    backgroundColor: 'transparent'
+                  "& .ais-InfiniteHits-list": {
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: "1.5rem",
+                    backgroundColor: "transparent",
                   },
-                  '& .ais-InfiniteHits-item': {
+                  "& .ais-InfiniteHits-item": {
                     bgcolor: "transparent",
-                    border: 'none',
+                    border: "none",
                     padding: 0,
-                    boxShadow: 'none',
+                    boxShadow: "none",
                   },
-                  '& .ais-InfiniteHits-loadPrevious': {
-                    visibility: "collapse"
+                  "& .ais-InfiniteHits-loadPrevious": {
+                    visibility: "collapse",
                   },
-                  '& .ais-InfiniteHits-disabledLoadPrevious': {
-                    visibility: "collapse"
+                  "& .ais-InfiniteHits-disabledLoadPrevious": {
+                    visibility: "collapse",
                   },
-                  '& .ais-InfiniteHits-loadMore': {
-                    textTransform: 'none',
+                  "& .ais-InfiniteHits-loadMore": {
+                    textTransform: "none",
                     borderRadius: 25,
                     fontWeight: 700,
-                    fontSize: '0.95rem',
-                    padding: '8px 16px',
-                    boxShadow: `0 4px 0 ${useAppTheme().mode === 'light' ? 'rgba(0,0,0,0.5)' : 'rgba(0,0,0,0.7)'}`,
+                    fontSize: "0.95rem",
+                    padding: "8px 16px",
+                    boxShadow: `0 4px 0 ${
+                      useAppTheme().mode === "light"
+                        ? "rgba(0,0,0,0.5)"
+                        : "rgba(0,0,0,0.7)"
+                    }`,
                     border: `2px solid #000000`,
-                    transition: 'all 0.1s ease-in-out',
-                    '&:hover': {
-                      transform: 'translateY(2px)',
-                      boxShadow: `0 2px 0 ${useAppTheme().mode === 'light' ? 'rgba(0,0,0,0.5)' : 'rgba(0,0,0,0.7)'}`,
-                      filter: 'brightness(1.05)',
+                    transition: "all 0.1s ease-in-out",
+                    "&:hover": {
+                      transform: "translateY(2px)",
+                      boxShadow: `0 2px 0 ${
+                        useAppTheme().mode === "light"
+                          ? "rgba(0,0,0,0.5)"
+                          : "rgba(0,0,0,0.7)"
+                      }`,
+                      filter: "brightness(1.05)",
                     },
-                    '&:active': {
-                      transform: 'translateY(4px)',
-                      boxShadow: 'none',
-                      filter: 'brightness(0.95)',
+                    "&:active": {
+                      transform: "translateY(4px)",
+                      boxShadow: "none",
+                      filter: "brightness(0.95)",
                     },
-                    backgroundColor: useAppTheme().mode === 'light' ? '#E60012' : '#009FE3',
-                  }
-                }
-                }
+                    backgroundColor: useAppTheme().mode === "light"
+                      ? "#E60012"
+                      : "#009FE3",
+                  },
+                }}
               />
             </Grid>
           </Grid>
@@ -401,32 +494,45 @@ function JobSearchComponent() {
           onClose={toggleDrawer}
           PaperProps={{
             sx: {
-              width: '85%',
+              width: "85%",
               maxWidth: 350,
               p: 3,
-            }
+            },
           }}
         >
-          <Box sx={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            mb: 3
-          }}>
-            <Typography variant="h6" fontWeight="bold" sx={{ display: 'flex', alignItems: 'center' }}>
-              <Filter size={18} style={{ marginRight: 10 }} color={theme.palette.primary.main} />
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              mb: 3,
+            }}
+          >
+            <Typography
+              variant="h6"
+              fontWeight="bold"
+              sx={{ display: "flex", alignItems: "center" }}
+            >
+              <Filter
+                size={18}
+                style={{ marginRight: 10 }}
+                color={theme.palette.primary.main}
+              />
               Filters
               {activeFilters > 0 && (
-                <Box component="span" sx={{
-                  ml: 1,
-                  px: 1.5,
-                  py: 0.5,
-                  borderRadius: 50,
-                  bgcolor: 'primary.main',
-                  color: 'white',
-                  fontSize: '0.75rem',
-                  border: '2px solid black',
-                }}>
+                <Box
+                  component="span"
+                  sx={{
+                    ml: 1,
+                    px: 1.5,
+                    py: 0.5,
+                    borderRadius: 50,
+                    bgcolor: "primary.main",
+                    color: "white",
+                    fontSize: "0.75rem",
+                    border: "2px solid black",
+                  }}
+                >
                   {activeFilters}
                 </Box>
               )}
@@ -438,7 +544,14 @@ function JobSearchComponent() {
             </IconButton>
           </Box>
           <Divider />
-          <Box sx={{ mt: 2, pb: 2, maxHeight: 'calc(100vh - 180px)', overflow: 'auto' }}>
+          <Box
+            sx={{
+              mt: 2,
+              pb: 2,
+              maxHeight: "calc(100vh - 180px)",
+              overflow: "auto",
+            }}
+          >
             <FiltersPanel
               activeFilters={activeFilters}
               setActiveFilters={setActiveFilters}
@@ -454,28 +567,28 @@ function JobSearchComponent() {
           aria-label="back to top"
           onClick={scrollToTop}
           sx={{
-            position: 'fixed',
+            position: "fixed",
             bottom: 24,
             right: 24,
             zIndex: 1000,
-            border: '2px solid black',
-            boxShadow: '0 4px 0 rgba(0,0,0,0.5)',
-            transition: 'all 0.1s ease-in-out',
-            '&:hover': {
-              transform: 'translateY(2px)',
-              boxShadow: '0 2px 0 rgba(0,0,0,0.5)',
+            border: "2px solid black",
+            boxShadow: "0 4px 0 rgba(0,0,0,0.5)",
+            transition: "all 0.1s ease-in-out",
+            "&:hover": {
+              transform: "translateY(2px)",
+              boxShadow: "0 2px 0 rgba(0,0,0,0.5)",
             },
-            '&:active': {
-              transform: 'translateY(4px)',
-              boxShadow: 'none',
-            }
+            "&:active": {
+              transform: "translateY(4px)",
+              boxShadow: "none",
+            },
           }}
         >
           <ArrowUp size={24} />
         </Fab>
       )}
     </Box>
-  )
+  );
 }
 
 // FiltersPanel component remains the same
@@ -483,49 +596,60 @@ function FiltersPanel({ activeFilters, setActiveFilters }) {
   const theme = useTheme();
 
   const clearAllFilters = () => {
-    document.querySelectorAll('.ais-RefinementList-checkbox:checked').forEach(checkbox => {
-      checkbox.click();
-    });
+    document.querySelectorAll(".ais-RefinementList-checkbox:checked").forEach(
+      (checkbox) => {
+        checkbox.click();
+      },
+    );
   };
 
   return (
     <Box
       sx={{
-        bgcolor: 'background.paper',
+        bgcolor: "background.paper",
         borderRadius: 3,
         p: 3,
-        height: 'relative',
-        border: '3px solid black',
-        boxShadow: '0 6px 0 rgba(0,0,0,0.5)',
+        height: "relative",
+        border: "3px solid black",
+        boxShadow: "0 6px 0 rgba(0,0,0,0.5)",
       }}
     >
-      <Box sx={{
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        mb: 2,
-      }}>
+      <Box
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          mb: 2,
+        }}
+      >
         <Typography
           variant="h6"
           fontWeight="bold"
           sx={{
-            display: 'flex',
-            alignItems: 'center'
+            display: "flex",
+            alignItems: "center",
           }}
         >
-          <Filter size={20} style={{ marginRight: 10 }} color={theme.palette.primary.main} />
+          <Filter
+            size={20}
+            style={{ marginRight: 10 }}
+            color={theme.palette.primary.main}
+          />
           Filters
           {activeFilters > 0 && (
-            <Box component="span" sx={{
-              ml: 1,
-              px: 1.5,
-              py: 0.5,
-              borderRadius: 50,
-              bgcolor: 'primary.main',
-              color: 'white',
-              fontSize: '0.75rem',
-              border: '2px solid black',
-            }}>
+            <Box
+              component="span"
+              sx={{
+                ml: 1,
+                px: 1.5,
+                py: 0.5,
+                borderRadius: 50,
+                bgcolor: "primary.main",
+                color: "white",
+                fontSize: "0.75rem",
+                border: "2px solid black",
+              }}
+            >
               {activeFilters}
             </Box>
           )}
@@ -534,17 +658,64 @@ function FiltersPanel({ activeFilters, setActiveFilters }) {
 
       <Divider sx={{ mb: 3 }} />
 
-      <FilterSection title="Job Type" attribute="job_type" icon={<Briefcase />} />
-      <FilterSection title="Co-op Cycle" attribute="coop_cycle" icon={<BookOpen />} />
-      <FilterSection title="Job Length" attribute="job_length" icon={<Layers />} />
-      <FilterSection title="Job Status" attribute="job_status" icon={<Award />} />
-      <FilterSection title="Work Hours" attribute="work_hours" icon={<Clock />} />
-      <FilterSection title="Year" attribute="year" isSlider icon={<Calendar />} />
-      <FilterSection title="Type of Organization" attribute="is_nonprofit" icon={<Building />} />
-      <FilterSection title="Research Position" attribute="is_research_position" icon={<MapPin />} />
-      <FilterSection title="Minimum GPA" attribute="minimum_gpa" step={0.25} isSlider icon={<GraduationCap />} />
-      <FilterSection title="Experience Level" attribute="experience_levels" icon={<Award />} />
-      <FilterSection title="Compensation" attribute="compensation_status" icon={<Briefcase />} />
+      <FilterSection
+        title="Job Type"
+        attribute="job_type"
+        icon={<Briefcase />}
+      />
+      <FilterSection
+        title="Co-op Cycle"
+        attribute="coop_cycle"
+        icon={<BookOpen />}
+      />
+      <FilterSection
+        title="Job Length"
+        attribute="job_length"
+        icon={<Layers />}
+      />
+      <FilterSection
+        title="Job Status"
+        attribute="job_status"
+        icon={<Award />}
+      />
+      <FilterSection
+        title="Work Hours"
+        attribute="work_hours"
+        icon={<Clock />}
+      />
+      <FilterSection
+        title="Year"
+        attribute="year"
+        isSlider
+        icon={<Calendar />}
+      />
+      <FilterSection
+        title="Type of Organization"
+        attribute="is_nonprofit"
+        icon={<Building />}
+      />
+      <FilterSection
+        title="Research Position"
+        attribute="is_research_position"
+        icon={<MapPin />}
+      />
+      <FilterSection
+        title="Minimum GPA"
+        attribute="minimum_gpa"
+        step={0.25}
+        isSlider
+        icon={<GraduationCap />}
+      />
+      <FilterSection
+        title="Experience Level"
+        attribute="experience_levels"
+        icon={<Award />}
+      />
+      <FilterSection
+        title="Compensation"
+        attribute="compensation_status"
+        icon={<Briefcase />}
+      />
 
       <Box sx={{ mt: 4 }}>
         <Button
@@ -571,20 +742,20 @@ function JobHit({ hit }) {
   // Define highlight styles
   const highlightStyle = {
     backgroundColor: theme.palette.warning.light,
-    padding: '0 4px',
-    borderRadius: '4px',
-    fontWeight: 'bold'
+    padding: "0 4px",
+    borderRadius: "4px",
+    fontWeight: "bold",
   };
 
   // Determine first letter color
   const getAvatarColor = () => {
     const colors = [
-      'primary.main',
-      'secondary.main',
-      'error.main',
-      'warning.main',
-      'info.main',
-      'success.main',
+      "primary.main",
+      "secondary.main",
+      "error.main",
+      "warning.main",
+      "info.main",
+      "success.main",
     ];
 
     // Generate a consistent color based on company name
@@ -598,100 +769,110 @@ function JobHit({ hit }) {
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       sx={{
-        position: 'relative',
+        position: "relative",
         mb: 1,
-        transition: 'all 0.2s ease-in-out',
-        transform: hovered ? 'translateY(-4px)' : 'translateY(0)',
+        transition: "all 0.2s ease-in-out",
+        transform: hovered ? "translateY(-4px)" : "translateY(0)",
       }}
     >
       <Card
         elevation={0}
         sx={{
           borderRadius: 3,
-          transition: 'all 0.2s ease-in-out',
-          bgcolor: 'background.paper',
-          border: '2px solid black',
-          boxShadow: '0 6px 0 rgba(0,0,0,0.2)',
+          transition: "all 0.2s ease-in-out",
+          bgcolor: "background.paper",
+          border: "2px solid black",
+          boxShadow: "0 6px 0 rgba(0,0,0,0.2)",
         }}
       >
         <CardContent sx={{ p: 3 }}>
           <Grid container spacing={2}>
             <Grid item xs={12} sm={7} md={8}>
-              <Box sx={{ display: 'flex', alignItems: 'flex-start' }}>
+              <Box sx={{ display: "flex", alignItems: "flex-start" }}>
                 <Avatar
                   sx={{
                     width: 56,
                     height: 56,
                     mr: 2,
                     bgcolor: getAvatarColor(),
-                    fontSize: '1.5rem',
-                    fontWeight: 'bold',
-                    border: '2px solid black',
+                    fontSize: "1.5rem",
+                    fontWeight: "bold",
+                    border: "2px solid black",
                   }}
                 >
-                  {hit.company_name?.charAt(0) || 'J'}
+                  {hit.company_name?.charAt(0) || "J"}
                 </Avatar>
                 <Box>
-                  <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 0.5 }}>
-                    {hit.position_name ? (
-                      <Highlight
-                        attribute="position_name"
-                        hit={hit}
-                        classNames={{
-                          highlighted: 'bg-yellow-200 px-1 rounded font-bold'
-                        }}
-                      />
-                    ) : (
-                      'Untitled Position'
-                    )}
+                  <Typography variant="h6" sx={{ fontWeight: "bold", mb: 0.5 }}>
+                    {hit.position_name
+                      ? (
+                        <Highlight
+                          attribute="position_name"
+                          hit={hit}
+                          classNames={{
+                            highlighted: "bg-yellow-200 px-1 rounded font-bold",
+                          }}
+                        />
+                      )
+                      : (
+                        "Untitled Position"
+                      )}
                   </Typography>
                   <Typography
                     variant="subtitle1"
                     sx={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      color: 'text.secondary',
+                      display: "flex",
+                      alignItems: "center",
+                      color: "text.secondary",
                       mb: 1,
                     }}
                   >
                     <Building size={16} style={{ marginRight: 6 }} />
-                    {hit.company_name ? (
-                      <Highlight
-                        attribute="company_name"
-                        hit={hit}
-                        classNames={{
-                          highlighted: 'bg-yellow-200 px-1 rounded font-bold'
-                        }}
-                      />
-                    ) : (
-                      'Unknown Company'
-                    )}
+                    {hit.company_name
+                      ? (
+                        <Highlight
+                          attribute="company_name"
+                          hit={hit}
+                          classNames={{
+                            highlighted: "bg-yellow-200 px-1 rounded font-bold",
+                          }}
+                        />
+                      )
+                      : (
+                        "Unknown Company"
+                      )}
                   </Typography>
                 </Box>
               </Box>
             </Grid>
 
-            <Grid item xs={12} sm={5} md={4} sx={{
-              display: 'flex',
-              justifyContent: { xs: 'flex-start', sm: 'flex-end' },
-              alignItems: 'flex-start'
-            }}>
+            <Grid
+              item
+              xs={12}
+              sm={5}
+              md={4}
+              sx={{
+                display: "flex",
+                justifyContent: { xs: "flex-start", sm: "flex-end" },
+                alignItems: "flex-start",
+              }}
+            >
               <IconButton
                 onClick={() => setFavorited(!favorited)}
                 sx={{
-                  color: favorited ? 'warning.main' : 'action.disabled',
+                  color: favorited ? "warning.main" : "action.disabled",
                   p: 1,
                   mr: 1.5,
-                  border: '2px solid black',
+                  border: "2px solid black",
                   borderRadius: 2,
-                  boxShadow: '0 3px 0 rgba(0,0,0,0.3)',
-                  '&:hover': {
-                    transform: 'translateY(2px)',
-                    boxShadow: '0 1px 0 rgba(0,0,0,0.3)',
-                  }
+                  boxShadow: "0 3px 0 rgba(0,0,0,0.3)",
+                  "&:hover": {
+                    transform: "translateY(2px)",
+                    boxShadow: "0 1px 0 rgba(0,0,0,0.3)",
+                  },
                 }}
               >
-                <Star size={20} fill={favorited ? 'currentColor' : 'none'} />
+                <Star size={20} fill={favorited ? "currentColor" : "none"} />
               </IconButton>
 
               <Button
@@ -705,7 +886,11 @@ function JobHit({ hit }) {
 
           {/* Tags */}
           <Box sx={{ my: 2 }}>
-            <Stack direction="row" spacing={1} sx={{ flexWrap: 'wrap', gap: 1 }}>
+            <Stack
+              direction="row"
+              spacing={1}
+              sx={{ flexWrap: "wrap", gap: 1 }}
+            >
               {hit.job_type && (
                 <Chip
                   icon={<Briefcase size={14} />}
@@ -714,7 +899,7 @@ function JobHit({ hit }) {
                       attribute="job_type"
                       hit={hit}
                       classNames={{
-                        highlighted: 'bg-yellow-200 px-1 rounded font-bold'
+                        highlighted: "bg-yellow-200 px-1 rounded font-bold",
                       }}
                     />
                   }
@@ -738,7 +923,7 @@ function JobHit({ hit }) {
                       attribute="coop_cycle"
                       hit={hit}
                       classNames={{
-                        highlighted: 'bg-yellow-200 px-1 rounded font-bold'
+                        highlighted: "bg-yellow-200 px-1 rounded font-bold",
                       }}
                     />
                   }
@@ -749,7 +934,9 @@ function JobHit({ hit }) {
               {hit.job_length && (
                 <Chip
                   icon={<Layers size={14} />}
-                  label={`${hit.job_length} Month${hit.job_length > 1 ? 's' : ''}`}
+                  label={`${hit.job_length} Month${
+                    hit.job_length > 1 ? "s" : ""
+                  }`}
                   color="info"
                   size="medium"
                 />
@@ -779,7 +966,7 @@ function JobHit({ hit }) {
                 attribute="position_description"
                 hit={hit}
                 classNames={{
-                  highlighted: 'bg-yellow-200 px-1 rounded font-bold'
+                  highlighted: "bg-yellow-200 px-1 rounded font-bold",
                 }}
               />
             </Typography>
@@ -791,23 +978,27 @@ function JobHit({ hit }) {
               sx={{
                 mt: 2.5,
                 pt: 2,
-                borderTop: '1px solid',
-                borderColor: 'divider',
+                borderTop: "1px solid",
+                borderColor: "divider",
               }}
             >
               <Typography
                 variant="body2"
                 sx={{
-                  fontWeight: 'bold',
+                  fontWeight: "bold",
                   mb: 1.5,
-                  display: 'flex',
-                  alignItems: 'center',
+                  display: "flex",
+                  alignItems: "center",
                 }}
               >
-                <GraduationCap size={16} style={{ marginRight: 8 }} color={theme.palette.primary.main} />
+                <GraduationCap
+                  size={16}
+                  style={{ marginRight: 8 }}
+                  color={theme.palette.primary.main}
+                />
                 Majors Sought:
               </Typography>
-              <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
+              <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}>
                 {hit.majors.map((major, index) => (
                   <Chip
                     key={index}
@@ -816,7 +1007,7 @@ function JobHit({ hit }) {
                         attribute={`majors.${index}`}
                         hit={hit}
                         classNames={{
-                          highlighted: 'bg-yellow-200 px-1 rounded font-bold'
+                          highlighted: "bg-yellow-200 px-1 rounded font-bold",
                         }}
                       />
                     }

@@ -21,8 +21,8 @@ const HeaderCell = ({ header }) => {
     transition,
     zIndex: isDragging ? 1 : 0,
     opacity: isDragging ? 0.8 : 1,
-    position: 'relative' as const,
-    userSelect: 'none' as const,
+    position: "relative" as const,
+    userSelect: "none" as const,
   };
 
   return (
@@ -30,42 +30,42 @@ const HeaderCell = ({ header }) => {
       ref={setNodeRef}
       style={style}
       sx={{
-        fontWeight: 'bold',
-        width: header.getSize() !== 150 ? header.getSize() : undefined
+        fontWeight: "bold",
+        width: header.getSize() !== 150 ? header.getSize() : undefined,
       }}
     >
-      <Box sx={{ display: 'flex', alignItems: 'center' }}>
+      <Box sx={{ display: "flex", alignItems: "center" }}>
         <Box
           {...attributes}
           {...listeners}
           sx={{
-            cursor: 'grab',
+            cursor: "grab",
             marginRight: 1,
-            display: 'flex',
-            alignItems: 'center',
-            ':hover': { opacity: 0.2 },
+            display: "flex",
+            alignItems: "center",
+            ":hover": { opacity: 0.2 },
           }}
         >
           <GripVertical size={14} />
         </Box>
         <Box
           sx={{
-            display: 'flex',
-            alignItems: 'center',
-            cursor: 'pointer',
-            width: '90%',
+            display: "flex",
+            alignItems: "center",
+            cursor: "pointer",
+            width: "90%",
           }}
           onClick={header.column.getToggleSortingHandler()}
         >
           {flexRender(header.column.columnDef.header, header.getContext())}
-          {header.column.getIsSorted() === false ? null :
-            header.column.getIsSorted() === 'desc' ?
-              <ChevronDown size={12} style={{ marginLeft: 4 }} /> :
-              <ChevronUp size={12} style={{ marginLeft: 4 }} />
-          }
+          {header.column.getIsSorted() === false
+            ? null
+            : header.column.getIsSorted() === "desc"
+            ? <ChevronDown size={12} style={{ marginLeft: 4 }} />
+            : <ChevronUp size={12} style={{ marginLeft: 4 }} />}
         </Box>
       </Box>
     </TableCell>
   );
-}
+};
 export default HeaderCell;

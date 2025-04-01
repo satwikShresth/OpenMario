@@ -6,7 +6,10 @@ import { z } from 'zod';
 
 // Custom middleware for Zod validation
 // Note: This is a fallback in case you don't want to use @hono/zod-validator
-export const zodValidator = (method: 'query' | 'json' | 'param', schema: z.ZodSchema) => {
+export const zodValidator = (
+   method: 'query' | 'json' | 'param',
+   schema: z.ZodSchema,
+) => {
    return async (c: Context, next: Next) => {
       let data;
 
@@ -62,7 +65,10 @@ export const validateOwner = (table: any) => {
             .where(eq(table.id, item_id));
 
          if (result.length === 0) {
-            return c.json({ message: 'Item not found', detail: 'Item not found' }, 404);
+            return c.json(
+               { message: 'Item not found', detail: 'Item not found' },
+               404,
+            );
          }
 
          if (result[0].user_id !== current_user_id) {
@@ -89,4 +95,3 @@ export const validateUser = async (c: Context, next: Next) => {
 
    return c.json({ message: 'Unauthorized Access' }, 401);
 };
-

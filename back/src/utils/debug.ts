@@ -57,7 +57,11 @@ export const debugMiddlewares = async (app: Hono<any>) => {
             ...openApiSpec,
             ...result.swaggerObject,
          };
-         openApiSpec = merge.recursive(true, openApiSpec, generateOpenAPIComponents(options));
+         openApiSpec = merge.recursive(
+            true,
+            openApiSpec,
+            generateOpenAPIComponents(options),
+         );
          events.finish(openApiSpec, {
             jsdocInfo: result.jsdocInfo,
             getPaths: result.getPaths,

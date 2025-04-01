@@ -3,33 +3,33 @@
 import type { Options } from "@hey-api/client-axios";
 import { queryOptions, type UseMutationOptions } from "@tanstack/react-query";
 import type {
-  PostAuthLoginData,
-  PostAuthLoginError,
-  PostAuthLoginResponse,
   GetAuthLoginByTokenData,
   GetAutocompleteCompanyData,
-  GetAutocompletePositionData,
   GetAutocompleteLocationData,
+  GetAutocompletePositionData,
   GetCompanyPositionData,
-  PostCompanyPositionData,
-  PostCompanyPositionError,
-  PostCompanyPositionResponse,
   GetSubmissionsData,
+  GetSubmissionsMeData,
   PatchSubmissionsData,
   PatchSubmissionsError,
   PatchSubmissionsResponse,
+  PostAuthLoginData,
+  PostAuthLoginError,
+  PostAuthLoginResponse,
+  PostCompanyPositionData,
+  PostCompanyPositionError,
+  PostCompanyPositionResponse,
   PostSubmissionsData,
   PostSubmissionsError,
   PostSubmissionsResponse,
-  GetSubmissionsMeData,
 } from "./types.gen";
 import type { AxiosError } from "axios";
 import {
   AuthService,
-  SearchService,
-  CompaniesAndPositionsService,
-  SubmissionsService,
   client,
+  CompaniesAndPositionsService,
+  SearchService,
+  SubmissionsService,
 } from "./sdk.gen";
 
 type QueryKey<TOptions extends Options> = [

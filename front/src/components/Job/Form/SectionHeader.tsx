@@ -1,5 +1,5 @@
-import React from 'react';
-import { Typography, Divider } from '@mui/material';
+import React from "react";
+import { Divider, Typography } from "@mui/material";
 
 type SectionHeaderProps = {
   title: string;

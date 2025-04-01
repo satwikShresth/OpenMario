@@ -39,7 +39,9 @@ class MeilisearchService {
       console.log('Read-only API key UID:', this.apiKey.uid);
    }
 
-   public async getTenantToken(tenantId: string = 'default'): Promise<string | null> {
+   public async getTenantToken(
+      tenantId: string = 'default',
+   ): Promise<string | null> {
       if (!this.apiKey) {
          await this.initialize();
          if (!this.apiKey) {
@@ -57,7 +59,10 @@ class MeilisearchService {
          searchRules: { '*': {} },
       }).catch(
          (error) => {
-            console.error(`Failed to generate tenant token for ${tenantId}:`, error);
+            console.error(
+               `Failed to generate tenant token for ${tenantId}:`,
+               error,
+            );
             return null;
          },
       );

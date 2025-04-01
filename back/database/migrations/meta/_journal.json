@@ -99,6 +99,13 @@
       "when": 1743455695160,
       "tag": "0013_making_dec_varchar_a_invariant",
       "breakpoints": true
+    },
+    {
+      "idx": 14,
+      "version": "7",
+      "when": 1743523103972,
+      "tag": "0014_making_null_not_distinct",
+      "breakpoints": true
     }
   ]
 }

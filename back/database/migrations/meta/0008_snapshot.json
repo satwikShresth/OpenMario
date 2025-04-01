@@ -1,1558 +1,1558 @@
 {
-  "id": "ad5c694d-3c97-4e91-990f-4cfa06aed018",
-  "prevId": "1653547a-f928-494b-9694-061078263fbd",
-  "version": "7",
-  "dialect": "postgresql",
-  "tables": {
-    "scheduler.colleges": {
-      "name": "colleges",
-      "schema": "scheduler",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "text",
-          "primaryKey": true,
-          "notNull": true
-        },
-        "name": {
-          "name": "name",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        }
+   "id": "ad5c694d-3c97-4e91-990f-4cfa06aed018",
+   "prevId": "1653547a-f928-494b-9694-061078263fbd",
+   "version": "7",
+   "dialect": "postgresql",
+   "tables": {
+      "scheduler.colleges": {
+         "name": "colleges",
+         "schema": "scheduler",
+         "columns": {
+            "id": {
+               "name": "id",
+               "type": "text",
+               "primaryKey": true,
+               "notNull": true
+            },
+            "name": {
+               "name": "name",
+               "type": "text",
+               "primaryKey": false,
+               "notNull": true
+            }
+         },
+         "indexes": {},
+         "foreignKeys": {},
+         "compositePrimaryKeys": {},
+         "uniqueConstraints": {
+            "colleges_name_unique": {
+               "name": "colleges_name_unique",
+               "nullsNotDistinct": false,
+               "columns": [
+                  "name"
+               ]
+            }
+         },
+         "policies": {},
+         "checkConstraints": {},
+         "isRLSEnabled": false
       },
-      "indexes": {},
-      "foreignKeys": {},
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {
-        "colleges_name_unique": {
-          "name": "colleges_name_unique",
-          "nullsNotDistinct": false,
-          "columns": [
-            "name"
-          ]
-        }
+      "scheduler.courses": {
+         "name": "courses",
+         "schema": "scheduler",
+         "columns": {
+            "id": {
+               "name": "id",
+               "type": "uuid",
+               "primaryKey": true,
+               "notNull": true,
+               "default": "gen_random_uuid()"
+            },
+            "subject_id": {
+               "name": "subject_id",
+               "type": "text",
+               "primaryKey": false,
+               "notNull": true
+            },
+            "course_number": {
+               "name": "course_number",
+               "type": "text",
+               "primaryKey": false,
+               "notNull": true
+            },
+            "title": {
+               "name": "title",
+               "type": "text",
+               "primaryKey": false,
+               "notNull": true
+            },
+            "description": {
+               "name": "description",
+               "type": "text",
+               "primaryKey": false,
+               "notNull": false
+            },
+            "credits": {
+               "name": "credits",
+               "type": "double precision",
+               "primaryKey": false,
+               "notNull": false,
+               "default": 0
+            },
+            "credit_range": {
+               "name": "credit_range",
+               "type": "text",
+               "primaryKey": false,
+               "notNull": false
+            },
+            "repeat_status": {
+               "name": "repeat_status",
+               "type": "text",
+               "primaryKey": false,
+               "notNull": false
+            },
+            "prerequisites": {
+               "name": "prerequisites",
+               "type": "text",
+               "primaryKey": false,
+               "notNull": false
+            },
+            "corequisites": {
+               "name": "corequisites",
+               "type": "text",
+               "primaryKey": false,
+               "notNull": false
+            },
+            "restrictions": {
+               "name": "restrictions",
+               "type": "text",
+               "primaryKey": false,
+               "notNull": false
+            },
+            "writing_intensive": {
+               "name": "writing_intensive",
+               "type": "boolean",
+               "primaryKey": false,
+               "notNull": false,
+               "default": false
+            }
+         },
+         "indexes": {},
+         "foreignKeys": {
+            "courses_subject_id_subjects_id_fk": {
+               "name": "courses_subject_id_subjects_id_fk",
+               "tableFrom": "courses",
+               "tableTo": "subjects",
+               "schemaTo": "scheduler",
+               "columnsFrom": [
+                  "subject_id"
+               ],
+               "columnsTo": [
+                  "id"
+               ],
+               "onDelete": "restrict",
+               "onUpdate": "no action"
+            }
+         },
+         "compositePrimaryKeys": {},
+         "uniqueConstraints": {
+            "courses_subject_id_course_number_unique": {
+               "name": "courses_subject_id_course_number_unique",
+               "nullsNotDistinct": false,
+               "columns": [
+                  "subject_id",
+                  "course_number"
+               ]
+            }
+         },
+         "policies": {},
+         "checkConstraints": {},
+         "isRLSEnabled": false
       },
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
-    },
-    "scheduler.courses": {
-      "name": "courses",
-      "schema": "scheduler",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "uuid",
-          "primaryKey": true,
-          "notNull": true,
-          "default": "gen_random_uuid()"
-        },
-        "subject_id": {
-          "name": "subject_id",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "course_number": {
-          "name": "course_number",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "title": {
-          "name": "title",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "description": {
-          "name": "description",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "credits": {
-          "name": "credits",
-          "type": "double precision",
-          "primaryKey": false,
-          "notNull": false,
-          "default": 0
-        },
-        "credit_range": {
-          "name": "credit_range",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "repeat_status": {
-          "name": "repeat_status",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "prerequisites": {
-          "name": "prerequisites",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "corequisites": {
-          "name": "corequisites",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "restrictions": {
-          "name": "restrictions",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "writing_intensive": {
-          "name": "writing_intensive",
-          "type": "boolean",
-          "primaryKey": false,
-          "notNull": false,
-          "default": false
-        }
+      "scheduler.instructors": {
+         "name": "instructors",
+         "schema": "scheduler",
+         "columns": {
+            "id": {
+               "name": "id",
+               "type": "serial",
+               "primaryKey": true,
+               "notNull": true
+            },
+            "name": {
+               "name": "name",
+               "type": "text",
+               "primaryKey": false,
+               "notNull": true
+            },
+            "avg_difficulty": {
+               "name": "avg_difficulty",
+               "type": "double precision",
+               "primaryKey": false,
+               "notNull": false
+            },
+            "avg_rating": {
+               "name": "avg_rating",
+               "type": "double precision",
+               "primaryKey": false,
+               "notNull": false
+            },
+            "num_ratings": {
+               "name": "num_ratings",
+               "type": "integer",
+               "primaryKey": false,
+               "notNull": false
+            },
+            "rmp_legacy_id": {
+               "name": "rmp_legacy_id",
+               "type": "integer",
+               "primaryKey": false,
+               "notNull": false
+            },
+            "rmp_id": {
+               "name": "rmp_id",
+               "type": "text",
+               "primaryKey": false,
+               "notNull": false
+            },
+            "department": {
+               "name": "department",
+               "type": "department",
+               "typeSchema": "scheduler",
+               "primaryKey": false,
+               "notNull": false
+            }
+         },
+         "indexes": {},
+         "foreignKeys": {},
+         "compositePrimaryKeys": {},
+         "uniqueConstraints": {
+            "instructors_rmp_legacy_id_unique": {
+               "name": "instructors_rmp_legacy_id_unique",
+               "nullsNotDistinct": false,
+               "columns": [
+                  "rmp_legacy_id"
+               ]
+            },
+            "instructors_rmp_id_unique": {
+               "name": "instructors_rmp_id_unique",
+               "nullsNotDistinct": false,
+               "columns": [
+                  "rmp_id"
+               ]
+            }
+         },
+         "policies": {},
+         "checkConstraints": {},
+         "isRLSEnabled": false
       },
-      "indexes": {},
-      "foreignKeys": {
-        "courses_subject_id_subjects_id_fk": {
-          "name": "courses_subject_id_subjects_id_fk",
-          "tableFrom": "courses",
-          "tableTo": "subjects",
-          "schemaTo": "scheduler",
-          "columnsFrom": [
-            "subject_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "restrict",
-          "onUpdate": "no action"
-        }
+      "scheduler.section_instructor": {
+         "name": "section_instructor",
+         "schema": "scheduler",
+         "columns": {
+            "section_id": {
+               "name": "section_id",
+               "type": "integer",
+               "primaryKey": false,
+               "notNull": true
+            },
+            "instructor_id": {
+               "name": "instructor_id",
+               "type": "integer",
+               "primaryKey": false,
+               "notNull": true
+            }
+         },
+         "indexes": {},
+         "foreignKeys": {
+            "section_instructor_section_id_sections_crn_fk": {
+               "name": "section_instructor_section_id_sections_crn_fk",
+               "tableFrom": "section_instructor",
+               "tableTo": "sections",
+               "schemaTo": "scheduler",
+               "columnsFrom": [
+                  "section_id"
+               ],
+               "columnsTo": [
+                  "crn"
+               ],
+               "onDelete": "no action",
+               "onUpdate": "no action"
+            },
+            "section_instructor_instructor_id_instructors_id_fk": {
+               "name": "section_instructor_instructor_id_instructors_id_fk",
+               "tableFrom": "section_instructor",
+               "tableTo": "instructors",
+               "schemaTo": "scheduler",
+               "columnsFrom": [
+                  "instructor_id"
+               ],
+               "columnsTo": [
+                  "id"
+               ],
+               "onDelete": "no action",
+               "onUpdate": "no action"
+            }
+         },
+         "compositePrimaryKeys": {
+            "section_instructor_section_id_instructor_id_pk": {
+               "name": "section_instructor_section_id_instructor_id_pk",
+               "columns": [
+                  "section_id",
+                  "instructor_id"
+               ]
+            }
+         },
+         "uniqueConstraints": {},
+         "policies": {},
+         "checkConstraints": {},
+         "isRLSEnabled": false
       },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {
-        "courses_subject_id_course_number_unique": {
-          "name": "courses_subject_id_course_number_unique",
-          "nullsNotDistinct": false,
-          "columns": [
-            "subject_id",
-            "course_number"
-          ]
-        }
+      "scheduler.sections": {
+         "name": "sections",
+         "schema": "scheduler",
+         "columns": {
+            "crn": {
+               "name": "crn",
+               "type": "integer",
+               "primaryKey": true,
+               "notNull": true
+            },
+            "course_id": {
+               "name": "course_id",
+               "type": "uuid",
+               "primaryKey": false,
+               "notNull": true
+            },
+            "section": {
+               "name": "section",
+               "type": "text",
+               "primaryKey": false,
+               "notNull": true
+            },
+            "instruction_type": {
+               "name": "instruction_type",
+               "type": "instruction_type",
+               "typeSchema": "scheduler",
+               "primaryKey": false,
+               "notNull": true
+            },
+            "instruction_method": {
+               "name": "instruction_method",
+               "type": "instruction_method",
+               "typeSchema": "scheduler",
+               "primaryKey": false,
+               "notNull": true
+            },
+            "credits": {
+               "name": "credits",
+               "type": "double precision",
+               "primaryKey": false,
+               "notNull": false
+            },
+            "start_time": {
+               "name": "start_time",
+               "type": "time",
+               "primaryKey": false,
+               "notNull": false
+            },
+            "end_time": {
+               "name": "end_time",
+               "type": "time",
+               "primaryKey": false,
+               "notNull": false
+            },
+            "days": {
+               "name": "days",
+               "type": "integer[]",
+               "primaryKey": false,
+               "notNull": false
+            },
+            "term": {
+               "name": "term",
+               "type": "integer",
+               "primaryKey": false,
+               "notNull": false
+            }
+         },
+         "indexes": {},
+         "foreignKeys": {
+            "sections_course_id_courses_id_fk": {
+               "name": "sections_course_id_courses_id_fk",
+               "tableFrom": "sections",
+               "tableTo": "courses",
+               "schemaTo": "scheduler",
+               "columnsFrom": [
+                  "course_id"
+               ],
+               "columnsTo": [
+                  "id"
+               ],
+               "onDelete": "restrict",
+               "onUpdate": "no action"
+            }
+         },
+         "compositePrimaryKeys": {},
+         "uniqueConstraints": {
+            "sections_section_course_id_term_instruction_type_unique": {
+               "name": "sections_section_course_id_term_instruction_type_unique",
+               "nullsNotDistinct": false,
+               "columns": [
+                  "section",
+                  "course_id",
+                  "term",
+                  "instruction_type"
+               ]
+            }
+         },
+         "policies": {},
+         "checkConstraints": {},
+         "isRLSEnabled": false
       },
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
-    },
-    "scheduler.instructors": {
-      "name": "instructors",
-      "schema": "scheduler",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "serial",
-          "primaryKey": true,
-          "notNull": true
-        },
-        "name": {
-          "name": "name",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "avg_difficulty": {
-          "name": "avg_difficulty",
-          "type": "double precision",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "avg_rating": {
-          "name": "avg_rating",
-          "type": "double precision",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "num_ratings": {
-          "name": "num_ratings",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "rmp_legacy_id": {
-          "name": "rmp_legacy_id",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "rmp_id": {
-          "name": "rmp_id",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "department": {
-          "name": "department",
-          "type": "department",
-          "typeSchema": "scheduler",
-          "primaryKey": false,
-          "notNull": false
-        }
+      "scheduler.subjects": {
+         "name": "subjects",
+         "schema": "scheduler",
+         "columns": {
+            "id": {
+               "name": "id",
+               "type": "text",
+               "primaryKey": true,
+               "notNull": true
+            },
+            "name": {
+               "name": "name",
+               "type": "text",
+               "primaryKey": false,
+               "notNull": true
+            },
+            "college_id": {
+               "name": "college_id",
+               "type": "text",
+               "primaryKey": false,
+               "notNull": true
+            }
+         },
+         "indexes": {},
+         "foreignKeys": {
+            "subjects_college_id_colleges_id_fk": {
+               "name": "subjects_college_id_colleges_id_fk",
+               "tableFrom": "subjects",
+               "tableTo": "colleges",
+               "schemaTo": "scheduler",
+               "columnsFrom": [
+                  "college_id"
+               ],
+               "columnsTo": [
+                  "id"
+               ],
+               "onDelete": "restrict",
+               "onUpdate": "no action"
+            }
+         },
+         "compositePrimaryKeys": {},
+         "uniqueConstraints": {
+            "subjects_name_unique": {
+               "name": "subjects_name_unique",
+               "nullsNotDistinct": false,
+               "columns": [
+                  "name"
+               ]
+            }
+         },
+         "policies": {},
+         "checkConstraints": {},
+         "isRLSEnabled": false
       },
-      "indexes": {},
-      "foreignKeys": {},
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {
-        "instructors_rmp_legacy_id_unique": {
-          "name": "instructors_rmp_legacy_id_unique",
-          "nullsNotDistinct": false,
-          "columns": [
-            "rmp_legacy_id"
-          ]
-        },
-        "instructors_rmp_id_unique": {
-          "name": "instructors_rmp_id_unique",
-          "nullsNotDistinct": false,
-          "columns": [
-            "rmp_id"
-          ]
-        }
+      "public.company": {
+         "name": "company",
+         "schema": "",
+         "columns": {
+            "id": {
+               "name": "id",
+               "type": "uuid",
+               "primaryKey": true,
+               "notNull": true,
+               "default": "gen_random_uuid()"
+            },
+            "name": {
+               "name": "name",
+               "type": "varchar(255)",
+               "primaryKey": false,
+               "notNull": true
+            },
+            "owner_id": {
+               "name": "owner_id",
+               "type": "uuid",
+               "primaryKey": false,
+               "notNull": false
+            }
+         },
+         "indexes": {},
+         "foreignKeys": {
+            "company_owner_id_users_id_fk": {
+               "name": "company_owner_id_users_id_fk",
+               "tableFrom": "company",
+               "tableTo": "users",
+               "columnsFrom": [
+                  "owner_id"
+               ],
+               "columnsTo": [
+                  "id"
+               ],
+               "onDelete": "set null",
+               "onUpdate": "no action"
+            }
+         },
+         "compositePrimaryKeys": {},
+         "uniqueConstraints": {
+            "company_name_unique": {
+               "name": "company_name_unique",
+               "nullsNotDistinct": false,
+               "columns": [
+                  "name"
+               ]
+            }
+         },
+         "policies": {},
+         "checkConstraints": {},
+         "isRLSEnabled": false
       },
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
-    },
-    "scheduler.section_instructor": {
-      "name": "section_instructor",
-      "schema": "scheduler",
-      "columns": {
-        "section_id": {
-          "name": "section_id",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "instructor_id": {
-          "name": "instructor_id",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true
-        }
+      "public.job_experience_levels": {
+         "name": "job_experience_levels",
+         "schema": "",
+         "columns": {
+            "id": {
+               "name": "id",
+               "type": "uuid",
+               "primaryKey": true,
+               "notNull": true,
+               "default": "gen_random_uuid()"
+            },
+            "job_posting_id": {
+               "name": "job_posting_id",
+               "type": "uuid",
+               "primaryKey": false,
+               "notNull": true
+            },
+            "experience_level": {
+               "name": "experience_level",
+               "type": "experience_level",
+               "typeSchema": "public",
+               "primaryKey": false,
+               "notNull": true
+            },
+            "description": {
+               "name": "description",
+               "type": "varchar(500)",
+               "primaryKey": false,
+               "notNull": false
+            }
+         },
+         "indexes": {},
+         "foreignKeys": {
+            "job_experience_levels_job_posting_id_job_posting_id_fk": {
+               "name": "job_experience_levels_job_posting_id_job_posting_id_fk",
+               "tableFrom": "job_experience_levels",
+               "tableTo": "job_posting",
+               "columnsFrom": [
+                  "job_posting_id"
+               ],
+               "columnsTo": [
+                  "id"
+               ],
+               "onDelete": "cascade",
+               "onUpdate": "no action"
+            }
+         },
+         "compositePrimaryKeys": {},
+         "uniqueConstraints": {},
+         "policies": {},
+         "checkConstraints": {},
+         "isRLSEnabled": false
       },
-      "indexes": {},
-      "foreignKeys": {
-        "section_instructor_section_id_sections_crn_fk": {
-          "name": "section_instructor_section_id_sections_crn_fk",
-          "tableFrom": "section_instructor",
-          "tableTo": "sections",
-          "schemaTo": "scheduler",
-          "columnsFrom": [
-            "section_id"
-          ],
-          "columnsTo": [
-            "crn"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        },
-        "section_instructor_instructor_id_instructors_id_fk": {
-          "name": "section_instructor_instructor_id_instructors_id_fk",
-          "tableFrom": "section_instructor",
-          "tableTo": "instructors",
-          "schemaTo": "scheduler",
-          "columnsFrom": [
-            "instructor_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        }
+      "public.job_posting": {
+         "name": "job_posting",
+         "schema": "",
+         "columns": {
+            "id": {
+               "name": "id",
+               "type": "uuid",
+               "primaryKey": true,
+               "notNull": true,
+               "default": "gen_random_uuid()"
+            },
+            "position_id": {
+               "name": "position_id",
+               "type": "uuid",
+               "primaryKey": false,
+               "notNull": true
+            },
+            "location_id": {
+               "name": "location_id",
+               "type": "uuid",
+               "primaryKey": false,
+               "notNull": true
+            },
+            "job_type": {
+               "name": "job_type",
+               "type": "job_type",
+               "typeSchema": "public",
+               "primaryKey": false,
+               "notNull": true
+            },
+            "job_status": {
+               "name": "job_status",
+               "type": "job_status",
+               "typeSchema": "public",
+               "primaryKey": false,
+               "notNull": true,
+               "default": "'Inactive'"
+            },
+            "coop_cycle": {
+               "name": "coop_cycle",
+               "type": "coop_cycle",
+               "typeSchema": "public",
+               "primaryKey": false,
+               "notNull": true
+            },
+            "year": {
+               "name": "year",
+               "type": "integer",
+               "primaryKey": false,
+               "notNull": true
+            },
+            "job_length": {
+               "name": "job_length",
+               "type": "integer",
+               "primaryKey": false,
+               "notNull": true,
+               "default": 2
+            },
+            "work_hours": {
+               "name": "work_hours",
+               "type": "integer",
+               "primaryKey": false,
+               "notNull": true,
+               "default": 40
+            },
+            "openings": {
+               "name": "openings",
+               "type": "integer",
+               "primaryKey": false,
+               "notNull": false,
+               "default": 1
+            },
+            "division_description": {
+               "name": "division_description",
+               "type": "varchar(5000)",
+               "primaryKey": false,
+               "notNull": false
+            },
+            "position_description": {
+               "name": "position_description",
+               "type": "varchar(5000)",
+               "primaryKey": false,
+               "notNull": false
+            },
+            "recommended_qualifications": {
+               "name": "recommended_qualifications",
+               "type": "varchar(5000)",
+               "primaryKey": false,
+               "notNull": false
+            },
+            "minimum_gpa": {
+               "name": "minimum_gpa",
+               "type": "double precision",
+               "primaryKey": false,
+               "notNull": false
+            },
+            "is_nonprofit": {
+               "name": "is_nonprofit",
+               "type": "boolean",
+               "primaryKey": false,
+               "notNull": false,
+               "default": false
+            },
+            "exposure_hazardous_materials": {
+               "name": "exposure_hazardous_materials",
+               "type": "boolean",
+               "primaryKey": false,
+               "notNull": false,
+               "default": false
+            },
+            "is_research_position": {
+               "name": "is_research_position",
+               "type": "boolean",
+               "primaryKey": false,
+               "notNull": false,
+               "default": false
+            },
+            "is_third_party_employer": {
+               "name": "is_third_party_employer",
+               "type": "boolean",
+               "primaryKey": false,
+               "notNull": false,
+               "default": false
+            },
+            "travel_required": {
+               "name": "travel_required",
+               "type": "boolean",
+               "primaryKey": false,
+               "notNull": false,
+               "default": false
+            },
+            "citizenship_restriction": {
+               "name": "citizenship_restriction",
+               "type": "citizenship_restriction",
+               "typeSchema": "public",
+               "primaryKey": false,
+               "notNull": true
+            },
+            "pre_employment_screening": {
+               "name": "pre_employment_screening",
+               "type": "varchar(1000)",
+               "primaryKey": false,
+               "notNull": false,
+               "default": "'None'"
+            },
+            "transportation": {
+               "name": "transportation",
+               "type": "varchar(1000)",
+               "primaryKey": false,
+               "notNull": false
+            },
+            "compensation_status": {
+               "name": "compensation_status",
+               "type": "compensation_status",
+               "typeSchema": "public",
+               "primaryKey": false,
+               "notNull": true
+            },
+            "compensation_details": {
+               "name": "compensation_details",
+               "type": "varchar(5000)",
+               "primaryKey": false,
+               "notNull": false
+            },
+            "other_compensation": {
+               "name": "other_compensation",
+               "type": "varchar(5000)",
+               "primaryKey": false,
+               "notNull": false
+            },
+            "created_at": {
+               "name": "created_at",
+               "type": "timestamp",
+               "primaryKey": false,
+               "notNull": false,
+               "default": "now()"
+            },
+            "updated_at": {
+               "name": "updated_at",
+               "type": "timestamp",
+               "primaryKey": false,
+               "notNull": false,
+               "default": "now()"
+            }
+         },
+         "indexes": {},
+         "foreignKeys": {
+            "job_posting_position_id_position_id_fk": {
+               "name": "job_posting_position_id_position_id_fk",
+               "tableFrom": "job_posting",
+               "tableTo": "position",
+               "columnsFrom": [
+                  "position_id"
+               ],
+               "columnsTo": [
+                  "id"
+               ],
+               "onDelete": "cascade",
+               "onUpdate": "no action"
+            },
+            "job_posting_location_id_location_id_fk": {
+               "name": "job_posting_location_id_location_id_fk",
+               "tableFrom": "job_posting",
+               "tableTo": "location",
+               "columnsFrom": [
+                  "location_id"
+               ],
+               "columnsTo": [
+                  "id"
+               ],
+               "onDelete": "restrict",
+               "onUpdate": "no action"
+            }
+         },
+         "compositePrimaryKeys": {},
+         "uniqueConstraints": {},
+         "policies": {},
+         "checkConstraints": {},
+         "isRLSEnabled": false
       },
-      "compositePrimaryKeys": {
-        "section_instructor_section_id_instructor_id_pk": {
-          "name": "section_instructor_section_id_instructor_id_pk",
-          "columns": [
-            "section_id",
-            "instructor_id"
-          ]
-        }
+      "public.job_posting_major": {
+         "name": "job_posting_major",
+         "schema": "",
+         "columns": {
+            "job_posting_id": {
+               "name": "job_posting_id",
+               "type": "uuid",
+               "primaryKey": false,
+               "notNull": true
+            },
+            "major_id": {
+               "name": "major_id",
+               "type": "uuid",
+               "primaryKey": false,
+               "notNull": true
+            }
+         },
+         "indexes": {},
+         "foreignKeys": {
+            "job_posting_major_job_posting_id_job_posting_id_fk": {
+               "name": "job_posting_major_job_posting_id_job_posting_id_fk",
+               "tableFrom": "job_posting_major",
+               "tableTo": "job_posting",
+               "columnsFrom": [
+                  "job_posting_id"
+               ],
+               "columnsTo": [
+                  "id"
+               ],
+               "onDelete": "cascade",
+               "onUpdate": "no action"
+            },
+            "job_posting_major_major_id_major_id_fk": {
+               "name": "job_posting_major_major_id_major_id_fk",
+               "tableFrom": "job_posting_major",
+               "tableTo": "major",
+               "columnsFrom": [
+                  "major_id"
+               ],
+               "columnsTo": [
+                  "id"
+               ],
+               "onDelete": "cascade",
+               "onUpdate": "no action"
+            }
+         },
+         "compositePrimaryKeys": {
+            "job_posting_major_job_posting_id_major_id_pk": {
+               "name": "job_posting_major_job_posting_id_major_id_pk",
+               "columns": [
+                  "job_posting_id",
+                  "major_id"
+               ]
+            }
+         },
+         "uniqueConstraints": {},
+         "policies": {},
+         "checkConstraints": {},
+         "isRLSEnabled": false
       },
-      "uniqueConstraints": {},
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
-    },
-    "scheduler.sections": {
-      "name": "sections",
-      "schema": "scheduler",
-      "columns": {
-        "crn": {
-          "name": "crn",
-          "type": "integer",
-          "primaryKey": true,
-          "notNull": true
-        },
-        "course_id": {
-          "name": "course_id",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "section": {
-          "name": "section",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "instruction_type": {
-          "name": "instruction_type",
-          "type": "instruction_type",
-          "typeSchema": "scheduler",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "instruction_method": {
-          "name": "instruction_method",
-          "type": "instruction_method",
-          "typeSchema": "scheduler",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "credits": {
-          "name": "credits",
-          "type": "double precision",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "start_time": {
-          "name": "start_time",
-          "type": "time",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "end_time": {
-          "name": "end_time",
-          "type": "time",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "days": {
-          "name": "days",
-          "type": "integer[]",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "term": {
-          "name": "term",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": false
-        }
+      "public.location": {
+         "name": "location",
+         "schema": "",
+         "columns": {
+            "id": {
+               "name": "id",
+               "type": "uuid",
+               "primaryKey": true,
+               "notNull": true,
+               "default": "gen_random_uuid()"
+            },
+            "state_code": {
+               "name": "state_code",
+               "type": "varchar(3)",
+               "primaryKey": false,
+               "notNull": true
+            },
+            "state": {
+               "name": "state",
+               "type": "varchar(100)",
+               "primaryKey": false,
+               "notNull": true
+            },
+            "city": {
+               "name": "city",
+               "type": "varchar(100)",
+               "primaryKey": false,
+               "notNull": true
+            }
+         },
+         "indexes": {},
+         "foreignKeys": {},
+         "compositePrimaryKeys": {},
+         "uniqueConstraints": {
+            "location_state_code_state_city_unique": {
+               "name": "location_state_code_state_city_unique",
+               "nullsNotDistinct": false,
+               "columns": [
+                  "state_code",
+                  "state",
+                  "city"
+               ]
+            }
+         },
+         "policies": {},
+         "checkConstraints": {},
+         "isRLSEnabled": false
       },
-      "indexes": {},
-      "foreignKeys": {
-        "sections_course_id_courses_id_fk": {
-          "name": "sections_course_id_courses_id_fk",
-          "tableFrom": "sections",
-          "tableTo": "courses",
-          "schemaTo": "scheduler",
-          "columnsFrom": [
-            "course_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "restrict",
-          "onUpdate": "no action"
-        }
+      "public.major": {
+         "name": "major",
+         "schema": "",
+         "columns": {
+            "id": {
+               "name": "id",
+               "type": "uuid",
+               "primaryKey": true,
+               "notNull": true,
+               "default": "gen_random_uuid()"
+            },
+            "program_level": {
+               "name": "program_level",
+               "type": "program_level",
+               "typeSchema": "public",
+               "primaryKey": false,
+               "notNull": true
+            },
+            "name": {
+               "name": "name",
+               "type": "varchar(255)",
+               "primaryKey": false,
+               "notNull": true
+            }
+         },
+         "indexes": {},
+         "foreignKeys": {},
+         "compositePrimaryKeys": {},
+         "uniqueConstraints": {
+            "major_name_unique": {
+               "name": "major_name_unique",
+               "nullsNotDistinct": false,
+               "columns": [
+                  "name"
+               ]
+            }
+         },
+         "policies": {},
+         "checkConstraints": {},
+         "isRLSEnabled": false
       },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {
-        "sections_section_course_id_term_instruction_type_unique": {
-          "name": "sections_section_course_id_term_instruction_type_unique",
-          "nullsNotDistinct": false,
-          "columns": [
-            "section",
-            "course_id",
-            "term",
-            "instruction_type"
-          ]
-        }
+      "public.minor": {
+         "name": "minor",
+         "schema": "",
+         "columns": {
+            "id": {
+               "name": "id",
+               "type": "uuid",
+               "primaryKey": true,
+               "notNull": true,
+               "default": "gen_random_uuid()"
+            },
+            "program_level": {
+               "name": "program_level",
+               "type": "program_level",
+               "typeSchema": "public",
+               "primaryKey": false,
+               "notNull": true
+            },
+            "name": {
+               "name": "name",
+               "type": "varchar(255)",
+               "primaryKey": false,
+               "notNull": true
+            }
+         },
+         "indexes": {},
+         "foreignKeys": {},
+         "compositePrimaryKeys": {},
+         "uniqueConstraints": {
+            "minor_name_unique": {
+               "name": "minor_name_unique",
+               "nullsNotDistinct": false,
+               "columns": [
+                  "name"
+               ]
+            }
+         },
+         "policies": {},
+         "checkConstraints": {},
+         "isRLSEnabled": false
       },
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
-    },
-    "scheduler.subjects": {
-      "name": "subjects",
-      "schema": "scheduler",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "text",
-          "primaryKey": true,
-          "notNull": true
-        },
-        "name": {
-          "name": "name",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "college_id": {
-          "name": "college_id",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        }
+      "public.position": {
+         "name": "position",
+         "schema": "",
+         "columns": {
+            "id": {
+               "name": "id",
+               "type": "uuid",
+               "primaryKey": true,
+               "notNull": true,
+               "default": "gen_random_uuid()"
+            },
+            "company_id": {
+               "name": "company_id",
+               "type": "uuid",
+               "primaryKey": false,
+               "notNull": true
+            },
+            "name": {
+               "name": "name",
+               "type": "varchar(255)",
+               "primaryKey": false,
+               "notNull": true
+            },
+            "owner_id": {
+               "name": "owner_id",
+               "type": "uuid",
+               "primaryKey": false,
+               "notNull": false
+            }
+         },
+         "indexes": {},
+         "foreignKeys": {
+            "position_company_id_company_id_fk": {
+               "name": "position_company_id_company_id_fk",
+               "tableFrom": "position",
+               "tableTo": "company",
+               "columnsFrom": [
+                  "company_id"
+               ],
+               "columnsTo": [
+                  "id"
+               ],
+               "onDelete": "restrict",
+               "onUpdate": "no action"
+            },
+            "position_owner_id_users_id_fk": {
+               "name": "position_owner_id_users_id_fk",
+               "tableFrom": "position",
+               "tableTo": "users",
+               "columnsFrom": [
+                  "owner_id"
+               ],
+               "columnsTo": [
+                  "id"
+               ],
+               "onDelete": "set null",
+               "onUpdate": "no action"
+            }
+         },
+         "compositePrimaryKeys": {},
+         "uniqueConstraints": {
+            "position_company_id_name_unique": {
+               "name": "position_company_id_name_unique",
+               "nullsNotDistinct": false,
+               "columns": [
+                  "company_id",
+                  "name"
+               ]
+            }
+         },
+         "policies": {},
+         "checkConstraints": {},
+         "isRLSEnabled": false
       },
-      "indexes": {},
-      "foreignKeys": {
-        "subjects_college_id_colleges_id_fk": {
-          "name": "subjects_college_id_colleges_id_fk",
-          "tableFrom": "subjects",
-          "tableTo": "colleges",
-          "schemaTo": "scheduler",
-          "columnsFrom": [
-            "college_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "restrict",
-          "onUpdate": "no action"
-        }
+      "public.profile_major": {
+         "name": "profile_major",
+         "schema": "",
+         "columns": {
+            "user_id": {
+               "name": "user_id",
+               "type": "uuid",
+               "primaryKey": false,
+               "notNull": true
+            },
+            "major_id": {
+               "name": "major_id",
+               "type": "uuid",
+               "primaryKey": false,
+               "notNull": true
+            }
+         },
+         "indexes": {},
+         "foreignKeys": {
+            "profile_major_user_id_users_id_fk": {
+               "name": "profile_major_user_id_users_id_fk",
+               "tableFrom": "profile_major",
+               "tableTo": "users",
+               "columnsFrom": [
+                  "user_id"
+               ],
+               "columnsTo": [
+                  "id"
+               ],
+               "onDelete": "cascade",
+               "onUpdate": "no action"
+            },
+            "profile_major_major_id_major_id_fk": {
+               "name": "profile_major_major_id_major_id_fk",
+               "tableFrom": "profile_major",
+               "tableTo": "major",
+               "columnsFrom": [
+                  "major_id"
+               ],
+               "columnsTo": [
+                  "id"
+               ],
+               "onDelete": "cascade",
+               "onUpdate": "no action"
+            }
+         },
+         "compositePrimaryKeys": {
+            "profile_major_user_id_major_id_pk": {
+               "name": "profile_major_user_id_major_id_pk",
+               "columns": [
+                  "user_id",
+                  "major_id"
+               ]
+            }
+         },
+         "uniqueConstraints": {},
+         "policies": {},
+         "checkConstraints": {},
+         "isRLSEnabled": false
       },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {
-        "subjects_name_unique": {
-          "name": "subjects_name_unique",
-          "nullsNotDistinct": false,
-          "columns": [
-            "name"
-          ]
-        }
+      "public.profile_minor": {
+         "name": "profile_minor",
+         "schema": "",
+         "columns": {
+            "user_id": {
+               "name": "user_id",
+               "type": "uuid",
+               "primaryKey": false,
+               "notNull": true
+            },
+            "minor_id": {
+               "name": "minor_id",
+               "type": "uuid",
+               "primaryKey": false,
+               "notNull": true
+            }
+         },
+         "indexes": {},
+         "foreignKeys": {
+            "profile_minor_user_id_users_id_fk": {
+               "name": "profile_minor_user_id_users_id_fk",
+               "tableFrom": "profile_minor",
+               "tableTo": "users",
+               "columnsFrom": [
+                  "user_id"
+               ],
+               "columnsTo": [
+                  "id"
+               ],
+               "onDelete": "cascade",
+               "onUpdate": "no action"
+            },
+            "profile_minor_minor_id_minor_id_fk": {
+               "name": "profile_minor_minor_id_minor_id_fk",
+               "tableFrom": "profile_minor",
+               "tableTo": "minor",
+               "columnsFrom": [
+                  "minor_id"
+               ],
+               "columnsTo": [
+                  "id"
+               ],
+               "onDelete": "cascade",
+               "onUpdate": "no action"
+            }
+         },
+         "compositePrimaryKeys": {
+            "profile_minor_user_id_minor_id_pk": {
+               "name": "profile_minor_user_id_minor_id_pk",
+               "columns": [
+                  "user_id",
+                  "minor_id"
+               ]
+            }
+         },
+         "uniqueConstraints": {},
+         "policies": {},
+         "checkConstraints": {},
+         "isRLSEnabled": false
       },
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
-    },
-    "public.company": {
-      "name": "company",
-      "schema": "",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "uuid",
-          "primaryKey": true,
-          "notNull": true,
-          "default": "gen_random_uuid()"
-        },
-        "name": {
-          "name": "name",
-          "type": "varchar(255)",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "owner_id": {
-          "name": "owner_id",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": false
-        }
+      "public.submission": {
+         "name": "submission",
+         "schema": "",
+         "columns": {
+            "id": {
+               "name": "id",
+               "type": "uuid",
+               "primaryKey": true,
+               "notNull": true,
+               "default": "gen_random_uuid()"
+            },
+            "position_id": {
+               "name": "position_id",
+               "type": "uuid",
+               "primaryKey": false,
+               "notNull": true
+            },
+            "location_id": {
+               "name": "location_id",
+               "type": "uuid",
+               "primaryKey": false,
+               "notNull": true
+            },
+            "program_level": {
+               "name": "program_level",
+               "type": "program_level",
+               "typeSchema": "public",
+               "primaryKey": false,
+               "notNull": true
+            },
+            "work_hours": {
+               "name": "work_hours",
+               "type": "integer",
+               "primaryKey": false,
+               "notNull": true,
+               "default": 40
+            },
+            "coop_cycle": {
+               "name": "coop_cycle",
+               "type": "coop_cycle",
+               "typeSchema": "public",
+               "primaryKey": false,
+               "notNull": true
+            },
+            "coop_year": {
+               "name": "coop_year",
+               "type": "coop_year",
+               "typeSchema": "public",
+               "primaryKey": false,
+               "notNull": true
+            },
+            "year": {
+               "name": "year",
+               "type": "integer",
+               "primaryKey": false,
+               "notNull": true
+            },
+            "compensation": {
+               "name": "compensation",
+               "type": "double precision",
+               "primaryKey": false,
+               "notNull": false
+            },
+            "other_compensation": {
+               "name": "other_compensation",
+               "type": "varchar(255)",
+               "primaryKey": false,
+               "notNull": false
+            },
+            "details": {
+               "name": "details",
+               "type": "varchar(255)",
+               "primaryKey": false,
+               "notNull": false
+            },
+            "owner_id": {
+               "name": "owner_id",
+               "type": "uuid",
+               "primaryKey": false,
+               "notNull": false
+            },
+            "created_at": {
+               "name": "created_at",
+               "type": "timestamp",
+               "primaryKey": false,
+               "notNull": true,
+               "default": "now()"
+            }
+         },
+         "indexes": {},
+         "foreignKeys": {
+            "submission_position_id_position_id_fk": {
+               "name": "submission_position_id_position_id_fk",
+               "tableFrom": "submission",
+               "tableTo": "position",
+               "columnsFrom": [
+                  "position_id"
+               ],
+               "columnsTo": [
+                  "id"
+               ],
+               "onDelete": "restrict",
+               "onUpdate": "no action"
+            },
+            "submission_location_id_location_id_fk": {
+               "name": "submission_location_id_location_id_fk",
+               "tableFrom": "submission",
+               "tableTo": "location",
+               "columnsFrom": [
+                  "location_id"
+               ],
+               "columnsTo": [
+                  "id"
+               ],
+               "onDelete": "restrict",
+               "onUpdate": "no action"
+            },
+            "submission_owner_id_users_id_fk": {
+               "name": "submission_owner_id_users_id_fk",
+               "tableFrom": "submission",
+               "tableTo": "users",
+               "columnsFrom": [
+                  "owner_id"
+               ],
+               "columnsTo": [
+                  "id"
+               ],
+               "onDelete": "set null",
+               "onUpdate": "no action"
+            }
+         },
+         "compositePrimaryKeys": {},
+         "uniqueConstraints": {},
+         "policies": {},
+         "checkConstraints": {},
+         "isRLSEnabled": false
       },
-      "indexes": {},
-      "foreignKeys": {
-        "company_owner_id_users_id_fk": {
-          "name": "company_owner_id_users_id_fk",
-          "tableFrom": "company",
-          "tableTo": "users",
-          "columnsFrom": [
-            "owner_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "set null",
-          "onUpdate": "no action"
-        }
+      "public.users": {
+         "name": "users",
+         "schema": "",
+         "columns": {
+            "id": {
+               "name": "id",
+               "type": "uuid",
+               "primaryKey": true,
+               "notNull": true,
+               "default": "gen_random_uuid()"
+            },
+            "username": {
+               "name": "username",
+               "type": "varchar(100)",
+               "primaryKey": false,
+               "notNull": true
+            },
+            "email": {
+               "name": "email",
+               "type": "text",
+               "primaryKey": false,
+               "notNull": true
+            },
+            "created_at": {
+               "name": "created_at",
+               "type": "timestamp",
+               "primaryKey": false,
+               "notNull": true,
+               "default": "now()"
+            },
+            "updated_at": {
+               "name": "updated_at",
+               "type": "timestamp",
+               "primaryKey": false,
+               "notNull": true,
+               "default": "now()"
+            }
+         },
+         "indexes": {},
+         "foreignKeys": {},
+         "compositePrimaryKeys": {},
+         "uniqueConstraints": {
+            "users_email_unique": {
+               "name": "users_email_unique",
+               "nullsNotDistinct": false,
+               "columns": [
+                  "email"
+               ]
+            }
+         },
+         "policies": {},
+         "checkConstraints": {},
+         "isRLSEnabled": false
+      }
+   },
+   "enums": {
+      "scheduler.department": {
+         "name": "department",
+         "schema": "scheduler",
+         "values": [
+            "Accounting",
+            "Anthropology",
+            "Architecture",
+            "Art History",
+            "Biological Sciences",
+            "Biology",
+            "Business",
+            "Chemical Engineering",
+            "Chemistry",
+            "Communication",
+            "Computer Science",
+            "Criminal Justice",
+            "Culinary Arts",
+            "Cultural Science",
+            "Decision Science",
+            "Design",
+            "Digital Media",
+            "Economics",
+            "Education",
+            "Engineering",
+            "English",
+            "Family Studies & Social Work",
+            "Film",
+            "Finance",
+            "Fine Arts",
+            "Geology",
+            "Graphic Arts",
+            "Health Science",
+            "History",
+            "Hospitality",
+            "Humanities",
+            "Information Science",
+            "Japanese",
+            "Journalism",
+            "Languages",
+            "Law",
+            "Library  Information Science",
+            "Library & Information Science",
+            "Literature",
+            "Management",
+            "Marketing",
+            "Materials Science",
+            "Mathematics",
+            "Media Arts & Design",
+            "Medicine",
+            "Music",
+            "Not Specified",
+            "Nursing",
+            "Philosophy",
+            "Photography",
+            "Physics",
+            "Political Science",
+            "Psychology",
+            "Public Health",
+            "Science",
+            "Social Work",
+            "Sociology",
+            "Statistics",
+            "Student Services",
+            "Theater"
+         ]
       },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {
-        "company_name_unique": {
-          "name": "company_name_unique",
-          "nullsNotDistinct": false,
-          "columns": [
-            "name"
-          ]
-        }
+      "scheduler.instruction_method": {
+         "name": "instruction_method",
+         "schema": "scheduler",
+         "values": [
+            "instruction",
+            "Community Based Learning",
+            "Face To Face",
+            "Hybrid",
+            "Online-Asynchronous",
+            "Online-Synchronous",
+            "Remote Asynchronous",
+            "Remote Synchronous"
+         ]
       },
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
-    },
-    "public.job_experience_levels": {
-      "name": "job_experience_levels",
-      "schema": "",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "uuid",
-          "primaryKey": true,
-          "notNull": true,
-          "default": "gen_random_uuid()"
-        },
-        "job_posting_id": {
-          "name": "job_posting_id",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "experience_level": {
-          "name": "experience_level",
-          "type": "experience_level",
-          "typeSchema": "public",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "description": {
-          "name": "description",
-          "type": "varchar(500)",
-          "primaryKey": false,
-          "notNull": false
-        }
+      "scheduler.instruction_type": {
+         "name": "instruction_type",
+         "schema": "scheduler",
+         "values": [
+            "instruction",
+            "Career Integrated Experience",
+            "Clinical",
+            "Dissertation",
+            "Integrated Lecture & Lab",
+            "Internship/Clerkship/Preceptor",
+            "Lab",
+            "Lab & Studio",
+            "Lecture",
+            "Lecture & Clinical",
+            "Lecture & Lab",
+            "Lecture, Lab & Studio",
+            "Lecture & Practicum",
+            "Lecture & Recitation",
+            "Lecture & Seminar",
+            "Lecture & Studio",
+            "Medical Rotation",
+            "Performance",
+            "Practice",
+            "Practicum",
+            "Practicum & Clinical",
+            "Private Lesson",
+            "Recitation/Discussion",
+            "Recitation & Lab",
+            "Research",
+            "Seminar",
+            "Seminar & Clinical",
+            "Seminar & Research",
+            "Special Topics",
+            "Special Topics-Lab",
+            "Special Topics-Lecture",
+            "Special Topics-Lecture & Lab",
+            "Special Topics-Seminar",
+            "Studio",
+            "Study Abroad",
+            "Thesis"
+         ]
       },
-      "indexes": {},
-      "foreignKeys": {
-        "job_experience_levels_job_posting_id_job_posting_id_fk": {
-          "name": "job_experience_levels_job_posting_id_job_posting_id_fk",
-          "tableFrom": "job_experience_levels",
-          "tableTo": "job_posting",
-          "columnsFrom": [
-            "job_posting_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        }
+      "public.citizenship_restriction": {
+         "name": "citizenship_restriction",
+         "schema": "public",
+         "values": [
+            "No Restriction",
+            "Resident Alien (Green Card) or US Citizen",
+            "US Citizen Only"
+         ]
       },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
-    },
-    "public.job_posting": {
-      "name": "job_posting",
-      "schema": "",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "uuid",
-          "primaryKey": true,
-          "notNull": true,
-          "default": "gen_random_uuid()"
-        },
-        "position_id": {
-          "name": "position_id",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "location_id": {
-          "name": "location_id",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "job_type": {
-          "name": "job_type",
-          "type": "job_type",
-          "typeSchema": "public",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "job_status": {
-          "name": "job_status",
-          "type": "job_status",
-          "typeSchema": "public",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "'Inactive'"
-        },
-        "coop_cycle": {
-          "name": "coop_cycle",
-          "type": "coop_cycle",
-          "typeSchema": "public",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "year": {
-          "name": "year",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "job_length": {
-          "name": "job_length",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true,
-          "default": 2
-        },
-        "work_hours": {
-          "name": "work_hours",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true,
-          "default": 40
-        },
-        "openings": {
-          "name": "openings",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": false,
-          "default": 1
-        },
-        "division_description": {
-          "name": "division_description",
-          "type": "varchar(5000)",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "position_description": {
-          "name": "position_description",
-          "type": "varchar(5000)",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "recommended_qualifications": {
-          "name": "recommended_qualifications",
-          "type": "varchar(5000)",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "minimum_gpa": {
-          "name": "minimum_gpa",
-          "type": "double precision",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "is_nonprofit": {
-          "name": "is_nonprofit",
-          "type": "boolean",
-          "primaryKey": false,
-          "notNull": false,
-          "default": false
-        },
-        "exposure_hazardous_materials": {
-          "name": "exposure_hazardous_materials",
-          "type": "boolean",
-          "primaryKey": false,
-          "notNull": false,
-          "default": false
-        },
-        "is_research_position": {
-          "name": "is_research_position",
-          "type": "boolean",
-          "primaryKey": false,
-          "notNull": false,
-          "default": false
-        },
-        "is_third_party_employer": {
-          "name": "is_third_party_employer",
-          "type": "boolean",
-          "primaryKey": false,
-          "notNull": false,
-          "default": false
-        },
-        "travel_required": {
-          "name": "travel_required",
-          "type": "boolean",
-          "primaryKey": false,
-          "notNull": false,
-          "default": false
-        },
-        "citizenship_restriction": {
-          "name": "citizenship_restriction",
-          "type": "citizenship_restriction",
-          "typeSchema": "public",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "pre_employment_screening": {
-          "name": "pre_employment_screening",
-          "type": "varchar(1000)",
-          "primaryKey": false,
-          "notNull": false,
-          "default": "'None'"
-        },
-        "transportation": {
-          "name": "transportation",
-          "type": "varchar(1000)",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "compensation_status": {
-          "name": "compensation_status",
-          "type": "compensation_status",
-          "typeSchema": "public",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "compensation_details": {
-          "name": "compensation_details",
-          "type": "varchar(5000)",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "other_compensation": {
-          "name": "other_compensation",
-          "type": "varchar(5000)",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "created_at": {
-          "name": "created_at",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": false,
-          "default": "now()"
-        },
-        "updated_at": {
-          "name": "updated_at",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": false,
-          "default": "now()"
-        }
+      "public.compensation_status": {
+         "name": "compensation_status",
+         "schema": "public",
+         "values": [
+            "Unpaid Position",
+            "Hourly Paid or Salaried Position"
+         ]
       },
-      "indexes": {},
-      "foreignKeys": {
-        "job_posting_position_id_position_id_fk": {
-          "name": "job_posting_position_id_position_id_fk",
-          "tableFrom": "job_posting",
-          "tableTo": "position",
-          "columnsFrom": [
-            "position_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        },
-        "job_posting_location_id_location_id_fk": {
-          "name": "job_posting_location_id_location_id_fk",
-          "tableFrom": "job_posting",
-          "tableTo": "location",
-          "columnsFrom": [
-            "location_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "restrict",
-          "onUpdate": "no action"
-        }
+      "public.coop_cycle": {
+         "name": "coop_cycle",
+         "schema": "public",
+         "values": [
+            "Fall/Winter",
+            "Winter/Spring",
+            "Spring/Summer",
+            "Summer/Fall"
+         ]
       },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
-    },
-    "public.job_posting_major": {
-      "name": "job_posting_major",
-      "schema": "",
-      "columns": {
-        "job_posting_id": {
-          "name": "job_posting_id",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "major_id": {
-          "name": "major_id",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": true
-        }
+      "public.coop_year": {
+         "name": "coop_year",
+         "schema": "public",
+         "values": [
+            "1st",
+            "2nd",
+            "3rd"
+         ]
       },
-      "indexes": {},
-      "foreignKeys": {
-        "job_posting_major_job_posting_id_job_posting_id_fk": {
-          "name": "job_posting_major_job_posting_id_job_posting_id_fk",
-          "tableFrom": "job_posting_major",
-          "tableTo": "job_posting",
-          "columnsFrom": [
-            "job_posting_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        },
-        "job_posting_major_major_id_major_id_fk": {
-          "name": "job_posting_major_major_id_major_id_fk",
-          "tableFrom": "job_posting_major",
-          "tableTo": "major",
-          "columnsFrom": [
-            "major_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        }
+      "public.experience_level": {
+         "name": "experience_level",
+         "schema": "public",
+         "values": [
+            "Advanced",
+            "Beginner",
+            "Intermediate"
+         ]
       },
-      "compositePrimaryKeys": {
-        "job_posting_major_job_posting_id_major_id_pk": {
-          "name": "job_posting_major_job_posting_id_major_id_pk",
-          "columns": [
-            "job_posting_id",
-            "major_id"
-          ]
-        }
+      "public.job_status": {
+         "name": "job_status",
+         "schema": "public",
+         "values": [
+            "Inactive",
+            "Pending",
+            "Cancelled",
+            "Active",
+            "Delete"
+         ]
       },
-      "uniqueConstraints": {},
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
-    },
-    "public.location": {
-      "name": "location",
-      "schema": "",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "uuid",
-          "primaryKey": true,
-          "notNull": true,
-          "default": "gen_random_uuid()"
-        },
-        "state_code": {
-          "name": "state_code",
-          "type": "varchar(3)",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "state": {
-          "name": "state",
-          "type": "varchar(100)",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "city": {
-          "name": "city",
-          "type": "varchar(100)",
-          "primaryKey": false,
-          "notNull": true
-        }
+      "public.job_type": {
+         "name": "job_type",
+         "schema": "public",
+         "values": [
+            "Co-op Experience",
+            "Graduate Co-op Experience",
+            "Summer-Only Coop"
+         ]
       },
-      "indexes": {},
-      "foreignKeys": {},
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {
-        "location_state_code_state_city_unique": {
-          "name": "location_state_code_state_city_unique",
-          "nullsNotDistinct": false,
-          "columns": [
-            "state_code",
-            "state",
-            "city"
-          ]
-        }
-      },
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
-    },
-    "public.major": {
-      "name": "major",
-      "schema": "",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "uuid",
-          "primaryKey": true,
-          "notNull": true,
-          "default": "gen_random_uuid()"
-        },
-        "program_level": {
-          "name": "program_level",
-          "type": "program_level",
-          "typeSchema": "public",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "name": {
-          "name": "name",
-          "type": "varchar(255)",
-          "primaryKey": false,
-          "notNull": true
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {},
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {
-        "major_name_unique": {
-          "name": "major_name_unique",
-          "nullsNotDistinct": false,
-          "columns": [
-            "name"
-          ]
-        }
-      },
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
-    },
-    "public.minor": {
-      "name": "minor",
-      "schema": "",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "uuid",
-          "primaryKey": true,
-          "notNull": true,
-          "default": "gen_random_uuid()"
-        },
-        "program_level": {
-          "name": "program_level",
-          "type": "program_level",
-          "typeSchema": "public",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "name": {
-          "name": "name",
-          "type": "varchar(255)",
-          "primaryKey": false,
-          "notNull": true
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {},
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {
-        "minor_name_unique": {
-          "name": "minor_name_unique",
-          "nullsNotDistinct": false,
-          "columns": [
-            "name"
-          ]
-        }
-      },
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
-    },
-    "public.position": {
-      "name": "position",
-      "schema": "",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "uuid",
-          "primaryKey": true,
-          "notNull": true,
-          "default": "gen_random_uuid()"
-        },
-        "company_id": {
-          "name": "company_id",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "name": {
-          "name": "name",
-          "type": "varchar(255)",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "owner_id": {
-          "name": "owner_id",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": false
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "position_company_id_company_id_fk": {
-          "name": "position_company_id_company_id_fk",
-          "tableFrom": "position",
-          "tableTo": "company",
-          "columnsFrom": [
-            "company_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "restrict",
-          "onUpdate": "no action"
-        },
-        "position_owner_id_users_id_fk": {
-          "name": "position_owner_id_users_id_fk",
-          "tableFrom": "position",
-          "tableTo": "users",
-          "columnsFrom": [
-            "owner_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "set null",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {
-        "position_company_id_name_unique": {
-          "name": "position_company_id_name_unique",
-          "nullsNotDistinct": false,
-          "columns": [
-            "company_id",
-            "name"
-          ]
-        }
-      },
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
-    },
-    "public.profile_major": {
-      "name": "profile_major",
-      "schema": "",
-      "columns": {
-        "user_id": {
-          "name": "user_id",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "major_id": {
-          "name": "major_id",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": true
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "profile_major_user_id_users_id_fk": {
-          "name": "profile_major_user_id_users_id_fk",
-          "tableFrom": "profile_major",
-          "tableTo": "users",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        },
-        "profile_major_major_id_major_id_fk": {
-          "name": "profile_major_major_id_major_id_fk",
-          "tableFrom": "profile_major",
-          "tableTo": "major",
-          "columnsFrom": [
-            "major_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {
-        "profile_major_user_id_major_id_pk": {
-          "name": "profile_major_user_id_major_id_pk",
-          "columns": [
-            "user_id",
-            "major_id"
-          ]
-        }
-      },
-      "uniqueConstraints": {},
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
-    },
-    "public.profile_minor": {
-      "name": "profile_minor",
-      "schema": "",
-      "columns": {
-        "user_id": {
-          "name": "user_id",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "minor_id": {
-          "name": "minor_id",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": true
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "profile_minor_user_id_users_id_fk": {
-          "name": "profile_minor_user_id_users_id_fk",
-          "tableFrom": "profile_minor",
-          "tableTo": "users",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        },
-        "profile_minor_minor_id_minor_id_fk": {
-          "name": "profile_minor_minor_id_minor_id_fk",
-          "tableFrom": "profile_minor",
-          "tableTo": "minor",
-          "columnsFrom": [
-            "minor_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {
-        "profile_minor_user_id_minor_id_pk": {
-          "name": "profile_minor_user_id_minor_id_pk",
-          "columns": [
-            "user_id",
-            "minor_id"
-          ]
-        }
-      },
-      "uniqueConstraints": {},
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
-    },
-    "public.submission": {
-      "name": "submission",
-      "schema": "",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "uuid",
-          "primaryKey": true,
-          "notNull": true,
-          "default": "gen_random_uuid()"
-        },
-        "position_id": {
-          "name": "position_id",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "location_id": {
-          "name": "location_id",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "program_level": {
-          "name": "program_level",
-          "type": "program_level",
-          "typeSchema": "public",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "work_hours": {
-          "name": "work_hours",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true,
-          "default": 40
-        },
-        "coop_cycle": {
-          "name": "coop_cycle",
-          "type": "coop_cycle",
-          "typeSchema": "public",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "coop_year": {
-          "name": "coop_year",
-          "type": "coop_year",
-          "typeSchema": "public",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "year": {
-          "name": "year",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "compensation": {
-          "name": "compensation",
-          "type": "double precision",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "other_compensation": {
-          "name": "other_compensation",
-          "type": "varchar(255)",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "details": {
-          "name": "details",
-          "type": "varchar(255)",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "owner_id": {
-          "name": "owner_id",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "created_at": {
-          "name": "created_at",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "submission_position_id_position_id_fk": {
-          "name": "submission_position_id_position_id_fk",
-          "tableFrom": "submission",
-          "tableTo": "position",
-          "columnsFrom": [
-            "position_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "restrict",
-          "onUpdate": "no action"
-        },
-        "submission_location_id_location_id_fk": {
-          "name": "submission_location_id_location_id_fk",
-          "tableFrom": "submission",
-          "tableTo": "location",
-          "columnsFrom": [
-            "location_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "restrict",
-          "onUpdate": "no action"
-        },
-        "submission_owner_id_users_id_fk": {
-          "name": "submission_owner_id_users_id_fk",
-          "tableFrom": "submission",
-          "tableTo": "users",
-          "columnsFrom": [
-            "owner_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "set null",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
-    },
-    "public.users": {
-      "name": "users",
-      "schema": "",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "uuid",
-          "primaryKey": true,
-          "notNull": true,
-          "default": "gen_random_uuid()"
-        },
-        "username": {
-          "name": "username",
-          "type": "varchar(100)",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "email": {
-          "name": "email",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "created_at": {
-          "name": "created_at",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
-        },
-        "updated_at": {
-          "name": "updated_at",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {},
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {
-        "users_email_unique": {
-          "name": "users_email_unique",
-          "nullsNotDistinct": false,
-          "columns": [
-            "email"
-          ]
-        }
-      },
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
-    }
-  },
-  "enums": {
-    "scheduler.department": {
-      "name": "department",
-      "schema": "scheduler",
-      "values": [
-        "Accounting",
-        "Anthropology",
-        "Architecture",
-        "Art History",
-        "Biological Sciences",
-        "Biology",
-        "Business",
-        "Chemical Engineering",
-        "Chemistry",
-        "Communication",
-        "Computer Science",
-        "Criminal Justice",
-        "Culinary Arts",
-        "Cultural Science",
-        "Decision Science",
-        "Design",
-        "Digital Media",
-        "Economics",
-        "Education",
-        "Engineering",
-        "English",
-        "Family Studies & Social Work",
-        "Film",
-        "Finance",
-        "Fine Arts",
-        "Geology",
-        "Graphic Arts",
-        "Health Science",
-        "History",
-        "Hospitality",
-        "Humanities",
-        "Information Science",
-        "Japanese",
-        "Journalism",
-        "Languages",
-        "Law",
-        "Library  Information Science",
-        "Library & Information Science",
-        "Literature",
-        "Management",
-        "Marketing",
-        "Materials Science",
-        "Mathematics",
-        "Media Arts & Design",
-        "Medicine",
-        "Music",
-        "Not Specified",
-        "Nursing",
-        "Philosophy",
-        "Photography",
-        "Physics",
-        "Political Science",
-        "Psychology",
-        "Public Health",
-        "Science",
-        "Social Work",
-        "Sociology",
-        "Statistics",
-        "Student Services",
-        "Theater"
-      ]
-    },
-    "scheduler.instruction_method": {
-      "name": "instruction_method",
-      "schema": "scheduler",
-      "values": [
-        "instruction",
-        "Community Based Learning",
-        "Face To Face",
-        "Hybrid",
-        "Online-Asynchronous",
-        "Online-Synchronous",
-        "Remote Asynchronous",
-        "Remote Synchronous"
-      ]
-    },
-    "scheduler.instruction_type": {
-      "name": "instruction_type",
-      "schema": "scheduler",
-      "values": [
-        "instruction",
-        "Career Integrated Experience",
-        "Clinical",
-        "Dissertation",
-        "Integrated Lecture & Lab",
-        "Internship/Clerkship/Preceptor",
-        "Lab",
-        "Lab & Studio",
-        "Lecture",
-        "Lecture & Clinical",
-        "Lecture & Lab",
-        "Lecture, Lab & Studio",
-        "Lecture & Practicum",
-        "Lecture & Recitation",
-        "Lecture & Seminar",
-        "Lecture & Studio",
-        "Medical Rotation",
-        "Performance",
-        "Practice",
-        "Practicum",
-        "Practicum & Clinical",
-        "Private Lesson",
-        "Recitation/Discussion",
-        "Recitation & Lab",
-        "Research",
-        "Seminar",
-        "Seminar & Clinical",
-        "Seminar & Research",
-        "Special Topics",
-        "Special Topics-Lab",
-        "Special Topics-Lecture",
-        "Special Topics-Lecture & Lab",
-        "Special Topics-Seminar",
-        "Studio",
-        "Study Abroad",
-        "Thesis"
-      ]
-    },
-    "public.citizenship_restriction": {
-      "name": "citizenship_restriction",
-      "schema": "public",
-      "values": [
-        "No Restriction",
-        "Resident Alien (Green Card) or US Citizen",
-        "US Citizen Only"
-      ]
-    },
-    "public.compensation_status": {
-      "name": "compensation_status",
-      "schema": "public",
-      "values": [
-        "Unpaid Position",
-        "Hourly Paid or Salaried Position"
-      ]
-    },
-    "public.coop_cycle": {
-      "name": "coop_cycle",
-      "schema": "public",
-      "values": [
-        "Fall/Winter",
-        "Winter/Spring",
-        "Spring/Summer",
-        "Summer/Fall"
-      ]
-    },
-    "public.coop_year": {
-      "name": "coop_year",
-      "schema": "public",
-      "values": [
-        "1st",
-        "2nd",
-        "3rd"
-      ]
-    },
-    "public.experience_level": {
-      "name": "experience_level",
-      "schema": "public",
-      "values": [
-        "Advanced",
-        "Beginner",
-        "Intermediate"
-      ]
-    },
-    "public.job_status": {
-      "name": "job_status",
-      "schema": "public",
-      "values": [
-        "Inactive",
-        "Pending",
-        "Cancelled",
-        "Active",
-        "Delete"
-      ]
-    },
-    "public.job_type": {
-      "name": "job_type",
-      "schema": "public",
-      "values": [
-        "Co-op Experience",
-        "Graduate Co-op Experience",
-        "Summer-Only Coop"
-      ]
-    },
-    "public.program_level": {
-      "name": "program_level",
-      "schema": "public",
-      "values": [
-        "Undergraduate",
-        "Graduate"
-      ]
-    }
-  },
-  "schemas": {
-    "scheduler": "scheduler"
-  },
-  "sequences": {},
-  "roles": {},
-  "policies": {},
-  "views": {},
-  "_meta": {
-    "columns": {},
-    "schemas": {},
-    "tables": {}
-  }
+      "public.program_level": {
+         "name": "program_level",
+         "schema": "public",
+         "values": [
+            "Undergraduate",
+            "Graduate"
+         ]
+      }
+   },
+   "schemas": {
+      "scheduler": "scheduler"
+   },
+   "sequences": {},
+   "roles": {},
+   "policies": {},
+   "views": {},
+   "_meta": {
+      "columns": {},
+      "schemas": {},
+      "tables": {}
+   }
 }

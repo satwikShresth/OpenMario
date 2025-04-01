@@ -1,6 +1,19 @@
-import React from 'react';
-import { FormControl, InputLabel, Select, MenuItem, FormHelperText, OutlinedInput, Box } from '@mui/material';
-import { Controller, type Control, type FieldValues, type RegisterOptions } from "react-hook-form";
+import React from "react";
+import {
+  Box,
+  FormControl,
+  FormHelperText,
+  InputLabel,
+  MenuItem,
+  OutlinedInput,
+  Select,
+} from "@mui/material";
+import {
+  type Control,
+  Controller,
+  type FieldValues,
+  type RegisterOptions,
+} from "react-hook-form";
 
 type DropdownFieldProps<T extends FieldValues> = {
   name: keyof T;
@@ -48,16 +61,16 @@ export const DropdownField = <T extends FieldValues>({
             error={error || !!fieldState.error}
           >
             <InputLabel id={`${String(name)}-label`}>
-              {icon ? (
-                <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                  <Box sx={{ transform: 'translateY(-2px)' }}>
-                    {icon}
+              {icon
+                ? (
+                  <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                    <Box sx={{ transform: "translateY(-2px)" }}>
+                      {icon}
+                    </Box>
+                    {label}
                   </Box>
-                  {label}
-                </Box>
-              ) : (
-                label
-              )}
+                )
+                : label}
             </InputLabel>
             <Select
               {...restField}
@@ -66,7 +79,9 @@ export const DropdownField = <T extends FieldValues>({
               value={value || ""}
               onChange={(e) => {
                 const newValue = e.target.value;
-                onChange(nullable && (!newValue || newValue === "") ? null : newValue);
+                onChange(
+                  nullable && (!newValue || newValue === "") ? null : newValue,
+                );
               }}
               input={<OutlinedInput label={label} />}
               displayEmpty={!!placeholder}
@@ -74,9 +89,9 @@ export const DropdownField = <T extends FieldValues>({
                 if (!selected && placeholder) {
                   return <em style={{ opacity: 0.6 }}>{placeholder}</em>;
                 }
-                return typeof selected === 'string' && selected.includes('/')
+                return typeof selected === "string" && selected.includes("/")
                   ? selected
-                  : `${selected}${name === 'coop_year' ? ' Year' : ''}`;
+                  : `${selected}${name === "coop_year" ? " Year" : ""}`;
               }}
             >
               {emptyOption && (
@@ -86,7 +101,9 @@ export const DropdownField = <T extends FieldValues>({
               )}
               {options.map((option) => (
                 <MenuItem key={option} value={option}>
-                  {option.includes('/') ? option : `${option}${name === 'coop_year' ? ' Year' : ''}`}
+                  {option.includes("/")
+                    ? option
+                    : `${option}${name === "coop_year" ? " Year" : ""}`}
                 </MenuItem>
               ))}
             </Select>

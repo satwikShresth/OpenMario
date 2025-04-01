@@ -1,11 +1,46 @@
-import React, { useState, useRef, useMemo, useEffect } from 'react';
-import { Button, Dialog, DialogTitle, DialogContent, DialogActions, IconButton, Typography, Box, Backdrop, Fade, Grid2 as Grid, TextField, Tooltip, Stepper, Step, StepLabel, StepContent, Paper } from '@mui/material';
-import { Upload, X, ImagePlus, FileUp, Clipboard, ExternalLink, ArrowLeft, ArrowRight, CheckCircle } from 'lucide-react';
-import { useForm } from 'react-hook-form';
-import { PROGRAM_LEVELS, COOP_CYCLES, COOP_YEARS, type CommonData, COOP_ROUND } from '#/types';
-import { DatePickerField, DropdownField } from './Job/Form/fields';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { UploadSchema } from '#/utils/validators';
+import React, { useEffect, useMemo, useRef, useState } from "react";
+import {
+  Backdrop,
+  Box,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Fade,
+  Grid2 as Grid,
+  IconButton,
+  Paper,
+  Step,
+  StepContent,
+  StepLabel,
+  Stepper,
+  TextField,
+  Tooltip,
+  Typography,
+} from "@mui/material";
+import {
+  ArrowLeft,
+  ArrowRight,
+  CheckCircle,
+  Clipboard,
+  ExternalLink,
+  FileUp,
+  ImagePlus,
+  Upload,
+  X,
+} from "lucide-react";
+import { useForm } from "react-hook-form";
+import {
+  type CommonData,
+  COOP_CYCLES,
+  COOP_ROUND,
+  COOP_YEARS,
+  PROGRAM_LEVELS,
+} from "#/types";
+import { DatePickerField, DropdownField } from "./Job/Form/fields";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { UploadSchema } from "#/utils/validators";
 
 interface FileUploadProps {
   onFileSelect: (file: File, common: CommonData) => void;
@@ -24,7 +59,7 @@ const FileUpload: React.FC<FileUploadProps> = ({ onFileSelect }) => {
     watch,
     reset,
     setFocus,
-    formState: { errors, isValid, touchedFields }
+    formState: { errors, isValid, touchedFields },
   } = useForm<CommonData>({
     resolver: zodResolver(UploadSchema),
     defaultValues: {
@@ -34,38 +69,40 @@ const FileUpload: React.FC<FileUploadProps> = ({ onFileSelect }) => {
       program_level: PROGRAM_LEVELS[0],
       year: "",
     },
-    mode: 'onChange',
+    mode: "onChange",
   });
 
-  const year = watch('year');
-  const coop_round = watch('coop_round');
-  const coop_cycle = watch('coop_cycle');
+  const year = watch("year");
+  const coop_round = watch("coop_round");
+  const coop_cycle = watch("coop_cycle");
 
   useEffect(() => {
     if (isValid) {
-      setActiveStep((previousActiveStep) => previousActiveStep + 1)
+      setActiveStep((previousActiveStep) => previousActiveStep + 1);
     }
   }, [isValid, setActiveStep]);
 
-
   useEffect(() => {
     if (activeStep === 0) {
-      setFocus('coop_year');
+      setFocus("coop_year");
     }
   }, [activeStep, setFocus]);
 
-  const previewUrl = useMemo(() =>
-    `https://banner.drexel.edu/duprod/hwczksrmk.P_StudentReqMaintRanking?i_user_type=S&i_begin_term=${year}${COOP_CYCLES.indexOf(coop_cycle) + 1}5&i_cycle=${coop_round}&i_mode=S&i_recs_per_page=20`,
-    [year, coop_cycle, coop_round]
+  const previewUrl = useMemo(
+    () =>
+      `https://banner.drexel.edu/duprod/hwczksrmk.P_StudentReqMaintRanking?i_user_type=S&i_begin_term=${year}${
+        COOP_CYCLES.indexOf(coop_cycle) + 1
+      }5&i_cycle=${coop_round}&i_mode=S&i_recs_per_page=20`,
+    [year, coop_cycle, coop_round],
   );
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
       const file = e.target.files[0];
-      if (file && file.type.startsWith('image/')) {
+      if (file && file.type.startsWith("image/")) {
         setSelectedFile(file);
       } else {
-        alert('Please select an image file');
+        alert("Please select an image file");
       }
     }
   };
@@ -76,10 +113,10 @@ const FileUpload: React.FC<FileUploadProps> = ({ onFileSelect }) => {
 
     if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
       const file = e.dataTransfer.files[0];
-      if (file.type.startsWith('image/')) {
+      if (file.type.startsWith("image/")) {
         setSelectedFile(file);
       } else {
-        alert('Please select an image file');
+        alert("Please select an image file");
       }
     }
   };
@@ -100,35 +137,39 @@ const FileUpload: React.FC<FileUploadProps> = ({ onFileSelect }) => {
       onFileSelect(selectedFile, data);
       closeModal();
     } else {
-      alert('Please select a file');
+      alert("Please select a file");
     }
   };
 
   const handleOpenUrl = () => {
-    window.open(previewUrl, '_blank', 'noopener,noreferrer,nofollow');
+    window.open(previewUrl, "_blank", "noopener,noreferrer,nofollow");
 
     setTimeout(() => {
       if (activeStep === 2) {
-        setBannerLinkClicked(false)
-        setActiveStep((previousActiveStep) => previousActiveStep + 1)
+        setBannerLinkClicked(false);
+        setActiveStep((previousActiveStep) => previousActiveStep + 1);
       }
     }, 800);
   };
 
   const handleBannerLinkClick = () => {
     setBannerLinkClicked(true);
-    window.open("https://bannersso.drexel.edu/ssomanager/c/SSB?pkg=bwszkfrag.P_DisplayFinResponsibility%3Fi_url%3Dhwczksrmp.P_StudentRequestMaintStud", '_blank', 'noopener,noreferrer,nofollow');
+    window.open(
+      "https://bannersso.drexel.edu/ssomanager/c/SSB?pkg=bwszkfrag.P_DisplayFinResponsibility%3Fi_url%3Dhwczksrmp.P_StudentRequestMaintStud",
+      "_blank",
+      "noopener,noreferrer,nofollow",
+    );
 
     setTimeout(() => {
       if (activeStep === 1) {
-        setActiveStep((previousActiveStep) => previousActiveStep + 1)
+        setActiveStep((previousActiveStep) => previousActiveStep + 1);
       }
     }, 800);
   };
 
   const handleBack = () => {
     setActiveStep(
-      (prevActiveStep) => prevActiveStep - (prevActiveStep === 3 ? 2 : 1)
+      (prevActiveStep) => prevActiveStep - (prevActiveStep === 3 ? 2 : 1),
     );
   };
 
@@ -142,8 +183,8 @@ const FileUpload: React.FC<FileUploadProps> = ({ onFileSelect }) => {
 
   const steps = [
     {
-      label: 'Fill Co-op Information',
-      activeLabel: 'Fill Co-op Information',
+      label: "Fill Co-op Information",
+      activeLabel: "Fill Co-op Information",
       content: (
         <Box>
           <Grid container columnSpacing={3} rowSpacing={2} sx={{ mt: 2 }}>
@@ -170,11 +211,13 @@ const FileUpload: React.FC<FileUploadProps> = ({ onFileSelect }) => {
                 name="year"
                 label="Year"
                 control={control}
-                views={['year']}
+                views={["year"]}
                 openTo="year"
                 minYear={2005}
                 error={!!touchedFields.year && !!errors.year}
-                helperText={touchedFields.year && errors.year ? errors.year.message : ''}
+                helperText={touchedFields.year && errors.year
+                  ? errors.year.message
+                  : ""}
               />
             </Grid>
 
@@ -200,15 +243,17 @@ const FileUpload: React.FC<FileUploadProps> = ({ onFileSelect }) => {
       ),
     },
     {
-      label: 'Access Banner System',
-      activeLabel: 'Login to Banner to access your rankings',
+      label: "Access Banner System",
+      activeLabel: "Login to Banner to access your rankings",
       content: (
         <Box>
-          <Box sx={{ display: 'flex', justifyContent: 'center', mb: 3 }}>
+          <Box sx={{ display: "flex", justifyContent: "center", mb: 3 }}>
             <Button
               variant="contained"
               color={bannerLinkClicked ? "success" : "primary"}
-              startIcon={bannerLinkClicked ? <CheckCircle size={20} /> : <ExternalLink size={20} />}
+              startIcon={bannerLinkClicked
+                ? <CheckCircle size={20} />
+                : <ExternalLink size={20} />}
               onClick={handleBannerLinkClick}
               size="large"
               sx={{ py: 1.5, px: 3 }}
@@ -220,8 +265,8 @@ const FileUpload: React.FC<FileUploadProps> = ({ onFileSelect }) => {
       ),
     },
     {
-      label: 'Access Rankings',
-      activeLabel: 'Access your rankings with the link below',
+      label: "Access Rankings",
+      activeLabel: "Access your rankings with the link below",
       content: (
         <Box>
           <TextField
@@ -230,9 +275,9 @@ const FileUpload: React.FC<FileUploadProps> = ({ onFileSelect }) => {
             value={previewUrl}
             InputProps={{
               readOnly: true,
-              sx: { fontSize: '1rem' },
+              sx: { fontSize: "1rem" },
               endAdornment: (
-                <Box sx={{ display: 'flex' }}>
+                <Box sx={{ display: "flex" }}>
                   <Tooltip title="Copy URL">
                     <IconButton
                       size="medium"
@@ -252,7 +297,14 @@ const FileUpload: React.FC<FileUploadProps> = ({ onFileSelect }) => {
             }}
           />
 
-          <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2 }}>
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              gap: 2,
+            }}
+          >
             <Button
               variant="contained"
               color="primary"
@@ -268,74 +320,104 @@ const FileUpload: React.FC<FileUploadProps> = ({ onFileSelect }) => {
       ),
     },
     {
-      label: 'Upload Screenshot',
+      label: "Upload Screenshot",
       activeLabel: "Upload a screenshot of your rankings page",
       content: (
         <Box>
-          <Typography variant="body2" color="text.secondary" sx={{ display: 'block', textAlign: 'center', fontWeight: 550, fontSize: 18, mb: 2 }}>
-            *Make sure your screenshot contains only the rankings between both {<img src="return.jpg" alt="return" style={{ display: 'inline', verticalAlign: 'middle' }} />} buttons
+          <Typography
+            variant="body2"
+            color="text.secondary"
+            sx={{
+              display: "block",
+              textAlign: "center",
+              fontWeight: 550,
+              fontSize: 18,
+              mb: 2,
+            }}
+          >
+            *Make sure your screenshot contains only the rankings between both
+            {" "}
+            {
+              <img
+                src="return.jpg"
+                alt="return"
+                style={{ display: "inline", verticalAlign: "middle" }}
+              />
+            } buttons
           </Typography>
 
-          {!selectedFile ? (
-            <Box
-              sx={{
-                border: '2px dashed',
-                borderColor: 'primary.main',
-                borderRadius: 2,
-                p: 4,
-                mb: 3,
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                cursor: 'pointer',
-                backgroundColor: 'rgba(25, 118, 210, 0.04)',
-                transition: 'all 0.2s',
-                '&:hover': {
-                  backgroundColor: 'rgba(25, 118, 210, 0.08)',
-                  transform: 'scale(1.01)'
-                }
-              }}
-              onClick={triggerFileSelect}
-              onDrop={handleDrop}
-              onDragOver={handleDragOver}
-            >
-              <ImagePlus size={40} color="#1976d2" style={{ marginBottom: 16 }} />
-              <Typography variant="body1" sx={{ mb: 1, textAlign: 'center', fontWeight: 500 }}>
-                Drag and drop an image here or click to browse
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                Supported formats: JPG, PNG, GIF
-              </Typography>
-            </Box>
-          ) : (
-            <Box
-              sx={{
-                border: '2px solid',
-                borderColor: 'success.main',
-                borderRadius: 2,
-                p: 3,
-                mb: 3,
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                backgroundColor: 'rgba(76, 175, 80, 0.08)',
-              }}
-            >
-              <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                <FileUp size={24} color="#2e7d32" />
-                <Typography variant="body1" sx={{ ml: 2, color: 'text.primary', fontWeight: 500 }}>
-                  {selectedFile.name}
+          {!selectedFile
+            ? (
+              <Box
+                sx={{
+                  border: "2px dashed",
+                  borderColor: "primary.main",
+                  borderRadius: 2,
+                  p: 4,
+                  mb: 3,
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  cursor: "pointer",
+                  backgroundColor: "rgba(25, 118, 210, 0.04)",
+                  transition: "all 0.2s",
+                  "&:hover": {
+                    backgroundColor: "rgba(25, 118, 210, 0.08)",
+                    transform: "scale(1.01)",
+                  },
+                }}
+                onClick={triggerFileSelect}
+                onDrop={handleDrop}
+                onDragOver={handleDragOver}
+              >
+                <ImagePlus
+                  size={40}
+                  color="#1976d2"
+                  style={{ marginBottom: 16 }}
+                />
+                <Typography
+                  variant="body1"
+                  sx={{ mb: 1, textAlign: "center", fontWeight: 500 }}
+                >
+                  Drag and drop an image here or click to browse
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  Supported formats: JPG, PNG, GIF
                 </Typography>
               </Box>
-              <IconButton
-                onClick={() => setSelectedFile(null)}
-                sx={{ color: 'error.main' }}
+            )
+            : (
+              <Box
+                sx={{
+                  border: "2px solid",
+                  borderColor: "success.main",
+                  borderRadius: 2,
+                  p: 3,
+                  mb: 3,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  backgroundColor: "rgba(76, 175, 80, 0.08)",
+                }}
               >
-                <X size={20} />
-              </IconButton>
-            </Box>
-          )}
-        </Box >
+                <Box sx={{ display: "flex", alignItems: "center" }}>
+                  <FileUp size={24} color="#2e7d32" />
+                  <Typography
+                    variant="body1"
+                    sx={{ ml: 2, color: "text.primary", fontWeight: 500 }}
+                  >
+                    {selectedFile.name}
+                  </Typography>
+                </Box>
+                <IconButton
+                  onClick={() => setSelectedFile(null)}
+                  sx={{ color: "error.main" }}
+                >
+                  <X size={20} />
+                </IconButton>
+              </Box>
+            )}
+        </Box>
       ),
     },
   ];
@@ -348,7 +430,7 @@ const FileUpload: React.FC<FileUploadProps> = ({ onFileSelect }) => {
         ref={fileInputRef}
         onChange={handleFileChange}
         accept="image/*"
-        style={{ display: 'none' }}
+        style={{ display: "none" }}
       />
 
       {/* Button to open modal */}
@@ -372,14 +454,16 @@ const FileUpload: React.FC<FileUploadProps> = ({ onFileSelect }) => {
         TransitionProps={{ timeout: 300 }}
         BackdropProps={{ timeout: 300 }}
       >
-        <DialogTitle sx={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          borderBottom: '1px solid',
-          borderColor: 'divider',
-          py: 2
-        }}>
+        <DialogTitle
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            borderBottom: "1px solid",
+            borderColor: "divider",
+            py: 2,
+          }}
+        >
           <Typography variant="h6" component="div" sx={{ fontWeight: 500 }}>
             Upload Co-op Offer
           </Typography>
@@ -401,13 +485,17 @@ const FileUpload: React.FC<FileUploadProps> = ({ onFileSelect }) => {
                     <Paper
                       sx={{
                         p: 0.7,
-                        bgcolor: 'primary.main',
-                        color: 'white',
+                        bgcolor: "primary.main",
+                        color: "white",
                         borderRadius: 1,
                       }}
                     >
                       <StepLabel>
-                        <Typography variant="body1" fontWeight="medium" sx={{ color: "white" }}>
+                        <Typography
+                          variant="body1"
+                          fontWeight="medium"
+                          sx={{ color: "white" }}
+                        >
                           {step.activeLabel}
                         </Typography>
                       </StepLabel>
@@ -419,8 +507,7 @@ const FileUpload: React.FC<FileUploadProps> = ({ onFileSelect }) => {
                         {step.label}
                       </Typography>
                     </StepLabel>
-                  )
-                }
+                  )}
                 <StepContent sx={{ pb: 2, pt: 2 }}>
                   {step.content}
                 </StepContent>
@@ -429,14 +516,16 @@ const FileUpload: React.FC<FileUploadProps> = ({ onFileSelect }) => {
           </Stepper>
         </DialogContent>
 
-        <DialogActions sx={{ px: 3, py: 2, borderTop: '1px solid', borderColor: 'divider' }}>
+        <DialogActions
+          sx={{ px: 3, py: 2, borderTop: "1px solid", borderColor: "divider" }}
+        >
           {activeStep > 0 && (
             <Button
               variant="outlined"
               onClick={handleBack}
               size="medium"
               startIcon={<ArrowLeft size={18} />}
-              sx={{ mr: 'auto' }}
+              sx={{ mr: "auto" }}
             >
               Back
             </Button>
@@ -446,7 +535,7 @@ const FileUpload: React.FC<FileUploadProps> = ({ onFileSelect }) => {
             variant="outlined"
             onClick={closeModal}
             size="medium"
-            sx={{ minWidth: '100px', mr: 1 }}
+            sx={{ minWidth: "100px", mr: 1 }}
           >
             Cancel
           </Button>
@@ -458,7 +547,7 @@ const FileUpload: React.FC<FileUploadProps> = ({ onFileSelect }) => {
               onClick={() => isValid && setActiveStep(1)}
               endIcon={<ArrowRight size={18} />}
               size="medium"
-              sx={{ minWidth: '100px', py: 1 }}
+              sx={{ minWidth: "100px", py: 1 }}
             >
               Next
             </Button>
@@ -472,13 +561,13 @@ const FileUpload: React.FC<FileUploadProps> = ({ onFileSelect }) => {
               startIcon={<Upload size={18} />}
               disabled={!selectedFile}
               size="medium"
-              sx={{ minWidth: '100px', py: 1 }}
+              sx={{ minWidth: "100px", py: 1 }}
             >
               Submit
             </Button>
           )}
         </DialogActions>
-      </Dialog >
+      </Dialog>
     </>
   );
 };

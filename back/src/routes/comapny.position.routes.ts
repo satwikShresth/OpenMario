@@ -77,65 +77,73 @@ export default () => {
     *   "message": "Error: Failed to create company or position"
     * }
     */
-   router.post('/company-position', zValidator('json', CompanyPositionInsertSchema), async (c) => {
-      const user_id = c.get('jwtPayload')?.user_id || null;
-      const { company_name, position_name } = c.req.valid('json') as CompanyPostionInsert;
+   router.post(
+      '/company-position',
+      zValidator('json', CompanyPositionInsertSchema),
+      async (c) => {
+         const user_id = c.get('jwtPayload')?.user_id || null;
+         const { company_name, position_name } = c.req.valid(
+            'json',
+         ) as CompanyPostionInsert;
 
-      // Get or create company
-      return await db
-         .select({ id: company.id })
-         .from(company)
-         .where(eq(company.name, company_name))
-         .then(async (existingCompanies) => {
-            if (existingCompanies.length > 0) {
-               return existingCompanies[0].id;
-            }
+         // Get or create company
+         return await db
+            .select({ id: company.id })
+            .from(company)
+            .where(eq(company.name, company_name))
+            .then(async (existingCompanies) => {
+               if (existingCompanies.length > 0) {
+                  return existingCompanies[0].id;
+               }
 
-            return await db
-               .insert(company)
-               .values({ name: company_name, owner_id: user_id })
-               .returning({ id: company.id })
-               .then(([{ id }]) => id);
-         })
-         .then(async (company_id) => {
-            // Check if position already exists
-            return await db
-               .select({ id: position.id })
-               .from(position)
-               .where(
-                  and(
-                     eq(position.name, position_name),
-                     eq(position.company_id, company_id),
-                  ),
-               )
-               .then(async (existingPositions) => {
-                  if (existingPositions.length > 0) {
-                     return c.json({ message: 'Position Already Exists' }, 409);
-                  }
+               return await db
+                  .insert(company)
+                  .values({ name: company_name, owner_id: user_id })
+                  .returning({ id: company.id })
+                  .then(([{ id }]) => id);
+            })
+            .then(async (company_id) => {
+               // Check if position already exists
+               return await db
+                  .select({ id: position.id })
+                  .from(position)
+                  .where(
+                     and(
+                        eq(position.name, position_name),
+                        eq(position.company_id, company_id),
+                     ),
+                  )
+                  .then(async (existingPositions) => {
+                     if (existingPositions.length > 0) {
+                        return c.json({ message: 'Position Already Exists' }, 409);
+                     }
 
-                  // Create new position
-                  return await db
-                     .insert(position)
-                     .values({
-                        name: position_name,
-                        company_id,
-                        owner_id: user_id,
-                     })
-                     .returning({ id: position.id })
-                     .then(([{ id }]) =>
-                        c.json({
+                     // Create new position
+                     return await db
+                        .insert(position)
+                        .values({
+                           name: position_name,
                            company_id,
-                           position_id: id,
-                           message: 'Added Position Successfully',
-                        }, 201)
-                     );
-               });
-         })
-         .catch((error) => {
-            console.log(`Error:${error}`);
-            return c.json({ message: `Error: ${error?.message || 'Unknown error'}` }, 409);
-         });
-   });
+                           owner_id: user_id,
+                        })
+                        .returning({ id: position.id })
+                        .then(([{ id }]) =>
+                           c.json({
+                              company_id,
+                              position_id: id,
+                              message: 'Added Position Successfully',
+                           }, 201)
+                        );
+                  });
+            })
+            .catch((error) => {
+               console.log(`Error:${error}`);
+               return c.json({
+                  message: `Error: ${error?.message || 'Unknown error'}`,
+               }, 409);
+            });
+      },
+   );
 
    return router;
 };

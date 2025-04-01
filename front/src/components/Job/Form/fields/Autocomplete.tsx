@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import { Controller } from 'react-hook-form';
-import { Box, TextField, Autocomplete, CircularProgress } from '@mui/material';
-import type { Submission } from '#/types';
-import { filterOptions } from '../filter';
+import React, { useEffect, useState } from "react";
+import { Controller } from "react-hook-form";
+import { Autocomplete, Box, CircularProgress, TextField } from "@mui/material";
+import type { Submission } from "#/types";
+import { filterOptions } from "../filter";
 
 type AutocompleteFieldWithIconProps<T> = {
   name: keyof Submission;
@@ -37,7 +37,7 @@ export const AutocompleteFieldWithIcon = <T extends object>({
   onInputChange,
   placeholder,
   nullable = false,
-  noOptionsText = 'No options',
+  noOptionsText = "No options",
   disabled = false,
   error,
   helperText,
@@ -45,8 +45,8 @@ export const AutocompleteFieldWithIcon = <T extends object>({
   ...props
 }: AutocompleteFieldWithIconProps<T>) => {
   const { loadOptions, dependsOn, ...filteredProps } = props as any;
-  const [inputValue, setInputValue] = useState('');
-  const [customError, setCustomError] = useState('');
+  const [inputValue, setInputValue] = useState("");
+  const [customError, setCustomError] = useState("");
   const [shouldValidate, setShouldValidate] = useState(true);
 
   // Effect to continuously validate input value against options
@@ -54,19 +54,19 @@ export const AutocompleteFieldWithIcon = <T extends object>({
   useEffect(() => {
     if (loading) {
       // Don't validate while loading
-      setCustomError('');
+      setCustomError("");
       return;
     }
 
-    if (shouldValidate && inputValue && inputValue !== '') {
+    if (shouldValidate && inputValue && inputValue !== "") {
       const valueExists = checkValueInOptions(inputValue);
       if (!valueExists) {
-        setCustomError('Value must match one of the available options');
+        setCustomError("Value must match one of the available options");
       } else {
-        setCustomError('');
+        setCustomError("");
       }
     } else {
-      setCustomError('');
+      setCustomError("");
     }
   }, [inputValue, options, getOptionLabel, loading, shouldValidate]);
 
@@ -97,7 +97,7 @@ export const AutocompleteFieldWithIcon = <T extends object>({
 
     const normalizedValue = normalizeString(value);
 
-    return options.some(option => {
+    return options.some((option) => {
       const optionLabel = getOptionLabel(option as T);
       return normalizeString(optionLabel) === normalizedValue;
     });
@@ -114,30 +114,33 @@ export const AutocompleteFieldWithIcon = <T extends object>({
           if (loading) return true;
 
           // Skip validation for empty values
-          if (!inputValue || inputValue === '') return true;
+          if (!inputValue || inputValue === "") return true;
 
-          return checkValueInOptions(inputValue) || 'Value must match one of the available options';
-        }
+          return checkValueInOptions(inputValue) ||
+            "Value must match one of the available options";
+        },
       }}
       render={({ field, fieldState }) => {
         const { onChange, value, ref, onBlur, ...restField } = field;
-        const controlledValue = value === null || value === undefined ? "" : value;
+        const controlledValue = value === null || value === undefined
+          ? ""
+          : value;
 
         // Custom onBlur handler that checks for errors
         const handleBlur = (event) => {
           // Don't show errors while loading
           if (loading) return onBlur();
 
-          if (inputValue && inputValue !== '') {
+          if (inputValue && inputValue !== "") {
             const valueExists = checkValueInOptions(inputValue);
 
             if (!valueExists) {
-              setCustomError('Value must match one of the available options');
+              setCustomError("Value must match one of the available options");
             } else {
-              setCustomError('');
+              setCustomError("");
             }
           } else {
-            setCustomError('');
+            setCustomError("");
           }
 
           // Call the original onBlur
@@ -161,8 +164,11 @@ export const AutocompleteFieldWithIcon = <T extends object>({
         }, [loading]);
 
         // Only show errors if not loading AND not recently loaded AND has actual errors
-        const showError = !loading && !wasRecentlyLoading && (error || !!fieldState.error || !!customError);
-        const errorMessage = showError ? (helperText || fieldState.error?.message || customError || "") : "";
+        const showError = !loading && !wasRecentlyLoading &&
+          (error || !!fieldState.error || !!customError);
+        const errorMessage = showError
+          ? (helperText || fieldState.error?.message || customError || "")
+          : "";
 
         return (
           <Autocomplete
@@ -172,9 +178,9 @@ export const AutocompleteFieldWithIcon = <T extends object>({
             loading={loading}
             getOptionLabel={(option) => {
               // Handle null/undefined option
-              if (option === null || option === undefined) return '';
+              if (option === null || option === undefined) return "";
               // Handle string options for freeSolo mode
-              if (typeof option === 'string') return option;
+              if (typeof option === "string") return option;
               return getOptionLabel(option as T);
             }}
             isOptionEqualToValue={isOptionEqualToValue}
@@ -182,7 +188,9 @@ export const AutocompleteFieldWithIcon = <T extends object>({
               setInputValue(newInputValue);
 
               if (freeSolo) {
-                onChange(newInputValue === "" && nullable ? null : newInputValue);
+                onChange(
+                  newInputValue === "" && nullable ? null : newInputValue,
+                );
               }
 
               if (onInputChange) {
@@ -196,23 +204,23 @@ export const AutocompleteFieldWithIcon = <T extends object>({
               onChange(newValue === "" && nullable ? null : newValue);
 
               // Clear any custom errors when selection changes
-              setCustomError('');
+              setCustomError("");
 
               // Also update the input value when selection changes
               if (newValue !== null) {
-                if (typeof newValue === 'object') {
+                if (typeof newValue === "object") {
                   setInputValue(getOptionLabel(newValue as T));
-                } else if (typeof newValue === 'string') {
+                } else if (typeof newValue === "string") {
                   setInputValue(newValue);
                 }
               } else {
-                setInputValue('');
+                setInputValue("");
               }
             }}
             onBlur={handleBlur}
             disabled={disabled}
             value={controlledValue}
-            noOptionsText={loading ? 'Loading...' : noOptionsText}
+            noOptionsText={loading ? "Loading..." : noOptionsText}
             freeSolo={freeSolo}
             renderInput={(params) => (
               <TextField
@@ -220,7 +228,7 @@ export const AutocompleteFieldWithIcon = <T extends object>({
                 inputRef={ref}
                 label={
                   <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                    <Box sx={{ transform: 'translateY(-2px)' }}>
+                    <Box sx={{ transform: "translateY(-2px)" }}>
                       {icon}
                     </Box>
                     {label}
@@ -233,7 +241,9 @@ export const AutocompleteFieldWithIcon = <T extends object>({
                   ...params.InputProps,
                   endAdornment: (
                     <React.Fragment>
-                      {loading ? <CircularProgress color="inherit" size={20} /> : null}
+                      {loading
+                        ? <CircularProgress color="inherit" size={20} />
+                        : null}
                       {params.InputProps.endAdornment}
                     </React.Fragment>
                   ),
@@ -243,7 +253,7 @@ export const AutocompleteFieldWithIcon = <T extends object>({
             renderOption={(props, option) => {
               if (option === null || option === undefined) return null;
               const optionLabel = getOptionLabel(option as T);
-              const optionKey = typeof option === 'object' && option !== null
+              const optionKey = typeof option === "object" && option !== null
                 ? (option as any).id || optionLabel
                 : String(optionLabel);
               return (

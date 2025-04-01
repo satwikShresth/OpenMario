@@ -1,23 +1,26 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useState } from "react";
 import {
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
+  Box,
   Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Divider,
   Grid,
   Typography,
-  Box,
-  Divider
-} from '@mui/material';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
-import { Building, Briefcase } from 'lucide-react';
-import ModalAutocompleteField from './ModalAutocompleteField';
-import { useQuery } from '@tanstack/react-query';
-import { getAutocompleteCompanyOptions, getAutocompletePositionOptions } from '#client/react-query.gen';
-import { debounce } from 'lodash';
+} from "@mui/material";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import { Briefcase, Building } from "lucide-react";
+import ModalAutocompleteField from "./ModalAutocompleteField";
+import { useQuery } from "@tanstack/react-query";
+import {
+  getAutocompleteCompanyOptions,
+  getAutocompletePositionOptions,
+} from "#client/react-query.gen";
+import { debounce } from "lodash";
 
 // Create a schema for company/position submission
 const CompanyPositionSchema = z.object({
@@ -33,15 +36,15 @@ interface CompanyPositionModalProps {
   initialCompany?: string;
   initialPosition?: string;
   onSubmit: (data: CompanyPosition, onReset, onClose) => Promise<void>;
-  disabledCompany: boolean,
-  disabledPosition: boolean,
+  disabledCompany: boolean;
+  disabledPosition: boolean;
 }
 
 const CompanyPositionModal: React.FC<CompanyPositionModalProps> = ({
   open,
   onClose,
-  initialCompany = '',
-  initialPosition = '',
+  initialCompany = "",
+  initialPosition = "",
   onSubmit,
   disabledCompany = false,
   disabledPosition = false,
@@ -51,14 +54,14 @@ const CompanyPositionModal: React.FC<CompanyPositionModalProps> = ({
     handleSubmit,
     reset,
     watch,
-    formState: { errors, isSubmitting }
+    formState: { errors, isSubmitting },
   } = useForm<CompanyPosition>({
     resolver: zodResolver(CompanyPositionSchema),
-    mode: 'onBlur',
+    mode: "onBlur",
     defaultValues: {
       company: initialCompany,
-      position: initialPosition
-    }
+      position: initialPosition,
+    },
   });
 
   const handleCancel = () => {
@@ -75,30 +78,30 @@ const CompanyPositionModal: React.FC<CompanyPositionModalProps> = ({
 
   const debouncedSearch = useCallback(
     debounce((field: string, value: string) => {
-      setSearches(prev => ({ ...prev, [field]: value }));
+      setSearches((prev) => ({ ...prev, [field]: value }));
     }, 300),
-    []
+    [],
   );
 
   const companyQuery = useQuery({
     ...getAutocompleteCompanyOptions({
-      query: { comp: company }
+      query: { comp: company },
     }),
     enabled: company?.length >= 3,
     staleTime: 30000,
-    placeholderData: (previousData) => previousData
+    placeholderData: (previousData) => previousData,
   });
 
   const positionQuery = useQuery({
     ...getAutocompletePositionOptions({
       query: {
-        comp: '*',
-        pos: position
-      }
+        comp: "*",
+        pos: position,
+      },
     }),
     enabled: position?.length >= 3,
     staleTime: 30000,
-    placeholderData: (previousData) => previousData
+    placeholderData: (previousData) => previousData,
   });
 
   return (
@@ -115,7 +118,11 @@ const CompanyPositionModal: React.FC<CompanyPositionModalProps> = ({
       </DialogTitle>
       <Divider sx={{ mb: 1 }} />
       <DialogContent>
-        <Box component="form" noValidate onSubmit={handleSubmit(handleFormSubmit)}>
+        <Box
+          component="form"
+          noValidate
+          onSubmit={handleSubmit(handleFormSubmit)}
+        >
           <Grid container spacing={3}>
             <Grid item xs={12}>
               <ModalAutocompleteField
@@ -150,7 +157,7 @@ const CompanyPositionModal: React.FC<CompanyPositionModalProps> = ({
           </Grid>
         </Box>
       </DialogContent>
-      <DialogActions sx={{ p: 2, mb: 1, mr: 1 }} >
+      <DialogActions sx={{ p: 2, mb: 1, mr: 1 }}>
         <Button onClick={handleCancel} color="inherit">
           Cancel
         </Button>
@@ -160,7 +167,7 @@ const CompanyPositionModal: React.FC<CompanyPositionModalProps> = ({
           color="primary"
           disabled={isSubmitting}
         >
-          {isSubmitting ? 'Saving...' : 'Save'}
+          {isSubmitting ? "Saving..." : "Save"}
         </Button>
       </DialogActions>
     </Dialog>

@@ -2,18 +2,18 @@
 
 ## Step 1: Installing Deno
 
-Install Deno because this project uses deno as its runtime, I took prior permission from Prof. Long for this, here is the link to do it if you havent
+Install Deno because this project uses deno as its runtime, I took prior
+permission from Prof. Long for this, here is the link to do it if you havent
 [DENO](https://deno.com)
-
 
 ## Step 2: Running the Project
 
-I have tried running it and it has worked for me, I have make it work in a certain way so it suits my dev process
+I have tried running it and it has worked for me, I have make it work in a
+certain way so it suits my dev process
 
 Commands are exaclty same as of npm
 
 ```bash
-
 # git clone <your-repo>
 # cd <your-repo>
 # npm i # install dependencies
@@ -34,8 +34,4 @@ deno task start # start your server
 
 # in another terminal...
 deno task test # run your tests
-
-
-
-
 ```
