@@ -16,6 +16,7 @@ import { Route as HomeImport } from './routes/home'
 import { Route as IndexImport } from './routes/index'
 import { Route as SubmissionIndexImport } from './routes/submission/index'
 import { Route as JobpostingIndexImport } from './routes/jobposting/index'
+import { Route as CoursesIndexImport } from './routes/courses/index'
 import { Route as SubmissionNewImport } from './routes/submission/new'
 import { Route as SubmissionFormIdImport } from './routes/submission/$formId'
 import { Route as LoginJwtPayloadImport } from './routes/login.$jwtPayload'
@@ -51,6 +52,12 @@ const SubmissionIndexRoute = SubmissionIndexImport.update({
 const JobpostingIndexRoute = JobpostingIndexImport.update({
   id: '/jobposting/',
   path: '/jobposting/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const CoursesIndexRoute = CoursesIndexImport.update({
+  id: '/courses/',
+  path: '/courses/',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -137,6 +144,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SubmissionNewImport
       parentRoute: typeof SubmissionImport
     }
+    '/courses/': {
+      id: '/courses/'
+      path: '/courses'
+      fullPath: '/courses'
+      preLoaderRoute: typeof CoursesIndexImport
+      parentRoute: typeof rootRoute
+    }
     '/jobposting/': {
       id: '/jobposting/'
       path: '/jobposting'
@@ -189,6 +203,7 @@ export interface FileRoutesByFullPath {
   '/login/$jwtPayload': typeof LoginJwtPayloadRoute
   '/submission/$formId': typeof SubmissionFormIdRoute
   '/submission/new': typeof SubmissionNewRoute
+  '/courses': typeof CoursesIndexRoute
   '/jobposting': typeof JobpostingIndexRoute
   '/submission/': typeof SubmissionIndexRoute
   '/submission/edit/$formId': typeof SubmissionEditFormIdRoute
@@ -201,6 +216,7 @@ export interface FileRoutesByTo {
   '/login/$jwtPayload': typeof LoginJwtPayloadRoute
   '/submission/$formId': typeof SubmissionFormIdRoute
   '/submission/new': typeof SubmissionNewRoute
+  '/courses': typeof CoursesIndexRoute
   '/jobposting': typeof JobpostingIndexRoute
   '/submission': typeof SubmissionIndexRoute
   '/submission/edit/$formId': typeof SubmissionEditFormIdRoute
@@ -215,6 +231,7 @@ export interface FileRoutesById {
   '/login/$jwtPayload': typeof LoginJwtPayloadRoute
   '/submission/$formId': typeof SubmissionFormIdRoute
   '/submission/new': typeof SubmissionNewRoute
+  '/courses/': typeof CoursesIndexRoute
   '/jobposting/': typeof JobpostingIndexRoute
   '/submission/': typeof SubmissionIndexRoute
   '/submission/edit/$formId': typeof SubmissionEditFormIdRoute
@@ -230,6 +247,7 @@ export interface FileRouteTypes {
     | '/login/$jwtPayload'
     | '/submission/$formId'
     | '/submission/new'
+    | '/courses'
     | '/jobposting'
     | '/submission/'
     | '/submission/edit/$formId'
@@ -241,6 +259,7 @@ export interface FileRouteTypes {
     | '/login/$jwtPayload'
     | '/submission/$formId'
     | '/submission/new'
+    | '/courses'
     | '/jobposting'
     | '/submission'
     | '/submission/edit/$formId'
@@ -253,6 +272,7 @@ export interface FileRouteTypes {
     | '/login/$jwtPayload'
     | '/submission/$formId'
     | '/submission/new'
+    | '/courses/'
     | '/jobposting/'
     | '/submission/'
     | '/submission/edit/$formId'
@@ -265,6 +285,7 @@ export interface RootRouteChildren {
   SubmissionRoute: typeof SubmissionRouteWithChildren
   JobpostingIdRoute: typeof JobpostingIdRoute
   LoginJwtPayloadRoute: typeof LoginJwtPayloadRoute
+  CoursesIndexRoute: typeof CoursesIndexRoute
   JobpostingIndexRoute: typeof JobpostingIndexRoute
 }
 
@@ -274,6 +295,7 @@ const rootRouteChildren: RootRouteChildren = {
   SubmissionRoute: SubmissionRouteWithChildren,
   JobpostingIdRoute: JobpostingIdRoute,
   LoginJwtPayloadRoute: LoginJwtPayloadRoute,
+  CoursesIndexRoute: CoursesIndexRoute,
   JobpostingIndexRoute: JobpostingIndexRoute,
 }
 
@@ -292,6 +314,7 @@ export const routeTree = rootRoute
         "/submission",
         "/jobposting/$id",
         "/login/$jwtPayload",
+        "/courses/",
         "/jobposting/"
       ]
     },
@@ -323,6 +346,9 @@ export const routeTree = rootRoute
     "/submission/new": {
       "filePath": "submission/new.tsx",
       "parent": "/submission"
+    },
+    "/courses/": {
+      "filePath": "courses/index.tsx"
     },
     "/jobposting/": {
       "filePath": "jobposting/index.tsx"

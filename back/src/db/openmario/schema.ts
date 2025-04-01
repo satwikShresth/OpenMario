@@ -17,7 +17,13 @@ export const job_type = [
    'Graduate Co-op Experience',
    'Summer-Only Coop',
 ] as const;
+
 export const experience_level = ['Advanced', 'Beginner', 'Intermediate'] as const;
+export const experience_desc = [
+   'Limited or no previous work experience/first Co-op',
+   'Some related work or volunteer experience/second Co-op',
+   'Previous related work experience/final Co-op',
+] as const;
 export const citizenship_restriction = [
    'No Restriction',
    'Resident Alien (Green Card) or US Citizen',
@@ -35,6 +41,7 @@ export const coop_cycle_type = pgEnum('coop_cycle', coop_cycle);
 export const coop_year_type = pgEnum('coop_year', coop_year);
 export const job_type_enum = pgEnum('job_type', job_type);
 export const experience_level_enum = pgEnum('experience_level', experience_level);
+export const experience_desc_enum = pgEnum('experience_desc', experience_desc);
 export const job_status_enum = pgEnum('job_status', job_status);
 export const compensation_status_enum = pgEnum('compensation_status', compensation_status);
 export const citizenship_restriction_enum = pgEnum(
@@ -189,7 +196,7 @@ export const job_experience_levels = pgTable('job_experience_levels', {
       .notNull()
       .references(() => job_posting.id, { onDelete: 'cascade' }),
    experience_level: experience_level_enum().notNull(),
-   description: varchar({ length: 500 }),
+   description: experience_desc_enum().notNull(),
 }, (table) => [primaryKey({ columns: [table.job_posting_id, table.experience_level] })]);
 
 export const job_posting_major = pgTable(

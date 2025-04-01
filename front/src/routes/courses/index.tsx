@@ -2,43 +2,44 @@ import { createFileRoute } from '@tanstack/react-router'
 import React, { useState, useEffect } from 'react'
 import {
   InstantSearch, SearchBox, InfiniteHits, Stats, RefinementList, SortBy,
-  Highlight // Added Highlight component import
+  Highlight
 } from 'react-instantsearch'
 import { instantMeiliSearch } from '@meilisearch/instant-meilisearch'
 import 'instantsearch.css/themes/satellite.css'
 import {
   Card, CardContent, Typography, Chip, Box, Grid, Button, Container,
   CircularProgress, Divider, Avatar, IconButton, Drawer, useMediaQuery,
-  Fab, useTheme, alpha, Stack
+  Fab, useTheme, alpha, Stack, Tooltip
 } from '@mui/material'
 import {
-  Briefcase, MapPin, Clock, Building, GraduationCap, Calendar, Search as SearchIcon,
-  Filter, SortAsc, ArrowUp, Star, ChevronDown, X, BookOpen, Layers, Menu, Award
+  BookOpen, Calendar, Clock, School, MapPin, Filter, ArrowUp,
+  Star, X, Users, GraduationCap, Award, BookmarkCheck, Layers,
+  ExternalLink
 } from 'lucide-react'
 import { useAppTheme } from '#/utils'
 import FilterSection from '#/components/search/FitlerSection'
 
-// Initialize the MeiliSearch client correctly
+// Initialize the MeiliSearch client
 const { searchClient } = instantMeiliSearch(
   `${window.location.host}/api/search`,
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWFyY2hSdWxlcyI6eyIqIjp7fX0sImFwaUtleVVpZCI6ImEzZDI4YWVhLWQ0NzgtNDI0Mi1iYzgyLWJjM2M5ODkwYTk0NSIsImV4cCI6MTc0MzU0Mzk1NX0.W4iWyHDtOITdLc_dmsBcIdtRKOWVX-XoYpWtpHlcYJU",
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWFyY2hSdWxlcyI6eyIqIjp7fX0sImFwaUtleVVpZCI6IjQ2ZTEyZjhkLWU1NTItNDY3NC1hMmI1LWMzODU3NjRjNGRkNCIsImV4cCI6MTc0MzU2MjI0NX0.FVTuiMqXqQ5w5HcPtkdorhFCaeAlE8Uoym94KlbBLSk",
   {
-    primaryKey: 'id',
+    primaryKey: 'crn',
     attributesToHighlight: [
-      'position_name',
-      'company_name',
-      'position_description',
-      'job_type',
-      'coop_cycle',
-      'majors'
+      'title',
+      'course',
+      'description',
+      'subject_name',
+      'college_name',
+      'instructors.name',
+      'instructors.department'
     ],
     highlightPreTag: '<mark>',
     highlightPostTag: '</mark>'
   }
 )
 
-// Route definition remains the same
-export const Route = createFileRoute('/jobposting/')({
+export const Route = createFileRoute('/courses/')({
   pendingComponent: () => {
     const theme = useTheme();
 
@@ -60,8 +61,8 @@ export const Route = createFileRoute('/jobposting/')({
               color: 'primary.main',
             }}
           />
-          <Typography variant="h5" fontWeight="bold" sx={{ mb: 1 }}>Loading Job Search</Typography>
-          <Typography variant="body1" color="text.secondary">Finding the perfect opportunities for you...</Typography>
+          <Typography variant="h5" fontWeight="bold" sx={{ mb: 1 }}>Loading Course Search</Typography>
+          <Typography variant="body1" color="text.secondary">Finding the perfect courses for you...</Typography>
         </Box>
       </Container>
     );
@@ -98,7 +99,7 @@ export const Route = createFileRoute('/jobposting/')({
             Oops! Something went wrong
           </Typography>
           <Typography variant="body1" sx={{ mb: 4, color: 'text.secondary' }}>
-            {error?.message || 'We encountered an error while loading the job search. Please try again.'}
+            {error?.message || 'We encountered an error while loading the course search. Please try again.'}
           </Typography>
           <Button
             variant="contained"
@@ -112,11 +113,11 @@ export const Route = createFileRoute('/jobposting/')({
       </Container>
     );
   },
-  component: JobSearchComponent,
+  component: CourseSectionsComponent,
 })
 
-// JobSearchComponent remains the same
-function JobSearchComponent() {
+// Main component
+function CourseSectionsComponent() {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -172,7 +173,7 @@ function JobSearchComponent() {
       <Container maxWidth="xl" sx={{ py: 3, px: { xs: 2, md: 4 } }}>
         <InstantSearch
           searchClient={searchClient}
-          indexName="job_postings"
+          indexName="sections"
         >
           <Box sx={{
             display: 'flex',
@@ -191,14 +192,14 @@ function JobSearchComponent() {
                   border: '2px solid black',
                 }}
               >
-                <Briefcase size={28} color="white" />
+                <BookOpen size={28} color="white" />
               </Box>
               <Box>
                 <Typography variant="h4" component="h1" fontWeight="bold" sx={{ mb: 0.5 }}>
-                  Find Your Dream Job
+                  Find Your Courses
                 </Typography>
                 <Typography variant="subtitle1" color="text.secondary">
-                  Explore opportunities that match your skills and interests
+                  Explore courses that match your academic interests and schedule
                 </Typography>
               </Box>
             </Box>
@@ -256,7 +257,7 @@ function JobSearchComponent() {
               }}
             >
               <SearchBox
-                placeholder="Search job titles, skills, or companies..."
+                placeholder="Search courses, instructors, or subjects..."
                 classNames={{
                   form: 'w-full relative',
                   input: 'w-full p-5 pl-14 rounded-full text-lg focus:outline-none',
@@ -269,7 +270,6 @@ function JobSearchComponent() {
           </Box>
 
           <Grid container spacing={4}>
-            {/* Filters - Desktop */}
             {!isMobile && (
               <Grid item md={3} lg={3}>
                 <FiltersPanel
@@ -304,10 +304,10 @@ function JobSearchComponent() {
                     boxShadow: '0 4px 0 rgba(0,0,0,0.2)',
                   }}
                 >
-                  <Award size={18} color={theme.palette.primary.main} style={{ marginRight: 8 }} />
+                  <BookmarkCheck size={18} color={theme.palette.primary.main} style={{ marginRight: 8 }} />
                   <Stats
                     translations={{
-                      stats: ({ nbHits }) => `${nbHits.toLocaleString()} positions available`,
+                      stats: ({ nbHits }) => `${nbHits.toLocaleString()} sections available`,
                     }}
                     classNames={{
                       root: 'font-bold',
@@ -327,14 +327,14 @@ function JobSearchComponent() {
                 >
                   <SortBy
                     items={[
-                      { label: 'Most Relevant', value: 'job_postings' },
-                      { label: 'Year (Newest)', value: 'job_postings:year:desc' },
-                      { label: 'Year (Oldest)', value: 'job_postings:year:asc' },
-                      { label: 'Job Length (Longest)', value: 'job_postings:job_length:desc' },
-                      { label: 'Minimum GPA (Highest)', value: 'job_postings:minimum_gpa:desc' },
-                      { label: 'Work Hours (Most)', value: 'job_postings:work_hours:desc' },
-                      { label: 'Recently Added', value: 'job_postings:created_at:desc' },
-                      { label: 'Recently Updated', value: 'job_postings:updated_at:desc' }
+                      { label: 'Most Relevant', value: 'sections' },
+                      { label: 'Course Number (Low to High)', value: 'sections:course_number:asc' },
+                      { label: 'Course Number (High to Low)', value: 'sections:course_number:desc' },
+                      { label: 'Credits (Highest)', value: 'sections:credits:desc' },
+                      { label: 'Credits (Lowest)', value: 'sections:credits:asc' },
+                      { label: 'Start Time (Earliest)', value: 'sections:start_time:asc' },
+                      { label: 'Start Time (Latest)', value: 'sections:start_time:desc' },
+                      { label: 'Instructor Rating (Highest)', value: 'sections:instructors.avg_rating:desc' }
                     ]}
                     classNames={{
                       select: 'py-2 px-10 px-4 rounded-full appearance-none cursor-pointer relative z-10 border-0 bg-transparent font-medium',
@@ -346,7 +346,7 @@ function JobSearchComponent() {
               {/* Results list */}
               <Box
                 component={InfiniteHits}
-                hitComponent={JobHit}
+                hitComponent={SectionHit}
                 sx={{
                   '& .ais-InfiniteHits-list': {
                     display: 'flex',
@@ -478,7 +478,7 @@ function JobSearchComponent() {
   )
 }
 
-// FiltersPanel component remains the same
+// FiltersPanel component
 function FiltersPanel({ activeFilters, setActiveFilters }) {
   const theme = useTheme();
 
@@ -534,17 +534,15 @@ function FiltersPanel({ activeFilters, setActiveFilters }) {
 
       <Divider sx={{ mb: 3 }} />
 
-      <FilterSection title="Job Type" attribute="job_type" icon={<Briefcase />} />
-      <FilterSection title="Co-op Cycle" attribute="coop_cycle" icon={<BookOpen />} />
-      <FilterSection title="Job Length" attribute="job_length" icon={<Layers />} />
-      <FilterSection title="Job Status" attribute="job_status" icon={<Award />} />
-      <FilterSection title="Work Hours" attribute="work_hours" icon={<Clock />} />
-      <FilterSection title="Year" attribute="year" icon={<Calendar />} />
-      <FilterSection title="Type of Organization" attribute="is_nonprofit" icon={<Building />} />
-      <FilterSection title="Research Position" attribute="is_research_position" icon={<MapPin />} />
-      <FilterSection title="Minimum GPA" attribute="minimum_gpa" icon={<GraduationCap />} />
-      <FilterSection title="Experience Level" attribute="experience_levels" icon={<Award />} />
-      <FilterSection title="Compensation" attribute="compensation_status" icon={<Briefcase />} />
+      <FilterSection title="Subject" attribute="subject_name" icon={<BookOpen />} searchable={true} />
+      <FilterSection title="College" attribute="college_name" icon={<School />} searchable={true} />
+      <FilterSection title="Instruction Type" attribute="instruction_type" icon={<Users />} />
+      <FilterSection title="Instruction Method" attribute="instruction_method" icon={<MapPin />} />
+      <FilterSection title="Credits" attribute="credits" isSlider icon={<Award />} />
+      <FilterSection title="Days" attribute="days" icon={<Calendar />} />
+      <FilterSection title="Term" attribute="term" icon={<Layers />} />
+      <FilterSection title="Instructor" attribute="instructors.name" icon={<GraduationCap />} searchable={true} />
+      <FilterSection title="Department" attribute="instructors.department" icon={<BookOpen />} searchable={true} />
 
       <Box sx={{ mt: 4 }}>
         <Button
@@ -562,21 +560,87 @@ function FiltersPanel({ activeFilters, setActiveFilters }) {
   );
 }
 
-// Updated JobHit Component with Highlighting
-function JobHit({ hit }) {
+// Helper function to format time
+function formatTime(timeString) {
+  if (!timeString) return '';
+
+  const [hours, minutes] = timeString.split(':');
+
+  let hour = parseInt(hours, 10);
+  const ampm = hour >= 12 ? 'PM' : 'AM';
+  hour = hour % 12 || 12; // Convert 0 to 12 for 12 AM
+
+  return `${hour}:${minutes} ${ampm}`;
+}
+
+const DayBox = ({ theme, days }) => {
+  if (!days || !Array.isArray(days) || days.length === 0) {
+    return <Typography variant="body2">N/A</Typography>;
+  }
+
+  const dayMapping = {
+    'Monday': 'M',
+    'Tuesday': 'T',
+    'Wednesday': 'W',
+    'Thursday': 'R',
+    'Friday': 'F',
+    'Saturday': 'S',
+    'Sunday': 'U'
+  };
+
+  const dayCodes = days.map(day => dayMapping[day] || day);
+  const allDays = ['M', 'T', 'W', 'R', 'F', 'S', 'U'];
+
+  const displayLabels = {
+    'M': 'M',
+    'T': 'T',
+    'W': 'W',
+    'R': 'T', // Thursday displays as "T"
+    'F': 'F',
+    'S': 'S',
+    'U': 'S'  // Sunday displays as "S"
+  };
+
+  return (
+    <Box sx={{ display: 'flex', alignItems: 'center' }}>
+      <Calendar size={18} style={{ marginRight: 8 }} color={theme.palette.primary.main} />
+      <Box sx={{ display: 'flex', ml: .7 }}>
+        {allDays.map((day) => (
+          <Box
+            key={day}
+            sx={{
+              width: 22,
+              height: 22,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              backgroundColor: dayCodes.includes(day)
+                ? theme.palette.primary.main
+                : theme.palette.background.paper,
+              border: 1,
+              borderColor: theme.palette.divider,
+              color: dayCodes.includes(day)
+                ? theme.palette.primary.contrastText
+                : theme.palette.text.secondary,
+              fontWeight: dayCodes.includes(day) ? 'bold' : 'normal',
+              fontSize: '.9rem',
+            }}
+          >
+            {displayLabels[day]}
+          </Box>
+        ))}
+      </Box>
+    </Box>
+  );
+};
+
+// SectionHit Component
+function SectionHit({ hit }) {
   const theme = useTheme();
   const [favorited, setFavorited] = useState(false);
   const [hovered, setHovered] = useState(false);
 
-  // Define highlight styles
-  const highlightStyle = {
-    backgroundColor: theme.palette.warning.light,
-    padding: '0 4px',
-    borderRadius: '4px',
-    fontWeight: 'bold'
-  };
-
-  // Determine first letter color
+  // Determine subject letter color
   const getAvatarColor = () => {
     const colors = [
       'primary.main',
@@ -587,12 +651,14 @@ function JobHit({ hit }) {
       'success.main',
     ];
 
-    // Generate a consistent color based on company name
-    if (!hit.company_name) return colors[0];
-    const charCode = hit.company_name.charCodeAt(0);
+    // Generate a consistent color based on subject
+    if (!hit.subject_id) return colors[0];
+    const charCode = hit.subject_id.charCodeAt(0);
     return colors[charCode % colors.length];
   };
 
+  // Get instructors array or empty array if not present
+  const instructors = hit.instructors && Array.isArray(hit.instructors) ? hit.instructors : [];
   return (
     <Box
       onMouseEnter={() => setHovered(true)}
@@ -602,6 +668,7 @@ function JobHit({ hit }) {
         mb: 1,
         transition: 'all 0.2s ease-in-out',
         transform: hovered ? 'translateY(-4px)' : 'translateY(0)',
+        width: "100%"
       }}
     >
       <Card
@@ -629,21 +696,33 @@ function JobHit({ hit }) {
                     border: '2px solid black',
                   }}
                 >
-                  {hit.company_name?.charAt(0) || 'J'}
+                  {hit.subject_id?.charAt(0) || 'C'}
                 </Avatar>
                 <Box>
                   <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 0.5 }}>
-                    {hit.position_name ? (
+                    {hit.course ? (
                       <Highlight
-                        attribute="position_name"
+                        attribute="course"
                         hit={hit}
                         classNames={{
                           highlighted: 'bg-yellow-200 px-1 rounded font-bold'
                         }}
                       />
                     ) : (
-                      'Untitled Position'
+                      'Untitled Course'
                     )}
+                    {' '}
+                    <Typography
+                      component="span"
+                      variant="subtitle1"
+                      sx={{
+                        ml: 1,
+                        color: 'text.secondary',
+                        display: 'inline-block'
+                      }}
+                    >
+                      Section {hit.section}
+                    </Typography>
                   </Typography>
                   <Typography
                     variant="subtitle1"
@@ -654,110 +733,115 @@ function JobHit({ hit }) {
                       mb: 1,
                     }}
                   >
-                    <Building size={16} style={{ marginRight: 6 }} />
-                    {hit.company_name ? (
+                    <School size={16} style={{ marginRight: 6 }} />
+                    {hit.title ? (
                       <Highlight
-                        attribute="company_name"
+                        attribute="title"
                         hit={hit}
                         classNames={{
                           highlighted: 'bg-yellow-200 px-1 rounded font-bold'
                         }}
                       />
                     ) : (
-                      'Unknown Company'
+                      'No Title'
                     )}
                   </Typography>
                 </Box>
               </Box>
             </Grid>
-
-            <Grid item xs={12} sm={5} md={4} sx={{
-              display: 'flex',
-              justifyContent: { xs: 'flex-start', sm: 'flex-end' },
-              alignItems: 'flex-start'
-            }}>
-              <IconButton
-                onClick={() => setFavorited(!favorited)}
-                sx={{
-                  color: favorited ? 'warning.main' : 'action.disabled',
-                  p: 1,
-                  mr: 1.5,
-                  border: '2px solid black',
-                  borderRadius: 2,
-                  boxShadow: '0 3px 0 rgba(0,0,0,0.3)',
-                  '&:hover': {
-                    transform: 'translateY(2px)',
-                    boxShadow: '0 1px 0 rgba(0,0,0,0.3)',
-                  }
-                }}
-              >
-                <Star size={20} fill={favorited ? 'currentColor' : 'none'} />
-              </IconButton>
-
-              <Button
-                variant="contained"
-                color="primary"
-              >
-                View Details
-              </Button>
-            </Grid>
+            {
+              /*
+                          <Grid item xs={12} sm={5} md={4} sx={{
+                            display: 'flex',
+                            justifyContent: { xs: 'flex-start', sm: 'flex-end' },
+                            alignItems: 'flex-start'
+                          }}>
+                            <Tooltip title={favorited ? "Remove from favorites" : "Add to favorites"}>
+                              <IconButton
+                                onClick={() => setFavorited(!favorited)}
+                                sx={{
+                                  color: favorited ? 'warning.main' : 'action.disabled',
+                                  p: 1,
+                                  mr: 1.5,
+                                  border: '2px solid black',
+                                  borderRadius: 2,
+                                  boxShadow: '0 3px 0 rgba(0,0,0,0.3)',
+                                  '&:hover': {
+                                    transform: 'translateY(2px)',
+                                    boxShadow: '0 1px 0 rgba(0,0,0,0.3)',
+                                  }
+                                }}
+                              >
+                                <Star size={20} fill={favorited ? 'currentColor' : 'none'} />
+                              </IconButton>
+                            </Tooltip>
+              
+                            <Button
+                              variant="contained"
+                              color="primary"
+                            >
+                              View Details
+                            </Button>
+                          </Grid>
+              
+               * */
+            }
           </Grid>
-
           {/* Tags */}
           <Box sx={{ my: 2 }}>
             <Stack direction="row" spacing={1} sx={{ flexWrap: 'wrap', gap: 1 }}>
-              {hit.job_type && (
+              <Chip
+                icon={<School size={14} />}
+                label={
+                  <Highlight
+                    attribute="subject_name"
+                    hit={hit}
+                    classNames={{
+                      highlighted: 'bg-yellow-200 px-1 rounded font-bold'
+                    }}
+                  />
+                }
+                color="primary"
+                size="medium"
+              />
+
+              <Chip
+                icon={<BookOpen size={14} />}
+                label={
+                  <Highlight
+                    attribute="college_name"
+                    hit={hit}
+                    classNames={{
+                      highlighted: 'bg-yellow-200 px-1 rounded font-bold'
+                    }}
+                  />
+                }
+                color="secondary"
+                size="medium"
+              />
+
+              {hit.instruction_type && (
                 <Chip
-                  icon={<Briefcase size={14} />}
-                  label={
-                    <Highlight
-                      attribute="job_type"
-                      hit={hit}
-                      classNames={{
-                        highlighted: 'bg-yellow-200 px-1 rounded font-bold'
-                      }}
-                    />
-                  }
-                  color="primary"
-                  size="medium"
-                />
-              )}
-              {hit.year && (
-                <Chip
-                  icon={<Calendar size={14} />}
-                  label={`${hit.year}`}
-                  color="secondary"
-                  size="medium"
-                />
-              )}
-              {hit.coop_cycle && (
-                <Chip
-                  icon={<BookOpen size={14} />}
-                  label={
-                    <Highlight
-                      attribute="coop_cycle"
-                      hit={hit}
-                      classNames={{
-                        highlighted: 'bg-yellow-200 px-1 rounded font-bold'
-                      }}
-                    />
-                  }
+                  icon={<Users size={14} />}
+                  label={hit.instruction_type}
                   color="success"
                   size="medium"
                 />
               )}
-              {hit.job_length && (
+
+              {hit.instruction_method && (
                 <Chip
-                  icon={<Layers size={14} />}
-                  label={`${hit.job_length} Month${hit.job_length > 1 ? 's' : ''}`}
+                  icon={<MapPin size={14} />}
+                  label={hit.instruction_method}
                   color="info"
                   size="medium"
                 />
               )}
-              {hit.work_hours && (
+
+              {hit.credits && (
                 <Chip
-                  icon={<Clock size={14} />}
-                  label={`${hit.work_hours} hrs/week`}
+                  icon={<Award size={14} />}
+                  label={`${hit.credits} credit${hit.credits !== 1 ? 's' : ''}`}
                   color="warning"
                   size="medium"
                 />
@@ -765,8 +849,65 @@ function JobHit({ hit }) {
             </Stack>
           </Box>
 
-          {/* Description with Highlighting */}
-          {hit.position_description && (
+          {/* Schedule information */}
+          <Box
+            sx={{
+              display: 'flex',
+              flexWrap: 'wrap',
+              gap: 2,
+              mt: 3,
+              mb: 2.5,
+              backgroundColor: alpha(theme.palette.background.default, 0.5),
+              p: 2,
+              borderRadius: 2,
+              border: '1px dashed',
+              borderColor: 'divider',
+            }}
+          >
+            {/* Meeting Days */}
+            {hit.days && hit.days.length > 0 && (
+              <Box sx={{ display: 'flex', alignItems: 'center', mr: 3 }}>
+                <Typography variant="body2" fontWeight="medium">
+                  {hit.days && hit.days.length > 0 && (
+                    <DayBox theme={theme} days={hit.days} />
+                  )}
+                </Typography>
+              </Box>
+            )}
+
+            {/* Meeting Time */}
+            {hit.start_time && hit.end_time && (
+              <Box sx={{ display: 'flex', alignItems: 'center', mr: 3 }}>
+                <Clock size={18} style={{ marginRight: 8 }} color={theme.palette.secondary.main} />
+                <Typography variant="body2" fontWeight="medium">
+                  {formatTime(hit.start_time)} - {formatTime(hit.end_time)}
+                </Typography>
+              </Box>
+            )}
+
+            {/* Term */}
+            {hit.term && (
+              <Box sx={{ display: 'flex', alignItems: 'center', mr: 3 }}>
+                <BookmarkCheck size={18} style={{ marginRight: 8 }} color={theme.palette.success.main} />
+                <Typography variant="body2" fontWeight="medium">
+                  Term: {hit.term}
+                </Typography>
+              </Box>
+            )}
+
+            {/* CRN */}
+            {hit.crn && (
+              <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                <Layers size={18} style={{ marginRight: 8 }} color={theme.palette.warning.main} />
+                <Typography variant="body2" fontWeight="medium">
+                  CRN: {hit.crn}
+                </Typography>
+              </Box>
+            )}
+          </Box>
+
+          {/* Course description with Highlighting */}
+          {hit.description && (
             <Typography
               variant="body2"
               color="text.secondary"
@@ -776,7 +917,7 @@ function JobHit({ hit }) {
               }}
             >
               <Highlight
-                attribute="position_description"
+                attribute="description"
                 hit={hit}
                 classNames={{
                   highlighted: 'bg-yellow-200 px-1 rounded font-bold'
@@ -785,47 +926,135 @@ function JobHit({ hit }) {
             </Typography>
           )}
 
-          {/* Majors with Highlighting */}
-          {hit.majors && hit.majors.length > 0 && (
-            <Box
+          {/* Instructors information */}
+          <Box
+            sx={{
+              mt: 2.5,
+              pt: 2,
+              borderTop: '1px solid',
+              borderColor: 'divider',
+            }}
+          >
+            <Typography
+              variant="body2"
+              fontWeight="bold"
               sx={{
-                mt: 2.5,
-                pt: 2,
-                borderTop: '1px solid',
-                borderColor: 'divider',
+                mb: 1.5,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between'
               }}
             >
-              <Typography
-                variant="body2"
-                sx={{
-                  fontWeight: 'bold',
-                  mb: 1.5,
-                  display: 'flex',
-                  alignItems: 'center',
-                }}
-              >
-                <GraduationCap size={16} style={{ marginRight: 8 }} color={theme.palette.primary.main} />
-                Majors Sought:
-              </Typography>
-              <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
-                {hit.majors.map((major, index) => (
-                  <Chip
-                    key={index}
-                    label={
-                      <Highlight
-                        attribute={`majors.${index}`}
-                        hit={hit}
-                        classNames={{
-                          highlighted: 'bg-yellow-200 px-1 rounded font-bold'
-                        }}
-                      />
-                    }
-                    size="medium"
-                  />
-                ))}
+              <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                <GraduationCap size={18} style={{ marginRight: 8 }} color={theme.palette.primary.main} />
+                {instructors.length !== 1 ? 'Instructors:' : 'Instructor:'}
               </Box>
-            </Box>
-          )}
+            </Typography>
+
+            {instructors.length === 0 ? (
+              <Typography variant="body2" color="text.secondary">
+                TBA
+              </Typography>
+            ) : (
+              instructors.map((instructor, index) => (
+                <Box
+                  key={`instructor-${index}-${instructor.id || index}`}
+                  sx={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    mb: 1,
+                    pb: index < instructors.length - 1 ? 1 : 0,
+                    borderBottom: index < instructors.length - 1 ? '1px dashed' : 'none',
+                    borderColor: 'divider',
+                  }}
+                >
+                  <Box>
+                    <Typography variant="body2">
+                      {instructor.name || 'Unknown Instructor'}
+                      {instructor.department && (
+                        <Typography
+                          variant="body2"
+                          color="text.secondary"
+                          component="span"
+                          sx={{ ml: 0.5 }}
+                        >
+                          ({instructor.department})
+                        </Typography>
+                      )}
+                    </Typography>
+                  </Box>
+
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                    {instructor.rmp_id && (
+                      <Button
+                        size="small"
+                        variant="outlined"
+                        color="info"
+                        endIcon={<ExternalLink size={16} />}
+                        sx={{
+                          py: 0.5,
+                          boxShadow: '0 2px 0 rgba(0,0,0,0.2)',
+                          border: '1px solid black',
+                          borderRadius: 10,
+                          textTransform: 'none'
+                        }}
+                        component="a"
+                        href={`https://www.ratemyprofessors.com/professor/${instructor.rmp_id}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        RMP Profile
+                      </Button>
+                    )}
+
+                    {instructor.avg_rating && (
+                      <Box
+                        sx={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          bgcolor: alpha(theme.palette.warning.main, 0.1),
+                          px: 1.5,
+                          py: 0.5,
+                          borderRadius: 10,
+                          border: '1px solid',
+                          borderColor: 'warning.main'
+                        }}
+                      >
+                        <Tooltip title="Rate My Professor rating">
+                          <Typography
+                            variant="caption"
+                            sx={{
+                              mr: .7,
+                              mt: .4,
+                              fontWeight: 'bold',
+                              color: theme.palette.warning.dark
+                            }}
+                          >
+                            RMP
+                          </Typography>
+                        </Tooltip>
+                        <Star size={14} style={{ marginRight: 4 }} fill={theme.palette.warning.main} color={theme.palette.warning.main} />
+                        <Typography variant="body2" fontWeight="bold" color="warning.main">
+                          {instructor.avg_rating.toFixed(1)}
+                          {instructor.num_ratings && (
+                            <Typography
+                              component="span"
+                              variant="caption"
+                              color="text.secondary"
+                              sx={{ ml: 0.5 }}
+                            >
+                              ({instructor.num_ratings})
+                            </Typography>
+                          )}
+                        </Typography>
+                      </Box>
+                    )}
+                  </Box>
+                </Box>
+              ))
+            )}
+          </Box>
         </CardContent>
       </Card>
     </Box>

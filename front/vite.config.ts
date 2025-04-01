@@ -21,7 +21,7 @@ export default defineConfig({
       "/api/search": {
         target: process.env.VITE_SEARCH_API_URL,
         changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api/, ""),
+        rewrite: (path) => path.replace(/^\/api\/search/, ""),
       },
     },
   },

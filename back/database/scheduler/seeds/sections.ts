@@ -16,6 +16,7 @@ const days_to_num = {
   Saturday: 6,
   Sunday: 7,
 };
+
 async function processSections() {
   const sections_ = [];
   const promises = sections___.map(
@@ -72,39 +73,43 @@ async function processSections() {
 
 export default async () => {
   const sections_ = await processSections();
-  sections_.forEach(async ({ instructors: instructorNames, ...insertData }) => {
-    const instructor_ids =
-      instructorNames?.length > 0
-        ? await Promise.all(
-            instructorNames.map(
-              async (name) =>
-                await db
-                  .select({ id: instructors.id })
-                  .from(instructors)
-                  .where(eq(instructors.name, name))
-                  .then(([{ id }]) => id),
-            ),
-          )
-        : null;
-
-    try {
-      const [{ section_id }] = await db
-        .insert(sections)
-        .values(insertData)
-        .returning({ section_id: sections.crn });
-
-      if (instructor_ids !== null) {
-        await db.insert(section_instructor).values(
-          instructor_ids.map((instructor_id) => ({
-            instructor_id,
-            section_id,
-          })),
-        );
+  
+  // Use Promise.all to wait for all async operations to complete
+  await Promise.all(
+    sections_.map(async ({ instructors: instructorNames, ...insertData }) => {
+      const instructor_ids =
+        instructorNames?.length > 0
+          ? await Promise.all(
+              instructorNames.map(
+                async (name) =>
+                  await db
+                    .select({ id: instructors.id })
+                    .from(instructors)
+                    .where(eq(instructors.name, name))
+                    .then(([{ id }]) => id),
+              ),
+            )
+          : null;
+      try {
+        const [{ section_id }] = await db
+          .insert(sections)
+          .values(insertData)
+          .returning({ section_id: sections.crn });
+        if (instructor_ids !== null) {
+          await db.insert(section_instructor).values(
+            instructor_ids.map((instructor_id) => ({
+              instructor_id,
+              section_id,
+            })),
+          );
+        }
+      } catch (error) {
+        console.log(error);
+        console.log(`Issue with`);
+        console.log(insertData);
       }
-    } catch (error) {
-      console.log(error);
-      console.log(`Issue with`);
-      console.log(insertData);
-    }
-  });
+    })
+  );
+  
+  console.log(`Seeded ${sections_.length} sections successfully`);
 };

@@ -1,4 +1,4 @@
-import { company, position, job_posting, location, major, job_posting_major } from "../../../src/db/index.ts";
+import { company, position, job_posting, location, major, job_posting_major, experience_level, job_experience_levels } from "../../../src/db/index.ts";
 import { db } from "../../../src/db/index.ts";
 import { eq } from "drizzle-orm";
 import { meilisearchService } from '../../../src/services/meilisearch.service.ts';
@@ -101,13 +101,20 @@ export default async () => {
       .innerJoin(major, eq(job_posting_major.major_id, major.id))
       .where(eq(job_posting_major.job_posting_id, posting.id));
     
-    const majors = majorsResult.map(m => m.major_name);
-    const major_ids = majorsResult.map(m => m.major_id);
+    const experience_levels = await db
+      .select({
+        levels: job_experience_levels.experience_level,
+      })
+      .from(job_experience_levels)
+      .where(eq(job_experience_levels.job_posting_id, posting.id))
+      .then((l)=>l.map(({levels})=>levels))
+
     
     return {
       ...posting,
-      majors,
-      major_ids
+      majors: majorsResult.map(m => m.major_name),
+      major_ids: majorsResult.map(m => m.major_id),
+      experience_levels,
     };
   });
   
