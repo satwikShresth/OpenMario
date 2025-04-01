@@ -736,3 +736,4 @@ export const SubmissionResponseSchema = {
     "location_state_code",
   ],
 } as const;
+

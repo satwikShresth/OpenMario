@@ -1,79 +1,25 @@
 import { createFileRoute } from "@tanstack/react-router";
 import React, { useEffect, useState } from "react";
 import {
-  Highlight, // Added Highlight component import
-  InfiniteHits,
-  InstantSearch,
-  RefinementList,
-  SearchBox,
-  SortBy,
-  Stats,
-} from "react-instantsearch";
+  Highlight, InfiniteHits, InstantSearch, RefinementList, SearchBox, SortBy, Stats,
+}
+  from "react-instantsearch";
 import { instantMeiliSearch } from "@meilisearch/instant-meilisearch";
 import "instantsearch.css/themes/satellite.css";
 import {
-  alpha,
-  Avatar,
-  Box,
-  Button,
-  Card,
-  CardContent,
-  Chip,
-  CircularProgress,
-  Container,
-  Divider,
-  Drawer,
-  Fab,
-  Grid,
-  IconButton,
-  Stack,
-  Typography,
-  useMediaQuery,
-  useTheme,
+  alpha, Avatar, Box, Button, Card, CardContent, Chip, CircularProgress, Container, Divider, Drawer, Fab, Grid, IconButton, Stack, Typography, useMediaQuery, useTheme,
 } from "@mui/material";
 import {
-  ArrowUp,
-  Award,
-  BookOpen,
-  Briefcase,
-  Building,
-  Calendar,
-  ChevronDown,
-  Clock,
-  Filter,
-  GraduationCap,
-  Layers,
-  MapPin,
-  Menu,
-  Search as SearchIcon,
-  SortAsc,
-  Star,
-  X,
+  ArrowUp, Award, BookOpen, Briefcase, Building, Calendar, ChevronDown, Clock, Filter, GraduationCap, Layers, MapPin, Menu, Search as SearchIcon, SortAsc, Star, X,
 } from "lucide-react";
 import { useAppTheme } from "#/utils";
 import FilterSection from "#/components/search/FitlerSection";
+import { getAuthSearchTokenOptions } from "#client/react-query.gen";
+import { useSuspenseQuery } from "@tanstack/react-query";
 
-// Initialize the MeiliSearch client correctly
-const { searchClient } = instantMeiliSearch(
-  `${window.location.host}/api/search`,
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWFyY2hSdWxlcyI6eyIqIjp7fX0sImFwaUtleVVpZCI6IjQ2ZTEyZjhkLWU1NTItNDY3NC1hMmI1LWMzODU3NjRjNGRkNCIsImV4cCI6MTc0MzU2MjI0NX0.FVTuiMqXqQ5w5HcPtkdorhFCaeAlE8Uoym94KlbBLSk",
-  {
-    primaryKey: "id",
-    attributesToHighlight: [
-      "position_name",
-      "company_name",
-      "position_description",
-      "job_type",
-      "coop_cycle",
-      "majors",
-    ],
-    highlightPreTag: "<mark>",
-    highlightPostTag: "</mark>",
-  },
-);
 
 // Route definition remains the same
-export const Route = createFileRoute("/jobposting/")({
+export const Route = createFileRoute("/jobs/")({
   pendingComponent: () => {
     const theme = useTheme();
 
@@ -162,11 +108,37 @@ export const Route = createFileRoute("/jobposting/")({
 
 // JobSearchComponent remains the same
 function JobSearchComponent() {
+  const searchToken = useSuspenseQuery({
+    ...getAuthSearchTokenOptions(),
+    staleTime: 19 * 1000, // 24 hours
+    gcTime: 19 * 1000, // 24 hours (cache time)
+    refetchInterval: 19000,
+    refetchIntervalInBackground: true,
+  });
+
+  const { searchClient } = instantMeiliSearch(
+    `${window.location.host}/api/search`,
+    () => { console.log("tried to get apikey again"); return searchToken.data.token },
+    {
+      primaryKey: "id",
+      attributesToHighlight: [
+        "position_name",
+        "company_name",
+        "position_description",
+        "job_type",
+        "coop_cycle",
+        "majors",
+      ],
+      highlightPreTag: "<mark>",
+      highlightPostTag: "</mark>",
+    },
+  );
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [showBackToTop, setShowBackToTop] = useState(false);
   const [activeFilters, setActiveFilters] = useState(0);
+
 
   // Count active filters
   useEffect(() => {
@@ -456,20 +428,18 @@ function JobSearchComponent() {
                     fontWeight: 700,
                     fontSize: "0.95rem",
                     padding: "8px 16px",
-                    boxShadow: `0 4px 0 ${
-                      useAppTheme().mode === "light"
-                        ? "rgba(0,0,0,0.5)"
-                        : "rgba(0,0,0,0.7)"
-                    }`,
+                    boxShadow: `0 4px 0 ${useAppTheme().mode === "light"
+                      ? "rgba(0,0,0,0.5)"
+                      : "rgba(0,0,0,0.7)"
+                      }`,
                     border: `2px solid #000000`,
                     transition: "all 0.1s ease-in-out",
                     "&:hover": {
                       transform: "translateY(2px)",
-                      boxShadow: `0 2px 0 ${
-                        useAppTheme().mode === "light"
-                          ? "rgba(0,0,0,0.5)"
-                          : "rgba(0,0,0,0.7)"
-                      }`,
+                      boxShadow: `0 2px 0 ${useAppTheme().mode === "light"
+                        ? "rgba(0,0,0,0.5)"
+                        : "rgba(0,0,0,0.7)"
+                        }`,
                       filter: "brightness(1.05)",
                     },
                     "&:active": {
@@ -934,9 +904,8 @@ function JobHit({ hit }) {
               {hit.job_length && (
                 <Chip
                   icon={<Layers size={14} />}
-                  label={`${hit.job_length} Month${
-                    hit.job_length > 1 ? "s" : ""
-                  }`}
+                  label={`${hit.job_length} Month${hit.job_length > 1 ? "s" : ""
+                    }`}
                   color="info"
                   size="medium"
                 />

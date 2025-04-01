@@ -1,61 +1,24 @@
 import { createFileRoute } from "@tanstack/react-router";
 import React, { useEffect, useState } from "react";
 import {
-  Highlight,
-  InfiniteHits,
-  InstantSearch,
-  RefinementList,
-  SearchBox,
-  SortBy,
-  Stats,
+  Highlight, InfiniteHits, InstantSearch, RefinementList, SearchBox, SortBy, Stats,
 } from "react-instantsearch";
 import { instantMeiliSearch } from "@meilisearch/instant-meilisearch";
 import "instantsearch.css/themes/satellite.css";
 import {
-  alpha,
-  Avatar,
-  Box,
-  Button,
-  Card,
-  CardContent,
-  Chip,
-  CircularProgress,
-  Container,
-  Divider,
-  Drawer,
-  Fab,
-  Grid,
-  IconButton,
-  Stack,
-  Tooltip,
-  Typography,
-  useMediaQuery,
-  useTheme,
+  alpha, Avatar, Box, Button, Card, CardContent, Chip, CircularProgress, Container, Divider, Drawer, Fab, Grid, IconButton, Stack, Tooltip, Typography, useMediaQuery, useTheme,
 } from "@mui/material";
 import {
-  ArrowUp,
-  Award,
-  BookmarkCheck,
-  BookOpen,
-  Calendar,
-  Clock,
-  ExternalLink,
-  Filter,
-  GraduationCap,
-  Layers,
-  MapPin,
-  School,
-  Star,
-  Users,
-  X,
+  ArrowUp, Award, BookmarkCheck, BookOpen, Calendar, Clock, ExternalLink, Filter, GraduationCap, Layers, MapPin, School, Star, Users, X,
 } from "lucide-react";
 import { useAppTheme } from "#/utils";
 import FilterSection from "#/components/search/FitlerSection";
+import { useQuery } from "@tanstack/react-query";
+import { getAuthSearchTokenOptions } from "#client/react-query.gen";
 
-// Initialize the MeiliSearch client
 const { searchClient } = instantMeiliSearch(
   `${window.location.host}/api/search`,
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWFyY2hSdWxlcyI6eyIqIjp7fX0sImFwaUtleVVpZCI6IjYzMjcxNGM5LWE1YTMtNDE0Mi1iYWU4LTlkOWU0ODU3YjNkOSIsImV4cCI6MTc0MzYxMDk4MX0.ARRLKWlJtLLGm6M5HD6zljIXjSmyJm_bDZbOgGn5K0Q",
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWFyY2hSdWxlcyI6eyIqIjp7fX0sImFwaUtleVVpZCI6ImYxYTA1OWU3LTI3ODktNDVlYS05NDYxLThkNWJhMTQ2NjJmMiIsImV4cCI6MTc0MzYyODQ2Mn0.8amk6ok7VM0YAnsRD8DjQ0MkxI0fzPGDsjySSZsSH3U",
   {
     primaryKey: "crn",
     attributesToHighlight: [
@@ -455,20 +418,18 @@ function CourseSectionsComponent() {
                     fontWeight: 700,
                     fontSize: "0.95rem",
                     padding: "8px 16px",
-                    boxShadow: `0 4px 0 ${
-                      useAppTheme().mode === "light"
-                        ? "rgba(0,0,0,0.5)"
-                        : "rgba(0,0,0,0.7)"
-                    }`,
+                    boxShadow: `0 4px 0 ${useAppTheme().mode === "light"
+                      ? "rgba(0,0,0,0.5)"
+                      : "rgba(0,0,0,0.7)"
+                      }`,
                     border: `2px solid #000000`,
                     transition: "all 0.1s ease-in-out",
                     "&:hover": {
                       transform: "translateY(2px)",
-                      boxShadow: `0 2px 0 ${
-                        useAppTheme().mode === "light"
-                          ? "rgba(0,0,0,0.5)"
-                          : "rgba(0,0,0,0.7)"
-                      }`,
+                      boxShadow: `0 2px 0 ${useAppTheme().mode === "light"
+                        ? "rgba(0,0,0,0.5)"
+                        : "rgba(0,0,0,0.7)"
+                        }`,
                       filter: "brightness(1.05)",
                     },
                     "&:active": {

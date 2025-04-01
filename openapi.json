@@ -894,69 +894,31 @@
       }
     },
     "parameters": {
+
     }
   },
   "paths": {
+    "/auth/search-token": {
+      "get": {
+        "deprecated": false,
+        "summary": "Get a tenant token for searching, filtering, and sorting (expires in 1 day)",
+        "security": [],
+        "responses": {
+
+        },
+        "parameters": [],
+        "tags": [
+          "Meilisearch"
+        ]
+      }
+    },
     "/auth/login": {
       "post": {
         "deprecated": false,
         "summary": "Request a magic link for authentication",
         "security": [],
         "responses": {
-          "200": {
-            "description": "Success response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object"
-                },
-                "examples": {
-                  "example1": {
-                    "summary": "Example success response",
-                    "value": {
-                      "message": "Magic link sent to your email"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Error response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object"
-                },
-                "examples": {
-                  "example2": {
-                    "summary": "Example error response",
-                    "value": {
-                      "message": "Email is required"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "409": {
-            "description": "Database or email error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object"
-                },
-                "examples": {
-                  "example3": {
-                    "summary": "Example error response",
-                    "value": {
-                      "message": "Failed to send email"
-                    }
-                  }
-                }
-              }
-            }
-          }
+
         },
         "parameters": [],
         "tags": [
@@ -967,12 +929,6 @@
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/Login"
-              },
-              "examples": {
-                "example1": {
-                  "summary": "Example request",
-                  "value": "{\"email\": \"user@example.com\"}"
-                }
               }
             }
           },
@@ -987,53 +943,7 @@
         "summary": "Verify magic link token and authenticate user",
         "security": [],
         "responses": {
-          "200": {
-            "description": "Success response with access token",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object"
-                },
-                "examples": {
-                  "example1": {
-                    "summary": "Example success response",
-                    "value": {
-                      "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
-                      "token_type": "bearer"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Invalid token response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object"
-                },
-                "examples": {
-                  "example2": {
-                    "summary": "Example invalid token",
-                    "value": {
-                      "message": "Invalid or expired token"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "409": {
-            "description": "Error response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object"
-                }
-              }
-            }
-          }
+
         },
         "parameters": [
           {
@@ -1399,400 +1309,42 @@
         "summary": "Retrieve co-op submission records with pagination and filtering",
         "security": [],
         "responses": {
-          "200": {
-            "description": "Success response with paginated submissions",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/SubmissionResponse"
-                  }
-                },
-                "examples": {
-                  "example1": {
-                    "summary": "Example success response",
-                    "value": {
-                      "skip": 0,
-                      "limit": 100,
-                      "data": [
-                        {
-                          "id": "123e4567-e89b-12d3-a456-426614174000",
-                          "year": 2024,
-                          "coop_year": "1st",
-                          "coop_cycle": "Fall/Winter",
-                          "program_level": "Undergraduate",
-                          "work_hours": 40,
-                          "compensation": 45000,
-                          "other_compensation": "Housing stipend",
-                          "details": "Full-stack development role",
-                          "company": "Tech Corp",
-                          "position": "Software Engineer",
-                          "location_city": "Boston",
-                          "location_state": "Massachusetts",
-                          "location_state_code": "MA"
-                        }
-                      ]
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "409": {
-            "description": "Error response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object"
-                },
-                "examples": {
-                  "example2": {
-                    "summary": "Example error response",
-                    "value": {
-                      "message": "Failed to retrieve submissions"
-                    }
-                  }
-                }
-              }
-            }
-          }
+
         },
-        "parameters": [
-          {
-            "name": "distinct",
-            "in": "query",
-            "description": "Query prarmer for filtering submission using company",
-            "required": false,
-            "deprecated": false,
-            "schema": {
-              "type": "boolean"
-            }
-          },
-          {
-            "name": "company",
-            "in": "query",
-            "description": "Query prarmer for filtering submission using company",
-            "required": false,
-            "deprecated": false,
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            }
-          },
-          {
-            "name": "position",
-            "in": "query",
-            "description": "Query prarmer for filtering submission using position",
-            "required": false,
-            "deprecated": false,
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            }
-          },
-          {
-            "name": "location",
-            "in": "query",
-            "description": "Query prarmer for filtering submission using location",
-            "required": false,
-            "deprecated": false,
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            }
-          },
-          {
-            "name": "year",
-            "in": "query",
-            "description": "Query prarmer for filtering submission using year",
-            "required": false,
-            "deprecated": false,
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            }
-          },
-          {
-            "name": "coop_year",
-            "in": "query",
-            "description": "Query prarmer for filtering submission using coop_year",
-            "required": false,
-            "deprecated": false,
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            }
-          },
-          {
-            "name": "coop_cycle",
-            "in": "query",
-            "description": "Query prarmer for filtering submission using coop_cycle",
-            "required": false,
-            "deprecated": false,
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            }
-          },
-          {
-            "name": "program_level",
-            "in": "query",
-            "description": "Query prarmer for filtering submission using program_level",
-            "required": false,
-            "deprecated": false,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "skip",
-            "in": "query",
-            "description": "Query prarmer for offeset",
-            "required": false,
-            "deprecated": false,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "limit",
-            "in": "query",
-            "description": "Query prarmer for limit",
-            "required": false,
-            "deprecated": false,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "tags": [
-          "Submissions"
-        ]
+        "parameters": [],
+        "tags": []
       },
       "post": {
         "deprecated": false,
         "summary": "Create new co-op submission(s)",
-        "security": [
-          {
-            "JWT": []
-          }
-        ],
+        "security": [],
         "responses": {
-          "201": {
-            "description": "Successfully created submission",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object"
-                },
-                "examples": {
-                  "example1": {
-                    "summary": "Success response example",
-                    "value": {
-                      "message": "Added positions successfully"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "409": {
-            "description": "Error response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object"
-                },
-                "examples": {
-                  "example2": {
-                    "summary": "Error response example",
-                    "value": {
-                      "message": "Failed to add positions",
-                      "detail": "Company or Position does not exist"
-                    }
-                  }
-                }
-              }
-            }
-          }
+
         },
         "parameters": [],
-        "tags": [
-          "Submissions"
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/SubmissionAggregate"
-              }
-            }
-          },
-          "description": "Submission data",
-          "required": true
-        }
+        "tags": []
       },
       "patch": {
         "deprecated": false,
         "summary": "Update an existing co-op submission",
-        "security": [
-          {
-            "JWT": []
-          }
-        ],
+        "security": [],
         "responses": {
-          "201": {
-            "description": "Successfully updated submission",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object"
-                },
-                "examples": {
-                  "example1": {
-                    "summary": "Success response example",
-                    "value": {
-                      "message": "Updated position successfully"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "409": {
-            "description": "Error response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object"
-                },
-                "examples": {
-                  "example2": {
-                    "summary": "Error response example",
-                    "value": {
-                      "message": "Failed to update position",
-                      "detail": "Company or Position does not exist"
-                    }
-                  }
-                }
-              }
-            }
-          }
+
         },
         "parameters": [],
-        "tags": [
-          "Submissions"
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/SubmissionAggregateUpdate"
-              }
-            }
-          },
-          "description": "Updated submission data including submission ID",
-          "required": true
-        }
+        "tags": []
       }
     },
     "/submissions/me": {
       "get": {
         "deprecated": false,
         "summary": "Retrieve all co-op submissions owned by the authenticated user",
-        "security": [
-          {
-            "JWT": []
-          }
-        ],
+        "security": [],
         "responses": {
-          "200": {
-            "description": "Success response with user's submissions",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/SubmissionResponse"
-                  }
-                },
-                "examples": {
-                  "example1": {
-                    "summary": "Example success response",
-                    "value": {
-                      "data": [
-                        {
-                          "year": 2024,
-                          "coop_year": "1st",
-                          "coop_cycle": "Fall/Winter",
-                          "program_level": "Undergraduate",
-                          "work_hours": 40,
-                          "compensation": 45000,
-                          "other_compensation": "Housing stipend",
-                          "details": "Full-stack development role",
-                          "company": "Tech Corp",
-                          "position": "Software Engineer",
-                          "location_city": "Boston",
-                          "location_state": "Massachusetts",
-                          "location_state_code": "MA"
-                        }
-                      ]
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "409": {
-            "description": "Error response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object"
-                },
-                "examples": {
-                  "example2": {
-                    "summary": "Example error response",
-                    "value": {
-                      "message": "Failed to retrieve submissions"
-                    }
-                  }
-                }
-              }
-            }
-          }
+
         },
-        "parameters": [
-          {
-            "name": "ids",
-            "in": "query",
-            "description": "Query prarmer for filtering submission using company",
-            "required": false,
-            "deprecated": false,
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            }
-          }
-        ],
-        "tags": [
-          "Submissions"
-        ]
+        "parameters": [],
+        "tags": []
       }
     }
   },
@@ -1806,11 +1358,11 @@
       "description": ""
     },
     {
-      "name": "Search",
+      "name": "Meilisearch",
       "description": ""
     },
     {
-      "name": "Submissions",
+      "name": "Search",
       "description": ""
     }
   ]

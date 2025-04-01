@@ -50,7 +50,7 @@ class MeilisearchService {
       }
 
       const expiresAt = new Date();
-      expiresAt.setDate(expiresAt.getDate() + 1);
+      expiresAt.setSeconds(expiresAt.getSeconds() + 20);
 
       return await generateTenantToken({
          apiKey: this.apiKey.key,
