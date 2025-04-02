@@ -1,623 +1,50 @@
+"use no memo"
+// src/routes/CoursesRoute.jsx
 import { createFileRoute } from "@tanstack/react-router";
-import React, { useEffect, useState } from "react";
+import { useState } from "react";
+import { Card, CardContent, Grid, Box, Typography, Avatar, Stack, Chip, alpha, Button } from "@mui/material";
 import {
-  Highlight, InfiniteHits, InstantSearch, RefinementList, SearchBox, SortBy, Stats,
-} from "react-instantsearch";
-import { instantMeiliSearch } from "@meilisearch/instant-meilisearch";
-import "instantsearch.css/themes/satellite.css";
-import {
-  alpha, Avatar, Box, Button, Card, CardContent, Chip, CircularProgress, Container, Divider, Drawer, Fab, Grid, IconButton, Stack, Tooltip, Typography, useMediaQuery, useTheme,
-} from "@mui/material";
-import {
-  ArrowUp, Award, BookmarkCheck, BookOpen, Calendar, Clock, ExternalLink, Filter, GraduationCap, Layers, MapPin, School, Star, Users, X,
+  Award, BookmarkCheck, BookOpen, Calendar, Clock, ExternalLink, GraduationCap, Layers, MapPin, School, Star, Users,
 } from "lucide-react";
-import { useAppTheme } from "#/utils";
+import { useTheme } from "@mui/material";
+import { Highlight } from "react-instantsearch";
 import FilterSection from "#/components/search/FitlerSection";
-import { useQuery } from "@tanstack/react-query";
 import { getAuthSearchTokenOptions } from "#client/react-query.gen";
+import { useSearchClient, useQueryHook } from "#/hooks";
 
-const { searchClient } = instantMeiliSearch(
-  `${window.location.host}/api/search`,
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzZWFyY2hSdWxlcyI6eyIqIjp7fX0sImFwaUtleVVpZCI6ImYxYTA1OWU3LTI3ODktNDVlYS05NDYxLThkNWJhMTQ2NjJmMiIsImV4cCI6MTc0MzYyODQ2Mn0.8amk6ok7VM0YAnsRD8DjQ0MkxI0fzPGDsjySSZsSH3U",
-  {
-    primaryKey: "crn",
-    attributesToHighlight: [
-      "title",
-      "course",
-      "description",
-      "subject_name",
-      "college_name",
-      "instructors.name",
-      "instructors.department",
-    ],
-    highlightPreTag: "<mark>",
-    highlightPostTag: "</mark>",
-  },
-);
+import {
+  SearchLayout,
+  LoadingComponent,
+  ErrorComponent,
+} from "#/components/search/Shared";
 
 export const Route = createFileRoute("/courses/")({
-  pendingComponent: () => {
-    const theme = useTheme();
-
-    return (
-      <Container
-        sx={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          height: "100vh",
-        }}
-      >
-        <Box sx={{ textAlign: "center" }}>
-          <CircularProgress
-            size={60}
-            thickness={5}
-            sx={{
-              mb: 3,
-              color: "primary.main",
-            }}
-          />
-          <Typography variant="h5" fontWeight="bold" sx={{ mb: 1 }}>
-            Loading Course Search
-          </Typography>
-          <Typography variant="body1" color="text.secondary">
-            Finding the perfect courses for you...
-          </Typography>
-        </Box>
-      </Container>
-    );
+  loader: async ({ context: { queryClient } }) => {
+    await queryClient.prefetchQuery(getAuthSearchTokenOptions())
   },
-  errorComponent: ({ error }) => {
-    const theme = useTheme();
-
-    return (
-      <Container
-        sx={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          height: "100vh",
-        }}
-      >
-        <Box sx={{ textAlign: "center", maxWidth: 500 }}>
-          <Box
-            sx={{
-              width: 120,
-              height: 120,
-              borderRadius: "50%",
-              bgcolor: "error.light",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              mb: 3,
-              mx: "auto",
-            }}
-          >
-            <X size={60} color="#fff" />
-          </Box>
-          <Typography
-            variant="h4"
-            gutterBottom
-            fontWeight="bold"
-            color="error.main"
-          >
-            Oops! Something went wrong
-          </Typography>
-          <Typography variant="body1" sx={{ mb: 4, color: "text.secondary" }}>
-            {error?.message ||
-              "We encountered an error while loading the course search. Please try again."}
-          </Typography>
-          <Button
-            variant="contained"
-            size="large"
-            color="primary"
-            onClick={() => window.location.reload()}
-          >
-            Try Again
-          </Button>
-        </Box>
-      </Container>
-    );
-  },
+  staleTime: 1000 * 60 * 110,
+  gcTime: 1000 * 60 * 110,
+  pendingComponent: () => (
+    <LoadingComponent
+      title="Loading Course Search"
+      subtitle="Finding the perfect courses for you..."
+    />
+  ),
+  errorComponent: ({ error }) => (
+    <ErrorComponent error={error} />
+  ),
   component: CourseSectionsComponent,
 });
 
 // Main component
 function CourseSectionsComponent() {
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
-  const [drawerOpen, setDrawerOpen] = useState(false);
-  const [showBackToTop, setShowBackToTop] = useState(false);
-  const [activeFilters, setActiveFilters] = useState(0);
-
-  // Count active filters
-  useEffect(() => {
-    const checkActiveFilters = () => {
-      const checkedBoxes = document.querySelectorAll(
-        ".ais-RefinementList-checkbox:checked",
-      );
-      setActiveFilters(checkedBoxes.length);
-    };
-
-    // Initial check
-    setTimeout(checkActiveFilters, 1000);
-
-    // Check when clicked
-    document.addEventListener("click", checkActiveFilters);
-    return () => document.removeEventListener("click", checkActiveFilters);
-  }, []);
-
-  // Show back to top button when scrolled down
-  useEffect(() => {
-    const handleScroll = () => {
-      if (window.scrollY > 300) {
-        setShowBackToTop(true);
-      } else {
-        setShowBackToTop(false);
-      }
-    };
-
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
-  const scrollToTop = () => {
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth",
-    });
-  };
-
-  const toggleDrawer = () => {
-    setDrawerOpen(!drawerOpen);
-  };
-
-  return (
-    <Box
-      sx={{
-        minHeight: "100vh",
-        pt: 2,
-        pb: 8,
-      }}
-    >
-      <Container maxWidth="xl" sx={{ py: 3, px: { xs: 2, md: 4 } }}>
-        <InstantSearch
-          searchClient={searchClient}
-          indexName="sections"
-        >
-          <Box
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "space-between",
-              mb: 4,
-            }}
-          >
-            <Box sx={{ display: "flex", alignItems: "center" }}>
-              <Box
-                sx={{
-                  p: 1.5,
-                  mr: 2,
-                  bgcolor: "primary.main",
-                  borderRadius: "12px",
-                  boxShadow: "0 4px 0 rgba(0,0,0,0.5)",
-                  border: "2px solid black",
-                }}
-              >
-                <BookOpen size={28} color="white" />
-              </Box>
-              <Box>
-                <Typography
-                  variant="h4"
-                  component="h1"
-                  fontWeight="bold"
-                  sx={{ mb: 0.5 }}
-                >
-                  Find Your Courses
-                </Typography>
-                <Typography variant="subtitle1" color="text.secondary">
-                  Explore courses that match your academic interests and
-                  schedule
-                </Typography>
-              </Box>
-            </Box>
-
-            {isMobile && (
-              <Button
-                variant="outlined"
-                color="primary"
-                onClick={toggleDrawer}
-                startIcon={<Filter size={20} />}
-              >
-                Filters
-                {activeFilters > 0 && (
-                  <Box
-                    sx={{
-                      position: "absolute",
-                      top: -8,
-                      right: -8,
-                      bgcolor: "secondary.main",
-                      color: "white",
-                      borderRadius: "50%",
-                      width: 24,
-                      height: 24,
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      fontWeight: "bold",
-                      fontSize: "0.75rem",
-                      border: "2px solid black",
-                    }}
-                  >
-                    {activeFilters}
-                  </Box>
-                )}
-              </Button>
-            )}
-          </Box>
-
-          {/* Search Box */}
-          <Box
-            sx={{
-              mb: 4,
-              position: "relative",
-              mx: "auto",
-              maxWidth: "900px",
-            }}
-          >
-            <Box
-              sx={{
-                position: "relative",
-                borderRadius: 50,
-                overflow: "hidden",
-                border: "3px solid black",
-                boxShadow: "0 6px 0 rgba(0,0,0,0.5)",
-              }}
-            >
-              <SearchBox
-                placeholder="Search courses, instructors, or subjects..."
-                classNames={{
-                  form: "w-full relative",
-                  input:
-                    "w-full p-5 pl-14 rounded-full text-lg focus:outline-none",
-                  submit: "hidden",
-                  reset: "hidden",
-                }}
-                autoFocus
-              />
-            </Box>
-          </Box>
-
-          <Grid container spacing={4}>
-            {!isMobile && (
-              <Grid item md={3} lg={3}>
-                <FiltersPanel
-                  activeFilters={activeFilters}
-                  setActiveFilters={setActiveFilters}
-                />
-              </Grid>
-            )}
-
-            {/* Main Content */}
-            <Grid item xs={12} md={9} lg={9}>
-              {/* Results count and sort */}
-              <Box
-                sx={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                  mb: 3,
-                  flexWrap: "wrap",
-                  gap: 2,
-                }}
-              >
-                <Box
-                  sx={{
-                    bgcolor: alpha(theme.palette.primary.main, 0.1),
-                    px: 2.5,
-                    py: 1,
-                    borderRadius: 50,
-                    display: "inline-flex",
-                    alignItems: "center",
-                    border: "2px solid black",
-                    boxShadow: "0 4px 0 rgba(0,0,0,0.2)",
-                  }}
-                >
-                  <BookmarkCheck
-                    size={18}
-                    color={theme.palette.primary.main}
-                    style={{ marginRight: 8 }}
-                  />
-                  <Stats
-                    translations={{
-                      stats: ({ nbHits }) =>
-                        `${nbHits.toLocaleString()} sections available`,
-                    }}
-                    classNames={{
-                      root: "font-bold",
-                    }}
-                  />
-                </Box>
-
-                <Box
-                  sx={{
-                    position: "relative",
-                    bgcolor: "background.paper",
-                    borderRadius: 50,
-                    border: "2px solid black",
-                    boxShadow: "0 4px 0 rgba(0,0,0,0.2)",
-                    overflow: "hidden",
-                  }}
-                >
-                  <SortBy
-                    items={[
-                      { label: "Most Relevant", value: "sections" },
-                      {
-                        label: "Course Number (Low to High)",
-                        value: "sections:course_number:asc",
-                      },
-                      {
-                        label: "Course Number (High to Low)",
-                        value: "sections:course_number:desc",
-                      },
-                      {
-                        label: "Credits (Highest)",
-                        value: "sections:credits:desc",
-                      },
-                      {
-                        label: "Credits (Lowest)",
-                        value: "sections:credits:asc",
-                      },
-                      {
-                        label: "Start Time (Earliest)",
-                        value: "sections:start_time:asc",
-                      },
-                      {
-                        label: "Start Time (Latest)",
-                        value: "sections:start_time:desc",
-                      },
-                      {
-                        label: "Instructor Rating (Highest)",
-                        value: "sections:instructors.avg_rating:desc",
-                      },
-                    ]}
-                    classNames={{
-                      select:
-                        "py-2 px-10 px-4 rounded-full appearance-none cursor-pointer relative z-10 border-0 bg-transparent font-medium",
-                    }}
-                  />
-                </Box>
-              </Box>
-
-              {/* Results list */}
-              <Box
-                component={InfiniteHits}
-                hitComponent={SectionHit}
-                sx={{
-                  "& .ais-InfiniteHits-list": {
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: "1.5rem",
-                    backgroundColor: "transparent",
-                  },
-                  "& .ais-InfiniteHits-item": {
-                    bgcolor: "transparent",
-                    border: "none",
-                    padding: 0,
-                    boxShadow: "none",
-                  },
-                  "& .ais-InfiniteHits-loadPrevious": {
-                    visibility: "collapse",
-                  },
-                  "& .ais-InfiniteHits-disabledLoadPrevious": {
-                    visibility: "collapse",
-                  },
-                  "& .ais-InfiniteHits-loadMore": {
-                    textTransform: "none",
-                    borderRadius: 25,
-                    fontWeight: 700,
-                    fontSize: "0.95rem",
-                    padding: "8px 16px",
-                    boxShadow: `0 4px 0 ${useAppTheme().mode === "light"
-                      ? "rgba(0,0,0,0.5)"
-                      : "rgba(0,0,0,0.7)"
-                      }`,
-                    border: `2px solid #000000`,
-                    transition: "all 0.1s ease-in-out",
-                    "&:hover": {
-                      transform: "translateY(2px)",
-                      boxShadow: `0 2px 0 ${useAppTheme().mode === "light"
-                        ? "rgba(0,0,0,0.5)"
-                        : "rgba(0,0,0,0.7)"
-                        }`,
-                      filter: "brightness(1.05)",
-                    },
-                    "&:active": {
-                      transform: "translateY(4px)",
-                      boxShadow: "none",
-                      filter: "brightness(0.95)",
-                    },
-                    backgroundColor: useAppTheme().mode === "light"
-                      ? "#E60012"
-                      : "#009FE3",
-                  },
-                }}
-              />
-            </Grid>
-          </Grid>
-        </InstantSearch>
-
-        {/* Mobile Drawer for Filters */}
-        <Drawer
-          anchor="left"
-          open={drawerOpen}
-          onClose={toggleDrawer}
-          PaperProps={{
-            sx: {
-              width: "85%",
-              maxWidth: 350,
-              p: 3,
-            },
-          }}
-        >
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-              mb: 3,
-            }}
-          >
-            <Typography
-              variant="h6"
-              fontWeight="bold"
-              sx={{ display: "flex", alignItems: "center" }}
-            >
-              <Filter
-                size={18}
-                style={{ marginRight: 10 }}
-                color={theme.palette.primary.main}
-              />
-              Filters
-              {activeFilters > 0 && (
-                <Box
-                  component="span"
-                  sx={{
-                    ml: 1,
-                    px: 1.5,
-                    py: 0.5,
-                    borderRadius: 50,
-                    bgcolor: "primary.main",
-                    color: "white",
-                    fontSize: "0.75rem",
-                    border: "2px solid black",
-                  }}
-                >
-                  {activeFilters}
-                </Box>
-              )}
-            </Typography>
-            <IconButton
-              onClick={toggleDrawer}
-            >
-              <X size={20} />
-            </IconButton>
-          </Box>
-          <Divider />
-          <Box
-            sx={{
-              mt: 2,
-              pb: 2,
-              maxHeight: "calc(100vh - 180px)",
-              overflow: "auto",
-            }}
-          >
-            <FiltersPanel
-              activeFilters={activeFilters}
-              setActiveFilters={setActiveFilters}
-            />
-          </Box>
-        </Drawer>
-      </Container>
-
-      {/* Back to top button */}
-      {showBackToTop && (
-        <Fab
-          color="primary"
-          aria-label="back to top"
-          onClick={scrollToTop}
-          sx={{
-            position: "fixed",
-            bottom: 24,
-            right: 24,
-            zIndex: 1000,
-            border: "2px solid black",
-            boxShadow: "0 4px 0 rgba(0,0,0,0.5)",
-            transition: "all 0.1s ease-in-out",
-            "&:hover": {
-              transform: "translateY(2px)",
-              boxShadow: "0 2px 0 rgba(0,0,0,0.5)",
-            },
-            "&:active": {
-              transform: "translateY(4px)",
-              boxShadow: "none",
-            },
-          }}
-        >
-          <ArrowUp size={24} />
-        </Fab>
-      )}
-    </Box>
-  );
-}
-
-// FiltersPanel component
-function FiltersPanel({ activeFilters, setActiveFilters }) {
+  const { searchClient } = useSearchClient();
+  const { queryHook } = useQueryHook();
   const theme = useTheme();
 
-  const clearAllFilters = () => {
-    document.querySelectorAll(".ais-RefinementList-checkbox:checked").forEach(
-      (checkbox) => {
-        checkbox.click();
-      },
-    );
-  };
-
-  return (
-    <Box
-      sx={{
-        bgcolor: "background.paper",
-        borderRadius: 3,
-        p: 3,
-        height: "relative",
-        border: "3px solid black",
-        boxShadow: "0 6px 0 rgba(0,0,0,0.5)",
-      }}
-    >
-      <Box
-        sx={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          mb: 2,
-        }}
-      >
-        <Typography
-          variant="h6"
-          fontWeight="bold"
-          sx={{
-            display: "flex",
-            alignItems: "center",
-          }}
-        >
-          <Filter
-            size={20}
-            style={{ marginRight: 10 }}
-            color={theme.palette.primary.main}
-          />
-          Filters
-          {activeFilters > 0 && (
-            <Box
-              component="span"
-              sx={{
-                ml: 1,
-                px: 1.5,
-                py: 0.5,
-                borderRadius: 50,
-                bgcolor: "primary.main",
-                color: "white",
-                fontSize: "0.75rem",
-                border: "2px solid black",
-              }}
-            >
-              {activeFilters}
-            </Box>
-          )}
-        </Typography>
-      </Box>
-
-      <Divider sx={{ mb: 3 }} />
-
+  // Define course filter sections
+  const courseFilterSections = (
+    <>
       <FilterSection
         title="Subject"
         attribute="subject_name"
@@ -661,20 +88,57 @@ function FiltersPanel({ activeFilters, setActiveFilters }) {
         icon={<BookOpen />}
         searchable={true}
       />
+    </>
+  );
 
-      <Box sx={{ mt: 4 }}>
-        <Button
-          variant="outlined"
-          fullWidth
-          color="primary"
-          startIcon={<X size={18} />}
-          onClick={clearAllFilters}
-          disabled={activeFilters === 0}
-        >
-          Clear All Filters
-        </Button>
-      </Box>
-    </Box>
+  // Sort options for courses
+  const courseSortByItems = [
+    { label: "Most Relevant", value: "sections" },
+    {
+      label: "Course Number (Low to High)",
+      value: "sections:course_number:asc",
+    },
+    {
+      label: "Course Number (High to Low)",
+      value: "sections:course_number:desc",
+    },
+    {
+      label: "Credits (Highest)",
+      value: "sections:credits:desc",
+    },
+    {
+      label: "Credits (Lowest)",
+      value: "sections:credits:asc",
+    },
+    {
+      label: "Start Time (Earliest)",
+      value: "sections:start_time:asc",
+    },
+    {
+      label: "Start Time (Latest)",
+      value: "sections:start_time:desc",
+    },
+    {
+      label: "Instructor Rating (Highest)",
+      value: "sections:instructors.avg_rating:desc",
+    },
+  ];
+
+  return (
+    <SearchLayout
+      indexName="sections"
+      searchClient={searchClient}
+      queryHook={queryHook}
+      headerIcon={<BookOpen size={28} color="white" />}
+      headerTitle="Find Your Courses"
+      headerSubtitle="Explore courses that match your academic interests and schedule"
+      searchPlaceholder="Search courses, instructors, or subjects..."
+      statsIcon={<BookmarkCheck size={18} color={theme.palette.primary.main} style={{ marginRight: 8 }} />}
+      statsText={(nbHits) => `${nbHits.toLocaleString()} sections available`}
+      sortByItems={courseSortByItems}
+      hitComponent={SectionHit}
+      filterSections={courseFilterSections}
+    />
   );
 }
 
@@ -693,7 +157,7 @@ function formatTime(timeString) {
 
 const DayBox = ({ theme, days }) => {
   if (!days || !Array.isArray(days) || days.length === 0) {
-    return <Typography variant="body2">N/A</Typography>;
+    return <Typography variant="body2" component="div">N/A</Typography>;
   }
 
   const dayMapping = {
@@ -762,7 +226,6 @@ function SectionHit({ hit }) {
   const [favorited, setFavorited] = useState(false);
   const [hovered, setHovered] = useState(false);
 
-  // Determine subject letter color
   const getAvatarColor = () => {
     const colors = [
       "primary.main",
@@ -783,6 +246,7 @@ function SectionHit({ hit }) {
   const instructors = hit.instructors && Array.isArray(hit.instructors)
     ? hit.instructors
     : [];
+
   return (
     <Box
       onMouseEnter={() => setHovered(true)}
@@ -876,44 +340,8 @@ function SectionHit({ hit }) {
                 </Box>
               </Box>
             </Grid>
-            {
-              /*
-                          <Grid item xs={12} sm={5} md={4} sx={{
-                            display: 'flex',
-                            justifyContent: { xs: 'flex-start', sm: 'flex-end' },
-                            alignItems: 'flex-start'
-                          }}>
-                            <Tooltip title={favorited ? "Remove from favorites" : "Add to favorites"}>
-                              <IconButton
-                                onClick={() => setFavorited(!favorited)}
-                                sx={{
-                                  color: favorited ? 'warning.main' : 'action.disabled',
-                                  p: 1,
-                                  mr: 1.5,
-                                  border: '2px solid black',
-                                  borderRadius: 2,
-                                  boxShadow: '0 3px 0 rgba(0,0,0,0.3)',
-                                  '&:hover': {
-                                    transform: 'translateY(2px)',
-                                    boxShadow: '0 1px 0 rgba(0,0,0,0.3)',
-                                  }
-                                }}
-                              >
-                                <Star size={20} fill={favorited ? 'currentColor' : 'none'} />
-                              </IconButton>
-                            </Tooltip>
-
-                            <Button
-                              variant="contained"
-                              color="primary"
-                            >
-                              View Details
-                            </Button>
-                          </Grid>
-
-               * */
-            }
           </Grid>
+
           {/* Tags */}
           <Box sx={{ my: 2 }}>
             <Stack
@@ -998,7 +426,7 @@ function SectionHit({ hit }) {
             {/* Meeting Days */}
             {hit.days && hit.days.length > 0 && (
               <Box sx={{ display: "flex", alignItems: "center", mr: 3 }}>
-                <Typography variant="body2" fontWeight="medium">
+                <Typography variant="body2" component="div" fontWeight="medium">
                   {hit.days && hit.days.length > 0 && (
                     <DayBox theme={theme} days={hit.days} />
                   )}
@@ -1014,7 +442,7 @@ function SectionHit({ hit }) {
                   style={{ marginRight: 8 }}
                   color={theme.palette.secondary.main}
                 />
-                <Typography variant="body2" fontWeight="medium">
+                <Typography variant="body2" component="div" fontWeight="medium">
                   {formatTime(hit.start_time)} - {formatTime(hit.end_time)}
                 </Typography>
               </Box>
@@ -1028,7 +456,7 @@ function SectionHit({ hit }) {
                   style={{ marginRight: 8 }}
                   color={theme.palette.success.main}
                 />
-                <Typography variant="body2" fontWeight="medium">
+                <Typography variant="body2" component="div" fontWeight="medium">
                   Term: {hit.term}
                 </Typography>
               </Box>
@@ -1042,7 +470,7 @@ function SectionHit({ hit }) {
                   style={{ marginRight: 8 }}
                   color={theme.palette.warning.main}
                 />
-                <Typography variant="body2" fontWeight="medium">
+                <Typography variant="body2" component="div" fontWeight="medium">
                   CRN: {hit.crn}
                 </Typography>
               </Box>
@@ -1078,25 +506,25 @@ function SectionHit({ hit }) {
               borderColor: "divider",
             }}
           >
-            <Typography
-              variant="body2"
-              fontWeight="bold"
-              sx={{
-                mb: 1.5,
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between",
-              }}
-            >
-              <Box sx={{ display: "flex", alignItems: "center" }}>
+            <Box sx={{ display: "flex", alignItems: "center" }}>
+              <Typography
+                variant="body2"
+                fontWeight="bold"
+                sx={{
+                  mb: 1.5,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                }}
+              >
                 <GraduationCap
                   size={18}
                   style={{ marginRight: 8 }}
                   color={theme.palette.primary.main}
                 />
                 {instructors.length !== 1 ? "Instructors:" : "Instructor:"}
-              </Box>
-            </Typography>
+              </Typography>
+            </Box>
 
             {instructors.length === 0
               ? (
@@ -1172,19 +600,17 @@ function SectionHit({ hit }) {
                             borderColor: "warning.main",
                           }}
                         >
-                          <Tooltip title="Rate My Professor rating">
-                            <Typography
-                              variant="caption"
-                              sx={{
-                                mr: .7,
-                                mt: .4,
-                                fontWeight: "bold",
-                                color: theme.palette.warning.dark,
-                              }}
-                            >
-                              RMP
-                            </Typography>
-                          </Tooltip>
+                          <Typography
+                            variant="caption"
+                            sx={{
+                              mr: .7,
+                              mt: .4,
+                              fontWeight: "bold",
+                              color: theme.palette.warning.dark,
+                            }}
+                          >
+                            RMP
+                          </Typography>
                           <Star
                             size={14}
                             style={{ marginRight: 4 }}
@@ -1214,6 +640,7 @@ function SectionHit({ hit }) {
                   </Box>
                 ))
               )}
+
           </Box>
         </CardContent>
       </Card>

@@ -2,21 +2,13 @@ import * as schema from '../../../src/db/scheduler/schema.ts';
 import { db } from '../../../src/db/index.ts';
 import data from './assets/courses.json' with { type: 'json' };
 
-const seed = async () => {
-   try {
-      await seedCourses(data);
-      console.log('Course seeding completed successfully');
-   } catch (error) {
-      console.error('Error seeding courses:', error);
-   }
-};
-
-// Seed courses
 const seedCourses = async (data) => {
    const courseMap = new Map();
 
+   // Process each subject sequentially
    for (const [subjectCode, subjectData] of Object.entries(data)) {
       if (subjectData.courses && Array.isArray(subjectData.courses)) {
+         // Process each course in the subject sequentially
          for (const course of subjectData.courses) {
             // Parse credits - handle ranges
             let numericCredits = 0;
@@ -54,10 +46,16 @@ const seedCourses = async (data) => {
                   .returning({ courseId: schema.courses.id })
                   .onConflictDoNothing();
 
-               courseMap.set(`${subjectCode}-${course.number}`, courseId);
-               console.log(
-                  `Added course: ${subjectCode} ${course.number} - ${course.title}`,
-               );
+               if (courseId) {
+                  courseMap.set(`${subjectCode}-${course.number}`, courseId);
+                  console.log(
+                     `Added course: ${subjectCode} ${course.number} - ${course.title}`,
+                  );
+               } else {
+                  console.log(
+                     `Course already exists: ${subjectCode} ${course.number} - ${course.title}`,
+                  );
+               }
             } catch (error) {
                console.error(
                   `Error adding course ${subjectCode} ${course.number}:`,
@@ -68,8 +66,13 @@ const seedCourses = async (data) => {
          }
       }
    }
-
-   return courseMap;
 };
 
-export default seed;
+try {
+   // Wait for all courses to be seeded before returning
+   await seedCourses(data);
+   console.log('Course seeding completed successfully');
+} catch (error) {
+   console.error('Error seeding courses:', error);
+   throw error; // Re-throw to handle in the main sequence
+}

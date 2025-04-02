@@ -1,633 +1,48 @@
+"use no memo"
+// src/routes/JobsRoute.jsx
 import { createFileRoute } from "@tanstack/react-router";
-import React, { useEffect, useState } from "react";
+import { useState } from "react";
+import { Highlight } from "react-instantsearch";
+import { useTheme } from "@mui/material";
 import {
-  Highlight, InfiniteHits, InstantSearch, RefinementList, SearchBox, SortBy, Stats,
-}
-  from "react-instantsearch";
-import { instantMeiliSearch } from "@meilisearch/instant-meilisearch";
-import "instantsearch.css/themes/satellite.css";
-import {
-  alpha, Avatar, Box, Button, Card, CardContent, Chip, CircularProgress, Container, Divider, Drawer, Fab, Grid, IconButton, Stack, Typography, useMediaQuery, useTheme,
-} from "@mui/material";
-import {
-  ArrowUp, Award, BookOpen, Briefcase, Building, Calendar, ChevronDown, Clock, Filter, GraduationCap, Layers, MapPin, Menu, Search as SearchIcon, SortAsc, Star, X,
+  Award, BookOpen, Briefcase, Building, Calendar, Clock, GraduationCap, Layers, MapPin, Star,
 } from "lucide-react";
-import { useAppTheme } from "#/utils";
+import { Avatar, Box, Button, Card, CardContent, Chip, Grid, IconButton, Stack, Typography } from "@mui/material";
 import FilterSection from "#/components/search/FitlerSection";
 import { getAuthSearchTokenOptions } from "#client/react-query.gen";
-import { useSuspenseQuery } from "@tanstack/react-query";
+import { useSearchClient, useQueryHook } from "#/hooks";
 
+import {
+  SearchLayout,
+  LoadingComponent,
+  ErrorComponent,
+} from "#/components/search/Shared";
 
-// Route definition remains the same
 export const Route = createFileRoute("/jobs/")({
-  pendingComponent: () => {
-    const theme = useTheme();
-
-    return (
-      <Container
-        sx={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          height: "100vh",
-        }}
-      >
-        <Box sx={{ textAlign: "center" }}>
-          <CircularProgress
-            size={60}
-            thickness={5}
-            sx={{
-              mb: 3,
-              color: "primary.main",
-            }}
-          />
-          <Typography variant="h5" fontWeight="bold" sx={{ mb: 1 }}>
-            Loading Job Search
-          </Typography>
-          <Typography variant="body1" color="text.secondary">
-            Finding the perfect opportunities for you...
-          </Typography>
-        </Box>
-      </Container>
-    );
+  loader: async ({ context: { queryClient } }) => {
+    await queryClient.prefetchQuery(getAuthSearchTokenOptions())
   },
-  errorComponent: ({ error }) => {
-    const theme = useTheme();
-
-    return (
-      <Container
-        sx={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          height: "100vh",
-        }}
-      >
-        <Box sx={{ textAlign: "center", maxWidth: 500 }}>
-          <Box
-            sx={{
-              width: 120,
-              height: 120,
-              borderRadius: "50%",
-              bgcolor: "error.light",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              mb: 3,
-              mx: "auto",
-            }}
-          >
-            <X size={60} color="#fff" />
-          </Box>
-          <Typography
-            variant="h4"
-            gutterBottom
-            fontWeight="bold"
-            color="error.main"
-          >
-            Oops! Something went wrong
-          </Typography>
-          <Typography variant="body1" sx={{ mb: 4, color: "text.secondary" }}>
-            {error?.message ||
-              "We encountered an error while loading the job search. Please try again."}
-          </Typography>
-          <Button
-            variant="contained"
-            size="large"
-            color="primary"
-            onClick={() => window.location.reload()}
-          >
-            Try Again
-          </Button>
-        </Box>
-      </Container>
-    );
-  },
+  pendingComponent: () => (
+    <LoadingComponent
+      title="Loading Job Search"
+      subtitle="Finding the perfect opportunities for you..."
+    />
+  ),
+  errorComponent: ({ error }) => (
+    <ErrorComponent error={error} />
+  ),
   component: JobSearchComponent,
 });
 
-// JobSearchComponent remains the same
+// Main component
 function JobSearchComponent() {
-  const searchToken = useSuspenseQuery({
-    ...getAuthSearchTokenOptions(),
-    staleTime: 19 * 1000, // 24 hours
-    gcTime: 19 * 1000, // 24 hours (cache time)
-    refetchInterval: 19000,
-    refetchIntervalInBackground: true,
-  });
-
-  const { searchClient } = instantMeiliSearch(
-    `${window.location.host}/api/search`,
-    () => { console.log("tried to get apikey again"); return searchToken.data.token },
-    {
-      primaryKey: "id",
-      attributesToHighlight: [
-        "position_name",
-        "company_name",
-        "position_description",
-        "job_type",
-        "coop_cycle",
-        "majors",
-      ],
-      highlightPreTag: "<mark>",
-      highlightPostTag: "</mark>",
-    },
-  );
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
-  const [drawerOpen, setDrawerOpen] = useState(false);
-  const [showBackToTop, setShowBackToTop] = useState(false);
-  const [activeFilters, setActiveFilters] = useState(0);
-
-
-  // Count active filters
-  useEffect(() => {
-    const checkActiveFilters = () => {
-      const checkedBoxes = document.querySelectorAll(
-        ".ais-RefinementList-checkbox:checked",
-      );
-      setActiveFilters(checkedBoxes.length);
-    };
-
-    // Initial check
-    setTimeout(checkActiveFilters, 1000);
-
-    // Check when clicked
-    document.addEventListener("click", checkActiveFilters);
-    return () => document.removeEventListener("click", checkActiveFilters);
-  }, []);
-
-  // Show back to top button when scrolled down
-  useEffect(() => {
-    const handleScroll = () => {
-      if (window.scrollY > 300) {
-        setShowBackToTop(true);
-      } else {
-        setShowBackToTop(false);
-      }
-    };
-
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
-  const scrollToTop = () => {
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth",
-    });
-  };
-
-  const toggleDrawer = () => {
-    setDrawerOpen(!drawerOpen);
-  };
-
-  return (
-    <Box
-      sx={{
-        minHeight: "100vh",
-        pt: 2,
-        pb: 8,
-      }}
-    >
-      <Container maxWidth="xl" sx={{ py: 3, px: { xs: 2, md: 4 } }}>
-        <InstantSearch
-          searchClient={searchClient}
-          indexName="job_postings"
-        >
-          <Box
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "space-between",
-              mb: 4,
-            }}
-          >
-            <Box sx={{ display: "flex", alignItems: "center" }}>
-              <Box
-                sx={{
-                  p: 1.5,
-                  mr: 2,
-                  bgcolor: "primary.main",
-                  borderRadius: "12px",
-                  boxShadow: "0 4px 0 rgba(0,0,0,0.5)",
-                  border: "2px solid black",
-                }}
-              >
-                <Briefcase size={28} color="white" />
-              </Box>
-              <Box>
-                <Typography
-                  variant="h4"
-                  component="h1"
-                  fontWeight="bold"
-                  sx={{ mb: 0.5 }}
-                >
-                  Find Your Dream Job
-                </Typography>
-                <Typography variant="subtitle1" color="text.secondary">
-                  Explore opportunities that match your skills and interests
-                </Typography>
-              </Box>
-            </Box>
-
-            {isMobile && (
-              <Button
-                variant="outlined"
-                color="primary"
-                onClick={toggleDrawer}
-                startIcon={<Filter size={20} />}
-              >
-                Filters
-                {activeFilters > 0 && (
-                  <Box
-                    sx={{
-                      position: "absolute",
-                      top: -8,
-                      right: -8,
-                      bgcolor: "secondary.main",
-                      color: "white",
-                      borderRadius: "50%",
-                      width: 24,
-                      height: 24,
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      fontWeight: "bold",
-                      fontSize: "0.75rem",
-                      border: "2px solid black",
-                    }}
-                  >
-                    {activeFilters}
-                  </Box>
-                )}
-              </Button>
-            )}
-          </Box>
-
-          {/* Search Box */}
-          <Box
-            sx={{
-              mb: 4,
-              position: "relative",
-              mx: "auto",
-              maxWidth: "900px",
-            }}
-          >
-            <Box
-              sx={{
-                position: "relative",
-                borderRadius: 50,
-                overflow: "hidden",
-                border: "3px solid black",
-                boxShadow: "0 6px 0 rgba(0,0,0,0.5)",
-              }}
-            >
-              <SearchBox
-                placeholder="Search job titles, skills, or companies..."
-                classNames={{
-                  form: "w-full relative",
-                  input:
-                    "w-full p-5 pl-14 rounded-full text-lg focus:outline-none",
-                  submit: "hidden",
-                  reset: "hidden",
-                }}
-                autoFocus
-              />
-            </Box>
-          </Box>
-
-          <Grid container spacing={4}>
-            {/* Filters - Desktop */}
-            {!isMobile && (
-              <Grid item md={3} lg={3}>
-                <FiltersPanel
-                  activeFilters={activeFilters}
-                  setActiveFilters={setActiveFilters}
-                />
-              </Grid>
-            )}
-
-            {/* Main Content */}
-            <Grid item xs={12} md={9} lg={9}>
-              {/* Results count and sort */}
-              <Box
-                sx={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                  mb: 3,
-                  flexWrap: "wrap",
-                  gap: 2,
-                }}
-              >
-                <Box
-                  sx={{
-                    bgcolor: alpha(theme.palette.primary.main, 0.1),
-                    px: 2.5,
-                    py: 1,
-                    borderRadius: 50,
-                    display: "inline-flex",
-                    alignItems: "center",
-                    border: "2px solid black",
-                    boxShadow: "0 4px 0 rgba(0,0,0,0.2)",
-                  }}
-                >
-                  <Award
-                    size={18}
-                    color={theme.palette.primary.main}
-                    style={{ marginRight: 8 }}
-                  />
-                  <Stats
-                    translations={{
-                      stats: ({ nbHits }) =>
-                        `${nbHits.toLocaleString()} positions available`,
-                    }}
-                    classNames={{
-                      root: "font-bold",
-                    }}
-                  />
-                </Box>
-
-                <Box
-                  sx={{
-                    position: "relative",
-                    bgcolor: "background.paper",
-                    borderRadius: 50,
-                    border: "2px solid black",
-                    boxShadow: "0 4px 0 rgba(0,0,0,0.2)",
-                    overflow: "hidden",
-                  }}
-                >
-                  <SortBy
-                    items={[
-                      { label: "Most Relevant", value: "job_postings" },
-                      {
-                        label: "Year (Newest)",
-                        value: "job_postings:year:desc",
-                      },
-                      {
-                        label: "Year (Oldest)",
-                        value: "job_postings:year:asc",
-                      },
-                      {
-                        label: "Job Length (Longest)",
-                        value: "job_postings:job_length:desc",
-                      },
-                      {
-                        label: "Minimum GPA (Highest)",
-                        value: "job_postings:minimum_gpa:desc",
-                      },
-                      {
-                        label: "Work Hours (Most)",
-                        value: "job_postings:work_hours:desc",
-                      },
-                      {
-                        label: "Recently Added",
-                        value: "job_postings:created_at:desc",
-                      },
-                      {
-                        label: "Recently Updated",
-                        value: "job_postings:updated_at:desc",
-                      },
-                    ]}
-                    classNames={{
-                      select:
-                        "py-2 px-10 px-4 rounded-full appearance-none cursor-pointer relative z-10 border-0 bg-transparent font-medium",
-                    }}
-                  />
-                </Box>
-              </Box>
-
-              {/* Results list */}
-              <Box
-                component={InfiniteHits}
-                hitComponent={JobHit}
-                sx={{
-                  "& .ais-InfiniteHits-list": {
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: "1.5rem",
-                    backgroundColor: "transparent",
-                  },
-                  "& .ais-InfiniteHits-item": {
-                    bgcolor: "transparent",
-                    border: "none",
-                    padding: 0,
-                    boxShadow: "none",
-                  },
-                  "& .ais-InfiniteHits-loadPrevious": {
-                    visibility: "collapse",
-                  },
-                  "& .ais-InfiniteHits-disabledLoadPrevious": {
-                    visibility: "collapse",
-                  },
-                  "& .ais-InfiniteHits-loadMore": {
-                    textTransform: "none",
-                    borderRadius: 25,
-                    fontWeight: 700,
-                    fontSize: "0.95rem",
-                    padding: "8px 16px",
-                    boxShadow: `0 4px 0 ${useAppTheme().mode === "light"
-                      ? "rgba(0,0,0,0.5)"
-                      : "rgba(0,0,0,0.7)"
-                      }`,
-                    border: `2px solid #000000`,
-                    transition: "all 0.1s ease-in-out",
-                    "&:hover": {
-                      transform: "translateY(2px)",
-                      boxShadow: `0 2px 0 ${useAppTheme().mode === "light"
-                        ? "rgba(0,0,0,0.5)"
-                        : "rgba(0,0,0,0.7)"
-                        }`,
-                      filter: "brightness(1.05)",
-                    },
-                    "&:active": {
-                      transform: "translateY(4px)",
-                      boxShadow: "none",
-                      filter: "brightness(0.95)",
-                    },
-                    backgroundColor: useAppTheme().mode === "light"
-                      ? "#E60012"
-                      : "#009FE3",
-                  },
-                }}
-              />
-            </Grid>
-          </Grid>
-        </InstantSearch>
-
-        {/* Mobile Drawer for Filters */}
-        <Drawer
-          anchor="left"
-          open={drawerOpen}
-          onClose={toggleDrawer}
-          PaperProps={{
-            sx: {
-              width: "85%",
-              maxWidth: 350,
-              p: 3,
-            },
-          }}
-        >
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-              mb: 3,
-            }}
-          >
-            <Typography
-              variant="h6"
-              fontWeight="bold"
-              sx={{ display: "flex", alignItems: "center" }}
-            >
-              <Filter
-                size={18}
-                style={{ marginRight: 10 }}
-                color={theme.palette.primary.main}
-              />
-              Filters
-              {activeFilters > 0 && (
-                <Box
-                  component="span"
-                  sx={{
-                    ml: 1,
-                    px: 1.5,
-                    py: 0.5,
-                    borderRadius: 50,
-                    bgcolor: "primary.main",
-                    color: "white",
-                    fontSize: "0.75rem",
-                    border: "2px solid black",
-                  }}
-                >
-                  {activeFilters}
-                </Box>
-              )}
-            </Typography>
-            <IconButton
-              onClick={toggleDrawer}
-            >
-              <X size={20} />
-            </IconButton>
-          </Box>
-          <Divider />
-          <Box
-            sx={{
-              mt: 2,
-              pb: 2,
-              maxHeight: "calc(100vh - 180px)",
-              overflow: "auto",
-            }}
-          >
-            <FiltersPanel
-              activeFilters={activeFilters}
-              setActiveFilters={setActiveFilters}
-            />
-          </Box>
-        </Drawer>
-      </Container>
-
-      {/* Back to top button */}
-      {showBackToTop && (
-        <Fab
-          color="primary"
-          aria-label="back to top"
-          onClick={scrollToTop}
-          sx={{
-            position: "fixed",
-            bottom: 24,
-            right: 24,
-            zIndex: 1000,
-            border: "2px solid black",
-            boxShadow: "0 4px 0 rgba(0,0,0,0.5)",
-            transition: "all 0.1s ease-in-out",
-            "&:hover": {
-              transform: "translateY(2px)",
-              boxShadow: "0 2px 0 rgba(0,0,0,0.5)",
-            },
-            "&:active": {
-              transform: "translateY(4px)",
-              boxShadow: "none",
-            },
-          }}
-        >
-          <ArrowUp size={24} />
-        </Fab>
-      )}
-    </Box>
-  );
-}
-
-// FiltersPanel component remains the same
-function FiltersPanel({ activeFilters, setActiveFilters }) {
+  const { searchClient } = useSearchClient();
+  const { queryHook } = useQueryHook();
   const theme = useTheme();
 
-  const clearAllFilters = () => {
-    document.querySelectorAll(".ais-RefinementList-checkbox:checked").forEach(
-      (checkbox) => {
-        checkbox.click();
-      },
-    );
-  };
-
-  return (
-    <Box
-      sx={{
-        bgcolor: "background.paper",
-        borderRadius: 3,
-        p: 3,
-        height: "relative",
-        border: "3px solid black",
-        boxShadow: "0 6px 0 rgba(0,0,0,0.5)",
-      }}
-    >
-      <Box
-        sx={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          mb: 2,
-        }}
-      >
-        <Typography
-          variant="h6"
-          fontWeight="bold"
-          sx={{
-            display: "flex",
-            alignItems: "center",
-          }}
-        >
-          <Filter
-            size={20}
-            style={{ marginRight: 10 }}
-            color={theme.palette.primary.main}
-          />
-          Filters
-          {activeFilters > 0 && (
-            <Box
-              component="span"
-              sx={{
-                ml: 1,
-                px: 1.5,
-                py: 0.5,
-                borderRadius: 50,
-                bgcolor: "primary.main",
-                color: "white",
-                fontSize: "0.75rem",
-                border: "2px solid black",
-              }}
-            >
-              {activeFilters}
-            </Box>
-          )}
-        </Typography>
-      </Box>
-
-      <Divider sx={{ mb: 3 }} />
-
+  // Define job filter sections
+  const jobFilterSections = (
+    <>
       <FilterSection
         title="Job Type"
         attribute="job_type"
@@ -651,6 +66,7 @@ function FiltersPanel({ activeFilters, setActiveFilters }) {
       <FilterSection
         title="Work Hours"
         attribute="work_hours"
+        isSlider
         icon={<Clock />}
       />
       <FilterSection
@@ -686,38 +102,65 @@ function FiltersPanel({ activeFilters, setActiveFilters }) {
         attribute="compensation_status"
         icon={<Briefcase />}
       />
+    </>
+  );
 
-      <Box sx={{ mt: 4 }}>
-        <Button
-          variant="outlined"
-          fullWidth
-          color="primary"
-          startIcon={<X size={18} />}
-          onClick={clearAllFilters}
-          disabled={activeFilters === 0}
-        >
-          Clear All Filters
-        </Button>
-      </Box>
-    </Box>
+  // Sort options for jobs
+  const jobSortByItems = [
+    { label: "Most Relevant", value: "job_postings" },
+    {
+      label: "Year (Newest)",
+      value: "job_postings:year:desc",
+    },
+    {
+      label: "Year (Oldest)",
+      value: "job_postings:year:asc",
+    },
+    {
+      label: "Job Length (Longest)",
+      value: "job_postings:job_length:desc",
+    },
+    {
+      label: "Minimum GPA (Highest)",
+      value: "job_postings:minimum_gpa:desc",
+    },
+    {
+      label: "Work Hours (Most)",
+      value: "job_postings:work_hours:desc",
+    },
+    {
+      label: "Recently Added",
+      value: "job_postings:created_at:desc",
+    },
+    {
+      label: "Recently Updated",
+      value: "job_postings:updated_at:desc",
+    },
+  ];
+
+  return (
+    <SearchLayout
+      indexName="job_postings"
+      searchClient={searchClient}
+      queryHook={queryHook}
+      headerIcon={<Briefcase size={28} color="white" />}
+      headerTitle="Find Your Dream Job"
+      headerSubtitle="Explore opportunities that match your skills and interests"
+      searchPlaceholder="Search job titles, skills, or companies..."
+      statsIcon={<Award size={18} color={theme.palette.primary.main} style={{ marginRight: 8 }} />}
+      statsText={(nbHits) => `${nbHits.toLocaleString()} positions available`}
+      sortByItems={jobSortByItems}
+      hitComponent={JobHit}
+      filterSections={jobFilterSections}
+    />
   );
 }
 
-// Updated JobHit Component with Highlighting
 function JobHit({ hit }) {
   const theme = useTheme();
   const [favorited, setFavorited] = useState(false);
   const [hovered, setHovered] = useState(false);
 
-  // Define highlight styles
-  const highlightStyle = {
-    backgroundColor: theme.palette.warning.light,
-    padding: "0 4px",
-    borderRadius: "4px",
-    fontWeight: "bold",
-  };
-
-  // Determine first letter color
   const getAvatarColor = () => {
     const colors = [
       "primary.main",
@@ -728,7 +171,6 @@ function JobHit({ hit }) {
       "success.main",
     ];
 
-    // Generate a consistent color based on company name
     if (!hit.company_name) return colors[0];
     const charCode = hit.company_name.charCodeAt(0);
     return colors[charCode % colors.length];
@@ -844,13 +286,6 @@ function JobHit({ hit }) {
               >
                 <Star size={20} fill={favorited ? "currentColor" : "none"} />
               </IconButton>
-
-              <Button
-                variant="contained"
-                color="primary"
-              >
-                View Details
-              </Button>
             </Grid>
           </Grid>
 
@@ -904,7 +339,7 @@ function JobHit({ hit }) {
               {hit.job_length && (
                 <Chip
                   icon={<Layers size={14} />}
-                  label={`${hit.job_length} Month${hit.job_length > 1 ? "s" : ""
+                  label={`${hit.job_length} Quarter${hit.job_length > 1 ? "s" : ""
                     }`}
                   color="info"
                   size="medium"
@@ -953,6 +388,7 @@ function JobHit({ hit }) {
             >
               <Typography
                 variant="body2"
+                component="div"
                 sx={{
                   fontWeight: "bold",
                   mb: 1.5,

@@ -66,6 +66,7 @@ export const department_enum = scheduler.enum('department', [
    'Literature',
    'Management',
    'Marketing',
+   'Dance',
    'Materials Science',
    'Mathematics',
    'Media Arts & Design',

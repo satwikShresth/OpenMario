@@ -1,13 +1,6 @@
 import { Link, useLocation } from "@tanstack/react-router";
-import {
-  AppBar,
-  Box,
-  Container,
-  IconButton,
-  Toolbar,
-  Tooltip,
-} from "@mui/material";
-import { Home, Moon, Sun, Upload, User } from "lucide-react";
+import { AppBar, Box, Container, IconButton, Toolbar, Tooltip, } from "@mui/material";
+import { Briefcase, GraduationCap, Home, Moon, Sun, Upload, User } from "lucide-react";
 import { useAppTheme } from "#/utils/useThemeProvider";
 import React, { useEffect, useState } from "react";
 import { clearToken, isLoggedIn } from "#/hooks/useAuth";
@@ -60,7 +53,7 @@ const Nav = ({ onLoginClick }): React.FC<{ onLoginClick: () => void }> => {
   const getColor = (lightColor, darkColor) =>
     mode === "light" ? lightColor : darkColor;
 
-  // Navigation links - removed Profile from here
+  // Navigation links - added Jobs and Courses
   const navLinks = [
     {
       text: "Home",
@@ -75,6 +68,20 @@ const Nav = ({ onLoginClick }): React.FC<{ onLoginClick: () => void }> => {
       icon: <Upload size={20} />,
       color: getColor(colors.green, colors.neonPink),
       glowColor: "rgba(255, 51, 153, 0.7)", // Pink glow
+    },
+    {
+      text: "Jobs",
+      path: "/jobs",
+      icon: <Briefcase size={20} />,
+      color: getColor("#4682B4", "#6495ED"), // Steel Blue for light, Cornflower Blue for dark
+      glowColor: "rgba(100, 149, 237, 0.6)", // Softer blue glow
+    },
+    {
+      text: "Courses",
+      path: "/courses",
+      icon: <GraduationCap size={20} />,
+      color: getColor("#8B5A2B", "#7B68EE"), // Saddle Brown for light, Medium Slate Blue for dark
+      glowColor: "rgba(123, 104, 238, 0.6)", // Softer purple glow
     },
   ];
 
@@ -175,8 +182,8 @@ const Nav = ({ onLoginClick }): React.FC<{ onLoginClick: () => void }> => {
                     ? "drop-shadow(0 0 3px rgba(230, 0, 18, 0.5))"
                     : "drop-shadow(0 0 8px rgba(255, 255, 255, 0.8))"
                   : mode === "dark"
-                  ? "drop-shadow(0 0 5px rgba(255, 255, 255, 0.3))"
-                  : "none",
+                    ? "drop-shadow(0 0 5px rgba(255, 255, 255, 0.3))"
+                    : "none",
                 transition: "all 0.3s ease",
                 animation: isLogoHovered
                   ? "float 3s ease-in-out infinite"
@@ -200,10 +207,10 @@ const Nav = ({ onLoginClick }): React.FC<{ onLoginClick: () => void }> => {
                   backgroundColor: i % 3 === 0
                     ? mode === "light" ? colors.yellow : colors.neonYellow
                     : i % 3 === 1
-                    ? mode === "light" ? colors.red : colors.neonPink
-                    : mode === "light"
-                    ? colors.blue
-                    : colors.neonBlue,
+                      ? mode === "light" ? colors.red : colors.neonPink
+                      : mode === "light"
+                        ? colors.blue
+                        : colors.neonBlue,
                   filter: `blur(${i % 2 === 0 ? "0" : "1px"})`,
                   opacity: 0,
                   animation: `twinkle 2s ease-in-out ${i * 0.3}s infinite`,
@@ -234,7 +241,7 @@ const Nav = ({ onLoginClick }): React.FC<{ onLoginClick: () => void }> => {
             ))}
           </Box>
 
-          {/* Navigation items - without Profile */}
+          {/* Navigation items - with added Jobs and Courses */}
           <Box
             sx={{
               display: "flex",
@@ -256,8 +263,8 @@ const Nav = ({ onLoginClick }): React.FC<{ onLoginClick: () => void }> => {
                   color: isActive(link.path)
                     ? colors.white
                     : mode === "light"
-                    ? colors.black
-                    : colors.white,
+                      ? colors.black
+                      : colors.white,
                   textDecoration: "none",
                   height: 48,
                   px: 2.5,
@@ -387,8 +394,8 @@ const Nav = ({ onLoginClick }): React.FC<{ onLoginClick: () => void }> => {
                 color: authState
                   ? colors.white
                   : mode === "light"
-                  ? colors.black
-                  : profileLink.color,
+                    ? colors.black
+                    : profileLink.color,
                 border: `3px solid ${colors.black}`,
                 borderRadius: "50%",
                 boxShadow: mode === "dark"

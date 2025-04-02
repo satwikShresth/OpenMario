@@ -1,4 +1,5 @@
-import sections___ from './assets/sections.json' with { type: 'json' };
+import sections_202435 from './assets/sections_202435.json' with { type: 'json' };
+import sections_202445 from './assets/sections_202445.json' with { type: 'json' };
 import {
    courses,
    instructors,
@@ -7,6 +8,7 @@ import {
 } from '../../../src/db/scheduler/schema.ts';
 import { db } from '../../../src/db/index.ts';
 import { and, eq } from 'drizzle-orm';
+
 const days_to_num = {
    Monday: 1,
    Tuesday: 2,
@@ -17,9 +19,9 @@ const days_to_num = {
    Sunday: 7,
 };
 
-async function processSections() {
+async function processSections(drexel_section: any, term: number) {
    const sections_ = [];
-   const promises = sections___.map(
+   const promises = drexel_section.map(
       async ({
          subject_code,
          course_number,
@@ -52,7 +54,7 @@ async function processSections() {
                   days: days?.map((day) => days_to_num[day]) ?? null,
                   start_time,
                   end_time,
-                  term: 202435,
+                  term,
                   instruction_method,
                   instruction_type,
                   instructors: instructors_?.map(({ name }) => name),
@@ -71,10 +73,9 @@ async function processSections() {
    return sections_;
 }
 
-export default async () => {
-   const sections_ = await processSections();
+export const section_function = async (drexel_section, term) => {
+   const sections_ = await processSections(drexel_section, term);
 
-   // Use Promise.all to wait for all async operations to complete
    await Promise.all(
       sections_.map(async ({ instructors: instructorNames, ...insertData }) => {
          const instructor_ids = instructorNames?.length > 0
@@ -113,3 +114,6 @@ export default async () => {
 
    console.log(`Seeded ${sections_.length} sections successfully`);
 };
+
+await section_function(sections_202435, 202435);
+await section_function(sections_202445, 202445);

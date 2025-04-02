@@ -45,13 +45,16 @@
     "dev:watch": "deno -A  --env-file=../.dev.env --watch src/server.ts",
     "install": "deno install --import-map ./import_map.dev.json",
     "watch": "deno -A --watch src/server.ts",
+    "dev:seed:scheduler": {
+      "command": "deno run --env-file=../.dev.env -A ./database/scheduler/seeds/subjects.ts && deno run --env-file=../.dev.env -A ./database/scheduler/seeds/instructors.ts && deno run --env-file=../.dev.env -A ./database/scheduler/seeds/course.ts && deno run --env-file=../.dev.env -A ./database/scheduler/seeds/sections.ts",
+    },
     "prod:migrate": "deno run -A npm:drizzle-kit migrate",
     "prod:seed:openmario": {
       "command": "deno run -A ./database/openmario/seeds/index.ts",
       "dependencies": ["prod:migrate"]
     },
     "prod:seed:scheduler": {
-      "command": "deno run -A ./database/scheduler/seeds/index.ts",
+      "command": "deno run -A ./database/scheduler/seeds/subjects.ts && deno run -A ./database/scheduler/seeds/instructors.ts && deno run -A ./database/scheduler/seeds/course.ts && deno run -A ./database/scheduler/seeds/sections.ts",
       "dependencies": ["prod:migrate"]
     },
     "prod:seed:meilisearch": {
