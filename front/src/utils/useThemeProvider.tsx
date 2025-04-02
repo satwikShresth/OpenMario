@@ -17,7 +17,7 @@ type ThemeContextType = {
 };
 
 const ThemeContext = createContext<ThemeContextType>({
-  toggleColorMode: () => {},
+  toggleColorMode: () => { },
   mode: "light",
 });
 
@@ -80,6 +80,15 @@ export const ThemeContextProvider: React.FC<ThemeContextProviderProps> = (
   // Create theme based on current mode - using useMemo to avoid recreating on every render
   const theme = useMemo(() =>
     createTheme({
+      breakpoints: {
+        values: {
+          xs: 0,
+          sm: 600,
+          md: 1200, // Changed from the default (typically 900px)
+          lg: 1200,
+          xl: 1536,
+        },
+      },
       palette: {
         mode,
         ...(mode === "light"
@@ -204,16 +213,14 @@ export const ThemeContextProvider: React.FC<ThemeContextProviderProps> = (
               fontWeight: 700,
               fontSize: "0.95rem",
               padding: "8px 16px",
-              boxShadow: `0 4px 0 ${
-                mode === "light" ? "rgba(0,0,0,0.5)" : "rgba(0,0,0,0.7)"
-              }`,
+              boxShadow: `0 4px 0 ${mode === "light" ? "rgba(0,0,0,0.5)" : "rgba(0,0,0,0.7)"
+                }`,
               border: `2px solid ${marioColors.black}`,
               transition: "all 0.1s ease-in-out",
               "&:hover": {
                 transform: "translateY(2px)",
-                boxShadow: `0 2px 0 ${
-                  mode === "light" ? "rgba(0,0,0,0.5)" : "rgba(0,0,0,0.7)"
-                }`,
+                boxShadow: `0 2px 0 ${mode === "light" ? "rgba(0,0,0,0.5)" : "rgba(0,0,0,0.7)"
+                  }`,
                 filter: "brightness(1.05)",
               },
               "&:active": {
@@ -304,9 +311,8 @@ export const ThemeContextProvider: React.FC<ThemeContextProviderProps> = (
         MuiAppBar: {
           styleOverrides: {
             root: {
-              boxShadow: `0 6px 0 ${
-                mode === "light" ? "rgba(0,0,0,0.6)" : "rgba(0,0,0,0.7)"
-              }`,
+              boxShadow: `0 6px 0 ${mode === "light" ? "rgba(0,0,0,0.6)" : "rgba(0,0,0,0.7)"
+                }`,
               borderBottom: `3px solid ${marioColors.black}`,
               backgroundColor: mode === "light"
                 ? marioColors.white
@@ -462,9 +468,8 @@ export const ThemeContextProvider: React.FC<ThemeContextProviderProps> = (
               "& .MuiSnackbarContent-root": {
                 borderRadius: 16,
                 border: `3px solid ${marioColors.black}`,
-                boxShadow: `0 4px 0 ${
-                  mode === "light" ? "rgba(0,0,0,0.5)" : "rgba(0,0,0,0.7)"
-                }`,
+                boxShadow: `0 4px 0 ${mode === "light" ? "rgba(0,0,0,0.5)" : "rgba(0,0,0,0.7)"
+                  }`,
                 fontWeight: 600,
               },
             },

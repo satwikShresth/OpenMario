@@ -11,12 +11,8 @@ import { Highlight } from "react-instantsearch";
 import FilterSection from "#/components/search/FitlerSection";
 import { getAuthSearchTokenOptions } from "#client/react-query.gen";
 import { useSearchClient, useQueryHook } from "#/hooks";
-
-import {
-  SearchLayout,
-  LoadingComponent,
-  ErrorComponent,
-} from "#/components/search/Shared";
+import { LoadingComponent, ErrorComponent, } from "#/components/search/Shared";
+import SearchLayout from "#/components/search/SearchLayout";
 
 export const Route = createFileRoute("/courses/")({
   loader: async ({ context: { queryClient } }) => {

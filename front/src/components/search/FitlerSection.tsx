@@ -24,12 +24,15 @@ const FilterList = ({ title, attribute, searchable, icon }) => {
     canToggleShowMore,
     isShowingMore,
     toggleShowMore,
+    createURL,
   } = useRefinementList({
     attribute,
     limit: 5,
     showMore: true,
     searchable,
   });
+
+  console.log(items)
 
   return (
     <Box sx={{ mb: 4 }}>
