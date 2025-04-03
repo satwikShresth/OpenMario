@@ -4,9 +4,11 @@ import { Box, Container, Grid, useMediaQuery, useTheme } from "@mui/material";
 import {
   SearchHeader, EnhancedSearchBox, MobileFilterButton, StatsCounter, StyledSortBy, StyledInfiniteHits, FiltersPanel, FilterDrawer, BackToTopButton
 } from "./Shared";
+import { FavoritesToggle } from "./FavoritesToggle";
 import { history } from 'instantsearch.js/es/lib/routers';
 import { useNavigate, useRouter } from "@tanstack/react-router";
-import { Router } from "@tanstack/react-router";
+import * as qs from "qs";
+import { configure } from "instantsearch.js/es/widgets";
 
 interface SearchLayoutProps {
   Route: string,
@@ -21,7 +23,8 @@ interface SearchLayoutProps {
   statsText: any,
   sortByItems: any,
   hitComponent: any,
-  filterSections: any
+  filterSections: any,
+  idField?: string
 }
 
 const SearchLayout: React.FC<SearchLayoutProps> = ({
@@ -37,7 +40,8 @@ const SearchLayout: React.FC<SearchLayoutProps> = ({
   statsText,
   sortByItems,
   hitComponent,
-  filterSections
+  filterSections,
+  idField = "id"
 }) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
@@ -63,7 +67,7 @@ const SearchLayout: React.FC<SearchLayoutProps> = ({
   const toggleDrawer = () => {
     setDrawerOpen(!drawerOpen);
   };
-  createinstant
+
   return (
     <Box
       sx={{
@@ -78,19 +82,41 @@ const SearchLayout: React.FC<SearchLayoutProps> = ({
           indexName={indexName}
           routing={{
             router: history({
+              parseURL({ location }) {
+                return router.parseLocation(location).search
+              },
+
               push(url) {
-                console.log(new URL(url).search.substring(1))
-                console.log(new URL(url));
+                const search = qs.parse(new URL(url).search.substring(1));
                 router.navigate({
                   from: Route,
                   to: Route,
-                  search: () => Object.fromEntries(new URL(url).searchParams),
+                  search,
                   replace: true,
                   resetScroll: false
                 });
               },
               cleanUrlOnDispose: false
-            })
+            }),
+            stateMapping: {
+              stateToRoute(uiState) {
+                const indexUiState = uiState[indexName];
+                indexUiState?.configure && delete indexUiState?.configure
+                indexUiState?.sortBy || delete indexUiState?.sortBy
+                console.log(indexUiState)
+                return {
+                  ...indexUiState,
+                }
+              },
+              routeToState(routeState) {
+                console.log(routeState)
+                return {
+                  [indexName]: {
+                    ...routeState,
+                  }
+                }
+              },
+            }
           }}
         >
           <Box
@@ -141,10 +167,13 @@ const SearchLayout: React.FC<SearchLayoutProps> = ({
                   gap: 2,
                 }}
               >
-                <StatsCounter
-                  icon={statsIcon}
-                  translationText={statsText}
-                />
+                <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+                  <StatsCounter
+                    icon={statsIcon}
+                    translationText={statsText}
+                  />
+                  <FavoritesToggle idField={idField} />
+                </Box>
 
                 <StyledSortBy items={sortByItems} />
               </Box>

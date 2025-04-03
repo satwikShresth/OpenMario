@@ -1,7 +1,7 @@
 "use no memo"
 // src/routes/JobsRoute.jsx
 import { createFileRoute, retainSearchParams } from "@tanstack/react-router";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Highlight } from "react-instantsearch";
 import { useTheme } from "@mui/material";
 import {
@@ -13,10 +13,11 @@ import { getAuthSearchTokenOptions } from "#client/react-query.gen";
 import { useSearchClient, useQueryHook } from "#/hooks";
 import { LoadingComponent, ErrorComponent, } from "#/components/search/Shared";
 import SearchLayout from "#/components/search/SearchLayout";
+import { FavoritesProvider, useFavoritesStore } from "#/stores/useFavoriteStore";
 
 export const Route = createFileRoute("/jobs/")({
   loader: async ({ context: { queryClient } }) => {
-    await queryClient.prefetchQuery(getAuthSearchTokenOptions())
+    await queryClient.fetchQuery(getAuthSearchTokenOptions())
   },
   pendingComponent: () => (
     <LoadingComponent
@@ -135,27 +136,31 @@ function JobSearchComponent() {
   ];
 
   return (
-    <SearchLayout
-      Route={Route.fullPath}
-      indexName="job_postings"
-      searchClient={searchClient}
-      queryHook={queryHook}
-      headerIcon={<Briefcase size={28} color="white" />}
-      headerTitle="Find Your Dream Job"
-      headerSubtitle="Explore opportunities that match your skills and interests"
-      searchPlaceholder="Search job titles, skills, or companies..."
-      statsIcon={<Award size={18} color={theme.palette.primary.main} style={{ marginRight: 8 }} />}
-      statsText={(nbHits) => `${nbHits.toLocaleString()} positions available`}
-      sortByItems={jobSortByItems}
-      hitComponent={JobHit}
-      filterSections={jobFilterSections}
-    />
+    <FavoritesProvider initialValue={{ index: "job_postings" }}>
+      <SearchLayout
+        Route={Route.fullPath}
+        indexName="job_postings"
+        searchClient={searchClient}
+        queryHook={queryHook}
+        headerIcon={<Briefcase size={28} color="white" />}
+        headerTitle="Find Your Dream Job"
+        headerSubtitle="Explore opportunities that match your skills and interests"
+        searchPlaceholder="Search job titles, skills, or companies..."
+        statsIcon={<Award size={18} color={theme.palette.primary.main} style={{ marginRight: 8 }} />}
+        statsText={(nbHits) => `${nbHits.toLocaleString()} positions available`}
+        sortByItems={jobSortByItems}
+        hitComponent={JobHit}
+        filterSections={jobFilterSections}
+        idField="id"
+      />
+    </FavoritesProvider>
   );
 }
 
 function JobHit({ hit }) {
   const theme = useTheme();
-  const [favorited, setFavorited] = useState(false);
+  const { isFavorite, toggleFavorite, favorites } = useFavoritesStore();
+  const favorited = useMemo(() => isFavorite(hit.id), [favorites]);
   const [hovered, setHovered] = useState(false);
 
   const getAvatarColor = () => {
@@ -267,7 +272,7 @@ function JobHit({ hit }) {
               }}
             >
               <IconButton
-                onClick={() => setFavorited(!favorited)}
+                onClick={() => toggleFavorite(hit.id)}
                 sx={{
                   color: favorited ? "warning.main" : "action.disabled",
                   p: 1,

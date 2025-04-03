@@ -182,7 +182,7 @@ const FilterList = ({ title, attribute, searchable, icon }) => {
 };
 const FilterSlider = ({ title, attribute, min, max, step = 1, icon }) => {
   const theme = useTheme();
-  const { currentRefinement, refine, range, start } = useRange({
+  const { refine, range, start } = useRange({
     attribute,
   });
 
@@ -190,16 +190,16 @@ const FilterSlider = ({ title, attribute, min, max, step = 1, icon }) => {
   const effectiveMax = range?.max ?? max;
 
   const [value, setValue] = useState([
-    currentRefinement?.min ?? effectiveMin,
-    currentRefinement?.max ?? effectiveMax,
+    start[0] ?? effectiveMin,
+    start[1] ?? effectiveMax,
   ]);
 
   useEffect(() => {
     setValue([
-      currentRefinement?.min ?? effectiveMin,
-      currentRefinement?.max ?? effectiveMax,
+      start[0] ?? effectiveMin,
+      start[1] ?? effectiveMax,
     ]);
-  }, [currentRefinement, effectiveMin, effectiveMax]);
+  }, [start, effectiveMin, effectiveMax]);
 
   const valuetext = (val) => `${val}`;
 

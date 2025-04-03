@@ -70,7 +70,14 @@ export default async (meilisearch: MeiliSearch, index: string) => {
                ${instructors.avg_rating} as avg_rating,
                ${instructors.department} as department,
                ${instructors.rmp_legacy_id} as rmp_id,
-               ${instructors.num_ratings} as num_ratings
+               ${instructors.num_ratings} as num_ratings,
+               CASE
+                  WHEN ${instructors.avg_difficulty} IS NOT NULL
+                     AND ${instructors.avg_rating} IS NOT NULL 
+                     AND ${instructors.num_ratings} IS NOT NULL 
+                     THEN ((5 - ${instructors.avg_difficulty} + ${instructors.avg_rating}) * ${instructors.num_ratings})
+                  ELSE NULL
+               END as weighted_score
             FROM ${section_instructor}
             JOIN ${instructors} ON ${section_instructor.instructor_id} = ${instructors.id}
             WHERE ${section_instructor.section_id} = ${sections.crn}

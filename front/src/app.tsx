@@ -1,5 +1,5 @@
 import "./app.css";
-import { createRouter, RouterProvider } from "@tanstack/react-router";
+import { createRouter, parseSearchWith, RouterProvider, stringifySearchWith } from "@tanstack/react-router";
 import { routeTree } from "./routeTree.gen";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import AppThemeProvider from "#/utils/useThemeProvider";
@@ -9,6 +9,7 @@ import ErrorBoundary from "./components/Error/Boundary";
 import { ErrorPage } from "./components/Error/Page";
 import { QueryBoundary } from "./components/Error/QueryBoundry";
 import { CircleX, X } from "lucide-react";
+import * as qs from "qs";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -26,6 +27,8 @@ const router = createRouter({
   },
   defaultPreload: "intent",
   scrollRestoration: true,
+  stringifySearch: stringifySearchWith(qs.stringify),
+  parseSearch: parseSearchWith(qs.parse),
   defaultNotFoundComponent: () => {
     return <ErrorPage error={new Error("Page not found")} />;
   },

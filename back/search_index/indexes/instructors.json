@@ -7,6 +7,7 @@
          "searchableText"
       ],
       "filterableAttributes": [
+         "id",
          "department",
          "avg_difficulty",
          "avg_rating",

@@ -13,7 +13,17 @@ export default async (meilisearch: MeiliSearch, index: string) => {
          rmp_legacy_id: instructors.rmp_legacy_id,
          rmp_id: instructors.rmp_id,
       })
-      .from(instructors);
+      .from(instructors)
+      .then((values) =>
+         values.map(({ avg_rating, avg_difficulty, num_ratings, ...rest }) => ({
+            ...rest,
+            avg_rating,
+            avg_difficulty,
+            num_ratings,
+            weighted_score: avg_difficulty && avg_rating && num_ratings &&
+               ((5 - avg_difficulty + avg_rating) * num_ratings),
+         }))
+      );
 
    await meilisearch.index(index).addDocuments(instructorsToIndex);
 

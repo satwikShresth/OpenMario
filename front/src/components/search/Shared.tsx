@@ -208,13 +208,20 @@ export function EnhancedSearchBox({ placeholder, queryHook }) {
 export function MobileFilterButton({ indexName, toggleDrawer }) {
   const { uiState } = useInstantSearch();
   const activeFilters = useMemo(() => {
-    if (!uiState[indexName] || !uiState[indexName].refinementList) {
+    if (!uiState || !indexName || !uiState[indexName]) {
       return 0;
     }
 
-    // Count all selected refinements by summing the length of each refinement array
-    return Object.values(uiState[indexName].refinementList)
-      .reduce((total, filters) => total + (Array.isArray(filters) ? filters.length : 0), 0);
+    const refinementListCount = uiState[indexName].refinementList
+      ? Object.values(uiState[indexName].refinementList)
+        .reduce((total, filters) => total + (Array.isArray(filters) ? filters.length : 0), 0)
+      : 0;
+
+    const rangeCount = uiState[indexName].range
+      ? Object.keys(uiState[indexName].range).length
+      : 0;
+
+    return refinementListCount + rangeCount;
   }, [uiState, indexName]);
 
   return (
@@ -414,18 +421,28 @@ export function FiltersPanel({ indexName, filterSections }) {
   const theme = useTheme();
   const { uiState, setUiState
   } = useInstantSearch();
+
   const activeFilters = useMemo(() => {
-    if (!uiState[indexName] || !uiState[indexName].refinementList) {
+    if (!uiState || !indexName || !uiState[indexName]) {
       return 0;
     }
 
-    return Object.values(uiState[indexName].refinementList)
-      .reduce((total, filters) => total + (Array.isArray(filters) ? filters.length : 0), 0);
+    const refinementListCount = uiState[indexName].refinementList
+      ? Object.values(uiState[indexName].refinementList)
+        .reduce((total, filters) => total + (Array.isArray(filters) ? filters.length : 0), 0)
+      : 0;
+
+    const rangeCount = uiState[indexName].range
+      ? Object.keys(uiState[indexName].range).length
+      : 0;
+
+    return refinementListCount + rangeCount;
   }, [uiState, indexName]);
 
   const clearAllFilters = () => setUiState((prev) => {
     const ret = { ...prev };
     ret[indexName].refinementList = {}
+    ret[indexName].range = {}
     return ret
   });
 
@@ -468,12 +485,13 @@ export function FiltersPanel({ indexName, filterSections }) {
               component="span"
               sx={{
                 ml: 1,
-                px: 1.5,
-                py: 0.5,
+                px: 1.3,
+                py: 0.3,
                 borderRadius: 50,
                 bgcolor: "primary.main",
                 color: "white",
-                fontSize: "0.75rem",
+                fontSize: "1rem",
+                textAlign: "center",
                 border: "2px solid black",
               }}
             >
@@ -507,14 +525,22 @@ export function FiltersPanel({ indexName, filterSections }) {
 export function FilterDrawer({ drawerOpen, toggleDrawer, indexName, children }) {
   const theme = useTheme();
   const { uiState } = useInstantSearch();
+
   const activeFilters = useMemo(() => {
-    if (!uiState[indexName] || !uiState[indexName].refinementList) {
+    if (!uiState || !indexName || !uiState[indexName]) {
       return 0;
     }
 
-    // Count all selected refinements by summing the length of each refinement array
-    return Object.values(uiState[indexName].refinementList)
-      .reduce((total, filters) => total + (Array.isArray(filters) ? filters.length : 0), 0);
+    const refinementListCount = uiState[indexName].refinementList
+      ? Object.values(uiState[indexName].refinementList)
+        .reduce((total, filters) => total + (Array.isArray(filters) ? filters.length : 0), 0)
+      : 0;
+
+    const rangeCount = uiState[indexName].range
+      ? Object.keys(uiState[indexName].range).length
+      : 0;
+
+    return refinementListCount + rangeCount;
   }, [uiState, indexName]);
 
   return (

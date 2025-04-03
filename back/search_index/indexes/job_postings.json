@@ -15,6 +15,7 @@
          "coop_cycle"
       ],
       "filterableAttributes": [
+         "id",
          "company_id",
          "position_id",
          "location_id",

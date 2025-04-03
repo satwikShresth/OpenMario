@@ -12,6 +12,7 @@
          "restrictions"
       ],
       "filterableAttributes": [
+         "id",
          "subject_id",
          "college_id",
          "credits",

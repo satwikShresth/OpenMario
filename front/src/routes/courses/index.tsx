@@ -1,10 +1,10 @@
 "use no memo"
 // src/routes/CoursesRoute.jsx
 import { createFileRoute } from "@tanstack/react-router";
-import { useEffect, useRef, useState } from "react";
-import { Card, CardContent, Grid, Box, Typography, Avatar, Stack, Chip, alpha, Button } from "@mui/material";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { Card, CardContent, Grid, Box, Typography, Avatar, Stack, Chip, alpha, Button, IconButton } from "@mui/material";
 import {
-  Award, BookmarkCheck, BookOpen, Calendar, Clock, ExternalLink, GraduationCap, Layers, MapPin, School, Star, Users,
+  Award, BarChart2, BookmarkCheck, BookOpen, Calendar, Clock, ExternalLink, GraduationCap, Layers, MapPin, School, Star, Users,
 } from "lucide-react";
 import { useTheme } from "@mui/material";
 import { Highlight, useInstantSearch } from "react-instantsearch";
@@ -13,10 +13,11 @@ import { getAuthSearchTokenOptions } from "#client/react-query.gen";
 import { useSearchClient, useQueryHook } from "#/hooks";
 import { LoadingComponent, ErrorComponent, } from "#/components/search/Shared";
 import SearchLayout from "#/components/search/SearchLayout";
+import { FavoritesProvider, useFavoritesStore } from "#/stores/useFavoriteStore";
 
 export const Route = createFileRoute("/courses/")({
   loader: async ({ context: { queryClient } }) => {
-    await queryClient.prefetchQuery(getAuthSearchTokenOptions())
+    await queryClient.fetchQuery(getAuthSearchTokenOptions())
   },
   staleTime: 1000 * 60 * 110,
   gcTime: 1000 * 60 * 110,
@@ -121,21 +122,24 @@ function CourseSectionsComponent() {
   ];
 
   return (
-    <SearchLayout
-      Route={Route.fullPath}
-      indexName="sections"
-      searchClient={searchClient}
-      queryHook={queryHook}
-      headerIcon={<BookOpen size={28} color="white" />}
-      headerTitle="Find Your Courses"
-      headerSubtitle="Explore courses that match your academic interests and schedule"
-      searchPlaceholder="Search courses, instructors, or subjects..."
-      statsIcon={<BookmarkCheck size={18} color={theme.palette.primary.main} style={{ marginRight: 8 }} />}
-      statsText={(nbHits) => `${nbHits.toLocaleString()} sections available`}
-      sortByItems={courseSortByItems}
-      hitComponent={SectionHit}
-      filterSections={courseFilterSections}
-    />
+    <FavoritesProvider initialValue={{ index: "sections" }}>
+      <SearchLayout
+        Route={Route.fullPath}
+        indexName="sections"
+        searchClient={searchClient}
+        queryHook={queryHook}
+        headerIcon={<BookOpen size={28} color="white" />}
+        headerTitle="Find Your Courses"
+        headerSubtitle="Explore courses that match your academic interests and schedule"
+        searchPlaceholder="Search courses, instructors, or subjects..."
+        statsIcon={<BookmarkCheck size={18} color={theme.palette.primary.main} style={{ marginRight: 8 }} />}
+        statsText={(nbHits) => `${nbHits.toLocaleString()} sections available`}
+        sortByItems={courseSortByItems}
+        hitComponent={SectionHit}
+        filterSections={courseFilterSections}
+        idField="crn"
+      />
+    </FavoritesProvider>
   );
 }
 
@@ -217,11 +221,47 @@ const DayBox = ({ theme, days }) => {
   );
 };
 
-// SectionHit Component
 function SectionHit({ hit }) {
   const theme = useTheme();
-  const [favorited, setFavorited] = useState(false);
+  const { isFavorite, toggleFavorite, favorites } = useFavoritesStore();
+  const favorited = useMemo(() => isFavorite(hit.crn), [favorites]);
   const [hovered, setHovered] = useState(false);
+
+  const ratingColors = {
+    gold: { main: '#FFC107', dark: '#FFB300' },           // Amber for top-tier (5.0)
+    excellent: { main: '#4CAF50', dark: '#388E3C' },      // Balanced green
+    good: { main: '#42A5F5', dark: '#1E88E5' },           // Clear sky blue
+    average: { main: '#FF7043', dark: '#F4511E' },        // Soft orange
+    poor: { main: '#E53935', dark: '#C62828' }            // Strong red
+  };
+
+  const difficultyColors = {
+    easy: { main: '#81C784', dark: '#388E3C' },           // Calmer green
+    medium: { main: '#64B5F6', dark: '#1976D2' },         // Approachable blue
+    challenging: { main: '#FFB74D', dark: '#F57C00' },    // Warm amber
+    hard: { main: '#E53935', dark: '#B71C1C' }            // Intense red
+  };
+  // Helper function to get rating color
+  function getRatingColor(rating, opacity = 1) {
+    // Special case for 5.0 rating - must be exactly 5.0
+    if (Math.abs(rating - 5.0) < 0.01) return opacity < 1 ? ratingColors.gold.dark : ratingColors.gold.main;
+    // Scale: 1-2 (red), 2-3 (orange), 3-4 (yellow), 4-5 (green)
+    if (rating >= 4) return opacity < 1 ? ratingColors.excellent.dark : ratingColors.excellent.main;
+    if (rating >= 3) return opacity < 1 ? ratingColors.good.dark : ratingColors.good.main;
+    if (rating >= 2) return opacity < 1 ? ratingColors.average.dark : ratingColors.average.main;
+    return opacity < 1 ? ratingColors.poor.dark : ratingColors.poor.main;
+  }
+
+  // Helper function to get difficulty color
+  function getDifficultyColor(difficulty, opacity = 1) {
+    // Scale: 1-2 (green/easy), 2-3 (blue/medium), 3-4 (purple/challenging), 4-5 (red/hard)
+    if (difficulty >= 4) return opacity < 1 ? difficultyColors.hard.dark : difficultyColors.hard.main;
+    if (difficulty >= 3) return opacity < 1 ? difficultyColors.challenging.dark : difficultyColors.challenging.main;
+    if (difficulty >= 2) return opacity < 1 ? difficultyColors.medium.dark : difficultyColors.medium.main;
+    return opacity < 1 ? difficultyColors.easy.dark : difficultyColors.easy.main;
+  }
+
+
 
   const getAvatarColor = () => {
     const colors = [
@@ -283,6 +323,7 @@ function SectionHit({ hit }) {
                 >
                   {hit.subject_id?.charAt(0) || "C"}
                 </Avatar>
+
                 <Box>
                   <Typography variant="h6" sx={{ fontWeight: "bold", mb: 0.5 }}>
                     {hit.course
@@ -310,6 +351,7 @@ function SectionHit({ hit }) {
                       Section {hit.section}
                     </Typography>
                   </Typography>
+
                   <Typography
                     variant="subtitle1"
                     sx={{
@@ -337,6 +379,36 @@ function SectionHit({ hit }) {
                 </Box>
               </Box>
             </Grid>
+            <Grid
+              item
+              xs={12}
+              sm={5}
+              md={4}
+              sx={{
+                display: "flex",
+                justifyContent: { xs: "flex-start", sm: "flex-end" },
+                alignItems: "flex-start",
+              }}
+            >
+              <IconButton
+                onClick={() => toggleFavorite(hit.crn)}
+                sx={{
+                  color: favorited ? "warning.main" : "action.disabled",
+                  p: 1,
+                  mr: 1.5,
+                  border: "2px solid black",
+                  borderRadius: 2,
+                  boxShadow: "0 3px 0 rgba(0,0,0,0.3)",
+                  "&:hover": {
+                    transform: "translateY(2px)",
+                    boxShadow: "0 1px 0 rgba(0,0,0,0.3)",
+                  },
+                }}
+              >
+                <Star size={20} fill={favorited ? "currentColor" : "none"} />
+              </IconButton>
+            </Grid>
+
           </Grid>
 
           {/* Tags */}
@@ -567,34 +639,38 @@ function SectionHit({ hit }) {
                           size="small"
                           variant="outlined"
                           color="info"
-                          endIcon={<ExternalLink size={16} />}
+                          endIcon={<ExternalLink size={14} />}
                           sx={{
-                            py: 0.5,
-                            boxShadow: "0 2px 0 rgba(0,0,0,0.2)",
-                            border: "1px solid black",
+                            py: 0.3,
+                            px: 1,
+                            boxShadow: "0 1px 0 rgba(0,0,0,0.1)",
+                            border: "1px solid",
+                            borderColor: "info.main",
                             borderRadius: 10,
                             textTransform: "none",
+                            fontSize: "0.75rem",
+                            minWidth: "auto"
                           }}
                           component="a"
                           href={`https://www.ratemyprofessors.com/professor/${instructor.rmp_id}`}
                           target="_blank"
                           rel="noopener noreferrer"
                         >
-                          RMP Profile
+                          RMP
                         </Button>
                       )}
 
-                      {instructor.avg_rating && (
+                      {instructor.avg_difficulty && (
                         <Box
                           sx={{
                             display: "flex",
                             alignItems: "center",
-                            bgcolor: alpha(theme.palette.warning.main, 0.1),
+                            bgcolor: alpha(getDifficultyColor(instructor.avg_difficulty), 0.2),
                             px: 1.5,
                             py: 0.5,
                             borderRadius: 10,
                             border: "1px solid",
-                            borderColor: "warning.main",
+                            borderColor: getDifficultyColor(instructor.avg_difficulty),
                           }}
                         >
                           <Typography
@@ -603,21 +679,68 @@ function SectionHit({ hit }) {
                               mr: .7,
                               mt: .4,
                               fontWeight: "bold",
-                              color: theme.palette.warning.dark,
+                              color: getDifficultyColor(instructor.avg_difficulty, 0.8),
                             }}
                           >
-                            RMP
+                            Difficulty
                           </Typography>
-                          <Star
+                          <BarChart2
                             size={14}
                             style={{ marginRight: 4 }}
-                            fill={theme.palette.warning.main}
-                            color={theme.palette.warning.main}
+                            fill={getDifficultyColor(instructor.avg_difficulty)}
+                            color={getDifficultyColor(instructor.avg_difficulty)}
                           />
                           <Typography
                             variant="body2"
                             fontWeight="bold"
-                            color="warning.main"
+                            sx={{
+                              color: getDifficultyColor(instructor.avg_difficulty),
+                              textShadow: "0px 0px 1px rgba(0,0,0,0.1)"
+                            }}
+                          >
+                            {instructor.avg_difficulty.toFixed(1)}
+                          </Typography>
+                        </Box>
+                      )}
+
+
+                      {instructor.avg_rating && (
+                        <Box
+                          sx={{
+                            display: "flex",
+                            alignItems: "center",
+                            bgcolor: alpha(getRatingColor(instructor.avg_rating), 0.2),
+                            px: 1.5,
+                            py: 0.5,
+                            borderRadius: 10,
+                            border: "1px solid",
+                            borderColor: getRatingColor(instructor.avg_rating),
+                          }}
+                        >
+                          <Typography
+                            variant="caption"
+                            sx={{
+                              mr: .7,
+                              mt: .4,
+                              fontWeight: "bold",
+                              color: getRatingColor(instructor.avg_rating, 0.8),
+                            }}
+                          >
+                            Rating
+                          </Typography>
+                          <Star
+                            size={14}
+                            style={{ marginRight: 4 }}
+                            fill={getRatingColor(instructor.avg_rating)}
+                            color={getRatingColor(instructor.avg_rating)}
+                          />
+                          <Typography
+                            variant="body2"
+                            fontWeight="bold"
+                            sx={{
+                              color: getRatingColor(instructor.avg_rating),
+                              textShadow: "0px 0px 1px rgba(0,0,0,0.1)"
+                            }}
                           >
                             {instructor.avg_rating.toFixed(1)}
                             {instructor.num_ratings && (
@@ -633,11 +756,11 @@ function SectionHit({ hit }) {
                           </Typography>
                         </Box>
                       )}
+
                     </Box>
                   </Box>
                 ))
               )}
-
           </Box>
         </CardContent>
       </Card>
