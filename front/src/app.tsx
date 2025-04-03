@@ -9,7 +9,7 @@ import ErrorBoundary from "./components/Error/Boundary";
 import { ErrorPage } from "./components/Error/Page";
 import { QueryBoundary } from "./components/Error/QueryBoundry";
 import { CircleX, X } from "lucide-react";
-import * as qs from "qs";
+import { parse, stringify } from 'jsurl2'
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -27,8 +27,8 @@ const router = createRouter({
   },
   defaultPreload: "intent",
   scrollRestoration: true,
-  stringifySearch: stringifySearchWith(qs.stringify),
-  parseSearch: parseSearchWith(qs.parse),
+  stringifySearch: stringifySearchWith(stringify),
+  parseSearch: parseSearchWith(parse),
   defaultNotFoundComponent: () => {
     return <ErrorPage error={new Error("Page not found")} />;
   },

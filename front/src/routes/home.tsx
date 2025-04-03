@@ -79,6 +79,11 @@ export const Route = createFileRoute("/home")({
     const { enqueueSnackbar } = useSnackbar();
     let timer: number | null = null;
     const isInitialRender = useRef(true);
+    const filterUndefinedValues = (obj) => Object.entries(obj).reduce((acc, [key, value]) =>
+      (value !== undefined && !(Array.isArray(value) && value.length === 0))
+        ? { ...acc, [key]: value }
+        : acc,
+      {});
 
     useEffect(() => {
       const unsubscribePositionStore = useFilterStore
@@ -101,23 +106,23 @@ export const Route = createFileRoute("/home")({
               isInitialRender.current = false;
             } else {
               timer = setTimeout(() => {
+                const search = filterUndefinedValues({
+                  company,
+                  position,
+                  location,
+                  year,
+                  coop_year,
+                  coop_cycle,
+                  program_level,
+                  distinct,
+                  pageIndex,
+                  pageSize,
+                })
+                console.log(search)
                 navigate({
                   from: "/home",
                   to: "/home",
-                  search: () => (
-                    {
-                      company,
-                      position,
-                      location,
-                      year,
-                      coop_year,
-                      coop_cycle,
-                      program_level,
-                      distinct,
-                      pageIndex,
-                      pageSize,
-                    }
-                  ),
+                  search,
                   replace: true,
                   reloadDocument: false,
                   resetScroll: false,

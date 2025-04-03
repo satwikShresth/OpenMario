@@ -66,13 +66,7 @@ export const SubmissionQuerySchema = z.object({
 export const querySQL = (column: Column, matchValue?: string): SQL =>
    matchValue &&
    sql`(
-    to_tsvector('english', ${column}) @@ to_tsquery('english', ${
-      matchValue
-         .trim()
-         .split(/\s+/)
-         .map((term) => `${term}:*`)
-         .join(' & ')
-   })
+    to_tsvector('english', ${column}) @@ plainto_tsquery('english', ${matchValue.trim()})
     OR ${column} % ${matchValue.trim()}
     OR ${column} ILIKE ${matchValue.trim().toLowerCase().split('').join('%') + '%'}
   )`;

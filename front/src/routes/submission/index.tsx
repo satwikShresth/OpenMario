@@ -68,11 +68,9 @@ export const Route = createFileRoute("/submission/")({
               ? parseFloat(job.compensation.replace("$", ""))
               : 10,
             other_compensation: job.other_compensation || "",
-            details: `Employer ID: ${job.employer_id || "N/A"}, Position ID: ${
-              job.position_id || "N/A"
-            }, Job Length: ${job.job_length || "N/A"}, Coop Round: ${
-              job.coop_round || "N/A"
-            }`,
+            details: `Employer ID: ${job.employer_id || "N/A"}, Position ID: ${job.position_id || "N/A"
+              }, Job Length: ${job.job_length || "N/A"}, Coop Round: ${job.coop_round || "N/A"
+              }`,
           });
         });
 

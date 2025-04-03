@@ -6,9 +6,9 @@ import {
 } from "./Shared";
 import { FavoritesToggle } from "./FavoritesToggle";
 import { history } from 'instantsearch.js/es/lib/routers';
-import { useNavigate, useRouter } from "@tanstack/react-router";
-import * as qs from "qs";
+import { parseSearchWith, useNavigate, useRouter } from "@tanstack/react-router";
 import { configure } from "instantsearch.js/es/widgets";
+import { parse, stringify } from 'jsurl2'
 
 interface SearchLayoutProps {
   Route: string,
@@ -82,19 +82,24 @@ const SearchLayout: React.FC<SearchLayoutProps> = ({
           indexName={indexName}
           routing={{
             router: history({
-              parseURL({ location }) {
-                return router.parseLocation(location).search
+              createURL({ routeState, location }) {
+                const loc = router.parseLocation(location)
+                const newLoc = router.buildLocation({ search: routeState, state: loc.state })
+                return location.origin + newLoc.href
               },
-
+              parseURL({ location }) {
+                return parseSearchWith(parse)(location.search)
+              },
               push(url) {
-                const search = qs.parse(new URL(url).search.substring(1));
+                const location = new URL(url);
+
                 router.navigate({
-                  from: Route,
                   to: Route,
-                  search,
+                  search: parseSearchWith(parse)(location.search),
                   replace: true,
-                  resetScroll: false
-                });
+                  resetScroll: false,
+                  reloadDocument: false
+                })
               },
               cleanUrlOnDispose: false
             }),
