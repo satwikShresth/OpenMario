@@ -1,3 +1,4 @@
+"use no memo"
 import React, { useEffect, useState } from "react";
 import {
   Box,
@@ -32,7 +33,6 @@ const FilterList = ({ title, attribute, searchable, icon }) => {
     searchable,
   });
 
-  console.log(items)
 
   return (
     <Box sx={{ mb: 4 }}>

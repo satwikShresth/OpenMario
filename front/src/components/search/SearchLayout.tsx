@@ -1,12 +1,31 @@
-"use no memo"
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { InstantSearch } from "react-instantsearch";
 import { Box, Container, Grid, useMediaQuery, useTheme } from "@mui/material";
 import {
   SearchHeader, EnhancedSearchBox, MobileFilterButton, StatsCounter, StyledSortBy, StyledInfiniteHits, FiltersPanel, FilterDrawer, BackToTopButton
 } from "./Shared";
+import { history } from 'instantsearch.js/es/lib/routers';
+import { useNavigate, useRouter } from "@tanstack/react-router";
+import { Router } from "@tanstack/react-router";
 
-function SearchLayout({
+interface SearchLayoutProps {
+  Route: string,
+  indexName: any,
+  searchClient: any,
+  queryHook: any,
+  headerIcon: any,
+  headerTitle: any,
+  headerSubtitle: any,
+  searchPlaceholder: any,
+  statsIcon: any,
+  statsText: any,
+  sortByItems: any,
+  hitComponent: any,
+  filterSections: any
+}
+
+const SearchLayout: React.FC<SearchLayoutProps> = ({
+  Route,
   indexName,
   searchClient,
   queryHook,
@@ -19,29 +38,13 @@ function SearchLayout({
   sortByItems,
   hitComponent,
   filterSections
-}) {
+}) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [showBackToTop, setShowBackToTop] = useState(false);
-  const [activeFilters, setActiveFilters] = useState(0);
-
-  // Count active filters
-  useEffect(() => {
-    const checkActiveFilters = () => {
-      const checkedBoxes = document.querySelectorAll(
-        ".ais-RefinementList-checkbox:checked",
-      );
-      setActiveFilters(checkedBoxes.length);
-    };
-
-    // Initial check
-    setTimeout(checkActiveFilters, 1000);
-
-    // Check when clicked
-    document.addEventListener("click", checkActiveFilters);
-    return () => document.removeEventListener("click", checkActiveFilters);
-  }, []);
+  const navigate = useNavigate({ from: Route });
+  const router = useRouter();
 
   // Show back to top button when scrolled down
   useEffect(() => {
@@ -60,7 +63,7 @@ function SearchLayout({
   const toggleDrawer = () => {
     setDrawerOpen(!drawerOpen);
   };
-
+  createinstant
   return (
     <Box
       sx={{
@@ -73,6 +76,22 @@ function SearchLayout({
           future={{ preserveSharedStateOnUnmount: true }}
           searchClient={searchClient}
           indexName={indexName}
+          routing={{
+            router: history({
+              push(url) {
+                console.log(new URL(url).search.substring(1))
+                console.log(new URL(url));
+                router.navigate({
+                  from: Route,
+                  to: Route,
+                  search: () => Object.fromEntries(new URL(url).searchParams),
+                  replace: true,
+                  resetScroll: false
+                });
+              },
+              cleanUrlOnDispose: false
+            })
+          }}
         >
           <Box
             sx={{
@@ -90,8 +109,8 @@ function SearchLayout({
 
             {isMobile && (
               <MobileFilterButton
+                indexName={indexName}
                 toggleDrawer={toggleDrawer}
-                activeFilters={activeFilters}
               />
             )}
           </Box>
@@ -105,8 +124,7 @@ function SearchLayout({
             {!isMobile && (
               <Grid item md={3} lg={3}>
                 <FiltersPanel
-                  activeFilters={activeFilters}
-                  setActiveFilters={setActiveFilters}
+                  indexName={indexName}
                   filterSections={filterSections}
                 />
               </Grid>
@@ -136,13 +154,12 @@ function SearchLayout({
           </Grid>
 
           <FilterDrawer
+            indexName={indexName}
             drawerOpen={drawerOpen}
             toggleDrawer={toggleDrawer}
-            activeFilters={activeFilters}
           >
             <FiltersPanel
-              activeFilters={activeFilters}
-              setActiveFilters={setActiveFilters}
+              indexName={indexName}
               filterSections={filterSections}
             />
           </FilterDrawer>
@@ -150,7 +167,7 @@ function SearchLayout({
       </Container>
 
       <BackToTopButton show={showBackToTop} />
-    </Box>
+    </Box >
   );
 }
 

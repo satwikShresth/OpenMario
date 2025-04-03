@@ -35,7 +35,7 @@
          "college_name",
          "course",
          "instructors.name",
-         "instructors.department"
+         "instructors.department",
       ],
       "sortableAttributes": [
          "crn",

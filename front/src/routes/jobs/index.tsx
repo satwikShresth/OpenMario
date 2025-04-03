@@ -1,6 +1,6 @@
 "use no memo"
 // src/routes/JobsRoute.jsx
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, retainSearchParams } from "@tanstack/react-router";
 import { useState } from "react";
 import { Highlight } from "react-instantsearch";
 import { useTheme } from "@mui/material";
@@ -11,12 +11,8 @@ import { Avatar, Box, Button, Card, CardContent, Chip, Grid, IconButton, Stack, 
 import FilterSection from "#/components/search/FitlerSection";
 import { getAuthSearchTokenOptions } from "#client/react-query.gen";
 import { useSearchClient, useQueryHook } from "#/hooks";
-
-import {
-  SearchLayout,
-  LoadingComponent,
-  ErrorComponent,
-} from "#/components/search/Shared";
+import { LoadingComponent, ErrorComponent, } from "#/components/search/Shared";
+import SearchLayout from "#/components/search/SearchLayout";
 
 export const Route = createFileRoute("/jobs/")({
   loader: async ({ context: { queryClient } }) => {
@@ -140,6 +136,7 @@ function JobSearchComponent() {
 
   return (
     <SearchLayout
+      Route={Route.fullPath}
       indexName="job_postings"
       searchClient={searchClient}
       queryHook={queryHook}

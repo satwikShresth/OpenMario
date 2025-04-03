@@ -53,7 +53,8 @@ export const useAuth = () => {
         return response;
       })
       .catch((error) => {
-        const errorMessage = error?.response?.data?.message ||
+        const errorMessage =
+          error?.response?.data?.message ||
           "Failed to send login link. Please try again.";
         setError(errorMessage);
         throw new Error(errorMessage);

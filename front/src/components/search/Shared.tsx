@@ -1,6 +1,7 @@
 // src/components/search/SharedComponents.jsx
 import {
-  InfiniteHits, SearchBox, SortBy, Stats,
+  InfiniteHits, RefinementList, SearchBox, SortBy, Stats,
+  useInstantSearch
 } from "react-instantsearch";
 import {
   alpha, Box, Button, CircularProgress, Container, Divider, Drawer, Fab, IconButton, Typography, useTheme,
@@ -9,6 +10,7 @@ import {
   ArrowUp, Filter, X,
 } from "lucide-react";
 import { useAppTheme } from "#/utils";
+import { useMemo } from "react";
 
 export function LoadingComponent({ title, subtitle }) {
   return (
@@ -203,7 +205,18 @@ export function EnhancedSearchBox({ placeholder, queryHook }) {
 }
 
 // Filter button for mobile
-export function MobileFilterButton({ toggleDrawer, activeFilters }) {
+export function MobileFilterButton({ indexName, toggleDrawer }) {
+  const { uiState } = useInstantSearch();
+  const activeFilters = useMemo(() => {
+    if (!uiState[indexName] || !uiState[indexName].refinementList) {
+      return 0;
+    }
+
+    // Count all selected refinements by summing the length of each refinement array
+    return Object.values(uiState[indexName].refinementList)
+      .reduce((total, filters) => total + (Array.isArray(filters) ? filters.length : 0), 0);
+  }, [uiState, indexName]);
+
   return (
     <Button
       variant="outlined"
@@ -326,6 +339,7 @@ export function StyledSortBy({ items }) {
 // Custom InfiniteHits component
 export function StyledInfiniteHits({ hitComponent }) {
   const HitComponent = hitComponent;
+  const appTheme = useAppTheme();
 
   // This custom component wrapper ensures each hit has a key
   const CustomHit = ({ hit, sendEvent }) => {
@@ -339,7 +353,7 @@ export function StyledInfiniteHits({ hitComponent }) {
   };
 
   return (
-    < Box
+    <Box
       component={InfiniteHits}
       hitComponent={CustomHit}
       sx={{
@@ -367,7 +381,7 @@ export function StyledInfiniteHits({ hitComponent }) {
           fontWeight: 700,
           fontSize: "0.95rem",
           padding: "8px 16px",
-          boxShadow: `0 4px 0 ${useAppTheme().mode === "light"
+          boxShadow: `0 4px 0 ${appTheme.mode === "light"
             ? "rgba(0,0,0,0.5)"
             : "rgba(0,0,0,0.7)"
             }`,
@@ -375,7 +389,7 @@ export function StyledInfiniteHits({ hitComponent }) {
           transition: "all 0.1s ease-in-out",
           "&:hover": {
             transform: "translateY(2px)",
-            boxShadow: `0 2px 0 ${useAppTheme().mode === "light"
+            boxShadow: `0 2px 0 ${appTheme.mode === "light"
               ? "rgba(0,0,0,0.5)"
               : "rgba(0,0,0,0.7)"
               }`,
@@ -386,27 +400,34 @@ export function StyledInfiniteHits({ hitComponent }) {
             boxShadow: "none",
             filter: "brightness(0.95)",
           },
-          backgroundColor: useAppTheme().mode === "light"
+          backgroundColor: appTheme.mode === "light"
             ? "#E60012"
             : "#009FE3",
         },
-      }
-      }
+      }}
     />
   );
 }
 
 // FiltersPanel component
-export function FiltersPanel({ activeFilters, setActiveFilters, filterSections }) {
+export function FiltersPanel({ indexName, filterSections }) {
   const theme = useTheme();
+  const { uiState, setUiState
+  } = useInstantSearch();
+  const activeFilters = useMemo(() => {
+    if (!uiState[indexName] || !uiState[indexName].refinementList) {
+      return 0;
+    }
 
-  const clearAllFilters = () => {
-    document.querySelectorAll(".ais-RefinementList-checkbox:checked").forEach(
-      (checkbox) => {
-        checkbox.click();
-      },
-    );
-  };
+    return Object.values(uiState[indexName].refinementList)
+      .reduce((total, filters) => total + (Array.isArray(filters) ? filters.length : 0), 0);
+  }, [uiState, indexName]);
+
+  const clearAllFilters = () => setUiState((prev) => {
+    const ret = { ...prev };
+    ret[indexName].refinementList = {}
+    return ret
+  });
 
   return (
     <Box
@@ -483,8 +504,18 @@ export function FiltersPanel({ activeFilters, setActiveFilters, filterSections }
 }
 
 // Filter drawer for mobile
-export function FilterDrawer({ drawerOpen, toggleDrawer, activeFilters, children }) {
+export function FilterDrawer({ drawerOpen, toggleDrawer, indexName, children }) {
   const theme = useTheme();
+  const { uiState } = useInstantSearch();
+  const activeFilters = useMemo(() => {
+    if (!uiState[indexName] || !uiState[indexName].refinementList) {
+      return 0;
+    }
+
+    // Count all selected refinements by summing the length of each refinement array
+    return Object.values(uiState[indexName].refinementList)
+      .reduce((total, filters) => total + (Array.isArray(filters) ? filters.length : 0), 0);
+  }, [uiState, indexName]);
 
   return (
     <Drawer
@@ -597,4 +628,3 @@ export function BackToTopButton({ show }) {
     </Fab>
   );
 }
-

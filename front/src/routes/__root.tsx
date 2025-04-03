@@ -2,7 +2,7 @@ import { useState } from "react";
 import Nav from "#/components/layout/Nav";
 import Footer from "#/components/layout/Footer";
 import LoginModal from "#/components/layout/Login";
-import { createRootRouteWithContext, Outlet } from "@tanstack/react-router";
+import { createRootRouteWithContext, Outlet, retainSearchParams } from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { Box, Container } from "@mui/material";

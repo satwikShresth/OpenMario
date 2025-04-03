@@ -77,14 +77,13 @@ export const ThemeContextProvider: React.FC<ThemeContextProviderProps> = (
     });
   };
 
-  // Create theme based on current mode - using useMemo to avoid recreating on every render
   const theme = useMemo(() =>
     createTheme({
       breakpoints: {
         values: {
           xs: 0,
           sm: 600,
-          md: 1200, // Changed from the default (typically 900px)
+          md: 1250,
           lg: 1200,
           xl: 1536,
         },
@@ -93,7 +92,6 @@ export const ThemeContextProvider: React.FC<ThemeContextProviderProps> = (
         mode,
         ...(mode === "light"
           ? {
-            // Light mode Mario palette - more harmonious colors
             primary: {
               main: marioColors.red,
               light: "#FF4D60",

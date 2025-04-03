@@ -1,13 +1,13 @@
 "use no memo"
 // src/routes/CoursesRoute.jsx
 import { createFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Card, CardContent, Grid, Box, Typography, Avatar, Stack, Chip, alpha, Button } from "@mui/material";
 import {
   Award, BookmarkCheck, BookOpen, Calendar, Clock, ExternalLink, GraduationCap, Layers, MapPin, School, Star, Users,
 } from "lucide-react";
 import { useTheme } from "@mui/material";
-import { Highlight } from "react-instantsearch";
+import { Highlight, useInstantSearch } from "react-instantsearch";
 import FilterSection from "#/components/search/FitlerSection";
 import { getAuthSearchTokenOptions } from "#client/react-query.gen";
 import { useSearchClient, useQueryHook } from "#/hooks";
@@ -122,6 +122,7 @@ function CourseSectionsComponent() {
 
   return (
     <SearchLayout
+      Route={Route.fullPath}
       indexName="sections"
       searchClient={searchClient}
       queryHook={queryHook}
