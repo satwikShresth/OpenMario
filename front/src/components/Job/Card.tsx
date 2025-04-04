@@ -1,29 +1,29 @@
 // components/Job/Card.tsx
-import React from 'react';
+import React from "react";
 import {
+  Box,
   Card,
+  CardActions,
   CardContent,
-  Typography,
+  Chip,
   Divider,
   Grid,
-  Box,
-  Chip,
   IconButton,
-  CardActions,
-  Tooltip
-} from '@mui/material';
+  Tooltip,
+  Typography,
+} from "@mui/material";
 import {
-  Edit,
-  Trash2,
-  MapPin,
-  DollarSign,
+  ArrowRight,
   Building,
   Calendar,
   Clock,
+  DollarSign,
+  Edit,
   GraduationCap,
-  ArrowRight
-} from 'lucide-react';
-import type { Submission } from '#/types';
+  MapPin,
+  Trash2,
+} from "lucide-react";
+import type { Submission } from "#/types";
 
 interface JobCardProps {
   submission: Submission;
@@ -38,7 +38,7 @@ const JobCard: React.FC<JobCardProps> = ({
   index,
   onEdit,
   onDelete,
-  isDraft = false
+  isDraft = false,
 }) => {
   const weeklyPay = submission?.compensation
     ? `$${(submission?.compensation * submission?.work_hours).toFixed(2)}/week`
@@ -55,58 +55,83 @@ const JobCard: React.FC<JobCardProps> = ({
   };
 
   return (
-    <Card elevation={2} sx={{
-      mb: 2,
-      position: 'relative',
-      transition: isDraft ? 'all 0.2s' : 'none',
-      '&:hover': isDraft ? {
-        boxShadow: 3,
-      } : {}
-    }}>
+    <Card
+      elevation={2}
+      sx={{
+        mb: 2,
+        position: "relative",
+        transition: isDraft ? "all 0.2s" : "none",
+        "&:hover": isDraft
+          ? {
+            boxShadow: 3,
+          }
+          : {},
+      }}
+    >
       {isDraft && (
         <Chip
           label="DRAFT"
           size="small"
           color="warning"
           sx={{
-            position: 'absolute',
+            position: "absolute",
             top: 10,
             right: 10,
             zIndex: 1,
-            fontSize: '0.7rem',
-            fontWeight: 'bold'
+            fontSize: "0.7rem",
+            fontWeight: "bold",
           }}
         />
       )}
 
       <CardContent sx={{ pb: 1 }}>
         {/* Title and Company */}
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 1 }}>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "flex-start",
+            mb: 1,
+          }}
+        >
           <Box>
-            <Typography variant="h6" component="div" color="primary" sx={{ fontWeight: 'medium' }}>
-              {submission?.position || 'Untitled Position'}
+            <Typography
+              variant="h6"
+              component="div"
+              color="primary"
+              sx={{ fontWeight: "medium" }}
+            >
+              {submission?.position || "Untitled Position"}
             </Typography>
-            <Box sx={{ display: 'flex', alignItems: 'center', mt: 0.5 }}>
+            <Box sx={{ display: "flex", alignItems: "center", mt: 0.5 }}>
               <Building size={16} />
               <Typography variant="body1" sx={{ ml: 1 }}>
-                {submission?.company || 'No Company'}
+                {submission?.company || "No Company"}
               </Typography>
             </Box>
           </Box>
-          <Box sx={{ display: 'flex' }}>
+          <Box sx={{ display: "flex" }}>
             <Tooltip title="Edit">
               <IconButton size="small" onClick={handleEditClick}>
                 <Edit size={18} />
               </IconButton>
             </Tooltip>
             <Tooltip title="Delete">
-              <IconButton size="small" color="error" onClick={handleDeleteClick}>
+              <IconButton
+                size="small"
+                color="error"
+                onClick={handleDeleteClick}
+              >
                 <Trash2 size={18} />
               </IconButton>
             </Tooltip>
             {isDraft && (
               <Tooltip title="Complete Submission">
-                <IconButton size="small" color="success" onClick={handleEditClick}>
+                <IconButton
+                  size="small"
+                  color="success"
+                  onClick={handleEditClick}
+                >
                   <ArrowRight size={18} />
                 </IconButton>
               </Tooltip>
@@ -115,10 +140,10 @@ const JobCard: React.FC<JobCardProps> = ({
         </Box>
 
         {/* Location */}
-        <Box sx={{ display: 'flex', alignItems: 'center', mt: 1 }}>
+        <Box sx={{ display: "flex", alignItems: "center", mt: 1 }}>
           <MapPin size={16} />
           <Typography variant="body2" sx={{ ml: 1 }}>
-            {submission?.location || 'No Location'}
+            {submission?.location || "No Location"}
           </Typography>
         </Box>
 
@@ -127,18 +152,20 @@ const JobCard: React.FC<JobCardProps> = ({
           <Grid item xs={12} sm={6}>
             <Grid container spacing={1}>
               <Grid item xs={12}>
-                <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                <Box sx={{ display: "flex", alignItems: "center" }}>
                   <GraduationCap size={16} />
                   <Typography variant="body2" sx={{ ml: 1 }}>
-                    {submission?.program_level || 'Undergraduate'}
+                    {submission?.program_level || "Undergraduate"}
                   </Typography>
                 </Box>
               </Grid>
               <Grid item xs={12}>
-                <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                <Box sx={{ display: "flex", alignItems: "center" }}>
                   <Calendar size={16} />
                   <Typography variant="body2" sx={{ ml: 1 }}>
-                    {submission?.coop_cycle || 'No Cycle'}, {submission?.year || new Date().getFullYear()} ({submission?.coop_year || '1st'} year)
+                    {submission?.coop_cycle || "No Cycle"},{" "}
+                    {submission?.year || new Date().getFullYear()}{" "}
+                    ({submission?.coop_year || "1st"} year)
                   </Typography>
                 </Box>
               </Grid>
@@ -148,7 +175,7 @@ const JobCard: React.FC<JobCardProps> = ({
           <Grid item xs={12} sm={6}>
             <Grid container spacing={1}>
               <Grid item xs={12}>
-                <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                <Box sx={{ display: "flex", alignItems: "center" }}>
                   <Clock size={16} />
                   <Typography variant="body2" sx={{ ml: 1 }}>
                     {submission?.work_hours || 40} hours/week
@@ -157,10 +184,12 @@ const JobCard: React.FC<JobCardProps> = ({
               </Grid>
               {submission?.compensation && (
                 <Grid item xs={12}>
-                  <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                  <Box sx={{ display: "flex", alignItems: "center" }}>
                     <DollarSign size={16} />
                     <Typography variant="body2" sx={{ ml: 1 }}>
-                      ${parseFloat(submission?.compensation.toString()).toFixed(2)}/hour {weeklyPay && `(${weeklyPay})`}
+                      ${parseFloat(submission?.compensation.toString()).toFixed(
+                        2,
+                      )}/hour {weeklyPay && `(${weeklyPay})`}
                     </Typography>
                   </Box>
                 </Grid>
@@ -174,7 +203,8 @@ const JobCard: React.FC<JobCardProps> = ({
           <Box sx={{ mt: 2 }}>
             <Divider sx={{ mb: 1 }} />
             <Typography variant="body2" color="text.secondary">
-              <strong>Other Compensation:</strong> {submission?.other_compensation}
+              <strong>Other Compensation:</strong>{" "}
+              {submission?.other_compensation}
             </Typography>
           </Box>
         )}
@@ -191,21 +221,21 @@ const JobCard: React.FC<JobCardProps> = ({
       </CardContent>
 
       <CardActions sx={{ pt: 0, pb: 1.5, px: 2 }}>
-        <Box sx={{ display: 'flex', gap: 1 }}>
+        <Box sx={{ display: "flex", gap: 1 }}>
           <Chip
-            label={submission?.program_level || 'Undergraduate'}
+            label={submission?.program_level || "Undergraduate"}
             size="small"
             color="primary"
             variant="outlined"
           />
           <Chip
-            label={submission?.coop_cycle || 'No Cycle'}
+            label={submission?.coop_cycle || "No Cycle"}
             size="small"
             color="secondary"
             variant="outlined"
           />
           <Chip
-            label={`${submission?.coop_year || '1st'} year`}
+            label={`${submission?.coop_year || "1st"} year`}
             size="small"
             color="info"
             variant="outlined"

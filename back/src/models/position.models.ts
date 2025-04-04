@@ -1,26 +1,26 @@
-import { z } from "zod";
-import { extendZodWithOpenApi } from "@asteasolutions/zod-to-openapi";
-import { company, position } from "#/db/schema.ts";
-import { createInsertSchema, createSelectSchema } from "drizzle-zod";
-import { ZodTypeAny } from "zod";
+import { z } from 'zod';
+import { extendZodWithOpenApi } from '@asteasolutions/zod-to-openapi';
+import { company, position } from '#/db/index.ts';
+import { createInsertSchema, createSelectSchema } from 'drizzle-zod';
+import { ZodTypeAny } from 'zod';
 
 extendZodWithOpenApi(z);
 
 export const name = (schema: any): ZodTypeAny =>
-  schema
-    .trim()
-    .min(3, { message: "Name must be more than 3 characters" })
-    .max(100, { message: "Name must be less than 100 characters" });
+   schema
+      .trim()
+      .min(3, { message: 'Name must be more than 3 characters' })
+      .max(100, { message: 'Name must be less than 100 characters' });
 
 export const CompanyPositionInsertSchema = z
-  .object({
-    company: name(z.string()),
-    position: name(z.string()),
-  })
-  .transform(({ company, position }) => ({
-    company_name: company,
-    position_name: position,
-  }));
+   .object({
+      company: name(z.string()),
+      position: name(z.string()),
+   })
+   .transform(({ company, position }) => ({
+      company_name: company,
+      position_name: position,
+   }));
 
 export type CompanyPostionInsert = z.infer<typeof CompanyPositionInsertSchema>;
 

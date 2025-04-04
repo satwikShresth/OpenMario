@@ -4,10 +4,16 @@ WORKDIR /app
 COPY package*.json /app/
 RUN npm install
 COPY ./ /app/
-
-ARG VITE_API_URL=${VITE_API_URL}
 RUN npm run build
 
 
-FROM caddy:latest
+FROM caddy:latest AS production-stage
 COPY --from=build-stage /app/dist/ /usr/share/caddy
+
+
+FROM node:20 AS development-stage
+WORKDIR /app
+COPY package*.json /app/
+RUN npm install
+
+COPY ./ /app/

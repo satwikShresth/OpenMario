@@ -1,8 +1,8 @@
 // src/components/QueryBoundary.tsx
-import React from 'react';
-import { QueryErrorResetBoundary } from '@tanstack/react-query';
-import { ErrorBoundary } from 'react-error-boundary';
-import { ErrorPage } from './Page';
+import React from "react";
+import { QueryErrorResetBoundary } from "@tanstack/react-query";
+import { ErrorBoundary } from "react-error-boundary";
+import { ErrorPage } from "./Page";
 
 interface QueryBoundaryProps {
   children: React.ReactNode;

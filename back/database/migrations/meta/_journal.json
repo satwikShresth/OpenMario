@@ -36,6 +36,13 @@
       "when": 1741986243777,
       "tag": "0004_adding_owner_id_to_company",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1743793133230,
+      "tag": "0005_openmario_v2",
+      "breakpoints": true
     }
   ]
 }

@@ -1,19 +1,26 @@
-"use no memo"
+"use no memo";
 // Table.jsx
-import { useState, useEffect, useMemo } from 'react';
-import { Table, TableContainer, TableHead, TableBody, TableRow, Paper } from '@mui/material';
-import { useReactTable, getCoreRowModel, getSortedRowModel } from '@tanstack/react-table';
-import { DndContext, closestCenter, KeyboardSensor, PointerSensor, useSensor, useSensors } from '@dnd-kit/core';
-import { SortableContext, horizontalListSortingStrategy, arrayMove, sortableKeyboardCoordinates } from '@dnd-kit/sortable';
-import Pagination from './Pagination';
-import { TableConfig } from './types';
-import TableHeaderComponent from './TableHeader';
-import TableBodyComponent from './TableBody';
-import { useFilterStore } from '#/stores';
-import { useQuery } from '@tanstack/react-query';
-import { getSubmissionsOptions } from '#client/react-query.gen';
+import { useEffect, useMemo, useState } from "react";
+import {
+  Paper, Table, TableBody, TableContainer, TableHead, TableRow,
+} from "@mui/material";
+import {
+  getCoreRowModel, getSortedRowModel, useReactTable,
+} from "@tanstack/react-table";
+import {
+  closestCenter, DndContext, KeyboardSensor, PointerSensor, useSensor, useSensors,
+} from "@dnd-kit/core";
+import {
+  arrayMove, horizontalListSortingStrategy, SortableContext, sortableKeyboardCoordinates,
+} from "@dnd-kit/sortable";
+import Pagination from "./Pagination";
+import { TableConfig } from "./types";
+import TableHeaderComponent from "./TableHeader";
+import TableBodyComponent from "./TableBody";
+import { useFilterStore } from "#/stores";
+import { useQuery } from "@tanstack/react-query";
+import { getSubmissionsOptions } from "#client/react-query.gen";
 import { Route } from "#/routes/home";
-
 
 const DataTable = () => {
   const query = Route.useSearch();
@@ -24,9 +31,9 @@ const DataTable = () => {
 
   const submissionsQuery = useQuery({
     ...getSubmissionsOptions({
-      query
+      query,
     }),
-    placeholderData: previousData => previousData,
+    placeholderData: (previousData) => previousData,
     staleTime: 3000,
     refetchOnWindowFocus: false,
   });
@@ -34,7 +41,7 @@ const DataTable = () => {
   useEffect(() => {
     if (defaultColumns.length > 0 && columnOrder.length === 0) {
       const initialOrder = defaultColumns
-        .map(col => {
+        .map((col) => {
           const id = (col.accessorKey) || (col.id);
           return id ? id : null;
         })
@@ -47,7 +54,7 @@ const DataTable = () => {
     if (columnOrder.length === 0) return defaultColumns;
 
     const columnMap = {};
-    defaultColumns.forEach(col => {
+    defaultColumns.forEach((col) => {
       const key = (col.accessorKey) || (col.id);
       if (key) {
         columnMap[key] = col;
@@ -55,7 +62,7 @@ const DataTable = () => {
     });
 
     return columnOrder
-      .map(id => columnMap[id])
+      .map((id) => columnMap[id])
       .filter(Boolean);
   }, [defaultColumns, columnOrder]);
 
@@ -66,7 +73,7 @@ const DataTable = () => {
       sorting,
       pagination: {
         pageSize,
-        pageIndex
+        pageIndex,
       },
     },
     onSortingChange: setSorting,
@@ -87,7 +94,7 @@ const DataTable = () => {
     }),
     useSensor(KeyboardSensor, {
       coordinateGetter: sortableKeyboardCoordinates,
-    })
+    }),
   );
 
   const handleDragEnd = (event) => {
@@ -107,7 +114,7 @@ const DataTable = () => {
   const headerGroups = table.getHeaderGroups();
 
   return (
-    <Paper elevation={5} sx={{ overflow: 'hidden', mb: 4 }}>
+    <Paper elevation={5} sx={{ overflow: "hidden", mb: 4 }}>
       <TableContainer>
         <DndContext
           sensors={sensors}
@@ -120,7 +127,7 @@ const DataTable = () => {
           >
             <Table stickyHeader>
               <TableHead>
-                {headerGroups.map(headerGroup => (
+                {headerGroups.map((headerGroup) => (
                   <TableHeaderComponent
                     key={headerGroup.id}
                     headerGroup={headerGroup}

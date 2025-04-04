@@ -1,577 +1,577 @@
 {
-  "id": "dcca968e-03fe-4c7e-8a0f-076e191fa934",
-  "prevId": "2df307c3-67f5-4a4f-9d61-16d719ab82a6",
-  "version": "7",
-  "dialect": "postgresql",
-  "tables": {
-    "public.company": {
-      "name": "company",
-      "schema": "",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "uuid",
-          "primaryKey": true,
-          "notNull": true,
-          "default": "gen_random_uuid()"
-        },
-        "name": {
-          "name": "name",
-          "type": "varchar(255)",
-          "primaryKey": false,
-          "notNull": true
-        }
+   "id": "dcca968e-03fe-4c7e-8a0f-076e191fa934",
+   "prevId": "2df307c3-67f5-4a4f-9d61-16d719ab82a6",
+   "version": "7",
+   "dialect": "postgresql",
+   "tables": {
+      "public.company": {
+         "name": "company",
+         "schema": "",
+         "columns": {
+            "id": {
+               "name": "id",
+               "type": "uuid",
+               "primaryKey": true,
+               "notNull": true,
+               "default": "gen_random_uuid()"
+            },
+            "name": {
+               "name": "name",
+               "type": "varchar(255)",
+               "primaryKey": false,
+               "notNull": true
+            }
+         },
+         "indexes": {},
+         "foreignKeys": {},
+         "compositePrimaryKeys": {},
+         "uniqueConstraints": {
+            "company_name_unique": {
+               "name": "company_name_unique",
+               "nullsNotDistinct": false,
+               "columns": [
+                  "name"
+               ]
+            }
+         },
+         "policies": {},
+         "checkConstraints": {},
+         "isRLSEnabled": false
       },
-      "indexes": {},
-      "foreignKeys": {},
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {
-        "company_name_unique": {
-          "name": "company_name_unique",
-          "nullsNotDistinct": false,
-          "columns": [
-            "name"
-          ]
-        }
+      "public.location": {
+         "name": "location",
+         "schema": "",
+         "columns": {
+            "id": {
+               "name": "id",
+               "type": "uuid",
+               "primaryKey": true,
+               "notNull": true,
+               "default": "gen_random_uuid()"
+            },
+            "state_code": {
+               "name": "state_code",
+               "type": "varchar(3)",
+               "primaryKey": false,
+               "notNull": true
+            },
+            "state": {
+               "name": "state",
+               "type": "varchar(100)",
+               "primaryKey": false,
+               "notNull": true
+            },
+            "city": {
+               "name": "city",
+               "type": "varchar(100)",
+               "primaryKey": false,
+               "notNull": true
+            }
+         },
+         "indexes": {},
+         "foreignKeys": {},
+         "compositePrimaryKeys": {},
+         "uniqueConstraints": {
+            "location_state_code_state_city_unique": {
+               "name": "location_state_code_state_city_unique",
+               "nullsNotDistinct": false,
+               "columns": [
+                  "state_code",
+                  "state",
+                  "city"
+               ]
+            }
+         },
+         "policies": {},
+         "checkConstraints": {},
+         "isRLSEnabled": false
       },
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
-    },
-    "public.location": {
-      "name": "location",
-      "schema": "",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "uuid",
-          "primaryKey": true,
-          "notNull": true,
-          "default": "gen_random_uuid()"
-        },
-        "state_code": {
-          "name": "state_code",
-          "type": "varchar(3)",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "state": {
-          "name": "state",
-          "type": "varchar(100)",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "city": {
-          "name": "city",
-          "type": "varchar(100)",
-          "primaryKey": false,
-          "notNull": true
-        }
+      "public.major": {
+         "name": "major",
+         "schema": "",
+         "columns": {
+            "id": {
+               "name": "id",
+               "type": "uuid",
+               "primaryKey": true,
+               "notNull": true,
+               "default": "gen_random_uuid()"
+            },
+            "program_level": {
+               "name": "program_level",
+               "type": "program_level",
+               "typeSchema": "public",
+               "primaryKey": false,
+               "notNull": true
+            },
+            "name": {
+               "name": "name",
+               "type": "varchar(255)",
+               "primaryKey": false,
+               "notNull": true
+            }
+         },
+         "indexes": {},
+         "foreignKeys": {},
+         "compositePrimaryKeys": {},
+         "uniqueConstraints": {
+            "major_name_unique": {
+               "name": "major_name_unique",
+               "nullsNotDistinct": false,
+               "columns": [
+                  "name"
+               ]
+            }
+         },
+         "policies": {},
+         "checkConstraints": {},
+         "isRLSEnabled": false
       },
-      "indexes": {},
-      "foreignKeys": {},
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {
-        "location_state_code_state_city_unique": {
-          "name": "location_state_code_state_city_unique",
-          "nullsNotDistinct": false,
-          "columns": [
-            "state_code",
-            "state",
-            "city"
-          ]
-        }
+      "public.minor": {
+         "name": "minor",
+         "schema": "",
+         "columns": {
+            "id": {
+               "name": "id",
+               "type": "uuid",
+               "primaryKey": true,
+               "notNull": true,
+               "default": "gen_random_uuid()"
+            },
+            "program_level": {
+               "name": "program_level",
+               "type": "program_level",
+               "typeSchema": "public",
+               "primaryKey": false,
+               "notNull": true
+            },
+            "name": {
+               "name": "name",
+               "type": "varchar(255)",
+               "primaryKey": false,
+               "notNull": true
+            }
+         },
+         "indexes": {},
+         "foreignKeys": {},
+         "compositePrimaryKeys": {},
+         "uniqueConstraints": {
+            "minor_name_unique": {
+               "name": "minor_name_unique",
+               "nullsNotDistinct": false,
+               "columns": [
+                  "name"
+               ]
+            }
+         },
+         "policies": {},
+         "checkConstraints": {},
+         "isRLSEnabled": false
       },
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
-    },
-    "public.major": {
-      "name": "major",
-      "schema": "",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "uuid",
-          "primaryKey": true,
-          "notNull": true,
-          "default": "gen_random_uuid()"
-        },
-        "program_level": {
-          "name": "program_level",
-          "type": "program_level",
-          "typeSchema": "public",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "name": {
-          "name": "name",
-          "type": "varchar(255)",
-          "primaryKey": false,
-          "notNull": true
-        }
+      "public.position": {
+         "name": "position",
+         "schema": "",
+         "columns": {
+            "id": {
+               "name": "id",
+               "type": "uuid",
+               "primaryKey": true,
+               "notNull": true,
+               "default": "gen_random_uuid()"
+            },
+            "company_id": {
+               "name": "company_id",
+               "type": "uuid",
+               "primaryKey": false,
+               "notNull": true
+            },
+            "name": {
+               "name": "name",
+               "type": "varchar(255)",
+               "primaryKey": false,
+               "notNull": true
+            }
+         },
+         "indexes": {},
+         "foreignKeys": {
+            "position_company_id_company_id_fk": {
+               "name": "position_company_id_company_id_fk",
+               "tableFrom": "position",
+               "tableTo": "company",
+               "columnsFrom": [
+                  "company_id"
+               ],
+               "columnsTo": [
+                  "id"
+               ],
+               "onDelete": "restrict",
+               "onUpdate": "no action"
+            }
+         },
+         "compositePrimaryKeys": {},
+         "uniqueConstraints": {
+            "position_company_id_name_unique": {
+               "name": "position_company_id_name_unique",
+               "nullsNotDistinct": false,
+               "columns": [
+                  "company_id",
+                  "name"
+               ]
+            }
+         },
+         "policies": {},
+         "checkConstraints": {},
+         "isRLSEnabled": false
       },
-      "indexes": {},
-      "foreignKeys": {},
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {
-        "major_name_unique": {
-          "name": "major_name_unique",
-          "nullsNotDistinct": false,
-          "columns": [
-            "name"
-          ]
-        }
+      "public.profile_major": {
+         "name": "profile_major",
+         "schema": "",
+         "columns": {
+            "user_id": {
+               "name": "user_id",
+               "type": "uuid",
+               "primaryKey": false,
+               "notNull": true
+            },
+            "major_id": {
+               "name": "major_id",
+               "type": "uuid",
+               "primaryKey": false,
+               "notNull": true
+            }
+         },
+         "indexes": {},
+         "foreignKeys": {
+            "profile_major_user_id_users_id_fk": {
+               "name": "profile_major_user_id_users_id_fk",
+               "tableFrom": "profile_major",
+               "tableTo": "users",
+               "columnsFrom": [
+                  "user_id"
+               ],
+               "columnsTo": [
+                  "id"
+               ],
+               "onDelete": "cascade",
+               "onUpdate": "no action"
+            },
+            "profile_major_major_id_major_id_fk": {
+               "name": "profile_major_major_id_major_id_fk",
+               "tableFrom": "profile_major",
+               "tableTo": "major",
+               "columnsFrom": [
+                  "major_id"
+               ],
+               "columnsTo": [
+                  "id"
+               ],
+               "onDelete": "cascade",
+               "onUpdate": "no action"
+            }
+         },
+         "compositePrimaryKeys": {
+            "profile_major_user_id_major_id_pk": {
+               "name": "profile_major_user_id_major_id_pk",
+               "columns": [
+                  "user_id",
+                  "major_id"
+               ]
+            }
+         },
+         "uniqueConstraints": {},
+         "policies": {},
+         "checkConstraints": {},
+         "isRLSEnabled": false
       },
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
-    },
-    "public.minor": {
-      "name": "minor",
-      "schema": "",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "uuid",
-          "primaryKey": true,
-          "notNull": true,
-          "default": "gen_random_uuid()"
-        },
-        "program_level": {
-          "name": "program_level",
-          "type": "program_level",
-          "typeSchema": "public",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "name": {
-          "name": "name",
-          "type": "varchar(255)",
-          "primaryKey": false,
-          "notNull": true
-        }
+      "public.profile_minor": {
+         "name": "profile_minor",
+         "schema": "",
+         "columns": {
+            "user_id": {
+               "name": "user_id",
+               "type": "uuid",
+               "primaryKey": false,
+               "notNull": true
+            },
+            "minor_id": {
+               "name": "minor_id",
+               "type": "uuid",
+               "primaryKey": false,
+               "notNull": true
+            }
+         },
+         "indexes": {},
+         "foreignKeys": {
+            "profile_minor_user_id_users_id_fk": {
+               "name": "profile_minor_user_id_users_id_fk",
+               "tableFrom": "profile_minor",
+               "tableTo": "users",
+               "columnsFrom": [
+                  "user_id"
+               ],
+               "columnsTo": [
+                  "id"
+               ],
+               "onDelete": "cascade",
+               "onUpdate": "no action"
+            },
+            "profile_minor_minor_id_minor_id_fk": {
+               "name": "profile_minor_minor_id_minor_id_fk",
+               "tableFrom": "profile_minor",
+               "tableTo": "minor",
+               "columnsFrom": [
+                  "minor_id"
+               ],
+               "columnsTo": [
+                  "id"
+               ],
+               "onDelete": "cascade",
+               "onUpdate": "no action"
+            }
+         },
+         "compositePrimaryKeys": {
+            "profile_minor_user_id_minor_id_pk": {
+               "name": "profile_minor_user_id_minor_id_pk",
+               "columns": [
+                  "user_id",
+                  "minor_id"
+               ]
+            }
+         },
+         "uniqueConstraints": {},
+         "policies": {},
+         "checkConstraints": {},
+         "isRLSEnabled": false
       },
-      "indexes": {},
-      "foreignKeys": {},
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {
-        "minor_name_unique": {
-          "name": "minor_name_unique",
-          "nullsNotDistinct": false,
-          "columns": [
-            "name"
-          ]
-        }
+      "public.submission": {
+         "name": "submission",
+         "schema": "",
+         "columns": {
+            "id": {
+               "name": "id",
+               "type": "uuid",
+               "primaryKey": true,
+               "notNull": true,
+               "default": "gen_random_uuid()"
+            },
+            "position_id": {
+               "name": "position_id",
+               "type": "uuid",
+               "primaryKey": false,
+               "notNull": true
+            },
+            "location_id": {
+               "name": "location_id",
+               "type": "uuid",
+               "primaryKey": false,
+               "notNull": true
+            },
+            "program_level": {
+               "name": "program_level",
+               "type": "program_level",
+               "typeSchema": "public",
+               "primaryKey": false,
+               "notNull": true
+            },
+            "work_hours": {
+               "name": "work_hours",
+               "type": "integer",
+               "primaryKey": false,
+               "notNull": true,
+               "default": 40
+            },
+            "coop_cycle": {
+               "name": "coop_cycle",
+               "type": "coop_cycle",
+               "typeSchema": "public",
+               "primaryKey": false,
+               "notNull": true
+            },
+            "coop_year": {
+               "name": "coop_year",
+               "type": "coop_year",
+               "typeSchema": "public",
+               "primaryKey": false,
+               "notNull": true
+            },
+            "year": {
+               "name": "year",
+               "type": "integer",
+               "primaryKey": false,
+               "notNull": true
+            },
+            "compensation": {
+               "name": "compensation",
+               "type": "double precision",
+               "primaryKey": false,
+               "notNull": false
+            },
+            "other_compensation": {
+               "name": "other_compensation",
+               "type": "varchar(255)",
+               "primaryKey": false,
+               "notNull": false
+            },
+            "details": {
+               "name": "details",
+               "type": "varchar(255)",
+               "primaryKey": false,
+               "notNull": false
+            },
+            "owner_id": {
+               "name": "owner_id",
+               "type": "uuid",
+               "primaryKey": false,
+               "notNull": false
+            },
+            "created_at": {
+               "name": "created_at",
+               "type": "timestamp",
+               "primaryKey": false,
+               "notNull": true,
+               "default": "now()"
+            }
+         },
+         "indexes": {},
+         "foreignKeys": {
+            "submission_position_id_position_id_fk": {
+               "name": "submission_position_id_position_id_fk",
+               "tableFrom": "submission",
+               "tableTo": "position",
+               "columnsFrom": [
+                  "position_id"
+               ],
+               "columnsTo": [
+                  "id"
+               ],
+               "onDelete": "restrict",
+               "onUpdate": "no action"
+            },
+            "submission_location_id_location_id_fk": {
+               "name": "submission_location_id_location_id_fk",
+               "tableFrom": "submission",
+               "tableTo": "location",
+               "columnsFrom": [
+                  "location_id"
+               ],
+               "columnsTo": [
+                  "id"
+               ],
+               "onDelete": "restrict",
+               "onUpdate": "no action"
+            },
+            "submission_owner_id_users_id_fk": {
+               "name": "submission_owner_id_users_id_fk",
+               "tableFrom": "submission",
+               "tableTo": "users",
+               "columnsFrom": [
+                  "owner_id"
+               ],
+               "columnsTo": [
+                  "id"
+               ],
+               "onDelete": "set null",
+               "onUpdate": "no action"
+            }
+         },
+         "compositePrimaryKeys": {},
+         "uniqueConstraints": {},
+         "policies": {},
+         "checkConstraints": {},
+         "isRLSEnabled": false
       },
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
-    },
-    "public.position": {
-      "name": "position",
-      "schema": "",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "uuid",
-          "primaryKey": true,
-          "notNull": true,
-          "default": "gen_random_uuid()"
-        },
-        "company_id": {
-          "name": "company_id",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "name": {
-          "name": "name",
-          "type": "varchar(255)",
-          "primaryKey": false,
-          "notNull": true
-        }
+      "public.users": {
+         "name": "users",
+         "schema": "",
+         "columns": {
+            "id": {
+               "name": "id",
+               "type": "uuid",
+               "primaryKey": true,
+               "notNull": true,
+               "default": "gen_random_uuid()"
+            },
+            "username": {
+               "name": "username",
+               "type": "varchar(100)",
+               "primaryKey": false,
+               "notNull": true
+            },
+            "email": {
+               "name": "email",
+               "type": "text",
+               "primaryKey": false,
+               "notNull": true
+            },
+            "created_at": {
+               "name": "created_at",
+               "type": "timestamp",
+               "primaryKey": false,
+               "notNull": true,
+               "default": "now()"
+            },
+            "updated_at": {
+               "name": "updated_at",
+               "type": "timestamp",
+               "primaryKey": false,
+               "notNull": true,
+               "default": "now()"
+            }
+         },
+         "indexes": {},
+         "foreignKeys": {},
+         "compositePrimaryKeys": {},
+         "uniqueConstraints": {
+            "users_email_unique": {
+               "name": "users_email_unique",
+               "nullsNotDistinct": false,
+               "columns": [
+                  "email"
+               ]
+            }
+         },
+         "policies": {},
+         "checkConstraints": {},
+         "isRLSEnabled": false
+      }
+   },
+   "enums": {
+      "public.coop_cycle": {
+         "name": "coop_cycle",
+         "schema": "public",
+         "values": [
+            "Fall/Winter",
+            "Winter/Spring",
+            "Spring/Summer",
+            "Summer/Fall"
+         ]
       },
-      "indexes": {},
-      "foreignKeys": {
-        "position_company_id_company_id_fk": {
-          "name": "position_company_id_company_id_fk",
-          "tableFrom": "position",
-          "tableTo": "company",
-          "columnsFrom": [
-            "company_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "restrict",
-          "onUpdate": "no action"
-        }
+      "public.coop_year": {
+         "name": "coop_year",
+         "schema": "public",
+         "values": [
+            "1st",
+            "2nd",
+            "3rd"
+         ]
       },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {
-        "position_company_id_name_unique": {
-          "name": "position_company_id_name_unique",
-          "nullsNotDistinct": false,
-          "columns": [
-            "company_id",
-            "name"
-          ]
-        }
-      },
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
-    },
-    "public.profile_major": {
-      "name": "profile_major",
-      "schema": "",
-      "columns": {
-        "user_id": {
-          "name": "user_id",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "major_id": {
-          "name": "major_id",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": true
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "profile_major_user_id_users_id_fk": {
-          "name": "profile_major_user_id_users_id_fk",
-          "tableFrom": "profile_major",
-          "tableTo": "users",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        },
-        "profile_major_major_id_major_id_fk": {
-          "name": "profile_major_major_id_major_id_fk",
-          "tableFrom": "profile_major",
-          "tableTo": "major",
-          "columnsFrom": [
-            "major_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {
-        "profile_major_user_id_major_id_pk": {
-          "name": "profile_major_user_id_major_id_pk",
-          "columns": [
-            "user_id",
-            "major_id"
-          ]
-        }
-      },
-      "uniqueConstraints": {},
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
-    },
-    "public.profile_minor": {
-      "name": "profile_minor",
-      "schema": "",
-      "columns": {
-        "user_id": {
-          "name": "user_id",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "minor_id": {
-          "name": "minor_id",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": true
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "profile_minor_user_id_users_id_fk": {
-          "name": "profile_minor_user_id_users_id_fk",
-          "tableFrom": "profile_minor",
-          "tableTo": "users",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        },
-        "profile_minor_minor_id_minor_id_fk": {
-          "name": "profile_minor_minor_id_minor_id_fk",
-          "tableFrom": "profile_minor",
-          "tableTo": "minor",
-          "columnsFrom": [
-            "minor_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {
-        "profile_minor_user_id_minor_id_pk": {
-          "name": "profile_minor_user_id_minor_id_pk",
-          "columns": [
-            "user_id",
-            "minor_id"
-          ]
-        }
-      },
-      "uniqueConstraints": {},
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
-    },
-    "public.submission": {
-      "name": "submission",
-      "schema": "",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "uuid",
-          "primaryKey": true,
-          "notNull": true,
-          "default": "gen_random_uuid()"
-        },
-        "position_id": {
-          "name": "position_id",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "location_id": {
-          "name": "location_id",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "program_level": {
-          "name": "program_level",
-          "type": "program_level",
-          "typeSchema": "public",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "work_hours": {
-          "name": "work_hours",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true,
-          "default": 40
-        },
-        "coop_cycle": {
-          "name": "coop_cycle",
-          "type": "coop_cycle",
-          "typeSchema": "public",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "coop_year": {
-          "name": "coop_year",
-          "type": "coop_year",
-          "typeSchema": "public",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "year": {
-          "name": "year",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "compensation": {
-          "name": "compensation",
-          "type": "double precision",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "other_compensation": {
-          "name": "other_compensation",
-          "type": "varchar(255)",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "details": {
-          "name": "details",
-          "type": "varchar(255)",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "owner_id": {
-          "name": "owner_id",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "created_at": {
-          "name": "created_at",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "submission_position_id_position_id_fk": {
-          "name": "submission_position_id_position_id_fk",
-          "tableFrom": "submission",
-          "tableTo": "position",
-          "columnsFrom": [
-            "position_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "restrict",
-          "onUpdate": "no action"
-        },
-        "submission_location_id_location_id_fk": {
-          "name": "submission_location_id_location_id_fk",
-          "tableFrom": "submission",
-          "tableTo": "location",
-          "columnsFrom": [
-            "location_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "restrict",
-          "onUpdate": "no action"
-        },
-        "submission_owner_id_users_id_fk": {
-          "name": "submission_owner_id_users_id_fk",
-          "tableFrom": "submission",
-          "tableTo": "users",
-          "columnsFrom": [
-            "owner_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "set null",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
-    },
-    "public.users": {
-      "name": "users",
-      "schema": "",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "uuid",
-          "primaryKey": true,
-          "notNull": true,
-          "default": "gen_random_uuid()"
-        },
-        "username": {
-          "name": "username",
-          "type": "varchar(100)",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "email": {
-          "name": "email",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "created_at": {
-          "name": "created_at",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
-        },
-        "updated_at": {
-          "name": "updated_at",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "now()"
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {},
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {
-        "users_email_unique": {
-          "name": "users_email_unique",
-          "nullsNotDistinct": false,
-          "columns": [
-            "email"
-          ]
-        }
-      },
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
-    }
-  },
-  "enums": {
-    "public.coop_cycle": {
-      "name": "coop_cycle",
-      "schema": "public",
-      "values": [
-        "Fall/Winter",
-        "Winter/Spring",
-        "Spring/Summer",
-        "Summer/Fall"
-      ]
-    },
-    "public.coop_year": {
-      "name": "coop_year",
-      "schema": "public",
-      "values": [
-        "1st",
-        "2nd",
-        "3rd"
-      ]
-    },
-    "public.program_level": {
-      "name": "program_level",
-      "schema": "public",
-      "values": [
-        "Undergraduate",
-        "Graduate"
-      ]
-    }
-  },
-  "schemas": {},
-  "sequences": {},
-  "roles": {},
-  "policies": {},
-  "views": {},
-  "_meta": {
-    "columns": {},
-    "schemas": {},
-    "tables": {}
-  }
+      "public.program_level": {
+         "name": "program_level",
+         "schema": "public",
+         "values": [
+            "Undergraduate",
+            "Graduate"
+         ]
+      }
+   },
+   "schemas": {},
+   "sequences": {},
+   "roles": {},
+   "policies": {},
+   "views": {},
+   "_meta": {
+      "columns": {},
+      "schemas": {},
+      "tables": {}
+   }
 }

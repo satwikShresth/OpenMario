@@ -1,13 +1,13 @@
-import { defineConfig, Config } from 'drizzle-kit';
+import { defineConfig } from "drizzle-kit";
 
 export default defineConfig({
-   dialect: 'postgresql',
-   dbCredentials: {
-      user:'postgres',
-      password:'postgres',
-      database:'openmario',
-      host:"localhost",
-      port:5432,
-      ssl: false
-   },
-}) satisfies Config;
+  dialect: "postgresql",
+  dbCredentials: {
+    host: "localhost",
+    database: "openmario",
+    password: "postgres",
+    port: 5432,
+    user: "postgres",
+    ssl: false,
+  },
+});

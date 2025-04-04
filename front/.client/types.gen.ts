@@ -233,6 +233,13 @@ export type SubmissionResponse = {
   location_state_code: string;
 };
 
+export type GetAuthSearchTokenData = {
+  body?: never;
+  path?: never;
+  query?: never;
+  url: "/auth/search-token";
+};
+
 export type PostAuthLoginData = {
   /**
    * User email
@@ -242,35 +249,6 @@ export type PostAuthLoginData = {
   query?: never;
   url: "/auth/login";
 };
-
-export type PostAuthLoginErrors = {
-  /**
-   * Error response
-   */
-  400: {
-    [key: string]: unknown;
-  };
-  /**
-   * Database or email error
-   */
-  409: {
-    [key: string]: unknown;
-  };
-};
-
-export type PostAuthLoginError = PostAuthLoginErrors[keyof PostAuthLoginErrors];
-
-export type PostAuthLoginResponses = {
-  /**
-   * Success response
-   */
-  200: {
-    [key: string]: unknown;
-  };
-};
-
-export type PostAuthLoginResponse =
-  PostAuthLoginResponses[keyof PostAuthLoginResponses];
 
 export type GetAuthLoginByTokenData = {
   body?: never;
@@ -283,36 +261,6 @@ export type GetAuthLoginByTokenData = {
   query?: never;
   url: "/auth/login/{token}";
 };
-
-export type GetAuthLoginByTokenErrors = {
-  /**
-   * Invalid token response
-   */
-  401: {
-    [key: string]: unknown;
-  };
-  /**
-   * Error response
-   */
-  409: {
-    [key: string]: unknown;
-  };
-};
-
-export type GetAuthLoginByTokenError =
-  GetAuthLoginByTokenErrors[keyof GetAuthLoginByTokenErrors];
-
-export type GetAuthLoginByTokenResponses = {
-  /**
-   * Success response with access token
-   */
-  200: {
-    [key: string]: unknown;
-  };
-};
-
-export type GetAuthLoginByTokenResponse =
-  GetAuthLoginByTokenResponses[keyof GetAuthLoginByTokenResponses];
 
 export type GetAutocompleteCompanyData = {
   body?: never;
@@ -488,172 +436,27 @@ export type PostCompanyPositionResponse =
 export type GetSubmissionsData = {
   body?: never;
   path?: never;
-  query?: {
-    /**
-     * Query prarmer for filtering submission using company
-     */
-    distinct?: boolean;
-    /**
-     * Query prarmer for filtering submission using company
-     */
-    company?: Array<string>;
-    /**
-     * Query prarmer for filtering submission using position
-     */
-    position?: Array<string>;
-    /**
-     * Query prarmer for filtering submission using location
-     */
-    location?: Array<string>;
-    /**
-     * Query prarmer for filtering submission using year
-     */
-    year?: Array<string>;
-    /**
-     * Query prarmer for filtering submission using coop_year
-     */
-    coop_year?: Array<string>;
-    /**
-     * Query prarmer for filtering submission using coop_cycle
-     */
-    coop_cycle?: Array<string>;
-    /**
-     * Query prarmer for filtering submission using program_level
-     */
-    program_level?: string;
-    /**
-     * Query prarmer for offeset
-     */
-    skip?: string;
-    /**
-     * Query prarmer for limit
-     */
-    limit?: string;
-  };
+  query?: never;
   url: "/submissions";
 };
-
-export type GetSubmissionsErrors = {
-  /**
-   * Error response
-   */
-  409: {
-    [key: string]: unknown;
-  };
-};
-
-export type GetSubmissionsError =
-  GetSubmissionsErrors[keyof GetSubmissionsErrors];
-
-export type GetSubmissionsResponses = {
-  /**
-   * Success response with paginated submissions
-   */
-  200: Array<SubmissionResponse>;
-};
-
-export type GetSubmissionsResponse =
-  GetSubmissionsResponses[keyof GetSubmissionsResponses];
 
 export type PatchSubmissionsData = {
-  /**
-   * Updated submission data including submission ID
-   */
-  body: SubmissionAggregateUpdate;
+  body?: never;
   path?: never;
   query?: never;
   url: "/submissions";
 };
-
-export type PatchSubmissionsErrors = {
-  /**
-   * Error response
-   */
-  409: {
-    [key: string]: unknown;
-  };
-};
-
-export type PatchSubmissionsError =
-  PatchSubmissionsErrors[keyof PatchSubmissionsErrors];
-
-export type PatchSubmissionsResponses = {
-  /**
-   * Successfully updated submission
-   */
-  201: {
-    [key: string]: unknown;
-  };
-};
-
-export type PatchSubmissionsResponse =
-  PatchSubmissionsResponses[keyof PatchSubmissionsResponses];
 
 export type PostSubmissionsData = {
-  /**
-   * Submission data
-   */
-  body: SubmissionAggregate;
+  body?: never;
   path?: never;
   query?: never;
   url: "/submissions";
 };
-
-export type PostSubmissionsErrors = {
-  /**
-   * Error response
-   */
-  409: {
-    [key: string]: unknown;
-  };
-};
-
-export type PostSubmissionsError =
-  PostSubmissionsErrors[keyof PostSubmissionsErrors];
-
-export type PostSubmissionsResponses = {
-  /**
-   * Successfully created submission
-   */
-  201: {
-    [key: string]: unknown;
-  };
-};
-
-export type PostSubmissionsResponse =
-  PostSubmissionsResponses[keyof PostSubmissionsResponses];
 
 export type GetSubmissionsMeData = {
   body?: never;
   path?: never;
-  query?: {
-    /**
-     * Query prarmer for filtering submission using company
-     */
-    ids?: Array<string>;
-  };
+  query?: never;
   url: "/submissions/me";
 };
-
-export type GetSubmissionsMeErrors = {
-  /**
-   * Error response
-   */
-  409: {
-    [key: string]: unknown;
-  };
-};
-
-export type GetSubmissionsMeError =
-  GetSubmissionsMeErrors[keyof GetSubmissionsMeErrors];
-
-export type GetSubmissionsMeResponses = {
-  /**
-   * Success response with user's submissions
-   */
-  200: Array<SubmissionResponse>;
-};
-
-export type GetSubmissionsMeResponse =
-  GetSubmissionsMeResponses[keyof GetSubmissionsMeResponses];
-

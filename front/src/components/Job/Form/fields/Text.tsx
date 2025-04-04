@@ -1,7 +1,7 @@
-import React from 'react';
-import { Controller } from 'react-hook-form';
-import { Box, TextField } from '@mui/material';
-import type { Submission } from '#/types';
+import React from "react";
+import { Controller } from "react-hook-form";
+import { Box, TextField } from "@mui/material";
+import type { Submission } from "#/types";
 
 type TextFieldWithIconProps = {
   name: keyof Submission;
@@ -42,7 +42,9 @@ export const TextFieldWithIcon: React.FC<TextFieldWithIconProps> = ({
       control={control}
       rules={rules}
       render={({ field, fieldState: { error } }) => {
-        const value = field.value === null || field.value === undefined ? '' : field.value;
+        const value = field.value === null || field.value === undefined
+          ? ""
+          : field.value;
 
         return (
           <TextField
@@ -51,7 +53,7 @@ export const TextFieldWithIcon: React.FC<TextFieldWithIconProps> = ({
             value={value} // Override field.value with our null-safe version
             label={
               <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                <Box sx={{ transform: 'translateY(-2px)' }}>
+                <Box sx={{ transform: "translateY(-2px)" }}>
                   {icon}
                 </Box>
                 {label}
@@ -69,7 +71,7 @@ export const TextFieldWithIcon: React.FC<TextFieldWithIconProps> = ({
               const value = e.target.value;
               if (nullable) {
                 field.onChange(value || null);
-              } else if (type === 'number' && value !== '') {
+              } else if (type === "number" && value !== "") {
                 field.onChange(parseFloat(value));
               } else {
                 field.onChange(value);

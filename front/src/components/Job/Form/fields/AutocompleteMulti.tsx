@@ -1,8 +1,14 @@
-import React from 'react';
-import { Controller } from 'react-hook-form';
-import { Box, TextField, Autocomplete, CircularProgress, Chip } from '@mui/material';
-import type { Submission } from '#/types';
-import { filterOptions } from '../filter';
+import React from "react";
+import { Controller } from "react-hook-form";
+import {
+  Autocomplete,
+  Box,
+  Chip,
+  CircularProgress,
+  TextField,
+} from "@mui/material";
+import type { Submission } from "#/types";
+import { filterOptions } from "../filter";
 
 type MultiselectFieldWithIconProps<T> = {
   name: keyof Submission;
@@ -23,7 +29,7 @@ type MultiselectFieldWithIconProps<T> = {
   helperText?: string;
   freeSolo?: boolean;
   limitTags?: number;
-  chipColor?: 'default' | 'primary' | 'secondary';
+  chipColor?: "default" | "primary" | "secondary";
 };
 
 export const MultiselectFieldWithIcon = <T extends object>({
@@ -39,13 +45,13 @@ export const MultiselectFieldWithIcon = <T extends object>({
   onInputChange,
   placeholder,
   nullable = false,
-  noOptionsText = 'No options',
+  noOptionsText = "No options",
   disabled = false,
   error,
   helperText,
   freeSolo = true,
   limitTags = 2,
-  chipColor = 'default',
+  chipColor = "default",
   ...props
 }: MultiselectFieldWithIconProps<T>) => {
   const { loadOptions, dependsOn, ...filteredProps } = props as any;
@@ -67,14 +73,18 @@ export const MultiselectFieldWithIcon = <T extends object>({
             options={options}
             loading={loading}
             getOptionLabel={(option) => {
-              if (!option) return '';
+              if (!option) return "";
               return getOptionLabel(option as T);
             }}
             isOptionEqualToValue={isOptionEqualToValue}
             onInputChange={onInputChange}
             filterOptions={filterOptions}
             onChange={(event, newValue) => {
-              onChange(nullable && (!newValue || newValue.length === 0) ? null : newValue);
+              onChange(
+                nullable && (!newValue || newValue.length === 0)
+                  ? null
+                  : newValue,
+              );
             }}
             disabled={disabled}
             value={value || []}
@@ -88,28 +98,29 @@ export const MultiselectFieldWithIcon = <T extends object>({
                   color={chipColor}
                   size="small"
                 />
-              ))
-            }
+              ))}
             renderInput={(params) => (
               <TextField
                 {...params}
                 inputRef={ref}
                 label={
                   <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                    <Box sx={{ transform: 'translateY(-2px)' }}>
+                    <Box sx={{ transform: "translateY(-2px)" }}>
                       {icon}
                     </Box>
                     {label}
                   </Box>
                 }
-                placeholder={value?.length > 0 ? '' : placeholder}
+                placeholder={value?.length > 0 ? "" : placeholder}
                 error={error || !!fieldState.error}
                 helperText={helperText || fieldState.error?.message || ""}
                 InputProps={{
                   ...params.InputProps,
                   endAdornment: (
                     <React.Fragment>
-                      {loading ? <CircularProgress color="inherit" size={20} /> : null}
+                      {loading
+                        ? <CircularProgress color="inherit" size={20} />
+                        : null}
                       {params.InputProps.endAdornment}
                     </React.Fragment>
                   ),
@@ -120,7 +131,7 @@ export const MultiselectFieldWithIcon = <T extends object>({
               if (!option) return null;
 
               const optionLabel = getOptionLabel(option as T);
-              const optionKey = typeof option === 'object' && option !== null
+              const optionKey = typeof option === "object" && option !== null
                 ? (option as any).id || optionLabel
                 : String(optionLabel);
 

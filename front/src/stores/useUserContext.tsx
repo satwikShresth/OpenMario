@@ -1,6 +1,6 @@
-import { create } from 'zustand';
-import { persist, createJSONStorage } from 'zustand/middleware';
-import React from 'react';
+import { create } from "zustand";
+import { createJSONStorage, persist } from "zustand/middleware";
+import React from "react";
 
 /**
  * A user record with authentication details
@@ -14,21 +14,21 @@ type UserStore = {
   user: JWTUser | null;
   setUser: (user: JWTUser) => void;
   clearUser: () => void;
-}
+};
 
 export const useUserStore = create<UserStore>()(
   persist(
     (set) => ({
       user: null,
       setUser: (user) => set({ user }),
-      clearUser: () => set({ user: null })
+      clearUser: () => set({ user: null }),
     }),
     {
-      name: 'user-auth-storage',
+      name: "user-auth-storage",
       storage: createJSONStorage(() => localStorage),
       version: 1,
-    }
-  )
+    },
+  ),
 );
 
 export const useUserHasHydrated = () => {

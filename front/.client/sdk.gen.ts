@@ -6,12 +6,9 @@ import {
   type Options,
 } from "@hey-api/client-axios";
 import type {
+  GetAuthSearchTokenData,
   PostAuthLoginData,
-  PostAuthLoginResponse,
-  PostAuthLoginError,
   GetAuthLoginByTokenData,
-  GetAuthLoginByTokenResponse,
-  GetAuthLoginByTokenError,
   GetAutocompleteCompanyData,
   GetAutocompleteCompanyResponse,
   GetAutocompleteCompanyError,
@@ -28,17 +25,9 @@ import type {
   PostCompanyPositionResponse,
   PostCompanyPositionError,
   GetSubmissionsData,
-  GetSubmissionsResponse,
-  GetSubmissionsError,
   PatchSubmissionsData,
-  PatchSubmissionsResponse,
-  PatchSubmissionsError,
   PostSubmissionsData,
-  PostSubmissionsResponse,
-  PostSubmissionsError,
   GetSubmissionsMeData,
-  GetSubmissionsMeResponse,
-  GetSubmissionsMeError,
 } from "./types.gen";
 import axios from "axios";
 
@@ -59,6 +48,20 @@ export const client = createClient(
   }),
 );
 
+export class MeilisearchService {
+  /**
+   * Get a tenant token for searching, filtering, and sorting (expires in 1 day)
+   */
+  public static getAuthSearchToken<ThrowOnError extends boolean = false>(
+    options?: Options<GetAuthSearchTokenData, ThrowOnError>,
+  ) {
+    return (options?.client ?? client).get<unknown, unknown, ThrowOnError>({
+      url: "/auth/search-token",
+      ...options,
+    });
+  }
+}
+
 export class AuthService {
   /**
    * Request a magic link for authentication
@@ -66,11 +69,7 @@ export class AuthService {
   public static postAuthLogin<ThrowOnError extends boolean = false>(
     options: Options<PostAuthLoginData, ThrowOnError>,
   ) {
-    return (options?.client ?? client).post<
-      PostAuthLoginResponse,
-      PostAuthLoginError,
-      ThrowOnError
-    >({
+    return (options?.client ?? client).post<unknown, unknown, ThrowOnError>({
       url: "/auth/login",
       ...options,
       headers: {
@@ -86,11 +85,7 @@ export class AuthService {
   public static getAuthLoginByToken<ThrowOnError extends boolean = false>(
     options: Options<GetAuthLoginByTokenData, ThrowOnError>,
   ) {
-    return (options?.client ?? client).get<
-      GetAuthLoginByTokenResponse,
-      GetAuthLoginByTokenError,
-      ThrowOnError
-    >({
+    return (options?.client ?? client).get<unknown, unknown, ThrowOnError>({
       url: "/auth/login/{token}",
       ...options,
     });
@@ -197,18 +192,14 @@ export class CompaniesAndPositionsService {
   }
 }
 
-export class SubmissionsService {
+export class DefaultService {
   /**
    * Retrieve co-op submission records with pagination and filtering
    */
   public static getSubmissions<ThrowOnError extends boolean = false>(
     options?: Options<GetSubmissionsData, ThrowOnError>,
   ) {
-    return (options?.client ?? client).get<
-      GetSubmissionsResponse,
-      GetSubmissionsError,
-      ThrowOnError
-    >({
+    return (options?.client ?? client).get<unknown, unknown, ThrowOnError>({
       url: "/submissions",
       ...options,
     });
@@ -218,25 +209,11 @@ export class SubmissionsService {
    * Update an existing co-op submission
    */
   public static patchSubmissions<ThrowOnError extends boolean = false>(
-    options: Options<PatchSubmissionsData, ThrowOnError>,
+    options?: Options<PatchSubmissionsData, ThrowOnError>,
   ) {
-    return (options?.client ?? client).patch<
-      PatchSubmissionsResponse,
-      PatchSubmissionsError,
-      ThrowOnError
-    >({
-      security: [
-        {
-          scheme: "bearer",
-          type: "http",
-        },
-      ],
+    return (options?.client ?? client).patch<unknown, unknown, ThrowOnError>({
       url: "/submissions",
       ...options,
-      headers: {
-        "Content-Type": "application/json",
-        ...options?.headers,
-      },
     });
   }
 
@@ -244,25 +221,11 @@ export class SubmissionsService {
    * Create new co-op submission(s)
    */
   public static postSubmissions<ThrowOnError extends boolean = false>(
-    options: Options<PostSubmissionsData, ThrowOnError>,
+    options?: Options<PostSubmissionsData, ThrowOnError>,
   ) {
-    return (options?.client ?? client).post<
-      PostSubmissionsResponse,
-      PostSubmissionsError,
-      ThrowOnError
-    >({
-      security: [
-        {
-          scheme: "bearer",
-          type: "http",
-        },
-      ],
+    return (options?.client ?? client).post<unknown, unknown, ThrowOnError>({
       url: "/submissions",
       ...options,
-      headers: {
-        "Content-Type": "application/json",
-        ...options?.headers,
-      },
     });
   }
 
@@ -272,19 +235,10 @@ export class SubmissionsService {
   public static getSubmissionsMe<ThrowOnError extends boolean = false>(
     options?: Options<GetSubmissionsMeData, ThrowOnError>,
   ) {
-    return (options?.client ?? client).get<
-      GetSubmissionsMeResponse,
-      GetSubmissionsMeError,
-      ThrowOnError
-    >({
-      security: [
-        {
-          scheme: "bearer",
-          type: "http",
-        },
-      ],
+    return (options?.client ?? client).get<unknown, unknown, ThrowOnError>({
       url: "/submissions/me",
       ...options,
     });
   }
 }
+

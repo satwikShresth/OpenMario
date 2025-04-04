@@ -1,2 +1,2 @@
-export * from "./formatter.ts";
-export * from "./debug.ts";
+export * from './formatter.ts';
+export * from './debug.ts';
