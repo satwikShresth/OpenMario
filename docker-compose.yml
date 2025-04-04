@@ -58,7 +58,7 @@ services:
     networks:
       - app_network
     volumes:
-      - ./volumes/app-db-data:/var/lib/postgresql/data/pgdata
+      - app-db-data:/var/lib/postgresql/data/pgdata
     env_file:
       - ./.env
     profiles:
