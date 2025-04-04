@@ -58,6 +58,12 @@ services:
       context: ./front
       dockerfile: Dockerfile
       target: development-stage
+    deploy:
+      resources:
+        limits:
+          memory: 500M
+        reservations:
+          memory: 100M
     volumes:
       - ./front/src/:/app/src
       - ./front/public/:/app/public

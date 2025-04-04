@@ -33,6 +33,7 @@ export const JwtPayload = z
          minimum: 0,
       }),
    })
+   //@ts-ignore:nothing
    .openapi({
       title: 'JSON Web Token',
       description: 'Schema for JWT payload containing user authentication information',

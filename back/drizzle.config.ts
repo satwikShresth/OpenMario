@@ -4,6 +4,9 @@ export default defineConfig({
    dialect: 'postgresql',
    out: './database/migrations',
    schema: ['./src/db/scheduler/schema.ts', './src/db/openmario/schema.ts'],
+   migrations: {
+      schema: 'public',
+   },
    dbCredentials: {
       user: Deno.env.get('POSTGRES_PASSWORD'),
       password: Deno.env.get('POSTGRES_USER'),

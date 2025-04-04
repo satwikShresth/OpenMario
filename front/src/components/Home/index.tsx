@@ -2,31 +2,16 @@
 // Table.jsx
 import { useEffect, useMemo, useState } from "react";
 import {
-  Paper,
-  Table,
-  TableBody,
-  TableContainer,
-  TableHead,
-  TableRow,
+  Paper, Table, TableBody, TableContainer, TableHead, TableRow,
 } from "@mui/material";
 import {
-  getCoreRowModel,
-  getSortedRowModel,
-  useReactTable,
+  getCoreRowModel, getSortedRowModel, useReactTable,
 } from "@tanstack/react-table";
 import {
-  closestCenter,
-  DndContext,
-  KeyboardSensor,
-  PointerSensor,
-  useSensor,
-  useSensors,
+  closestCenter, DndContext, KeyboardSensor, PointerSensor, useSensor, useSensors,
 } from "@dnd-kit/core";
 import {
-  arrayMove,
-  horizontalListSortingStrategy,
-  SortableContext,
-  sortableKeyboardCoordinates,
+  arrayMove, horizontalListSortingStrategy, SortableContext, sortableKeyboardCoordinates,
 } from "@dnd-kit/sortable";
 import Pagination from "./Pagination";
 import { TableConfig } from "./types";

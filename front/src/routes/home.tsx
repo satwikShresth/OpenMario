@@ -7,9 +7,7 @@ import { zodValidator } from "@tanstack/zod-adapter";
 import FilterDrawer from "#/components/Home/FilterDrawer";
 import { Box, Button, Container, Paper, Typography } from "@mui/material";
 import {
-  createFileRoute,
-  redirect,
-  retainSearchParams,
+  createFileRoute, redirect, retainSearchParams,
 } from "@tanstack/react-router";
 import { useSnackbar } from "notistack";
 

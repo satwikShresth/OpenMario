@@ -1,2 +1,0 @@
-ALTER TABLE "job_posting" ALTER COLUMN "division_description" SET DATA TYPE varchar(10000);--> statement-breakpoint
-ALTER TABLE "job_posting" ALTER COLUMN "position_description" SET DATA TYPE varchar(15000);

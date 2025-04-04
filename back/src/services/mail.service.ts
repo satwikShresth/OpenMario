@@ -10,7 +10,7 @@ class EmailService {
       this.senderEmail = senderEmail;
       if (!key) {
          throw new Error(
-            'SendGrid API key is required. Please set the SENDGRID_API_KEY environment variable.',
+            'EMAIL_API_KEY API key is required. Please set the EMAIL_API_KEY environment variable.',
          );
       }
       const mailgun = new Mailgun(formData);

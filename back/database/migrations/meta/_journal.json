@@ -40,71 +40,8 @@
     {
       "idx": 5,
       "version": "7",
-      "when": 1743096311626,
-      "tag": "0005_adding_scheduler",
-      "breakpoints": true
-    },
-    {
-      "idx": 6,
-      "version": "7",
-      "when": 1743099897604,
-      "tag": "0006_adding_job_positing",
-      "breakpoints": true
-    },
-    {
-      "idx": 7,
-      "version": "7",
-      "when": 1743100989353,
-      "tag": "0007_making_some_changes",
-      "breakpoints": true
-    },
-    {
-      "idx": 8,
-      "version": "7",
-      "when": 1743102204405,
-      "tag": "0008_increaseing_size_of_var_char",
-      "breakpoints": true
-    },
-    {
-      "idx": 9,
-      "version": "7",
-      "when": 1743111563559,
-      "tag": "0009_making_location_id_null",
-      "breakpoints": true
-    },
-    {
-      "idx": 10,
-      "version": "7",
-      "when": 1743114592188,
-      "tag": "0010_making_table_unique_on_multiple_parameter",
-      "breakpoints": true
-    },
-    {
-      "idx": 11,
-      "version": "7",
-      "when": 1743115154179,
-      "tag": "0011_making_table_unique_on_multiple_parameter",
-      "breakpoints": true
-    },
-    {
-      "idx": 12,
-      "version": "7",
-      "when": 1743190810655,
-      "tag": "0012_adding_indexes",
-      "breakpoints": true
-    },
-    {
-      "idx": 13,
-      "version": "7",
-      "when": 1743455695160,
-      "tag": "0013_making_dec_varchar_a_invariant",
-      "breakpoints": true
-    },
-    {
-      "idx": 14,
-      "version": "7",
-      "when": 1743523103972,
-      "tag": "0014_making_null_not_distinct",
+      "when": 1743793133230,
+      "tag": "0005_openmario_v2",
       "breakpoints": true
     }
   ]

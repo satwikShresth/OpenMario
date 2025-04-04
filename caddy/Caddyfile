@@ -19,22 +19,20 @@
     }
 
     # Handle API requests
-    handle_path /search/* {
-        uri strip_prefix /search
+    handle_path /api/search/* {
         reverse_proxy meilisearch:7700 {
             header_up Host {host}
             header_up X-Real-IP {remote}
         }
     }
 
-    # Handle API requests
-    handle_path /api/* {
-        uri strip_prefix /api
-        reverse_proxy backend:3000 {
-            header_up Host {host}
-            header_up X-Real-IP {remote}
-        }
-    }
+   handle_path /api/v1/* {
+       rewrite * /v1{uri}
+       reverse_proxy backend:3000 {
+           header_up Host {host}
+           header_up X-Real-IP {remote}
+       }
+   }
 
     # Logging
     log {

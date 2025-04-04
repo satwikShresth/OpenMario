@@ -5,6 +5,12 @@ services:
     restart: always
     networks:
       - app_network
+    deploy:
+      resources:
+        limits:
+          memory: 500M
+        reservations:
+          memory: 150M
     env_file:
       - ./.env
     volumes:
@@ -18,9 +24,31 @@ services:
       test: set -o pipefail;curl -fsS http://localhost:7700/health | grep -q '{"status":"available"}'
       retries: 3
       timeout: 5s
+    profiles:
+      - prestart
+      - deploy
+
   database:
     image: postgres:latest
     restart: always
+    deploy:
+      resources:
+        limits:
+          memory: 200M
+        reservations:
+          memory: 100M
+    environment:
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD?POSTGRES_PASSWORD variable not set}
+      - POSTGRES_USER=${POSTGRES_USER?POSTGRES_USER variable not set}
+      - POSTGRES_DB=${POSTGRES_DB?POSTGRES_DB variable not set}
+      - POSTGRES_PORT=${POSTGRES_PORT?POSTGRES_PORT variable not set}
+      - POSTGRES_SERVER=${POSTGRES_SERVER?POSTGRES_SERVER variable not set}
+      - PGDATA=/var/lib/postgresql/data/pgdata
+      # Add these to reduce PostgreSQL memory usage
+      - shared_buffers=64MB
+      - work_mem=4MB
+      - maintenance_work_mem=16MB
+      - max_connections=20
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
       interval: 10s
@@ -30,16 +58,13 @@ services:
     networks:
       - app_network
     volumes:
-      - app-db-data:/var/lib/postgresql/data/pgdata
+      - ./volumes/app-db-data:/var/lib/postgresql/data/pgdata
     env_file:
       - ./.env
-    environment:
-      - PGDATA=/var/lib/postgresql/data/pgdata
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD?POSTGRES_PASSWORD variable not set}
-      - POSTGRES_USER=${POSTGRES_USER?POSTGRES_USER variable not set}
-      - POSTGRES_DB=${POSTGRES_DB?POSTGRES_DB variable not set}
-      - POSTGRES_PORT=${POSTGRES_PORT?POSTGRES_PORT variable not set}
-      - POSTGRES_SERVER=${POSTGRES_SERVER?POSTGRES_SERVER variable not set}
+    profiles:
+      - prestart
+      - deploy
+
   prestart:
     build:
       context: ./back
@@ -48,6 +73,12 @@ services:
       platforms:
         - linux/amd64
     image: ${PRESTART_IMAGE?PRESTART_IMAGE variable not set}
+    deploy:
+      resources:
+        limits:
+          memory: 300M  # Increased from 150M to 300M
+        reservations:
+          memory: 200M  # Added memory reservation
     container_name: prestart
     restart: no
     depends_on:
@@ -69,7 +100,8 @@ services:
       - POSTGRES_PORT=${POSTGRES_PORT?POSTGRES_PORT variable not set}
       - POSTGRES_SERVER=${POSTGRES_SERVER?POSTGRES_SERVER variable not set}
     profiles:
-      - seed
+      - prestart
+
   backend:
     build:
       context: ./back
@@ -77,6 +109,12 @@ services:
       target: production-stage
       platforms:
         - linux/amd64
+    deploy:
+      resources:
+        limits:
+          memory: 250M
+        reservations:
+          memory: 150M
     image: ${BACKEND_IMAGE?POSTGRES_PASSWORD variable not set}
     container_name: backend
     restart: always
@@ -91,6 +129,7 @@ services:
     env_file:
       - ./.env
     environment:
+      - MALLOC_ARENA_MAX=2
       - PORT=${PORT?PORT variable not set}
       - HOST=${HOST?HOST variable not set}
       - JWT_SECRET_MAGIC_LINK=${JWT_SECRET_MAGIC_LINK?JWT_SECRET_MAGIC_LINK variable not set}
@@ -107,6 +146,8 @@ services:
       - DOMAIN=${DOMAIN?DOMAIN variable not set}
       - MEILI_HOST=${MEILI_HOST?MEILI_HOST variable not set}
       - MEILI_MASTER_KEY=${MEILI_MASTER_KEY?MEILI_MASTER_KEY variable not set}
+    profiles:
+      - deploy
 
   reverse-proxy:
     build:
@@ -115,6 +156,12 @@ services:
       target: production-stage
       platforms:
         - linux/amd64
+    deploy:
+      resources:
+        limits:
+          memory: 200M
+        reservations:
+          memory: 100M
     image: ${REVERSE_PROXY_IMAGE?REVERSE_PROXY_IMAGE variable not set}
     restart: unless-stopped
     ports:
@@ -135,12 +182,15 @@ services:
       - VITE_API_URL=${VITE_API_URL?VITE_API_URL variable not set}
       - VITE_SEARCH_API_URL=${VITE_SEARCH_API_URL?VITE_SEARCH_API_URL variable not set}
       - NODE_ENV=${NODE_ENV?NODE_ENV variable not set}
+    profiles:
+      - deploy
+
 volumes:
-  external-db-data:
   app-db-data:
   caddy_data:
   caddy_config:
   meilisearch_data:
+
 networks:
   app_network:
     driver: bridge

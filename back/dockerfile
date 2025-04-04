@@ -1,5 +1,5 @@
 # Build stage
-FROM denoland/deno:latest AS builder-stage
+FROM denoland/deno:alpine AS builder-stage
 WORKDIR /app
 COPY . .
 ENV DENO_DIR=/.deno_cache
@@ -7,19 +7,19 @@ RUN deno compile --no-check -A -o openmario src/server.ts  \
     && chmod +x openmario
 
 
-FROM denoland/deno:latest AS production-stage
+FROM denoland/deno:alpine AS production-stage
 WORKDIR /app
 COPY --from=builder-stage /app/openmario /app
 
 
-FROM denoland/deno:latest AS development-stage
+FROM denoland/deno:alpine AS development-stage
 WORKDIR /app
 COPY . /app
 ENV DENO_DIR=/.deno_cache
 RUN deno install
 
 
-FROM denoland/deno:latest AS seeding-stage
+FROM denoland/deno:alpine AS seeding-stage
 WORKDIR /app
 ENV DENO_DIR=/.deno_cache
 COPY --from=development-stage /app /app

@@ -1,28 +1,9 @@
 import { useCallback, useEffect, useState } from "react";
 import {
-  Box,
-  Button,
-  Divider,
-  Drawer,
-  FormControl,
-  FormControlLabel,
-  FormLabel,
-  Grid,
-  IconButton,
-  Radio,
-  RadioGroup,
-  Slider,
-  Typography,
+  Box, Button, Divider, Drawer, FormControl, FormControlLabel, FormLabel, Grid, IconButton, Radio, RadioGroup, Slider, Typography,
 } from "@mui/material";
 import {
-  Briefcase,
-  Building,
-  Calendar,
-  CalendarDays,
-  Filter,
-  MapPin,
-  School,
-  X,
+  Briefcase, Building, Calendar, CalendarDays, Filter, MapPin, School, X,
 } from "lucide-react";
 import { useFilterStore } from "#/stores/useFilterStore";
 import { FormProvider, useForm } from "react-hook-form";

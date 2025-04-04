@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { InstantSearch } from "react-instantsearch";
-import { Box, Container, Grid, useMediaQuery, useTheme } from "@mui/material";
+import { Box, Button, Container, Grid, useMediaQuery, useTheme } from "@mui/material";
 import {
   SearchHeader, EnhancedSearchBox, MobileFilterButton, StatsCounter, StyledSortBy, StyledInfiniteHits, FiltersPanel, FilterDrawer, BackToTopButton
 } from "./Shared";
@@ -9,6 +9,9 @@ import { history } from 'instantsearch.js/es/lib/routers';
 import { parseSearchWith, useNavigate, useRouter } from "@tanstack/react-router";
 import { configure } from "instantsearch.js/es/widgets";
 import { parse, stringify } from 'jsurl2'
+import { Share } from "lucide-react";
+import { handleShare } from "#/utils";
+import { useSnackbar } from "notistack";
 
 interface SearchLayoutProps {
   Route: string,
@@ -48,6 +51,7 @@ const SearchLayout: React.FC<SearchLayoutProps> = ({
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [showBackToTop, setShowBackToTop] = useState(false);
   const navigate = useNavigate({ from: Route });
+  const { enqueueSnackbar } = useSnackbar();
   const router = useRouter();
 
   // Show back to top button when scrolled down
@@ -145,11 +149,11 @@ const SearchLayout: React.FC<SearchLayoutProps> = ({
               />
             )}
           </Box>
-
           <EnhancedSearchBox
             placeholder={searchPlaceholder}
             queryHook={queryHook}
           />
+
 
           <Grid container spacing={4}>
             {!isMobile && (
@@ -180,7 +184,18 @@ const SearchLayout: React.FC<SearchLayoutProps> = ({
                   <FavoritesToggle idField={idField} />
                 </Box>
 
-                <StyledSortBy items={sortByItems} />
+                <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+                  <Button
+                    variant="outlined"
+                    startIcon={<Share size={18} />}
+                    onClick={() => {
+                      handleShare(window.location.href, enqueueSnackbar);
+                    }}
+                  >
+                    Share
+                  </Button>
+                  <StyledSortBy items={sortByItems} />
+                </Box>
               </Box>
 
               <StyledInfiniteHits hitComponent={hitComponent} />
