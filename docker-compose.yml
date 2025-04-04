@@ -115,7 +115,7 @@ services:
           memory: 250M
         reservations:
           memory: 150M
-    image: ${BACKEND_IMAGE?POSTGRES_PASSWORD variable not set}
+    image: ${BACKEND_IMAGE?BACKEND_IMAGE variable not set}
     container_name: backend
     restart: always
     depends_on:
@@ -143,7 +143,7 @@ services:
       - POSTGRES_SERVER=${POSTGRES_SERVER?POSTGRES_SERVER variable not set}
       - EMAIL_API_KEY=${EMAIL_API_KEY?EMAIL_API_KEY variable not set}
       - SENDER_EMAIL=${SENDER_EMAIL?SENDER_EMAIL variable not set}
-      - DOMAIN=${DOMAIN?DOMAIN variable not set}
+      - APP_URL=${APP_URL?APP_URL variable not set}
       - MEILI_HOST=${MEILI_HOST?MEILI_HOST variable not set}
       - MEILI_MASTER_KEY=${MEILI_MASTER_KEY?MEILI_MASTER_KEY variable not set}
     profiles:

@@ -15,7 +15,7 @@ export function useSearchClient() {
 
   const searchClient = useMemo(() => {
     return instantMeiliSearch(
-      `${window.location.host}/api/search`,
+      `${window.location.origin}/api/search`,
       () => data.token,
     );
   }, [data.token]);
