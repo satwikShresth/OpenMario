@@ -1,4 +1,4 @@
-# Global options
+# global options
 {
     admin off # theres no need for the admin api in railway's environment
     persist_config off # storage isn't persistent anyway
@@ -12,56 +12,51 @@
         trusted_proxies static private_ranges 100.0.0.0/8 # trust railway's proxy
     }
 }
-# Site block, listens on the $PORT environment variable, automatically assigned by railway
+
+
+# site block, listens on the $PORT environment variable, automatically assigned by railway
 :{$PORT:3000} {
-    # Access logs
+    # access logs
     log {
         format json # set access log format to json mode
     }
-    
-    # Health check for railway
+
+    # health check for railway
     rewrite /health /*
-    
-    # Handle favicon requests
-    handle /favicon.ico {
-        file_server {
-            root dist
-        }
-    }
-    
-    # Handle API requests for search (adjust the backend service name as needed)
-    handle_path /api/search/* {
-        reverse_proxy http://{$MEILI_HOST} {
-            header_up Host {host}
-            header_up X-Real-IP {remote}
-            header_up X-Forwarded-For {remote}
-        }
-    }
-    
-    # Handle API v1 requests (adjust the backend service name as needed)
-    handle_path /api/v1/* {
-        route {
-            rewrite * /v1{uri}
-            log {
-                output stdout
-                level DEBUG
-            }
-            reverse_proxy http://{$BACKEND_URL} {
-                header_up Host {host}
-                header_up X-Real-IP {remote}
-                header_up X-Forwarded-For {remote}
-                header_up X-Debug-Backend-URL {$BACKEND_URL}
-            }
-        }
-    }
-    
-    # Serve static files from dist folder
-    handle_path /* {
-        root * dist
-        # Enable gzipping responses
-        encode gzip
-        # If path doesn't exist, redirect to index.html for client-side routing
-        try_files {path} /index.html
-        file_server
-    }
+
+	handle /favicon.ico {
+		file_server {
+			root /usr/share/caddy
+		}
+	}
+
+	handle_path /* {
+		root * /usr/share/caddy
+      encode gzip
+		try_files {path} /index.html
+		file_server
+	}
+
+	# Handle API requests
+	handle_path /api/search/* {
+		reverse_proxy http://{$MEILI_HOST} {
+			header_up Host {host}
+			header_up X-Real-IP {remote}
+		}
+	}
+
+	handle_path /api/v1/* {
+		rewrite * /v1{uri}
+		reverse_proxy http://{$BACKEND_URL} {
+			header_up Host {host}
+			header_up X-Real-IP {remote}
+		}
+	}
+
+	# Logging
+	log {
+		output stdout
+		format console
+	}
 }
+
