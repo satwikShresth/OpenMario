@@ -78,6 +78,6 @@ app.onError((err, c) => {
 
 console.log(`🚀 Server running on ${protocol}://${host}:${port}✨`);
 Deno.serve(
-   { port },
+   { port, hostname: '::' },
    app.fetch,
 );
