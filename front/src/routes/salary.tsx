@@ -11,7 +11,7 @@ import {
 } from "@tanstack/react-router";
 import { useSnackbar } from "notistack";
 
-export const Route = createFileRoute("/home")({
+export const Route = createFileRoute("/salary")({
   validateSearch: zodValidator({
     schema: FilterSchema,
     input: "output",
@@ -118,8 +118,8 @@ export const Route = createFileRoute("/home")({
                 })
                 console.log(search)
                 navigate({
-                  from: "/home",
-                  to: "/home",
+                  from: "/salary",
+                  to: "/salary",
                   search,
                   replace: true,
                   reloadDocument: false,

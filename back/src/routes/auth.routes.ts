@@ -7,6 +7,7 @@ import * as config from '#/config/index.ts';
 import { eq } from 'drizzle-orm';
 import { sign, verify } from 'jsonwebtoken';
 import { meilisearchService } from '#/services/meilisearch.service.ts';
+import { json } from 'drizzle-orm/gel-core';
 
 export default () => {
    const router = new Hono();
@@ -67,15 +68,16 @@ export default () => {
     */
    router.get('/login/:token', async (c) => {
       const token = c.req.param('token');
-
-      const decodedToken = await verify(token, config.JWT_MAGIC_SECRET)
-         //@ts-ignore: I duuno why
-         .catch((error) =>
-            c.json(
-               { message: 'Invalid or expired token', details: error.message },
-               401,
-            )
+      let decodedToken;
+      try {
+         decodedToken = await verify(token, config.JWT_MAGIC_SECRET);
+      } catch (error) {
+         c.json(
+            //@ts-ignore: I duuno why
+            { message: 'Invalid or expired token', details: error.message },
+            401,
          );
+      }
 
       const { email, username } = decodedToken as {
          email: string;

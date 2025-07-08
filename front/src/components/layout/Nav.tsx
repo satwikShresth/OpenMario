@@ -1,15 +1,29 @@
 import { Link, useLocation } from "@tanstack/react-router";
-import { AppBar, Box, Container, IconButton, Toolbar, Tooltip, } from "@mui/material";
-import { Briefcase, GraduationCap, Home, Moon, Sun, Upload, User } from "lucide-react";
+import { AppBar, Box, Container, createTheme, Drawer, IconButton, List, ListItem, ListItemIcon, ListItemText, Toolbar, Tooltip, useMediaQuery, useTheme } from "@mui/material";
+import { Briefcase, GraduationCap, DollarSign, Menu, Moon, Sun, Upload, User, X } from "lucide-react";
 import { useAppTheme } from "#/utils/useThemeProvider";
 import React, { useEffect, useState } from "react";
 import { clearToken, isLoggedIn } from "#/hooks/useAuth";
 
-const Nav = ({ onLoginClick }): React.FC<{ onLoginClick: () => void }> => {
+const Nav = ({ onLoginClick }) => {
   const { toggleColorMode, mode } = useAppTheme();
   const location = useLocation();
   const [isLogoHovered, setIsLogoHovered] = useState(false);
   const [authState, setAuthState] = useState(isLoggedIn());
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const theme = useTheme();
+  const customTheme = createTheme({
+    breakpoints: {
+      values: {
+        xs: 0,
+        sm: 600,
+        md: 900,
+        lg: 1200,
+        xl: 1536,
+      },
+    },
+  });
+  const isMobile = useMediaQuery(customTheme.breakpoints.down('md'));
 
   useEffect(() => {
     setAuthState(isLoggedIn());
@@ -53,12 +67,12 @@ const Nav = ({ onLoginClick }): React.FC<{ onLoginClick: () => void }> => {
   const getColor = (lightColor, darkColor) =>
     mode === "light" ? lightColor : darkColor;
 
-  // Navigation links - added Jobs and Courses
+  // Navigation links - updated Home to Salaries
   const navLinks = [
     {
-      text: "Home",
-      path: "/home",
-      icon: <Home size={20} />,
+      text: "Salary",
+      path: "/salary",
+      icon: <DollarSign size={20} />,
       color: getColor(colors.red, colors.green),
       glowColor: "rgba(255, 255, 0, 0.7)", // Yellow glow
     },
@@ -99,6 +113,10 @@ const Nav = ({ onLoginClick }): React.FC<{ onLoginClick: () => void }> => {
     return false;
   };
 
+  const toggleMobileMenu = () => {
+    setMobileMenuOpen(!mobileMenuOpen);
+  };
+
   return (
     <AppBar
       position="sticky"
@@ -124,8 +142,6 @@ const Nav = ({ onLoginClick }): React.FC<{ onLoginClick: () => void }> => {
         },
       }}
     >
-      {/* GitHub button will be added next to the theme toggle and profile */}
-
       <Container maxWidth="xl">
         <Toolbar disableGutters sx={{ minHeight: 64 }}>
           {/* Logo with elegant hover effect */}
@@ -241,147 +257,178 @@ const Nav = ({ onLoginClick }): React.FC<{ onLoginClick: () => void }> => {
             ))}
           </Box>
 
-          {/* Navigation items - with added Jobs and Courses */}
-          <Box
-            sx={{
-              display: "flex",
-              flexGrow: 1,
-              gap: 1,
-            }}
-          >
-            {navLinks.map((link) => (
-              <Box
-                key={link.text}
-                component={Link}
-                to={link.path}
-                sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  position: "relative",
-                  bgcolor: isActive(link.path) ? link.color : "transparent",
-                  color: isActive(link.path)
-                    ? colors.white
-                    : mode === "light"
-                      ? colors.black
-                      : colors.white,
-                  textDecoration: "none",
-                  height: 48,
-                  px: 2.5,
-                  borderRadius: isActive(link.path) ? "8px 8px 0 0" : 4,
-                  fontWeight: isActive(link.path) ? 700 : 600,
-                  fontSize: "0.95rem",
-                  border: isActive(link.path)
-                    ? `3px solid ${colors.black}`
-                    : "none",
-                  borderBottom: isActive(link.path) ? 0 : "none",
-                  top: isActive(link.path) ? 8 : 0,
-                  zIndex: isActive(link.path) ? 2 : 1,
-                  transition: "all 0.2s ease-in-out",
-                  overflow: "hidden",
+          {/* Spacer that pushes everything else to the right on mobile */}
+          <Box sx={{ flexGrow: 1 }} />
 
-                  // Add glow effect for dark mode
-                  ...(mode === "dark" && isActive(link.path) && {
-                    boxShadow: `0 0 15px ${link.glowColor}`,
-                  }),
+          {/* Mobile Menu Toggle Button - only visible on mobile */}
+          {isMobile && (
+            <IconButton
+              onClick={toggleMobileMenu}
+              sx={{
+                width: 46,
+                height: 46,
+                mr: 1,
+                bgcolor: mobileMenuOpen ? colors.red : "transparent",
+                color: mobileMenuOpen ? colors.white : mode === "light" ? colors.black : colors.white,
+                border: `3px solid ${colors.black}`,
+                borderRadius: "50%",
+                boxShadow: "0 4px 0 rgba(0,0,0,0.6)",
+                transition: "all 0.15s ease",
+                "&:hover": {
+                  bgcolor: mobileMenuOpen ? colors.red : `${colors.red}22`,
+                  transform: "translateY(2px)",
+                  boxShadow: "0 2px 0 rgba(0,0,0,0.6)",
+                },
+                zIndex: 1301, // Above drawer
+              }}
+            >
+              {mobileMenuOpen ? <X size={22} /> : <Menu size={22} />}
+            </IconButton>
+          )}
 
-                  // Shine effect for active tabs
-                  ...(isActive(link.path) && {
-                    "&::before": {
-                      content: '""',
-                      position: "absolute",
-                      top: 0,
-                      left: -50,
-                      width: 50,
-                      height: "100%",
-                      background: "rgba(255,255,255,0.2)",
-                      transform: "skewX(-25deg)",
-                      animation: "shine 4s infinite",
-                      "@keyframes shine": {
-                        "0%": { left: -50 },
-                        "20%": { left: "150%" },
-                        "100%": { left: "150%" },
-                      },
-                    },
-                  }),
-
-                  // Dark mode specific hover effects
-                  ...(mode === "dark" && !isActive(link.path) && {
-                    "&:hover": {
-                      bgcolor: `${link.color}22`,
-                      color: link.color,
-                      transform: "scale(1.05)",
-                      boxShadow: `0 0 10px ${link.glowColor}`,
-                      transition:
-                        "all 0.15s cubic-bezier(0.68, -0.55, 0.265, 1.55)",
-                    },
-                  }),
-
-                  // Light mode hover effects
-                  ...(mode === "light" && !isActive(link.path) && {
-                    "&:hover": {
-                      bgcolor: `${link.color}22`,
-                      color: link.color,
-                      transform: "scale(1.05)",
-                      boxShadow: `0 3px 0 ${colors.black}`,
-                      transition:
-                        "all 0.15s cubic-bezier(0.68, -0.55, 0.265, 1.55)",
-                    },
-                  }),
-
-                  // Add a playful icon pop on hover
-                  "& svg": {
-                    transition: isActive(link.path)
-                      ? "none"
-                      : "transform 0.2s cubic-bezier(0.68, -0.55, 0.265, 1.55)",
-                  },
-                  "&:hover svg": {
-                    transform: isActive(link.path)
-                      ? "none"
-                      : "scale(1.15) rotate(-5deg)",
-                    color: isActive(link.path) ? "none" : link.color,
-                  },
-
-                  // Display shadow below active tab
-                  ...(isActive(link.path) && {
-                    "&::after": {
-                      content: '""',
-                      position: "absolute",
-                      bottom: -8,
-                      left: -4,
-                      right: -4,
-                      height: 8,
-                      backgroundColor: link.color,
-                      borderBottomLeftRadius: 4,
-                      borderBottomRightRadius: 4,
-                      zIndex: -1,
-                      ...(mode === "dark" && {
-                        boxShadow: `0 4px 8px ${link.glowColor}`,
-                      }),
-                    },
-                  }),
-                }}
-              >
+          {/* Desktop Navigation - visible only on desktop */}
+          {!isMobile && (
+            <Box
+              sx={{
+                display: "flex",
+                flexGrow: 1,
+                gap: 1,
+              }}
+            >
+              {navLinks.map((link) => (
                 <Box
+                  key={link.text}
+                  component={Link}
+                  to={link.path}
                   sx={{
-                    mr: 1.5,
                     display: "flex",
                     alignItems: "center",
-                    ...(mode === "dark" && {
-                      filter: isActive(link.path)
+                    justifyContent: "center",
+                    position: "relative",
+                    bgcolor: isActive(link.path) ? link.color : "transparent",
+                    color: isActive(link.path)
+                      ? colors.white
+                      : mode === "light"
+                        ? colors.black
+                        : colors.white,
+                    textDecoration: "none",
+                    height: 48,
+                    px: 2.5,
+                    borderRadius: isActive(link.path) ? "8px 8px 0 0" : 4,
+                    fontWeight: isActive(link.path) ? 700 : 600,
+                    fontSize: "0.95rem",
+                    border: isActive(link.path)
+                      ? `3px solid ${colors.black}`
+                      : "none",
+                    borderBottom: isActive(link.path) ? 0 : "none",
+                    top: isActive(link.path) ? 8 : 0,
+                    zIndex: isActive(link.path) ? 2 : 1,
+                    transition: "all 0.2s ease-in-out",
+                    overflow: "hidden",
+
+                    // Add glow effect for dark mode
+                    ...(mode === "dark" && isActive(link.path) && {
+                      boxShadow: `0 0 15px ${link.glowColor}`,
+                    }),
+
+                    // Shine effect for active tabs
+                    ...(isActive(link.path) && {
+                      "&::before": {
+                        content: '""',
+                        position: "absolute",
+                        top: 0,
+                        left: -50,
+                        width: 50,
+                        height: "100%",
+                        background: "rgba(255,255,255,0.2)",
+                        transform: "skewX(-25deg)",
+                        animation: "shine 4s infinite",
+                        "@keyframes shine": {
+                          "0%": { left: -50 },
+                          "20%": { left: "150%" },
+                          "100%": { left: "150%" },
+                        },
+                      },
+                    }),
+
+                    // Dark mode specific hover effects
+                    ...(mode === "dark" && !isActive(link.path) && {
+                      "&:hover": {
+                        bgcolor: `${link.color}22`,
+                        color: link.color,
+                        transform: "scale(1.05)",
+                        boxShadow: `0 0 10px ${link.glowColor}`,
+                        transition:
+                          "all 0.15s cubic-bezier(0.68, -0.55, 0.265, 1.55)",
+                      },
+                    }),
+
+                    // Light mode hover effects
+                    ...(mode === "light" && !isActive(link.path) && {
+                      "&:hover": {
+                        bgcolor: `${link.color}22`,
+                        color: link.color,
+                        transform: "scale(1.05)",
+                        boxShadow: `0 3px 0 ${colors.black}`,
+                        transition:
+                          "all 0.15s cubic-bezier(0.68, -0.55, 0.265, 1.55)",
+                      },
+                    }),
+
+                    // Add a playful icon pop on hover
+                    "& svg": {
+                      transition: isActive(link.path)
                         ? "none"
-                        : `drop-shadow(0 0 2px ${link.color})`,
+                        : "transform 0.2s cubic-bezier(0.68, -0.55, 0.265, 1.55)",
+                    },
+                    "&:hover svg": {
+                      transform: isActive(link.path)
+                        ? "none"
+                        : "scale(1.15) rotate(-5deg)",
+                      color: isActive(link.path) ? "none" : link.color,
+                    },
+
+                    // Display shadow below active tab
+                    ...(isActive(link.path) && {
+                      "&::after": {
+                        content: '""',
+                        position: "absolute",
+                        bottom: -8,
+                        left: -4,
+                        right: -4,
+                        height: 8,
+                        backgroundColor: link.color,
+                        borderBottomLeftRadius: 4,
+                        borderBottomRightRadius: 4,
+                        zIndex: -1,
+                        ...(mode === "dark" && {
+                          boxShadow: `0 4px 8px ${link.glowColor}`,
+                        }),
+                      },
                     }),
                   }}
                 >
-                  {link.icon}
+                  <Box
+                    sx={{
+                      mr: 1.5,
+                      display: "flex",
+                      alignItems: "center",
+                      ...(mode === "dark" && {
+                        filter: isActive(link.path)
+                          ? "none"
+                          : `drop-shadow(0 0 2px ${link.color})`,
+                      }),
+                    }}
+                  >
+                    {link.icon}
+                  </Box>
+                  {link.text}
                 </Box>
-                {link.text}
-              </Box>
-            ))}
-          </Box>
+              ))}
+            </Box>
+          )}
 
-          {/* Profile/Login Link - Moved next to theme toggle */}
+          {/* Profile/Login Link - visible on both */}
           <Tooltip title={authState ? "Logout" : "Login"}>
             <IconButton
               onClick={authState ? handleLogout : onLoginClick}
@@ -436,7 +483,7 @@ const Nav = ({ onLoginClick }): React.FC<{ onLoginClick: () => void }> => {
             </IconButton>
           </Tooltip>
 
-          {/* Theme Toggle Button */}
+          {/* Theme Toggle Button - visible on both */}
           <Tooltip
             title={`Switch to ${mode === "dark" ? "light" : "dark"} mode`}
           >
@@ -469,39 +516,177 @@ const Nav = ({ onLoginClick }): React.FC<{ onLoginClick: () => void }> => {
             </IconButton>
           </Tooltip>
 
-          {/* GitHub Button */}
-          <Tooltip title="View source on GitHub">
-            <IconButton
-              component="a"
-              href="https://github.com/satwikShresth/OpenMario"
-              target="_blank"
-              rel="noopener noreferrer"
-              sx={{
-                width: 46,
-                height: 46,
-                ml: 2,
-                bgcolor: colors.darkBlue,
-                color: colors.white,
-                border: `3px solid ${colors.black}`,
-                borderRadius: "50%",
-                boxShadow: mode === "dark"
-                  ? `0 4px 0 rgba(0,0,0,0.6), 0 0 10px rgba(255, 255, 255, 0.3)`
-                  : "0 4px 0 rgba(0,0,0,0.6)",
-                transition: "all 0.15s ease",
-                "&:hover": {
-                  bgcolor: mode === "dark" ? "#555555" : "#333333",
-                  transform: "translateY(2px)",
+          {/* GitHub Button - Only visible on desktop or conditionally on mobile depending on space */}
+          {(!isMobile || window.innerWidth > 400) && (
+            <Tooltip title="View source on GitHub">
+              <IconButton
+                component="a"
+                href="https://github.com/satwikShresth/OpenMario"
+                target="_blank"
+                rel="noopener noreferrer"
+                sx={{
+                  width: 46,
+                  height: 46,
+                  ml: isMobile ? 1 : 2,
+                  bgcolor: colors.darkBlue,
+                  color: colors.white,
+                  border: `3px solid ${colors.black}`,
+                  borderRadius: "50%",
                   boxShadow: mode === "dark"
-                    ? "0 2px 0 rgba(0,0,0,0.6), 0 0 10px rgba(255, 255, 255, 0.2)"
-                    : "0 2px 0 rgba(0,0,0,0.6)",
-                  filter: "brightness(1.1)",
+                    ? `0 4px 0 rgba(0,0,0,0.6), 0 0 10px rgba(255, 255, 255, 0.3)`
+                    : "0 4px 0 rgba(0,0,0,0.6)",
+                  transition: "all 0.15s ease",
+                  "&:hover": {
+                    bgcolor: mode === "dark" ? "#555555" : "#333333",
+                    transform: "translateY(2px)",
+                    boxShadow: mode === "dark"
+                      ? "0 2px 0 rgba(0,0,0,0.6), 0 0 10px rgba(255, 255, 255, 0.2)"
+                      : "0 2px 0 rgba(0,0,0,0.6)",
+                    filter: "brightness(1.1)",
+                  },
+                }}
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="22"
+                  height="22"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22">
+                  </path>
+                </svg>
+              </IconButton>
+            </Tooltip>
+          )}
+        </Toolbar>
+      </Container>
+
+      {/* Mobile Navigation Drawer */}
+      <Drawer
+        anchor="right"
+        open={isMobile && mobileMenuOpen}
+        onClose={toggleMobileMenu}
+        sx={{
+          '& .MuiDrawer-paper': {
+            width: '80%',
+            maxWidth: 300,
+            backgroundColor: mode === "light" ? colors.white : colors.darkBlue,
+            backgroundImage: mode === "dark"
+              ? 'linear-gradient(rgba(26, 30, 60, 0.98), rgba(26, 30, 60, 0.95))'
+              : 'none',
+            boxShadow: mode === "dark"
+              ? '-4px 0 20px rgba(0, 238, 255, 0.2)'
+              : '-4px 0 10px rgba(0, 0, 0, 0.1)',
+            borderLeft: `5px solid ${colors.black}`,
+            pt: 2,
+          },
+        }}
+      >
+        <List sx={{ pt: 6 }}>
+          {navLinks.map((link) => (
+            <ListItem
+              button
+              component={Link}
+              to={link.path}
+              key={link.text}
+              onClick={toggleMobileMenu}
+              sx={{
+                my: 1,
+                mx: 2,
+                borderRadius: 2,
+                transition: 'all 0.2s ease',
+                position: 'relative',
+                height: 56,
+                bgcolor: isActive(link.path) ? link.color : 'transparent',
+                color: isActive(link.path)
+                  ? colors.white
+                  : mode === "light" ? colors.black : colors.white,
+                border: isActive(link.path)
+                  ? `3px solid ${colors.black}`
+                  : 'none',
+                boxShadow: isActive(link.path)
+                  ? (mode === "dark"
+                    ? `0 0 10px ${link.glowColor}, 0 4px 0 rgba(0,0,0,0.6)`
+                    : `0 4px 0 rgba(0,0,0,0.6)`)
+                  : 'none',
+                '&:hover': {
+                  bgcolor: isActive(link.path)
+                    ? link.color
+                    : `${link.color}22`,
+                  transform: 'translateY(2px)',
+                  boxShadow: isActive(link.path)
+                    ? '0 2px 0 rgba(0,0,0,0.6)'
+                    : 'none',
                 },
+                '&::after': isActive(link.path) ? {
+                  content: '""',
+                  position: 'absolute',
+                  top: 0,
+                  left: -20,
+                  width: 8,
+                  height: '100%',
+                  backgroundColor: link.color,
+                  borderRadius: '0 4px 4px 0',
+                } : {},
+              }}
+            >
+              <ListItemIcon
+                sx={{
+                  color: isActive(link.path)
+                    ? colors.white
+                    : link.color,
+                  minWidth: 40
+                }}
+              >
+                {link.icon}
+              </ListItemIcon>
+              <ListItemText
+                primary={link.text}
+                primaryTypographyProps={{
+                  fontWeight: isActive(link.path) ? 700 : 600,
+                  fontSize: '1rem',
+                }}
+              />
+            </ListItem>
+          ))}
+
+          {/* GitHub link in mobile menu */}
+          <ListItem
+            button
+            component="a"
+            href="https://github.com/satwikShresth/OpenMario"
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={toggleMobileMenu}
+            sx={{
+              my: 1,
+              mx: 2,
+              borderRadius: 2,
+              transition: 'all 0.2s ease',
+              height: 56,
+              bgcolor: 'transparent',
+              color: mode === "light" ? colors.black : colors.white,
+              '&:hover': {
+                bgcolor: `${colors.darkBlue}22`,
+                transform: 'translateY(2px)',
+              },
+            }}
+          >
+            <ListItemIcon
+              sx={{
+                color: colors.darkBlue,
+                minWidth: 40
               }}
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                width="22"
-                height="22"
+                width="20"
+                height="20"
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"
@@ -509,13 +694,19 @@ const Nav = ({ onLoginClick }): React.FC<{ onLoginClick: () => void }> => {
                 strokeLinecap="round"
                 strokeLinejoin="round"
               >
-                <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22">
-                </path>
+                <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
               </svg>
-            </IconButton>
-          </Tooltip>
-        </Toolbar>
-      </Container>
+            </ListItemIcon>
+            <ListItemText
+              primary="GitHub"
+              primaryTypographyProps={{
+                fontWeight: 600,
+                fontSize: '1rem',
+              }}
+            />
+          </ListItem>
+        </List>
+      </Drawer>
     </AppBar>
   );
 };

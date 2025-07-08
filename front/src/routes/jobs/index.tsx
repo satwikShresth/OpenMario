@@ -22,7 +22,7 @@ export const Route = createFileRoute("/jobs/")({
   pendingComponent: () => (
     <LoadingComponent
       title="Loading Job Search"
-      subtitle="Finding the perfect opportunities for you..."
+      subtitle="Finding all the Jobs present in the system"
     />
   ),
   errorComponent: ({ error }) => (
@@ -73,7 +73,7 @@ function JobSearchComponent() {
         icon={<Calendar />}
       />
       <FilterSection
-        title="Type of Organization"
+        title="Non-Profit Organization"
         attribute="is_nonprofit"
         icon={<Building />}
       />
@@ -143,8 +143,8 @@ function JobSearchComponent() {
         searchClient={searchClient}
         queryHook={queryHook}
         headerIcon={<Briefcase size={28} color="white" />}
-        headerTitle="Find Your Dream Job"
-        headerSubtitle="Explore opportunities that match your skills and interests"
+        headerTitle="The Co-op Vault: Every Position Ever Posted"
+        headerSubtitle="Browse complete history of professional opportunities and career pathways"
         searchPlaceholder="Search job titles, skills, or companies..."
         statsIcon={<Award size={18} color={theme.palette.primary.main} style={{ marginRight: 8 }} />}
         statsText={(nbHits) => `${nbHits.toLocaleString()} positions available`}
