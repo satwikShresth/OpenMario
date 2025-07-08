@@ -343,6 +343,7 @@ export function StyledSortBy({ items }) {
   );
 }
 
+
 // Custom InfiniteHits component
 export function StyledInfiniteHits({ hitComponent }) {
   const HitComponent = hitComponent;

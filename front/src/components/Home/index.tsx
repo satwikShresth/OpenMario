@@ -20,7 +20,7 @@ import TableBodyComponent from "./TableBody";
 import { useFilterStore } from "#/stores";
 import { useQuery } from "@tanstack/react-query";
 import { getSubmissionsOptions } from "#client/react-query.gen";
-import { Route } from "#/routes/home";
+import { Route } from "#/routes/salary";
 
 const DataTable = () => {
   const query = Route.useSearch();

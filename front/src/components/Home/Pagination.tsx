@@ -11,7 +11,7 @@ import type { TableConfig } from "./types";
 import React from "react";
 import { useFilterStore } from "#/stores/useFilterStore";
 import { getSubmissionsOptions } from "#client/react-query.gen";
-import { Route } from "#/routes/home";
+import { Route } from "#/routes/salary";
 import { useQueryClient } from "@tanstack/react-query";
 
 const Pagination: React.FC<{ table: Table<typeof TableConfig>; query: any }> = (

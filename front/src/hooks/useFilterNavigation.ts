@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import { useFilterStore } from "#/stores/useFilterStore";
 
 export function useFilterNavigation() {
-  const navigate = useNavigate({ from: "/home" });
+  const navigate = useNavigate({ from: "/salary" });
   const searchParams = useFilterStore(
     ({
       company,
@@ -34,8 +34,8 @@ export function useFilterNavigation() {
     const timer = setTimeout(() => {
       console.log("redoing the params", searchParams);
       navigate({
-        from: "/home",
-        to: "/home",
+        from: "/salary",
+        to: "/salary",
         search: () => searchParams,
         replace: true,
         reloadDocument: false,

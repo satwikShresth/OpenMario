@@ -20,7 +20,7 @@ export const ErrorPage = ({ error, resetErrorBoundary }: ErrorPageProps) => {
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      navigate({ to: "/home" });
+      navigate({ to: "/salary" });
     }, 5000);
 
     return () => clearTimeout(timer);
@@ -59,7 +59,7 @@ export const ErrorPage = ({ error, resetErrorBoundary }: ErrorPageProps) => {
             variant="contained"
             color="primary"
             startIcon={<Home size={18} />}
-            onClick={() => navigate({ to: "/home" })}
+            onClick={() => navigate({ to: "/salary" })}
           >
             Go to Home
           </Button>
