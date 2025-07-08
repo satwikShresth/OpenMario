@@ -10,6 +10,7 @@ RUN deno compile --no-check -A -o openmario src/server.ts  \
 FROM denoland/deno:alpine
 WORKDIR /app
 COPY --from=builder-stage /app/openmario /app
+CMD ["./openmario"]
 
 #
 # FROM denoland/deno:alpine AS development-stage
