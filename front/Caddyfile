@@ -40,14 +40,19 @@
     }
     
     # Handle API v1 requests (adjust the backend service name as needed)
-    handle_path /api/v1/* {
-        rewrite * /v1{uri}
-        reverse_proxy http://{$BACKEND_URL} {
-            header_up Host {host}
-            header_up X-Real-IP {remote}
-            header_up X-Forwarded-For {remote}
-        }
-    }
+   handle_path /api/v1/* {
+       rewrite * /v1{uri}
+       log {
+           output stdout
+           level DEBUG
+       }
+       reverse_proxy http://{$BACKEND_URL} {
+           header_up Host {host}
+           header_up X-Real-IP {remote}
+           header_up X-Forwarded-For {remote}
+           header_up X-Debug-Backend-URL {$BACKEND_URL}
+       }
+   }
     
     # Serve static files from dist folder
     handle_path /* {
