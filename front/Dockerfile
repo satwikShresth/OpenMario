@@ -1,19 +1,40 @@
-# Stage 0, "build-stage", based on Node.js, to build and compile the frontend
-FROM node:20 AS build-stage
+# Use the Node alpine official image
+# https://hub.docker.com/_/node
+FROM node:lts-alpine AS build
+
+# Set config
+ENV NPM_CONFIG_UPDATE_NOTIFIER=false
+ENV NPM_CONFIG_FUND=false
+
+# Create and change to the app directory.
 WORKDIR /app
-COPY package*.json /app/
-RUN npm install
-COPY ./ /app/
+
+# Copy the files to the container image
+COPY package*.json ./
+
+# Install packages
+RUN npm ci
+
+# Copy local code to the container image.
+COPY . ./
+
+# Build the app.
 RUN npm run build
 
+# Use the Caddy image
+FROM caddy
 
-FROM caddy:latest AS production-stage
-COPY --from=build-stage /app/dist/ /usr/share/caddy
-
-
-FROM node:20 AS development-stage
+# Create and change to the app directory.
 WORKDIR /app
-COPY package*.json /app/
-RUN npm install
 
-COPY ./ /app/
+# Copy Caddyfile to the container image.
+COPY Caddyfile ./
+
+# Copy local code to the container image.
+RUN caddy fmt Caddyfile --overwrite
+
+# Copy files to the container image.
+COPY --from=build /app/dist ./dist
+
+# Use Caddy to run/serve the app
+CMD ["caddy", "run", "--config", "Caddyfile", "--adapter", "caddyfile"]

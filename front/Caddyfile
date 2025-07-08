@@ -1,0 +1,61 @@
+# Global options
+{
+    admin off # theres no need for the admin api in railway's environment
+    persist_config off # storage isn't persistent anyway
+    auto_https off # railway handles https for us, this would cause issues if left enabled
+    # runtime logs
+    log {
+        format json # set runtime log format to json mode 
+    }
+    # server options
+    servers {
+        trusted_proxies static private_ranges 100.0.0.0/8 # trust railway's proxy
+    }
+}
+
+# Site block, listens on the $PORT environment variable, automatically assigned by railway
+:{$PORT:3000} {
+    # Access logs
+    log {
+        format json # set access log format to json mode
+    }
+    
+    # Health check for railway
+    rewrite /health /*
+    
+    # Handle favicon requests
+    handle /favicon.ico {
+        file_server {
+            root dist
+        }
+    }
+    
+    # Handle API requests for search (adjust the backend service name as needed)
+    handle_path /api/search/* {
+        reverse_proxy {$MEILISEARCH_URL:7700} {
+            header_up Host {host}
+            header_up X-Real-IP {remote}
+            header_up X-Forwarded-For {remote}
+        }
+    }
+    
+    # Handle API v1 requests (adjust the backend service name as needed)
+    handle_path /api/v1/* {
+        rewrite * /v1{uri}
+        reverse_proxy {$BACKEND_URL:3000} {
+            header_up Host {host}
+            header_up X-Real-IP {remote}
+            header_up X-Forwarded-For {remote}
+        }
+    }
+    
+    # Serve static files from dist folder
+    handle_path /* {
+        root * dist
+        # Enable gzipping responses
+        encode gzip
+        # If path doesn't exist, redirect to index.html for client-side routing
+        try_files {path} /index.html
+        file_server
+    }
+}
