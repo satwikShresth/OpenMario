@@ -32,7 +32,7 @@
     
     # Handle API requests for search (adjust the backend service name as needed)
     handle_path /api/search/* {
-        reverse_proxy {$MEILISEARCH_URL:7700} {
+        reverse_proxy {$MEILI_HOST:7700} {
             header_up Host {host}
             header_up X-Real-IP {remote}
             header_up X-Forwarded-For {remote}
