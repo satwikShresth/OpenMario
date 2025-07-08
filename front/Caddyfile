@@ -12,7 +12,6 @@
         trusted_proxies static private_ranges 100.0.0.0/8 # trust railway's proxy
     }
 }
-
 # Site block, listens on the $PORT environment variable, automatically assigned by railway
 :{$PORT:3000} {
     # Access logs
@@ -40,19 +39,21 @@
     }
     
     # Handle API v1 requests (adjust the backend service name as needed)
-   handle_path /api/v1/* {
-       rewrite * /v1{uri}
-       log {
-           output stdout
-           level DEBUG
-       }
-       reverse_proxy http://{$BACKEND_URL} {
-           header_up Host {host}
-           header_up X-Real-IP {remote}
-           header_up X-Forwarded-For {remote}
-           header_up X-Debug-Backend-URL {$BACKEND_URL}
-       }
-   }
+    handle_path /api/v1/* {
+        route {
+            rewrite * /v1{uri}
+            log {
+                output stdout
+                level DEBUG
+            }
+            reverse_proxy http://{$BACKEND_URL} {
+                header_up Host {host}
+                header_up X-Real-IP {remote}
+                header_up X-Forwarded-For {remote}
+                header_up X-Debug-Backend-URL {$BACKEND_URL}
+            }
+        }
+    }
     
     # Serve static files from dist folder
     handle_path /* {
