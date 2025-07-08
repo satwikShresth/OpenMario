@@ -5,6 +5,7 @@ import type { JwtVariables } from 'hono/jwt';
 import { showRoutes } from 'hono/dev';
 import routes from '#routes';
 import { JWT_CLIENT_SECRET as secret } from '#/config/index.ts';
+import { db } from '#db';
 
 // Create Hono app
 const app = new Hono<{ Variables: JwtVariables }>();
@@ -76,7 +77,6 @@ app.onError((err, c) => {
 });
 
 console.log(`🚀 Server running on ${protocol}://${host}:${port}✨`);
-
 Deno.serve(
    { port },
    app.fetch,

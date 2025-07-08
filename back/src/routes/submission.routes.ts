@@ -94,7 +94,7 @@ export default () => {
             compensation: submission.compensation,
             other_compensation: submission.other_compensation,
             details: submission.details,
-            company: sql`${company.name}`.as('subQuery'),
+            company: sql`${company.name}`.as('company_name'),
             position: position.name,
             location_city: location.city,
             location_state: location.state,

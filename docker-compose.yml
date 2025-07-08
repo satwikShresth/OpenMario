@@ -38,11 +38,7 @@ services:
         reservations:
           memory: 100M
     environment:
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD?POSTGRES_PASSWORD variable not set}
-      - POSTGRES_USER=${POSTGRES_USER?POSTGRES_USER variable not set}
-      - POSTGRES_DB=${POSTGRES_DB?POSTGRES_DB variable not set}
-      - POSTGRES_PORT=${POSTGRES_PORT?POSTGRES_PORT variable not set}
-      - POSTGRES_SERVER=${POSTGRES_SERVER?POSTGRES_SERVER variable not set}
+      - DATABASE_URL=${DATABASE_URL?DATABASE_URL variable not set}
       - PGDATA=/var/lib/postgresql/data/pgdata
       # Add these to reduce PostgreSQL memory usage
       - shared_buffers=64MB
@@ -94,11 +90,7 @@ services:
     env_file:
       - ./.env
     environment:
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD?POSTGRES_PASSWORD variable not set}
-      - POSTGRES_USER=${POSTGRES_USER?POSTGRES_USER variable not set}
-      - POSTGRES_DB=${POSTGRES_DB?POSTGRES_DB variable not set}
-      - POSTGRES_PORT=${POSTGRES_PORT?POSTGRES_PORT variable not set}
-      - POSTGRES_SERVER=${POSTGRES_SERVER?POSTGRES_SERVER variable not set}
+      - DATABASE_URL=${DATABASE_URL?DATABASE_URL variable not set}
     profiles:
       - prestart
 
@@ -115,7 +107,7 @@ services:
           memory: 250M
         reservations:
           memory: 150M
-    image: ${BACKEND_IMAGE?BACKEND_IMAGE variable not set}
+    image: ss5278/openmario:backend
     container_name: backend
     restart: always
     depends_on:
@@ -136,11 +128,7 @@ services:
       - JWT_EXPIRATION_MAGIC_LINK=${JWT_EXPIRATION_MAGIC_LINK?JWT_EXPIRATION_MAGIC_LINK variable not set}
       - JWT_SECRET_CLIENT=${JWT_SECRET_CLIENT?JWT_SECRET_CLIENT variable not set}
       - JWT_EXPIRATION_CLIENT=${JWT_EXPIRATION_CLIENT?JWT_EXPIRATION_CLIENT variable not set}
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD?POSTGRES_PASSWORD variable not set}
-      - POSTGRES_USER=${POSTGRES_USER?POSTGRES_USER variable not set}
-      - POSTGRES_DB=${POSTGRES_DB?POSTGRES_DB variable not set}
-      - POSTGRES_PORT=${POSTGRES_PORT?POSTGRES_PORT variable not set}
-      - POSTGRES_SERVER=${POSTGRES_SERVER?POSTGRES_SERVER variable not set}
+      - DATABASE_URL=${DATABASE_URL?DATABASE_URL variable not set}
       - EMAIL_API_KEY=${EMAIL_API_KEY?EMAIL_API_KEY variable not set}
       - SENDER_EMAIL=${SENDER_EMAIL?SENDER_EMAIL variable not set}
       - APP_URL=${APP_URL?APP_URL variable not set}
@@ -183,7 +171,7 @@ services:
       - VITE_SEARCH_API_URL=${VITE_SEARCH_API_URL?VITE_SEARCH_API_URL variable not set}
       - NODE_ENV=${NODE_ENV?NODE_ENV variable not set}
     profiles:
-      - deploy
+      - deploy2
 
 volumes:
   app-db-data:
