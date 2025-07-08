@@ -1,5 +1,5 @@
 import { MeiliSearch } from 'meilisearch';
-import { colleges, courses, db, subjects } from '../../src/db/index.ts';
+import { colleges, courses, db, subjects } from '#db';
 import { eq, sql } from 'drizzle-orm';
 
 export default async (meilisearch: MeiliSearch, index: string) => {

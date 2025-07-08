@@ -2,7 +2,7 @@ import job_posting from './seeds/job_posting.ts';
 import courses from './seeds/courses.ts';
 import sections from './seeds/sections.ts';
 import instructors from './seeds/instructors.ts';
-import { meilisearchService } from '../src/services/meilisearch.service.ts';
+import { meilisearchService } from '#/services/meilisearch.service.ts';
 import type { MeiliSearch } from 'meilisearch';
 
 const migrateAndSeed = async (
@@ -18,8 +18,8 @@ const migrateAndSeed = async (
       }
    );
    await meilisearch.createIndex(index, { primaryKey });
-   await seeder(meilisearch, index);
    await meilisearch.index(index).updateSettings(settings);
+   await seeder(meilisearch, index);
 };
 
 const meilisearch = meilisearchService.client;

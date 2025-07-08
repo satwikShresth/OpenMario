@@ -1,5 +1,5 @@
 import { MeiliSearch } from 'meilisearch';
-import { db, instructors } from '../../src/db/index.ts';
+import { db, instructors } from '#db';
 
 export default async (meilisearch: MeiliSearch, index: string) => {
    const BATCH_SIZE = 1000;

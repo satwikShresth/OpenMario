@@ -8,7 +8,7 @@ import {
    location,
    major,
    position,
-} from '../../src/db/index.ts';
+} from '#db';
 import { eq } from 'drizzle-orm';
 
 export default async (meilisearch: MeiliSearch, index: string) => {
