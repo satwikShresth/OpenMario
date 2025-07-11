@@ -4,17 +4,15 @@
    "exports": "./src/main.tsx",
    "tasks": {
       "gen:client": "deno run -A @hey-api/openapi-ts -f ./openapi.config.ts",
-      "dev": "deno run -A npm:vite -- --port 3000",
-      "start": "deno run --allow-net --allow-read --allow-env --allow-write npm:vite -- --port 3000",
+      "dev": "deno run -A --unstable-no-legacy-abort npm:vite",
       "build": "deno run --allow-net --allow-read --allow-env --allow-write npm:vite -- build && deno run --allow-read --allow-write npm:tsc",
       "serve": "deno run --allow-net --allow-read --allow-env --allow-write npm:vite -- preview",
       "test": "deno run --allow-net --allow-read --allow-env --allow-write npm:vitest -- run",
-      "lint": "deno run --allow-net --allow-read --allow-env --allow-write npm:eslint",
-      "format": "deno run --allow-net --allow-read --allow-env --allow-write npm:prettier",
       "check": "deno run --allow-net --allow-read --allow-env --allow-write npm:prettier -- --write . && deno run --allow-net --allow-read --allow-env --allow-write npm:eslint -- --fix"
    },
    "imports": {
       "@chakra-ui/react": "npm:@chakra-ui/react@^3.22.0",
+      "@deno/vite-plugin": "npm:@deno/vite-plugin@^1.0.5",
       "@emotion/react": "npm:@emotion/react@^11.14.0",
       "@faker-js/faker": "npm:@faker-js/faker@^9.6.0",
       "@hey-api/openapi-ts": "npm:@hey-api/openapi-ts@^0.78.3",
@@ -43,7 +41,8 @@
       "vite": "npm:vite@^6.1.0",
       "vitest": "npm:vitest@^3.0.5",
       "web-vitals": "npm:web-vitals@^4.2.4",
-      "zod": "npm:zod@^4.0.5"
+      "zod": "npm:zod@^4.0.5",
+      "@/": "./src/"
    },
    "include": [
       "**/*.ts",
@@ -70,6 +69,17 @@
       "noUncheckedSideEffectImports": true,
       "esModuleInterop": true,
       "baseUrl": ".",
+      "types": [
+         "react",
+         "react-dom",
+         "@types/react"
+      ],
+      "lib": [
+         "dom",
+         "dom.iterable",
+         "deno.ns"
+      ],
+      "jsxImportSource": "react"
       "paths": {
          "@/*": ["./src/*"]
       }
