@@ -66,13 +66,13 @@ To use SPA (Single Page Application) navigation you will need to import the
 `Link` component from `@tanstack/react-router`.
 
 ```tsx
-import { Link } from "@tanstack/react-router";
+import { Link } from '@tanstack/react-router';
 ```
 
 Then anywhere in your JSX you can use it like so:
 
 ```tsx
-<Link to="/about">About</Link>;
+<Link to='/about'>About</Link>;
 ```
 
 This will create a link that will navigate to the `/about` route.
@@ -90,24 +90,24 @@ the routes. The route content will appear in the JSX where you use the
 Here is an example layout that includes a header:
 
 ```tsx
-import { createRootRoute, Outlet } from "@tanstack/react-router";
-import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
+import { createRootRoute, Outlet } from '@tanstack/react-router';
+import { TanStackRouterDevtools } from '@tanstack/react-router-devtools';
 
-import { Link } from "@tanstack/react-router";
+import { Link } from '@tanstack/react-router';
 
 export const Route = createRootRoute({
-  component: () => (
-    <>
-      <header>
-        <nav>
-          <Link to="/">Home</Link>
-          <Link to="/about">About</Link>
-        </nav>
-      </header>
-      <Outlet />
-      <TanStackRouterDevtools />
-    </>
-  ),
+   component: () => (
+      <>
+         <header>
+            <nav>
+               <Link to='/'>Home</Link>
+               <Link to='/about'>About</Link>
+            </nav>
+         </header>
+         <Outlet />
+         <TanStackRouterDevtools />
+      </>
+   ),
 });
 ```
 
@@ -128,24 +128,24 @@ For example:
 
 ```tsx
 const peopleRoute = createRoute({
-  getParentRoute: () => rootRoute,
-  path: "/people",
-  loader: async () => {
-    const response = await fetch("https://swapi.dev/api/people");
-    return response.json() as Promise<{
-      results: {
-        name: string;
-      }[];
-    }>;
-  },
-  component: () => {
-    const data = peopleRoute.useLoaderData();
-    return (
-      <ul>
-        {data.results.map((person) => <li key={person.name}>{person.name}</li>)}
-      </ul>
-    );
-  },
+   getParentRoute: () => rootRoute,
+   path: '/people',
+   loader: async () => {
+      const response = await fetch('https://swapi.dev/api/people');
+      return response.json() as Promise<{
+         results: {
+            name: string;
+         }[];
+      }>;
+   },
+   component: () => {
+      const data = peopleRoute.useLoaderData();
+      return (
+         <ul>
+            {data.results.map((person) => <li key={person.name}>{person.name}</li>)}
+         </ul>
+      );
+   },
 });
 ```
 
@@ -168,7 +168,7 @@ Next we'll need to create a query client and provider. We recommend putting
 those in `main.tsx`.
 
 ```tsx
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 // ...
 
@@ -177,56 +177,56 @@ const queryClient = new QueryClient();
 // ...
 
 if (!rootElement.innerHTML) {
-  const root = ReactDOM.createRoot(rootElement);
+   const root = ReactDOM.createRoot(rootElement);
 
-  root.render(
-    <QueryClientProvider client={queryClient}>
-      <RouterProvider router={router} />
-    </QueryClientProvider>,
-  );
+   root.render(
+      <QueryClientProvider client={queryClient}>
+         <RouterProvider router={router} />
+      </QueryClientProvider>,
+   );
 }
 ```
 
 You can also add TanStack Query Devtools to the root route (optional).
 
 ```tsx
-import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 
 const rootRoute = createRootRoute({
-  component: () => (
-    <>
-      <Outlet />
-      <ReactQueryDevtools buttonPosition="top-right" />
-      <TanStackRouterDevtools />
-    </>
-  ),
+   component: () => (
+      <>
+         <Outlet />
+         <ReactQueryDevtools buttonPosition='top-right' />
+         <TanStackRouterDevtools />
+      </>
+   ),
 });
 ```
 
 Now you can use `useQuery` to fetch your data.
 
 ```tsx
-import { useQuery } from "@tanstack/react-query";
+import { useQuery } from '@tanstack/react-query';
 
-import "./App.css";
+import './App.css';
 
 function App() {
-  const { data } = useQuery({
-    queryKey: ["people"],
-    queryFn: () =>
-      fetch("https://swapi.dev/api/people")
-        .then((res) => res.json())
-        .then((data) => data.results as { name: string }[]),
-    initialData: [],
-  });
+   const { data } = useQuery({
+      queryKey: ['people'],
+      queryFn: () =>
+         fetch('https://swapi.dev/api/people')
+            .then((res) => res.json())
+            .then((data) => data.results as { name: string }[]),
+      initialData: [],
+   });
 
-  return (
-    <div>
-      <ul>
-        {data.map((person) => <li key={person.name}>{person.name}</li>)}
-      </ul>
-    </div>
-  );
+   return (
+      <div>
+         <ul>
+            {data.map((person) => <li key={person.name}>{person.name}</li>)}
+         </ul>
+      </div>
+   );
 }
 
 export default App;
@@ -250,21 +250,21 @@ npm install @tanstack/store
 Now let's create a simple counter in the `src/App.tsx` file as a demonstration.
 
 ```tsx
-import { useStore } from "@tanstack/react-store";
-import { Store } from "@tanstack/store";
-import "./App.css";
+import { useStore } from '@tanstack/react-store';
+import { Store } from '@tanstack/store';
+import './App.css';
 
 const countStore = new Store(0);
 
 function App() {
-  const count = useStore(countStore);
-  return (
-    <div>
-      <button onClick={() => countStore.setState((n) => n + 1)}>
-        Increment - {count}
-      </button>
-    </div>
-  );
+   const count = useStore(countStore);
+   return (
+      <div>
+         <button onClick={() => countStore.setState((n) => n + 1)}>
+            Increment - {count}
+         </button>
+      </div>
+   );
 }
 
 export default App;
@@ -276,30 +276,30 @@ from other state. That derived state will update when the base state updates.
 Let's check this out by doubling the count using derived state.
 
 ```tsx
-import { useStore } from "@tanstack/react-store";
-import { Derived, Store } from "@tanstack/store";
-import "./App.css";
+import { useStore } from '@tanstack/react-store';
+import { Derived, Store } from '@tanstack/store';
+import './App.css';
 
 const countStore = new Store(0);
 
 const doubledStore = new Derived({
-  fn: () => countStore.state * 2,
-  deps: [countStore],
+   fn: () => countStore.state * 2,
+   deps: [countStore],
 });
 doubledStore.mount();
 
 function App() {
-  const count = useStore(countStore);
-  const doubledCount = useStore(doubledStore);
+   const count = useStore(countStore);
+   const doubledCount = useStore(doubledStore);
 
-  return (
-    <div>
-      <button onClick={() => countStore.setState((n) => n + 1)}>
-        Increment - {count}
-      </button>
-      <div>Doubled - {doubledCount}</div>
-    </div>
-  );
+   return (
+      <div>
+         <button onClick={() => countStore.setState((n) => n + 1)}>
+            Increment - {count}
+         </button>
+         <div>Doubled - {doubledCount}</div>
+      </div>
+   );
 }
 
 export default App;

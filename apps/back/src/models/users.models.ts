@@ -1,38 +1,34 @@
-import { z } from "zod";
-import {
-  createInsertSchema,
-  createSelectSchema,
-  createUpdateSchema,
-} from "drizzle-zod";
-import { profile_major, profile_minor, users } from "#db";
+import { z } from 'zod';
+import { createInsertSchema, createSelectSchema, createUpdateSchema } from 'drizzle-zod';
+import { profile_major, profile_minor, users } from '#db';
 
-export const UserSchema = createSelectSchema(users).meta({ id: "User" });
+export const UserSchema = createSelectSchema(users).meta({ id: 'User' });
 
 export const UserInsertSchema = createInsertSchema(users).meta({
-  id: "UserInsert",
+   id: 'UserInsert',
 });
 export const UserUpdateSchema = createUpdateSchema(users).meta({
-  id: "UserUpdate",
+   id: 'UserUpdate',
 });
 
 export const ProfileMajorSchema = createSelectSchema(profile_major).meta({
-  id: "ProfileMajor",
+   id: 'ProfileMajor',
 });
 export const ProfileMajorInsertSchema = createInsertSchema(profile_major).meta({
-  id: "ProfileMajorInsert",
+   id: 'ProfileMajorInsert',
 });
 export const ProfileMajorUpdateSchema = createUpdateSchema(profile_major).meta({
-  id: "ProfileMajorUpdate",
+   id: 'ProfileMajorUpdate',
 });
 
 export const ProfileMinorSchema = createSelectSchema(profile_minor).meta({
-  id: "ProfileMinor",
+   id: 'ProfileMinor',
 });
 export const ProfileMinorInsertSchema = createInsertSchema(profile_minor).meta({
-  id: "ProfileMinorInsert",
+   id: 'ProfileMinorInsert',
 });
 export const ProfileMinorUpdateSchema = createUpdateSchema(profile_minor).meta({
-  id: "ProfileMinorUpdate",
+   id: 'ProfileMinorUpdate',
 });
 
 export type User = z.infer<typeof UserSchema>;

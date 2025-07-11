@@ -7,7 +7,8 @@
     "singleQuote": true,
     "lineWidth": 100,
     "proseWrap": "preserve",
-    "include": ["./apps/back/*"]
+    "exclude": ["./apps/front-new/src/routeTree.gen.ts","./apps/front-new/.vite/*","./apps/back/email_templates/*"]
+    "include": ["./apps/back/","./apps/front-new"]
   },
   "nodeModulesDir": "auto"
 }
