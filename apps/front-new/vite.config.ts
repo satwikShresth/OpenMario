@@ -14,4 +14,18 @@ export default defineConfig({
          '@': resolve(__dirname, './src'),
       },
    },
+   server: {
+      proxy: {
+         '/api/v1': {
+            target: process.env.VITE_API_URL || 'http://localhost:3000',
+            changeOrigin: true,
+            rewrite: (path) => path.replace(/^\/api/, ''),
+         },
+         '/api/search': {
+            target: process.env.VITE_SEARCH_API_URL || 'http://localhost:7700',
+            changeOrigin: true,
+            rewrite: (path) => path.replace(/^\/api\/search/, ''),
+         },
+      },
+   },
 });

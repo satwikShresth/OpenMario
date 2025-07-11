@@ -10,6 +10,30 @@ import { routeTree } from './routeTree.gen';
 
 import './styles.css';
 import reportWebVitals from './reportWebVitals.ts';
+import { client } from './client/client.gen';
+
+// Request interceptor - logs outgoing requests
+client.interceptors.request.use(async (request) => {
+   console.log('→ Request:', {
+      method: request.method,
+      url: request.url,
+      headers: Object.fromEntries(request.headers.entries()),
+   });
+
+   return request;
+});
+
+// Response interceptor - logs incoming responses
+client.interceptors.response.use(async (response) => {
+   console.log('← Response:', {
+      status: response.status,
+      statusText: response.statusText,
+      url: response.url,
+      headers: Object.fromEntries(response.headers.entries()),
+   });
+
+   return response;
+});
 
 // Create a new router instance
 const router = createRouter({

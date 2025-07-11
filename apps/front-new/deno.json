@@ -3,6 +3,7 @@
    "version": "1.0.0",
    "exports": "./src/main.tsx",
    "tasks": {
+      "gen:client": "deno run -A @hey-api/openapi-ts -f ./openapi.config.ts",
       "dev": "deno run -A npm:vite -- --port 3000",
       "start": "deno run --allow-net --allow-read --allow-env --allow-write npm:vite -- --port 3000",
       "build": "deno run --allow-net --allow-read --allow-env --allow-write npm:vite -- build && deno run --allow-read --allow-write npm:tsc",
@@ -16,6 +17,7 @@
       "@chakra-ui/react": "npm:@chakra-ui/react@^3.22.0",
       "@emotion/react": "npm:@emotion/react@^11.14.0",
       "@faker-js/faker": "npm:@faker-js/faker@^9.6.0",
+      "@hey-api/openapi-ts": "npm:@hey-api/openapi-ts@^0.78.3",
       "@tanstack/match-sorter-utils": "npm:@tanstack/match-sorter-utils@^8.19.4",
       "@tanstack/react-form": "npm:@tanstack/react-form@^1.0.0",
       "@tanstack/react-query": "npm:@tanstack/react-query@^5.66.5",
@@ -41,7 +43,7 @@
       "vite": "npm:vite@^6.1.0",
       "vitest": "npm:vitest@^3.0.5",
       "web-vitals": "npm:web-vitals@^4.2.4",
-      "zod": "npm:zod@^4.0.3"
+      "zod": "npm:zod@^4.0.5"
    },
    "include": [
       "**/*.ts",
@@ -66,6 +68,7 @@
       "noUnusedParameters": true,
       "noFallthroughCasesInSwitch": true,
       "noUncheckedSideEffectImports": true,
+      "esModuleInterop": true,
       "baseUrl": ".",
       "paths": {
          "@/*": ["./src/*"]
