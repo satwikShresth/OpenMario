@@ -1,0 +1,233 @@
+{
+   "A": {
+      "title": "Antoinette Westphal College of Media Arts & Design",
+      "subjects": {
+         "ADGD": "Advertising Design",
+         "ANIM": "Animation",
+         "ARCH": "Architecture",
+         "ARTH": "Art History",
+         "DANC": "Dance",
+         "DSMR": "Design & Merchandising",
+         "DIGM": "Digital Media",
+         "EAM": "Entertainment & Arts Management",
+         "EVGD": "Environmental Graphic Design",
+         "FASH": "Fashion Design",
+         "FMTV": "Film & TV Production",
+         "FMST": "Film Studies",
+         "GMAP": "Game Art and Production",
+         "VSCM": "Graphic Design",
+         "IDM": "Interactive Digital Media",
+         "INTR": "Interior Design",
+         "MUSC": "Music",
+         "MIP": "Music Industry Program",
+         "PRFA": "Performing Arts",
+         "PHTO": "Photography",
+         "PROD": "Product Design",
+         "RETL": "Retail Leadership",
+         "SCRP": "Screenwriting & Playwriting",
+         "TVPR": "TV Production",
+         "TVST": "TV Studies",
+         "THTR": "Theatre",
+         "VRIM": "VR and Immersive Media Design",
+         "VSST": "Visual Studies",
+         "WMGD": "Web & Motion Graphic Design",
+         "WEST": "Westphal Studies"
+      }
+   },
+   "X": {
+      "title": "University Courses",
+      "subjects": {
+         "EXAM": "Common Exams",
+         "COOP": "Cooperative Education",
+         "MLSC": "Military Science",
+         "NSC": "Naval Science"
+      }
+   },
+   "AS": {
+      "title": "College of Arts and Sciences",
+      "subjects": {
+         "AFAS": "Africana Studies",
+         "ANTH": "Anthropology",
+         "ARBC": "Arabic",
+         "AS-I": "Arts & Sciences-Interdisp Stud",
+         "BIO": "Bioscience & Biotechnology",
+         "CHEC": "Chemical Engineering Chemistry",
+         "CHEM": "Chemistry",
+         "CHIN": "Chinese",
+         "COM": "Communication",
+         "CJS": "Criminology and Justice Studies",
+         "ENGL": "English",
+         "ESL": "English as a Second Language",
+         "ENVS": "Environmental Science",
+         "ENSS": "Environmental Studies & Sustainability",
+         "FREN": "French",
+         "GEO": "Geoscience",
+         "GER": "German",
+         "GST": "Global Studies",
+         "HBRW": "Hebrew",
+         "HIST": "History",
+         "HUM": "Humanities, General",
+         "IST": "International Studies",
+         "ITAL": "Italian",
+         "JAPN": "Japanese",
+         "JWST": "Jewish Studies",
+         "KOR": "Korean",
+         "LANG": "Language",
+         "LING": "Linguistics",
+         "MATH": "Mathematics",
+         "MENA": "Middle East & North African Studies",
+         "NEUS": "Neuroscience",
+         "PHIL": "Philosophy",
+         "PPE": "Philosophy, Politics & Economics",
+         "PHYS": "Physics",
+         "PHEV": "Physics-Environmental Science",
+         "PSCI": "Political Science",
+         "PSY": "Psychology",
+         "RELS": "Religious Studies",
+         "SCTS": "Science, Technology and Society",
+         "SOC": "Sociology",
+         "SPAN": "Spanish",
+         "WGST": "Women's and Gender Studies",
+         "WRIT": "Writing"
+      }
+   },
+   "B": {
+      "title": "LeBow College of Business",
+      "subjects": {
+         "ACCT": "Accounting",
+         "BSAN": "Business Analytics",
+         "STAT": "Business Statistics",
+         "ECON": "Economics",
+         "FIN": "Finance",
+         "BUSN": "General Business",
+         "HRMT": "Human Resource Management",
+         "INTB": "International Business",
+         "BLAW": "Legal Studies",
+         "MGMT": "Management",
+         "MIS": "Management Information Systems",
+         "MKTG": "Marketing",
+         "OPM": "Operations Management",
+         "OPR": "Operations Research",
+         "ORGB": "Organizational Behavior",
+         "PROJ": "Project Management",
+         "REMD": "Real Estate Management & Development",
+         "SMT": "Sport Management",
+         "TAX": "Taxation"
+      }
+   },
+   "C": {
+      "title": "Close School of Entrepreneurship",
+      "subjects": {
+         "ENTP": "Entrepreneurship and Innovation"
+      }
+   },
+   "CI": {
+      "title": "Computing and Informatics",
+      "subjects": {
+         "CS": "Computer Science",
+         "CT": "Computing Technology",
+         "DSCI": "Data Science",
+         "INFO": "Information Science & Systems",
+         "SE": "Software Engineering"
+      }
+   },
+   "CV": {
+      "title": "Center for Civic Engagement",
+      "subjects": {
+         "CIVC": "Civic Engagement"
+      }
+   },
+   "E": {
+      "title": "College of Engineering",
+      "subjects": {
+         "AE": "Architectural Engineering",
+         "BET": "Biomedical Engineering Tech",
+         "CHE": "Chemical Engineering",
+         "CAE": "Civil & Architectural Engineering",
+         "CIVE": "Civil Engineering",
+         "CAEE": "Civil, Architectural & Environmental Engr",
+         "CET": "Computer Engineering Technology",
+         "CMGT": "Construction Management",
+         "ECEC": "Elec & Comp Engr-Computers",
+         "ECEE": "Elec & Computer Engr-Electroph",
+         "ECEP": "Elec & Computer Engr-Power Eng",
+         "ECES": "Elec & Computer Engr-Systems",
+         "ECE": "Electrical & Computer Engr",
+         "ECEL": "Electrical Engineering Lab",
+         "EET": "Electrical Engr Technology",
+         "EGMT": "Engineering Management",
+         "ENGR": "Engineering, General",
+         "ENVE": "Environmental Engineering",
+         "INDE": "Industrial Engineering",
+         "MET": "Manufacturing Engr Technology",
+         "MATE": "Materials Engineering",
+         "MEM": "Mechanical Engr & Mechanics",
+         "MHT": "Mechanical Engr Technology",
+         "PENG": "Peace Engineering",
+         "REAL": "Real Estate",
+         "SYSE": "Systems Engineering"
+      }
+   },
+   "GC": {
+      "title": "Goodwin College of Professional Studies",
+      "subjects": {
+         "FYE": "First-Year Exploratory Studies",
+         "GSTD": "General Studies",
+         "PRST": "Professional Studies"
+      }
+   },
+   "L": {
+      "title": "Thomas R. Kline School of Law",
+      "subjects": {
+         "LAW": "Law"
+      }
+   },
+   "NH": {
+      "title": "College of Nursing & Health Professions",
+      "subjects": {
+         "ANAT": "Anatomy",
+         "BACS": "Behavioral & Addictions Couns",
+         "CIT": "Complementary & Integrative Therapy",
+         "CULA": "Culinary Arts",
+         "ESCI": "Exercise Science",
+         "FDSC": "Food Science",
+         "HSCI": "Health Sciences",
+         "HSAD": "Health Services Administration",
+         "HRM": "Hotel & Restaurant Management",
+         "NURS": "Nursing",
+         "NFS": "Nutrition & Food Science"
+      }
+   },
+   "PE": {
+      "title": "Pennoni Honors College",
+      "subjects": {
+         "CSDN": "Custom-Designed Minor",
+         "HNRS": "Honors Program"
+      }
+   },
+   "PH": {
+      "title": "Dornsife School of Public Health",
+      "subjects": {
+         "PBHL": "Public Health"
+      }
+   },
+   "R": {
+      "title": "School of Biomedical Engineering, Science & Health Systems",
+      "subjects": {
+         "BMES": "Biomedical Engineering & Sci"
+      }
+   },
+   "T": {
+      "title": "School of Education",
+      "subjects": {
+         "CRTV": "Creativity Studies",
+         "EHRD": "Education Human Resource Devel",
+         "EDLT": "Education Learning Technologies",
+         "MTED": "Mathematics Education",
+         "ESTM": "STEM Teacher Education",
+         "EDEX": "Special Education",
+         "SCL": "Sport Coaching Leadership",
+         "EDUC": "Teacher Education"
+      }
+   }
+}

@@ -1,0 +1,169 @@
+{
+  "hash": "03071b66",
+  "configHash": "79786bb4",
+  "lockfileHash": "e3b0c442",
+  "browserHash": "e3703315",
+  "optimized": {
+    "react": {
+      "src": "../../../../node_modules/.deno/react@19.1.0/node_modules/react/index.js",
+      "file": "react.js",
+      "fileHash": "0679a05d",
+      "needsInterop": true
+    },
+    "react-dom": {
+      "src": "../../../../node_modules/.deno/react-dom@19.1.0/node_modules/react-dom/index.js",
+      "file": "react-dom.js",
+      "fileHash": "9414915f",
+      "needsInterop": true
+    },
+    "react/jsx-dev-runtime": {
+      "src": "../../../../node_modules/.deno/react@19.1.0/node_modules/react/jsx-dev-runtime.js",
+      "file": "react_jsx-dev-runtime.js",
+      "fileHash": "95f5a03a",
+      "needsInterop": true
+    },
+    "react/jsx-runtime": {
+      "src": "../../../../node_modules/.deno/react@19.1.0/node_modules/react/jsx-runtime.js",
+      "file": "react_jsx-runtime.js",
+      "fileHash": "f47e151e",
+      "needsInterop": true
+    },
+    "@faker-js/faker": {
+      "src": "../../../../node_modules/.deno/@faker-js+faker@9.9.0/node_modules/@faker-js/faker/dist/index.js",
+      "file": "@faker-js_faker.js",
+      "fileHash": "b3fe85d3",
+      "needsInterop": false
+    },
+    "@tanstack/match-sorter-utils": {
+      "src": "../../../../node_modules/.deno/@tanstack+match-sorter-utils@8.19.4/node_modules/@tanstack/match-sorter-utils/build/lib/index.mjs",
+      "file": "@tanstack_match-sorter-utils.js",
+      "fileHash": "2a90c73c",
+      "needsInterop": false
+    },
+    "@tanstack/react-form": {
+      "src": "../../../../node_modules/.deno/@tanstack+react-form@1.14.1/node_modules/@tanstack/react-form/dist/esm/index.js",
+      "file": "@tanstack_react-form.js",
+      "fileHash": "bf545bd0",
+      "needsInterop": false
+    },
+    "@tanstack/react-query": {
+      "src": "../../../../node_modules/.deno/@tanstack+react-query@5.82.0/node_modules/@tanstack/react-query/build/modern/index.js",
+      "file": "@tanstack_react-query.js",
+      "fileHash": "4ace4926",
+      "needsInterop": false
+    },
+    "@tanstack/react-query-devtools": {
+      "src": "../../../../node_modules/.deno/@tanstack+react-query-devtools@5.82.0/node_modules/@tanstack/react-query-devtools/build/modern/index.js",
+      "file": "@tanstack_react-query-devtools.js",
+      "fileHash": "7384dc6b",
+      "needsInterop": false
+    },
+    "@tanstack/react-router": {
+      "src": "../../../../node_modules/.deno/@tanstack+react-router@1.125.6/node_modules/@tanstack/react-router/dist/esm/index.js",
+      "file": "@tanstack_react-router.js",
+      "fileHash": "85ada4c4",
+      "needsInterop": false
+    },
+    "@tanstack/react-router-devtools": {
+      "src": "../../../../node_modules/.deno/@tanstack+react-router-devtools@1.125.6/node_modules/@tanstack/react-router-devtools/dist/esm/index.js",
+      "file": "@tanstack_react-router-devtools.js",
+      "fileHash": "9a71c7eb",
+      "needsInterop": false
+    },
+    "@tanstack/react-table": {
+      "src": "../../../../node_modules/.deno/@tanstack+react-table@8.21.3/node_modules/@tanstack/react-table/build/lib/index.mjs",
+      "file": "@tanstack_react-table.js",
+      "fileHash": "f5e48a26",
+      "needsInterop": false
+    },
+    "react-dom/client": {
+      "src": "../../../../node_modules/.deno/react-dom@19.1.0/node_modules/react-dom/client.js",
+      "file": "react-dom_client.js",
+      "fileHash": "b1c0c3fb",
+      "needsInterop": true
+    },
+    "web-vitals": {
+      "src": "../../../../node_modules/.deno/web-vitals@4.2.4/node_modules/web-vitals/dist/web-vitals.js",
+      "file": "web-vitals.js",
+      "fileHash": "fece74e9",
+      "needsInterop": false
+    },
+    "zod": {
+      "src": "../../../../node_modules/.deno/zod@4.0.3/node_modules/zod/index.js",
+      "file": "zod.js",
+      "fileHash": "b1720eb8",
+      "needsInterop": false
+    },
+    "@chakra-ui/react": {
+      "src": "../../../../node_modules/.deno/@chakra-ui+react@3.22.0/node_modules/@chakra-ui/react/dist/esm/index.js",
+      "file": "@chakra-ui_react.js",
+      "fileHash": "308aca6e",
+      "needsInterop": false
+    },
+    "next-themes": {
+      "src": "../../../../node_modules/.deno/next-themes@0.4.6/node_modules/next-themes/dist/index.mjs",
+      "file": "next-themes.js",
+      "fileHash": "7e42acd6",
+      "needsInterop": false
+    },
+    "react-icons/lu": {
+      "src": "../../../../node_modules/.deno/react-icons@5.5.0/node_modules/react-icons/lu/index.mjs",
+      "file": "react-icons_lu.js",
+      "fileHash": "5ecdd720",
+      "needsInterop": false
+    }
+  },
+  "chunks": {
+    "HH7B3BHX-FQCS43DD": {
+      "file": "HH7B3BHX-FQCS43DD.js"
+    },
+    "JZI2RDCT-RQ5ACS5R": {
+      "file": "JZI2RDCT-RQ5ACS5R.js"
+    },
+    "chunk-GNYIFT4C": {
+      "file": "chunk-GNYIFT4C.js"
+    },
+    "BaseTanStackRouterDevtoolsPanel-3GE527XV": {
+      "file": "BaseTanStackRouterDevtoolsPanel-3GE527XV.js"
+    },
+    "FloatingTanStackRouterDevtools-2JNWPNKP": {
+      "file": "FloatingTanStackRouterDevtools-2JNWPNKP.js"
+    },
+    "chunk-J56NN4R3": {
+      "file": "chunk-J56NN4R3.js"
+    },
+    "chunk-NM2VQ3O4": {
+      "file": "chunk-NM2VQ3O4.js"
+    },
+    "chunk-3U56OLN7": {
+      "file": "chunk-3U56OLN7.js"
+    },
+    "chunk-J7P766K4": {
+      "file": "chunk-J7P766K4.js"
+    },
+    "chunk-IMQKYS6T": {
+      "file": "chunk-IMQKYS6T.js"
+    },
+    "chunk-VMMXHQTH": {
+      "file": "chunk-VMMXHQTH.js"
+    },
+    "chunk-SJXWFFBF": {
+      "file": "chunk-SJXWFFBF.js"
+    },
+    "chunk-PKKGSRSG": {
+      "file": "chunk-PKKGSRSG.js"
+    },
+    "chunk-JY6JHD56": {
+      "file": "chunk-JY6JHD56.js"
+    },
+    "chunk-VEEPTEKR": {
+      "file": "chunk-VEEPTEKR.js"
+    },
+    "chunk-JZ6RMLDG": {
+      "file": "chunk-JZ6RMLDG.js"
+    },
+    "chunk-WOOG5QLI": {
+      "file": "chunk-WOOG5QLI.js"
+    }
+  }
+}

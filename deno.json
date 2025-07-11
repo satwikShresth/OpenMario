@@ -1,0 +1,13 @@
+{
+  "workspace": ["./apps/back/", "./apps/front-new"],
+  "fmt": {
+    "useTabs": false,
+    "indentWidth": 3,
+    "semiColons": true,
+    "singleQuote": true,
+    "lineWidth": 100,
+    "proseWrap": "preserve",
+    "include": ["./apps/back/*"]
+  },
+  "nodeModulesDir": "auto"
+}

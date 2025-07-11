@@ -1,0 +1,67 @@
+{
+  "primaryKey": "id",
+  "settings": {
+    "searchableAttributes": [
+      "name",
+      "department",
+      "searchableText"
+    ],
+    "filterableAttributes": [
+      "id",
+      "department",
+      "avg_difficulty",
+      "avg_rating",
+      "num_ratings"
+    ],
+    "sortableAttributes": [
+      "name",
+      "avg_rating",
+      "avg_difficulty",
+      "num_ratings"
+    ],
+    "displayedAttributes": [
+      "id",
+      "name",
+      "avg_difficulty",
+      "avg_rating",
+      "num_ratings",
+      "department",
+      "rmp_legacy_id",
+      "rmp_id"
+    ],
+    "rankingRules": [
+      "words",
+      "typo",
+      "proximity",
+      "attribute",
+      "sort",
+      "exactness",
+      "avg_rating:desc"
+    ],
+    "distinctAttribute": "id",
+    "stopWords": [
+      "dr",
+      "professor",
+      "prof",
+      "mr",
+      "mrs",
+      "ms",
+      "the",
+      "a",
+      "an"
+    ],
+    "typoTolerance": {
+      "minWordSizeForTypos": {
+        "oneTypo": 4,
+        "twoTypos": 8
+      }
+    },
+    "pagination": {
+      "maxTotalHits": 5000
+    },
+    "faceting": {
+      "maxValuesPerFacet": 200
+    },
+    "searchCutoffMs": 150
+  }
+}

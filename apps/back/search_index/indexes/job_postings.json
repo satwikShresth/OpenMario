@@ -1,0 +1,74 @@
+{
+  "primaryKey": "id",
+  "settings": {
+    "searchableAttributes": [
+      "position_name",
+      "company_name",
+      "location_city",
+      "location_state",
+      "division_description",
+      "position_description",
+      "recommended_qualifications",
+      "majors",
+      "job_type",
+      "compensation_status",
+      "coop_cycle"
+    ],
+    "filterableAttributes": [
+      "id",
+      "company_id",
+      "position_id",
+      "location_id",
+      "job_type",
+      "job_status",
+      "coop_cycle",
+      "year",
+      "job_length",
+      "work_hours",
+      "minimum_gpa",
+      "is_nonprofit",
+      "is_research_position",
+      "citizenship_restriction",
+      "compensation_status",
+      "major_ids",
+      "experience_levels"
+    ],
+    "sortableAttributes": [
+      "created_at",
+      "updated_at",
+      "year",
+      "job_length",
+      "minimum_gpa",
+      "work_hours"
+    ],
+    "rankingRules": [
+      "words",
+      "typo",
+      "proximity",
+      "attribute",
+      "sort",
+      "exactness"
+    ],
+    "pagination": {
+      "maxTotalHits": 5000
+    },
+    "faceting": {
+      "maxValuesPerFacet": 200
+    },
+    "stopWords": [
+      "the",
+      "a",
+      "an",
+      "and",
+      "or",
+      "of"
+    ],
+    "typoTolerance": {
+      "minWordSizeForTypos": {
+        "oneTypo": 5,
+        "twoTypos": 9
+      }
+    },
+    "searchCutoffMs": 150
+  }
+}

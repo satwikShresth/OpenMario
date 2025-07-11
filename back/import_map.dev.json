@@ -1,8 +1,0 @@
-{
-  "imports": {
-    "swagger-ui-express": "npm:swagger-ui-express@^5.0.1",
-    "express-jsdoc-swagger": "npm:express-jsdoc-swagger@^1.8.0",
-    "@types/express": "npm:@types/express@^5.0.0",
-    "drizzle-kit": "npm:drizzle-kit@^0.30.1"
-  }
-}
