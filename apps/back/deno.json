@@ -1,4 +1,7 @@
 {
+   "name":"@openmario/back",
+   "version": "0.1.0",
+   "exports": "./src/server.ts",
    "compilerOptions": {
       "noFallthroughCasesInSwitch": true
    },

@@ -12,7 +12,7 @@
     "npm:@neondatabase/serverless@^1.0.1": "1.0.1",
     "npm:@tanstack/eslint-config@0.1": "0.1.0_typescript@5.8.3",
     "npm:@tanstack/match-sorter-utils@^8.19.4": "8.19.4",
-    "npm:@tanstack/react-form@1": "1.14.1_react@19.1.0_react-dom@19.1.0__react@19.1.0",
+    "npm:@tanstack/react-form@^1.14.1": "1.14.1_react@19.1.0_react-dom@19.1.0__react@19.1.0",
     "npm:@tanstack/react-query-devtools@^5.66.5": "5.83.0_@tanstack+react-query@5.83.0__react@19.1.0_react@19.1.0",
     "npm:@tanstack/react-query@^5.66.5": "5.83.0_react@19.1.0",
     "npm:@tanstack/react-router-devtools@^1.121.2": "1.127.1_@tanstack+react-router@1.127.1__react@19.1.0__react-dom@19.1.0___react@19.1.0_react@19.1.0_react-dom@19.1.0__react@19.1.0",
@@ -34,6 +34,7 @@
     "npm:hono@^4.7.5": "4.8.4",
     "npm:jsdom@26": "26.1.0",
     "npm:jsonwebtoken@^9.0.2": "9.0.2",
+    "npm:jsurl2@^2.2.0": "2.2.0",
     "npm:mailgun.js@^12.0.1": "12.0.3",
     "npm:meilisearch@0.51": "0.51.0",
     "npm:merge@^2.1.1": "2.1.1",
@@ -3326,6 +3327,9 @@
         "semver@7.7.2"
       ]
     },
+    "jsurl2@2.2.0": {
+      "integrity": "sha512-jFwgc2G7eVMF6/uyxsF+7DbNEg7fj7SRWmJuVfu/SAOK0iIH9gOpLK9FL1jLvENCXS7kYsYcmFxRFQFyQEb7jg=="
+    },
     "jwa@1.4.2": {
       "integrity": "sha512-eeH5JO+21J78qMvTIDdBXidBd6nG2kZjg5Ohz/1fpa28Z4CcsWUzJ1ZZyFq/3z3N17aZy+ZuBoHljASbL1WfOw==",
       "dependencies": [
@@ -4499,7 +4503,7 @@
           "npm:@hey-api/openapi-ts@~0.78.3",
           "npm:@tanstack/eslint-config@0.1",
           "npm:@tanstack/match-sorter-utils@^8.19.4",
-          "npm:@tanstack/react-form@1",
+          "npm:@tanstack/react-form@^1.14.1",
           "npm:@tanstack/react-query-devtools@^5.66.5",
           "npm:@tanstack/react-query@^5.66.5",
           "npm:@tanstack/react-router-devtools@^1.121.2",
@@ -4513,6 +4517,7 @@
           "npm:@vitejs/plugin-react@^4.3.4",
           "npm:chakra-react-select@^6.1.0",
           "npm:jsdom@26",
+          "npm:jsurl2@^2.2.0",
           "npm:next-themes@~0.4.6",
           "npm:prettier@^3.5.3",
           "npm:react-dom@19",

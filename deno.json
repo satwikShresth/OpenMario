@@ -15,6 +15,13 @@
       "exclude": ["no-sloppy-imports"]
     }
   },
+  "tasks": {
+    "dev": {
+      "dependencies": ["server:dev", "client:dev"]
+    },
+    "server:dev": "deno task -f '@openmario/back' dev:watch"
+    "client:dev": "deno task -f '@openmario/front' dev"
+  },
   "unstable": ["sloppy-imports"],
   "nodeModulesDir": "auto"
 }

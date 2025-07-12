@@ -11,9 +11,10 @@ export const PaginationLink = (
       if (page === 'next') return pagination.nextPage;
       return page;
    };
+
    return (
       <IconButton asChild {...rest}>
-         <Link to={to} search={{ pageIndex: pageValue() }}>
+         <Link search={{ pageIndex: pageValue() ?? 1 }}>
             {props.children}
          </Link>
       </IconButton>

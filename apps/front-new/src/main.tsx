@@ -1,7 +1,8 @@
 import { StrictMode } from 'react';
 import { Provider } from '@/components/ui/provider';
 import ReactDOM from 'react-dom/client';
-import { createRouter, RouterProvider } from '@tanstack/react-router';
+import { createRouter, RouterProvider, stringifySearchWith } from '@tanstack/react-router';
+import { parse, stringify } from 'jsurl2';
 
 import * as TanStackQueryProvider from './integrations/tanstack-query/root-provider.tsx';
 
@@ -10,6 +11,7 @@ import { routeTree } from './routeTree.gen';
 
 import './styles.css';
 import reportWebVitals from './reportWebVitals.ts';
+import { parseSearchWith } from '@tanstack/react-router';
 // import { client } from './client/client.gen';
 //
 // // Request interceptor - logs outgoing requests
@@ -43,6 +45,8 @@ const router = createRouter({
    },
    defaultPreload: 'intent',
    scrollRestoration: true,
+   stringifySearch: stringifySearchWith(stringify),
+   parseSearch: parseSearchWith(parse),
    defaultStructuralSharing: true,
    defaultPreloadStaleTime: 0,
 });
