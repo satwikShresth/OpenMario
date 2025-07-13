@@ -44,7 +44,9 @@
       "vitest": "npm:vitest@^3.0.5",
       "web-vitals": "npm:web-vitals@^4.2.4",
       "zod": "npm:zod@^4.0.5",
-      "@/": "./src/"
+      "@/": "./src/",
+      "zustand": "npm:zustand@^5.0.6",
+      "zustand-context": "npm:zustand-context@^1.0.0"
    },
    "include": [
       "**/*.ts",

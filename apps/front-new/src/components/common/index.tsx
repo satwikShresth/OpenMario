@@ -1,2 +1,2 @@
 export * from './PaginationLink';
-export * from './AutocompleteSelect';
+export * from './asyncComponents';

@@ -52,7 +52,9 @@
     "npm:web-vitals@^4.2.4": "4.2.4",
     "npm:zod-openapi@^5.0.1": "5.1.0_zod@4.0.5",
     "npm:zod@^4.0.3": "4.0.5",
-    "npm:zod@^4.0.5": "4.0.5"
+    "npm:zod@^4.0.5": "4.0.5",
+    "npm:zustand-context@1": "1.0.0_react@19.1.0_zustand@5.0.6__@types+react@19.1.8__react@19.1.0_@types+react@19.1.8",
+    "npm:zustand@^5.0.6": "5.0.6_@types+react@19.1.8_react@19.1.0"
   },
   "jsr": {
     "@std/internal@1.0.9": {
@@ -4463,6 +4465,24 @@
     },
     "zod@4.0.5": {
       "integrity": "sha512-/5UuuRPStvHXu7RS+gmvRf4NXrNxpSllGwDnCBcJZtQsKrviYXm54yDGV2KYNLT5kq0lHGcl7lqWJLgSaG+tgA=="
+    },
+    "zustand-context@1.0.0_react@19.1.0_zustand@5.0.6__@types+react@19.1.8__react@19.1.0_@types+react@19.1.8": {
+      "integrity": "sha512-oWf9Gjp6xXOhTT4nP9Tau44IrHmNGqnQe/ftflBGPxWvOVS8NsKMns8PmGso2F37POk4rKngYxxe9viwFwbp1Q==",
+      "dependencies": [
+        "react",
+        "zustand"
+      ]
+    },
+    "zustand@5.0.6_@types+react@19.1.8_react@19.1.0": {
+      "integrity": "sha512-ihAqNeUVhe0MAD+X8M5UzqyZ9k3FFZLBTtqo6JLPwV53cbRB/mJwBI0PxcIgqhBBHlEs8G45OTDTMq3gNcLq3A==",
+      "dependencies": [
+        "@types/react",
+        "react"
+      ],
+      "optionalPeers": [
+        "@types/react",
+        "react"
+      ]
     }
   },
   "redirects": {
@@ -4527,7 +4547,9 @@
           "npm:vite@^6.1.0",
           "npm:vitest@^3.0.5",
           "npm:web-vitals@^4.2.4",
-          "npm:zod@^4.0.5"
+          "npm:zod@^4.0.5",
+          "npm:zustand-context@1",
+          "npm:zustand@^5.0.6"
         ]
       }
     }
