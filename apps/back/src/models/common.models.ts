@@ -1,5 +1,6 @@
 import { describeRoute } from 'hono-openapi';
 import { z } from 'zod';
+import { resolver } from 'hono-openapi/zod';
 
 export const PaginationQuerySchema = z
    .object({
@@ -35,7 +36,7 @@ export const DescribeRouteBase = ({
                description: res.description,
                ...(res.schema && {
                   content: {
-                     'application/json': { schema: z.toJSONSchema(res.schema) },
+                     'application/json': { schema: resolver(res.schema) },
                   },
                }),
             },

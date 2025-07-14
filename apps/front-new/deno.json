@@ -17,6 +17,7 @@
       "@emotion/react": "npm:@emotion/react@^11.14.0",
       "@faker-js/faker": "npm:@faker-js/faker@^9.6.0",
       "@hey-api/openapi-ts": "npm:@hey-api/openapi-ts@^0.78.3",
+      "@hey-api/vite-plugin": "npm:@hey-api/vite-plugin@^0.2.0",
       "@tanstack/match-sorter-utils": "npm:@tanstack/match-sorter-utils@^8.19.4",
       "@tanstack/react-form": "npm:@tanstack/react-form@^1.14.1",
       "@tanstack/react-query": "npm:@tanstack/react-query@^5.66.5",
@@ -83,7 +84,7 @@
          "dom.iterable",
          "deno.ns"
       ],
-      "jsxImportSource": "react"
+      "jsxImportSource": "react",
       "paths": {
          "@/*": ["./src/*"]
       }

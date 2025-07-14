@@ -1,5 +1,6 @@
 import { HonoBase } from 'hono/hono-base';
 import { openAPISpecs } from 'hono-openapi';
+import { Hono } from 'hono';
 
 const options = {
    documentation: {
@@ -17,5 +18,6 @@ const options = {
    },
 };
 
-export const devHook = (app: any, routes: any) =>
-   app.get('/openapi', openAPISpecs(routes, options));
+export const devHook = (app: any) => {
+   app.get('/openapi', openAPISpecs(app, options));
+};

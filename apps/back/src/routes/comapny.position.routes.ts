@@ -1,10 +1,10 @@
 import { Hono } from 'hono';
-import { zValidator } from '@hono/zod-validator';
+import { validator as zValidator } from 'hono-openapi/zod';
 import { z } from 'zod';
-import { CompanyPositionInsertSchema, CompanyPostionInsert } from '#models';
+import { CompanyPositionInsertSchema, type CompanyPostionInsert } from '#models';
 import { company, db, position } from '#db';
 import { and, eq, or, sql } from 'drizzle-orm';
-import { DescribeRouteBase, DescribleRoute, ErrorResponseSchema } from '#models';
+import { DescribeRouteBase, type DescribleRoute, ErrorResponseSchema } from '#models';
 
 const CompanyPositionItemSchema = z
    .object({
@@ -113,7 +113,7 @@ export default () => {
       zValidator('json', CompanyPositionInsertSchema),
       async (c) => {
          const user_id = c.get('jwtPayload')?.user_id || null;
-         const { company_name, position_name } = c.req.valid(
+         const { company: company_name, position: position_name } = c.req.valid(
             'json',
          ) as CompanyPostionInsert;
 

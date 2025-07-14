@@ -1,5 +1,5 @@
 {
-   "name":"@openmario/back",
+   "name": "@openmario/back",
    "version": "0.1.0",
    "exports": "./src/server.ts",
    "compilerOptions": {
@@ -8,6 +8,7 @@
    "imports": {
       "@hono/zod-validator": "npm:@hono/zod-validator@^0.7.0",
       "@neondatabase/serverless": "npm:@neondatabase/serverless@^1.0.1",
+      "zod-openapi": "npm:zod-openapi@^5.0.1",
       "@std/path": "jsr:@std/path@^1.1.1",
       "drizzle-orm": "npm:drizzle-orm@^0.44.2",
       "axios": "npm:axios@^1.7.9",
@@ -29,8 +30,7 @@
       "#db/scheduler": "./src/db/scheduler/index.ts",
       "#utils": "./src/utils/index.ts",
       "#models": "./src/models/index.ts",
-      "#routes": "./src/routes/index.ts",
-      "zod-openapi": "npm:zod-openapi@^5.0.1"
+      "#routes": "./src/routes/index.ts"
    },
    "fmt": {
       "useTabs": false,
@@ -39,14 +39,8 @@
       "singleQuote": true,
       "lineWidth": 100,
       "proseWrap": "preserve",
-      "include": [
-         "./src/",
-         "./database/",
-         "./email_templates/",
-         "./search_index/",
-         "*.ts"
-      ],
-      "exclude": ["src/static"]
+      "exclude": ["./email_templates/*"],
+      "include": ["."]
    },
    "tasks": {
       "dev:migrate": "deno run --env-file=../.dev.env -A npm:drizzle-kit migrate",

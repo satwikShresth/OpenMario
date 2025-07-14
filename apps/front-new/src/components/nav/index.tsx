@@ -68,6 +68,7 @@ export default function Navbar() {
                   fontFamily='heading'
                   fontWeight='bold'
                   fontSize='xl'
+                  onClick={onToggle}
                   {...linkOptions({ to: `/` })}
                   color={useColorModeValue('gray.800', 'white')}
                >
@@ -102,7 +103,8 @@ export default function Navbar() {
                   variant='ghost'
                   _hover={{ color: 'accent' }}
                   borderRadius='lg'
-                  href='https://github.com/satwikShresth/Personal-Website'
+                  onClick={onToggle}
+                  href='https://github.com/satwikShresth/openmario'
                >
                   <Icon as={FiGithub} />
                </IconButton>
@@ -122,7 +124,7 @@ export default function Navbar() {
          {/* Mobile Navigation */}
          <Collapsible.Root open={open}>
             <Collapsible.Content>
-               <MobileNav />
+               <MobileNav onToggle={onToggle} />
             </Collapsible.Content>
          </Collapsible.Root>
       </Box>

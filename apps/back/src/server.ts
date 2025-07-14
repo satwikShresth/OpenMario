@@ -24,18 +24,13 @@ app.use('*', async (c, next) => {
 });
 
 // Logger middleware (equivalent to morgan)
-app.use('*', logger());
+app.use('/v1/*', logger());
 
 // Trust proxy configuration
 // Note: Hono doesn't have a direct equivalent, but this can be handled in your deployment configuration
 
 // Debug middleware
 // Convert debugMiddlewares to Hono equivalent
-if (Deno.env.get('NODE_ENV') !== 'production') {
-   const { devHook } = await import('#/utils/dev.ts');
-   devHook(app, routes);
-   showRoutes(app);
-}
 
 app.use('/v1/*', async (c, next) => {
    if (!c.req.header('Authorization')) {
@@ -72,8 +67,10 @@ app.onError((err, c) => {
    return c.json({ message: err?.message! || 'Unkown' }, status);
 });
 
+if (Deno.env.get('ENV') !== 'production') {
+   const { devHook } = await import('#/utils/dev.ts');
+   devHook(app);
+   showRoutes(app);
+}
 console.log(`🚀 Server running on ${protocol}://${hostname}:${port}✨`);
-Deno.serve(
-   { port, hostname },
-   app.fetch,
-);
+Deno.serve({ port, hostname }, app.fetch);

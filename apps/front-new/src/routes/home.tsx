@@ -2,7 +2,7 @@ import * as z from 'zod/mini';
 import { Box, Container, VStack } from '@chakra-ui/react';
 import { createFileRoute } from '@tanstack/react-router';
 import { DataTable } from '@/components/Salary';
-import { getSubmissionsOptions } from '@/client/@tanstack/react-query.gen.ts';
+import { getV1SubmissionsOptions } from '@/client';
 import { useQuery } from '@tanstack/react-query';
 
 const submissionSearchSchema = z.object({
@@ -29,15 +29,24 @@ const submissionSearchSchema = z.object({
       ),
       undefined,
    ),
+   location: z.catch(
+      z.optional(
+         z
+            .array(z.string())
+            .check(z.minLength(1), z.maxLength(5)),
+      ),
+      undefined,
+   ),
+   distinct: z._default(z.coerce.boolean(), true),
 });
+
+export type SubmissionSearch = z.infer<typeof submissionSearchSchema>;
 
 export const Route = createFileRoute('/home')({
    validateSearch: submissionSearchSchema,
    loaderDeps: ({ search }) => search,
    loader: ({ deps: query, context: { queryClient } }) =>
-      queryClient.ensureQueryData(
-         getSubmissionsOptions({ query }),
-      ),
+      queryClient.ensureQueryData(getV1SubmissionsOptions({ query })),
    component: App,
 });
 
@@ -46,18 +55,18 @@ export type Route = typeof Route;
 function App() {
    const query = Route.useSearch();
    const { data } = useQuery({
-      ...getSubmissionsOptions({ query }),
+      ...getV1SubmissionsOptions({ query }),
       staleTime: 3000,
-      refetchOnWindowFocus: false,
+      refetchOnWindowFocus: true,
    });
    return (
-      <Container maxW='container.md' py={10}>
+      <Container>
          <VStack align='center'>
-            <Box>
+            <Box maxW='85%'>
                <DataTable.Root Route={Route}>
                   <DataTable.Filters />
-                  <DataTable.Body data={data?.data} count={data?.count} />
-                  <DataTable.Pagination count={data?.count} />
+                  <DataTable.Body data={data?.data!} count={data?.count!} />
+                  <DataTable.Pagination count={data?.count!} />
                   <DataTable.Footer />
                </DataTable.Root>
             </Box>

@@ -9,7 +9,6 @@ class MeilisearchService {
       if (!host || !masterKey) {
          throw new Error('Host and master key must not be null');
       }
-      console.log(host);
       this.client = new MeiliSearch({
          host,
          apiKey: masterKey,
@@ -23,17 +22,17 @@ class MeilisearchService {
       }
 
       // Create a permanent read-only API key with access to all indexes
-      this.apiKey = await this.client.createKey({
-         description: 'Read-only API key for tenant tokens',
-         actions: ['search', 'documents.get', 'indexes.get'],
-         indexes: ['*'],
-         expiresAt: null,
-      }).catch(
-         (error) => {
+      this.apiKey = await this.client
+         .createKey({
+            description: 'Read-only API key for tenant tokens',
+            actions: ['search', 'documents.get', 'indexes.get'],
+            indexes: ['*'],
+            expiresAt: null,
+         })
+         .catch((error) => {
             console.error('Failed to create read-only API key:', error);
             throw error;
-         },
-      );
+         });
 
       console.log('Created read-only API key:', this.apiKey.key);
       console.log('Read-only API key UID:', this.apiKey.uid);
@@ -57,15 +56,10 @@ class MeilisearchService {
          apiKeyUid: this.apiKey.uid,
          expiresAt,
          searchRules: { '*': {} },
-      }).catch(
-         (error) => {
-            console.error(
-               `Failed to generate tenant token for ${tenantId}:`,
-               error,
-            );
-            return null;
-         },
-      );
+      }).catch((error) => {
+         console.error(`Failed to generate tenant token for ${tenantId}:`, error);
+         return null;
+      });
    }
 }
 

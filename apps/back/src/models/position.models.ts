@@ -11,10 +11,6 @@ export const CompanyPositionInsertSchema = z
       company: name(z.string()),
       position: name(z.string()),
    })
-   .transform(({ company, position }) => ({
-      company_name: company,
-      position_name: position,
-   }))
    .meta({ id: 'CompanyPostionInsert' });
 
 export type CompanyPostionInsert = z.infer<typeof CompanyPositionInsertSchema>;
