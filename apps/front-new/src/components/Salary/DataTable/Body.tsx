@@ -34,15 +34,10 @@ export default ({ data, count }: { data: SubmissionListResponse['data']; count: 
                   ? (
                      data?.map((row, index) => (
                         <Table.Row key={index}>
-                           <Table.Cell>
-                              {row?.company || 'N/A'}
-                           </Table.Cell>
-                           <Table.Cell>
-                              {row?.position || 'N/A'}
-                           </Table.Cell>
+                           <Table.Cell>{row?.company || 'N/A'}</Table.Cell>
+                           <Table.Cell>{row?.position || 'N/A'}</Table.Cell>
                            <Table.Cell display={{ base: 'none', md: 'table-cell' }}>
-                              {`${row.location_city}, ${row.location_state_code}` ||
-                                 'N/A'}
+                              {`${row.location_city}, ${row.location_state_code}` || 'N/A'}
                            </Table.Cell>
                            <Table.Cell display={{ base: 'table-cell', md: 'table-cell' }}>
                               {row?.year || 'N/A'}
@@ -53,10 +48,7 @@ export default ({ data, count }: { data: SubmissionListResponse['data']; count: 
                            <Table.Cell display={{ base: 'none', md: 'table-cell' }}>
                               {row?.coop_cycle
                                  ? (
-                                    <Badge
-                                       colorPalette='blue'
-                                       variant='subtle'
-                                    >
+                                    <Badge colorPalette='blue' variant='subtle'>
                                        {row?.coop_cycle}
                                     </Badge>
                                  )
@@ -68,12 +60,8 @@ export default ({ data, count }: { data: SubmissionListResponse['data']; count: 
                            <Table.Cell textAlign='end'>
                               {row?.compensation
                                  ? (
-                                    <Text
-                                       fontWeight='semibold'
-                                       color='green.600'
-                                    >
-                                       ${row?.compensation
-                                          ?.toLocaleString()}
+                                    <Text fontWeight='semibold' color='green.600'>
+                                       ${row?.compensation?.toLocaleString()}
                                     </Text>
                                  )
                                  : 'N/A'}
