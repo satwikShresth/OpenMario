@@ -1,42 +1,49 @@
-import { Badge, Box, Flex, Table, Text } from "@chakra-ui/react";
-import type { SubmissionListResponse } from "@/client";
+import { Badge, Box, EmptyState, List, Table, Text, VStack } from '@chakra-ui/react';
+import type { SubmissionListResponse } from '@/client';
+import { HiColorSwatch } from 'react-icons/hi';
 
 export default (
-   { data, count }: { data: SubmissionListResponse["data"]; count: number },
+   { data, count }: { data: SubmissionListResponse['data']; count: number },
 ) => {
    return (
-      <Box overflow="auto" w="full">
-         <Table.Root variant="outline" striped interactive borderRadius="2xl">
+      <Box overflow='auto' w='full'>
+         <Table.Root
+            tableLayout={count === 0 ? 'fixed' : 'auto'}
+            variant='outline'
+            striped
+            interactive
+            borderRadius='2xl'
+         >
             <Table.Header>
                <Table.Row>
                   <Table.ColumnHeader>Company</Table.ColumnHeader>
                   <Table.ColumnHeader>Position</Table.ColumnHeader>
                   <Table.ColumnHeader
-                     display={{ base: "none", md: "table-cell" }}
+                     display={{ base: 'none', md: 'table-cell' }}
                   >
                      Location
                   </Table.ColumnHeader>
                   <Table.ColumnHeader
-                     display={{ base: "table-cell", md: "table-cell" }}
+                     display={{ base: 'table-cell', md: 'table-cell' }}
                   >
                      Year
                   </Table.ColumnHeader>
                   <Table.ColumnHeader
-                     display={{ base: "none", md: "table-cell" }}
+                     display={{ base: 'none', md: 'table-cell' }}
                   >
                      Coop Year
                   </Table.ColumnHeader>
                   <Table.ColumnHeader
-                     display={{ base: "none", md: "table-cell" }}
+                     display={{ base: 'none', md: 'table-cell' }}
                   >
                      Coop Cycle
                   </Table.ColumnHeader>
                   <Table.ColumnHeader
-                     display={{ base: "none", md: "table-cell" }}
+                     display={{ base: 'none', md: 'table-cell' }}
                   >
                      Program Level
                   </Table.ColumnHeader>
-                  <Table.ColumnHeader textAlign="end">
+                  <Table.ColumnHeader textAlign='end'>
                      Salary
                   </Table.ColumnHeader>
                </Table.Row>
@@ -46,67 +53,75 @@ export default (
                   ? (
                      data?.map((row, index) => (
                         <Table.Row key={index}>
-                           <Table.Cell>{row?.company || "N/A"}</Table.Cell>
-                           <Table.Cell>{row?.position || "N/A"}</Table.Cell>
+                           <Table.Cell>{row?.company || 'N/A'}</Table.Cell>
+                           <Table.Cell>{row?.position || 'N/A'}</Table.Cell>
                            <Table.Cell
-                              display={{ base: "none", md: "table-cell" }}
+                              display={{ base: 'none', md: 'table-cell' }}
                            >
                               {`${row.location_city}, ${row.location_state_code}` ||
-                                 "N/A"}
+                                 'N/A'}
                            </Table.Cell>
                            <Table.Cell
-                              display={{ base: "table-cell", md: "table-cell" }}
+                              display={{ base: 'table-cell', md: 'table-cell' }}
                            >
-                              {row?.year || "N/A"}
+                              {row?.year || 'N/A'}
                            </Table.Cell>
                            <Table.Cell
-                              display={{ base: "none", md: "table-cell" }}
+                              display={{ base: 'none', md: 'table-cell' }}
                            >
-                              {row?.coop_year || "N/A"}
+                              {row?.coop_year || 'N/A'}
                            </Table.Cell>
                            <Table.Cell
-                              display={{ base: "none", md: "table-cell" }}
+                              display={{ base: 'none', md: 'table-cell' }}
                            >
                               {row?.coop_cycle
                                  ? (
-                                    <Badge colorPalette="blue" variant="subtle">
+                                    <Badge colorPalette='blue' variant='subtle'>
                                        {row?.coop_cycle}
                                     </Badge>
                                  )
-                                 : "N/A"}
+                                 : 'N/A'}
                            </Table.Cell>
                            <Table.Cell
-                              display={{ base: "none", md: "table-cell" }}
+                              display={{ base: 'none', md: 'table-cell' }}
                            >
-                              {row?.program_level || "N/A"}
+                              {row?.program_level || 'N/A'}
                            </Table.Cell>
-                           <Table.Cell textAlign="end">
+                           <Table.Cell textAlign='end'>
                               {row?.compensation
                                  ? (
                                     <Text
-                                       fontWeight="semibold"
-                                       color="green.600"
+                                       fontWeight='semibold'
+                                       color='green.600'
                                     >
                                        ${row?.compensation?.toLocaleString()}
                                     </Text>
                                  )
-                                 : "N/A"}
+                                 : 'N/A'}
                            </Table.Cell>
                         </Table.Row>
                      ))
                   )
                   : (
                      <Table.Row>
-                        <Table.Cell colSpan={8} py={10}>
-                           <Flex
-                              justify="center"
-                              align="center"
-                              direction="column"
-                           >
-                              <Text color="gray.500">
-                                 No salary data available
-                              </Text>
-                           </Flex>
+                        <Table.Cell colSpan={8} py={100} width='full'>
+                           <EmptyState.Root>
+                              <EmptyState.Content>
+                                 <EmptyState.Indicator>
+                                    <HiColorSwatch />
+                                 </EmptyState.Indicator>
+                                 <VStack textAlign='center'>
+                                    <EmptyState.Title>No results found</EmptyState.Title>
+                                    <EmptyState.Description>
+                                       Try adjusting your search
+                                    </EmptyState.Description>
+                                 </VStack>
+                                 <List.Root variant='marker'>
+                                    <List.Item>Try removing filters</List.Item>
+                                    <List.Item>Try different keywords</List.Item>
+                                 </List.Root>
+                              </EmptyState.Content>
+                           </EmptyState.Root>
                         </Table.Cell>
                      </Table.Row>
                   )}

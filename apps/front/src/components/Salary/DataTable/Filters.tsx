@@ -6,20 +6,20 @@ import {
    Slider,
    Switch,
    VStack,
-} from "@chakra-ui/react";
-import { AsyncSelect, type GroupBase } from "chakra-react-select";
-import { useQueryClient } from "@tanstack/react-query";
-import { useSalaryTableStore } from "./Store.ts";
-import { useForm } from "@tanstack/react-form";
-import { HiCheck, HiX } from "react-icons/hi";
-import { asyncComponents } from "@/components/common";
+} from '@chakra-ui/react';
+import { AsyncSelect, type GroupBase } from 'chakra-react-select';
+import { useQueryClient } from '@tanstack/react-query';
+import { useSalaryTableStore } from './Store.ts';
+import { useForm } from '@tanstack/react-form';
+import { HiCheck, HiX } from 'react-icons/hi';
+import { asyncComponents } from '@/components/common';
 import {
    getV1AutocompleteCompanyOptions,
    getV1AutocompleteLocationOptions,
    getV1AutocompletePositionOptions,
    type GetV1SubmissionsData,
-} from "@/client";
-import { coopCycle, coopYear, programLevel } from "@/helpers";
+} from '@/client';
+import { coopCycle, coopYear, programLevel } from '@/helpers';
 
 type AutocompleteOptions = {
    value: string;
@@ -30,9 +30,9 @@ type AutocompleteOptions = {
 const ConvertMapFunc = (
    value: string | { name: string } | undefined,
 ): AutocompleteOptions => ({
-   value: typeof value === "string" ? value : value?.name || "",
-   label: typeof value === "string" ? value : value?.name || "",
-   variant: "subtle",
+   value: typeof value === 'string' ? value : value?.name || '',
+   label: typeof value === 'string' ? value : value?.name || '',
+   variant: 'subtle',
 });
 
 export default () => {
@@ -44,10 +44,10 @@ export default () => {
    const max = new Date().getFullYear();
    const marks = Array.from(
       { length: max - min + 1 },
-      (_, i) => ({ value: i + min, label: i % 4 === 0 ? i + min : "" }),
+      (_, i) => ({ value: i + min, label: i % 4 === 0 ? i + min : '' }),
    );
 
-   const defaultValues: GetV1SubmissionsData["query"] = {
+   const defaultValues: GetV1SubmissionsData['query'] = {
       company: [...((query?.company!) ? query?.company : [])],
       position: [...((query?.position!) ? query?.position : [])],
       location: [...((query?.location!) ? query?.location : [])],
@@ -62,10 +62,10 @@ export default () => {
 
    return (
       <form>
-         <VStack width="full">
-            <HStack mb={2} w="full" gap={5}>
+         <VStack width='full'>
+            <HStack mb={2} w='full' gap={5}>
                <form.Field
-                  name="company"
+                  name='company'
                   listeners={{
                      onChange: ({ value: company }) =>
                         navigate({
@@ -87,15 +87,13 @@ export default () => {
                         GroupBase<AutocompleteOptions>
                      >
                         isMulti
-                        name="company"
-                        placeholder="Select a company"
+                        name='company'
+                        placeholder='Select a company'
                         value={state.value?.map(ConvertMapFunc)}
                         components={asyncComponents}
                         onBlur={handleBlur}
-                        onChange={(values) =>
-                           handleChange(values.map(({ value }) => value))}
-                        noOptionsMessage={() =>
-                           "Keeping typing for autocomplete"}
+                        onChange={(values) => handleChange(values.map(({ value }) => value))}
+                        noOptionsMessage={() => 'Keeping typing for autocomplete'}
                         loadOptions={(inputValue, callback) => {
                            const query = { comp: inputValue };
                            if (inputValue?.length >= 3) {
@@ -103,9 +101,7 @@ export default () => {
                                  .ensureQueryData(
                                     getV1AutocompleteCompanyOptions({ query }),
                                  )
-                                 .then((data) =>
-                                    callback(data?.map(ConvertMapFunc) || [])
-                                 )
+                                 .then((data) => callback(data?.map(ConvertMapFunc) || []))
                                  .catch(() => callback([]));
                            }
                         }}
@@ -113,14 +109,19 @@ export default () => {
                   )}
                </form.Field>
                <form.Field
-                  name="position"
+                  name='position'
                   listeners={{
-                     onChange: ({ value: position }) => navigate({
-                        search: (prev) => ({ ...prev, pageIndex: 1, position }),
-                        reloadDocument: false,
-                        replace: true,
-                        startTransition: true,
-                     }),
+                     onChange: ({ value: position }) =>
+                        navigate({
+                           search: (prev) => ({
+                              ...prev,
+                              pageIndex: 1,
+                              position,
+                           }),
+                           reloadDocument: false,
+                           replace: true,
+                           startTransition: true,
+                        }),
                   }}
                >
                   {({ state, handleChange, handleBlur }) => (
@@ -130,25 +131,21 @@ export default () => {
                         GroupBase<AutocompleteOptions>
                      >
                         isMulti
-                        name="position"
-                        placeholder="Select a position"
+                        name='position'
+                        placeholder='Select a position'
                         value={state.value?.map(ConvertMapFunc)}
                         components={asyncComponents}
                         onBlur={handleBlur}
-                        onChange={(values) =>
-                           handleChange(values.map(({ value }) => value))}
-                        noOptionsMessage={() =>
-                           "Keeping typing for autocomplete"}
+                        onChange={(values) => handleChange(values.map(({ value }) => value))}
+                        noOptionsMessage={() => 'Keeping typing for autocomplete'}
                         loadOptions={(inputValue, callback) => {
-                           const query = { comp: "*", pos: inputValue };
+                           const query = { comp: '*', pos: inputValue };
                            if (inputValue?.length >= 3) {
                               queryClient
                                  .ensureQueryData(
                                     getV1AutocompletePositionOptions({ query }),
                                  )
-                                 .then((data) =>
-                                    callback(data?.map(ConvertMapFunc) || [])
-                                 )
+                                 .then((data) => callback(data?.map(ConvertMapFunc) || []))
                                  .catch(() => callback([]));
                            }
                         }}
@@ -157,14 +154,19 @@ export default () => {
                </form.Field>
 
                <form.Field
-                  name="location"
+                  name='location'
                   listeners={{
-                     onChange: ({ value: location }) => navigate({
-                        search: (prev) => ({ ...prev, pageIndex: 1, location }),
-                        reloadDocument: false,
-                        replace: true,
-                        startTransition: true,
-                     }),
+                     onChange: ({ value: location }) =>
+                        navigate({
+                           search: (prev) => ({
+                              ...prev,
+                              pageIndex: 1,
+                              location,
+                           }),
+                           reloadDocument: false,
+                           replace: true,
+                           startTransition: true,
+                        }),
                   }}
                >
                   {({ state, handleChange, handleBlur }) => (
@@ -174,15 +176,13 @@ export default () => {
                         GroupBase<AutocompleteOptions>
                      >
                         isMulti
-                        name="location"
-                        placeholder="Select a location"
+                        name='location'
+                        placeholder='Select a location'
                         value={state.value?.map(ConvertMapFunc)}
                         components={asyncComponents}
                         onBlur={handleBlur}
-                        onChange={(values) =>
-                           handleChange(values.map(({ value }) => value))}
-                        noOptionsMessage={() =>
-                           "Keeping typing for autocomplete"}
+                        onChange={(values) => handleChange(values.map(({ value }) => value))}
+                        noOptionsMessage={() => 'Keeping typing for autocomplete'}
                         loadOptions={(inputValue, callback) => {
                            const query = { loc: inputValue };
                            if (inputValue?.length >= 3) {
@@ -190,9 +190,7 @@ export default () => {
                                  .ensureQueryData(
                                     getV1AutocompleteLocationOptions({ query }),
                                  )
-                                 .then((data) =>
-                                    callback(data?.map(ConvertMapFunc) || [])
-                                 )
+                                 .then((data) => callback(data?.map(ConvertMapFunc) || []))
                                  .catch(() => callback([]));
                            }
                         }}
@@ -200,7 +198,7 @@ export default () => {
                   )}
                </form.Field>
                <form.Field
-                  name="distinct"
+                  name='distinct'
                   listeners={{
                      onChange: ({ value: distinct }) => {
                         navigate({
@@ -218,7 +216,7 @@ export default () => {
                >
                   {({ state, handleChange }) => (
                      <Switch.Root
-                        size="lg"
+                        size='lg'
                         checked={state.value}
                         onCheckedChange={({ checked }) => handleChange(checked)}
                      >
@@ -226,7 +224,7 @@ export default () => {
                         <Switch.Control>
                            <Switch.Thumb>
                               <Switch.ThumbIndicator
-                                 fallback={<HiX color="black" />}
+                                 fallback={<HiX color='black' />}
                               >
                                  <HiCheck />
                               </Switch.ThumbIndicator>
@@ -237,9 +235,9 @@ export default () => {
                   )}
                </form.Field>
             </HStack>
-            <HStack mb={4} w="full" gap={5}>
+            <HStack mb={4} w='full' gap={5}>
                <form.Field
-                  name="year"
+                  name='year'
                   listeners={{
                      onChange: ({ value: year }) => {
                         navigate({
@@ -253,14 +251,14 @@ export default () => {
                >
                   {({ state, handleChange }) => (
                      <Slider.Root
-                        width="full"
+                        width='full'
                         value={state.value}
                         onValueChange={({ value }) => handleChange(value)}
                         min={min}
                         max={max}
                         minStepsBetweenThumbs={2}
                         step={1}
-                        colorPalette="cyan"
+                        colorPalette='cyan'
                      >
                         <Slider.Label>Year</Slider.Label>
                         <Slider.Control>
@@ -269,20 +267,20 @@ export default () => {
                            </Slider.Track>
                            <Slider.Thumb index={0}>
                               <Slider.DraggingIndicator
-                                 layerStyle="fill.solid"
-                                 top="6"
-                                 rounded="sm"
-                                 px="1.5"
+                                 layerStyle='fill.solid'
+                                 top='6'
+                                 rounded='sm'
+                                 px='1.5'
                               >
                                  {}
                               </Slider.DraggingIndicator>
                            </Slider.Thumb>
                            <Slider.Thumb index={1}>
                               <Slider.DraggingIndicator
-                                 layerStyle="fill.solid"
-                                 top="6"
-                                 rounded="sm"
-                                 px="1.5"
+                                 layerStyle='fill.solid'
+                                 top='6'
+                                 rounded='sm'
+                                 px='1.5'
                               >
                                  {state!.value![1]}
                               </Slider.DraggingIndicator>
@@ -293,14 +291,14 @@ export default () => {
                   )}
                </form.Field>
                <form.Field
-                  name="coop_year"
+                  name='coop_year'
                   listeners={{
-                     onChange: ({ value: coopYear }) => {
+                     onChange: ({ value: coop_year }) => {
                         navigate({
                            search: (prev) => ({
                               ...prev,
                               pageIndex: 1,
-                              coopYear,
+                              coop_year,
                            }),
                            reloadDocument: false,
                            replace: true,
@@ -321,7 +319,7 @@ export default () => {
                         <Select.Label>Coop Year</Select.Label>
                         <Select.Control>
                            <Select.Trigger>
-                              <Select.ValueText placeholder="Select coop year" />
+                              <Select.ValueText placeholder='Select coop year' />
                            </Select.Trigger>
                            <Select.IndicatorGroup>
                               <Select.ClearTrigger />
@@ -349,14 +347,14 @@ export default () => {
                   )}
                </form.Field>
                <form.Field
-                  name="coop_cycle"
+                  name='coop_cycle'
                   listeners={{
-                     onChange: ({ value: coopCycle }) => {
+                     onChange: ({ value: coop_cycle }) => {
                         navigate({
                            search: (prev) => ({
                               ...prev,
                               pageIndex: 1,
-                              coopCycle,
+                              coop_cycle,
                            }),
                            reloadDocument: false,
                            replace: true,
@@ -377,7 +375,7 @@ export default () => {
                         <Select.Label>Coop Cycle</Select.Label>
                         <Select.Control>
                            <Select.Trigger>
-                              <Select.ValueText placeholder="Select coop cycle" />
+                              <Select.ValueText placeholder='Select coop cycle' />
                            </Select.Trigger>
                            <Select.IndicatorGroup>
                               <Select.ClearTrigger />
@@ -406,7 +404,7 @@ export default () => {
                </form.Field>
 
                <form.Field
-                  name="program_level"
+                  name='program_level'
                   listeners={{
                      onChange: ({ value: program_level }) => {
                         navigate({
@@ -426,8 +424,7 @@ export default () => {
                      <Select.Root
                         value={[state?.value!]}
                         //@ts-ignore: shut up
-                        onValueChange={({ value: [change] }) =>
-                           handleChange(change!)}
+                        onValueChange={({ value: [change] }) => handleChange(change!)}
                         collection={programLevelCollection}
                      >
                         <Select.HiddenSelect />

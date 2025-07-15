@@ -1,10 +1,10 @@
-import { Link as ChakraLink, Stack, Text } from "@chakra-ui/react";
-import { Link, linkOptions } from "@tanstack/react-router";
-import { NAV_ITEMS } from "./items";
+import { Link as ChakraLink, Stack, Text } from '@chakra-ui/react';
+import { Link, linkOptions } from '@tanstack/react-router';
+import { NAV_ITEMS } from './items';
 
 const MobileNav = ({ onToggle }: { onToggle: () => void }) => {
    return (
-      <Stack bg="card" p={4} borderRadius="lg" gap={5}>
+      <Stack bg='card' p={4} borderRadius='lg' gap={5}>
          {NAV_ITEMS.map(({ label, section, href }) => (
             <ChakraLink
                key={`mobile-${label}`}
@@ -14,7 +14,7 @@ const MobileNav = ({ onToggle }: { onToggle: () => void }) => {
                   hashScrollIntoView: true,
                })}
                onClick={() => onToggle()}
-               _hover={{ color: "accent" }}
+               _hover={{ color: 'accent' }}
                fontWeight={600}
             >
                <Text>{label}</Text>

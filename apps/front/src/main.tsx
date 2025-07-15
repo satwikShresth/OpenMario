@@ -1,21 +1,17 @@
-import { StrictMode } from "react";
-import { Provider } from "@/components/ui/provider";
-import ReactDOM from "react-dom/client";
-import {
-   createRouter,
-   RouterProvider,
-   stringifySearchWith,
-} from "@tanstack/react-router";
-import { parse, stringify } from "jsurl2";
+import { StrictMode } from 'react';
+import { Provider } from '@/components/ui/provider';
+import ReactDOM from 'react-dom/client';
+import { createRouter, RouterProvider, stringifySearchWith } from '@tanstack/react-router';
+import { parse, stringify } from 'jsurl2';
 
-import * as TanStackQueryProvider from "./integrations/tanstack-query/root-provider.tsx";
+import * as TanStackQueryProvider from './integrations/tanstack-query/root-provider.tsx';
 
 // Import the generated route tree
-import { routeTree } from "./routeTree.gen";
+import { routeTree } from './routeTree.gen';
 
-import "./styles.css";
-import reportWebVitals from "./reportWebVitals.ts";
-import { parseSearchWith } from "@tanstack/react-router";
+import './styles.css';
+import reportWebVitals from './reportWebVitals.ts';
+import { parseSearchWith } from '@tanstack/react-router';
 // import { client } from './client/client.gen';
 
 // // Request interceptor - logs outgoing requests
@@ -47,7 +43,7 @@ const router = createRouter({
    context: {
       ...TanStackQueryProvider.getContext(),
    },
-   defaultPreload: "intent",
+   defaultPreload: 'intent',
    scrollRestoration: true,
    stringifySearch: stringifySearchWith(stringify),
    parseSearch: parseSearchWith(parse),
@@ -56,14 +52,14 @@ const router = createRouter({
 });
 
 // Register the router instance for type safety
-declare module "@tanstack/react-router" {
+declare module '@tanstack/react-router' {
    interface Register {
       router: typeof router;
    }
 }
 
 // Render the app
-const rootElement = document.getElementById("app");
+const rootElement = document.getElementById('app');
 if (rootElement && !rootElement.innerHTML) {
    const root = ReactDOM.createRoot(rootElement);
    root.render(
