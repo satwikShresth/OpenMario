@@ -9,11 +9,13 @@ export default (
 ) => {
    const dialog = useDialog();
    const [submission, setSubmission] = useState<SubmissionListItem | null>(null);
+   console.log(data);
 
    return (
       <Box overflow='auto' w='full' mt={4}>
          <Table.Root
             tableLayout={count === 0 ? 'fixed' : 'auto'}
+            size='lg'
             variant='outline'
             interactive
             borderRadius='2xl'
