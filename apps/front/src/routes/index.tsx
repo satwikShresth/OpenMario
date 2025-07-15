@@ -1,9 +1,8 @@
-import { createFileRoute, Navigate } from "@tanstack/react-router";
+import { redirect } from '@tanstack/react-router';
+import { createFileRoute } from '@tanstack/react-router';
 
-export const Route = createFileRoute("/")({
-  component: HomeComponent,
-});
-
-function HomeComponent() {
-  return <Navigate to="/salary" replace />;
-}
+ex port const Route = createFileRoute('/')({
+   loader: () => {
+      throw redirect({ to: '/home' });
+   },
+ });

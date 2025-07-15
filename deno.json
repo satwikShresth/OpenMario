@@ -1,5 +1,5 @@
 {
-  "workspace": ["./apps/back/", "./apps/front-new"],
+  "workspace": ["./apps/back/", "./apps/front"],
   "fmt": {
     "useTabs": false,
     "indentWidth": 3,
@@ -7,8 +7,8 @@
     "singleQuote": true,
     "lineWidth": 100,
     "proseWrap": "preserve",
-    "exclude": ["./apps/front-new/src/routeTree.gen.ts","./apps/front-new/.vite/*","./apps/back/email_templates/*"]
-    "include": ["./apps/back/","./apps/front-new"]
+    "exclude": ["./apps/front/src/routeTree.gen.ts","./apps/front/.vite/*","./apps/back/email_templates/*"]
+    "include": ["./apps/back/","./apps/front"]
   },
   "lint": {
     "rules": {

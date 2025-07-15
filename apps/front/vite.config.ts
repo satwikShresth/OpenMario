@@ -1,42 +1,67 @@
 import { defineConfig } from "vite";
-import autoprefixer from "autoprefixer";
-import tailwindcss from "tailwindcss";
+import deno from "@deno/vite-plugin";
 import react from "@vitejs/plugin-react";
-//import react from '@vitejs/plugin-react-swc'
-import { TanStackRouterVite } from "@tanstack/router-plugin/vite";
-import tsconfigPaths from "vite-tsconfig-paths";
+import { tanstackRouter } from "@tanstack/router-plugin/vite";
+import { heyApiPlugin } from "@hey-api/vite-plugin";
+import { resolve } from "node:path";
+import { defaultPlugins } from "@hey-api/openapi-ts";
+import { FixDir } from "./plugins/heyapifix.ts";
 
-const ReactCompilerConfig = {
-  /* ... */
-};
-
+// https://vitejs.dev/config/
 export default defineConfig({
+  plugins: [
+    tanstackRouter({ target: "react", autoCodeSplitting: true }),
+    react(),
+    deno(),
+    //@ts-ignore: shut up
+    heyApiPlugin({
+      config: {
+        input: {
+          path: "http://localhost:3000/openapi",
+        },
+        output: {
+          path: "./src/client",
+        },
+        plugins: [
+          ...defaultPlugins,
+          {
+            name: "@hey-api/client-fetch",
+            exportFromIndex: "true",
+            path: "./src/client",
+            runtimeConfigPath: "./src/client.config.ts",
+          },
+          {
+            name: "@tanstack/react-query",
+            //@ts-ignore: shut up
+            exportFromIndex: true,
+          },
+          {
+            name: "@hey-api/sdk",
+            operationId: true,
+            exportFromIndex: false,
+          },
+        ],
+      },
+    }),
+    FixDir(),
+  ],
+  resolve: {
+    alias: {
+      "@": resolve(__dirname, "./src"),
+    },
+  },
   server: {
     proxy: {
       "/api/v1": {
-        target: process.env.VITE_API_URL || "http://localhost:3000",
+        target: "http://localhost:3000",
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, ""),
       },
-      "/api/search": {
-        target: process.env.VITE_SEARCH_API_URL || "http://localhost:7700",
-        changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api\/search/, ""),
-      },
+      // "/api/search": {
+      //   target: "http://localhost:7700",
+      //   changeOrigin: true,
+      //   rewrite: (path) => path.replace(/^\/api\/search/, ""),
+      // },
     },
   },
-  css: {
-    postcss: {
-      plugins: [tailwindcss, autoprefixer],
-    },
-  },
-  plugins: [
-    tsconfigPaths(),
-    TanStackRouterVite({ target: "react", autoCodeSplitting: true }),
-    react({
-      babel: {
-        plugins: [["babel-plugin-react-compiler", ReactCompilerConfig]],
-      },
-    }),
-  ],
 });
