@@ -46,7 +46,7 @@ export default () => {
    const max = new Date().getFullYear();
    const marks = Array.from(
       { length: max - min + 1 },
-      (_, i) => ({ value: i + min, label: i % 4 === 0 ? i + min : '' }),
+      (_, i) => ({ value: i + min, label: i % 3 === 0 ? i + min : '' }),
    );
 
    const defaultValues: GetV1SubmissionsData['query'] = {
@@ -274,22 +274,22 @@ export default () => {
                                  layerStyle='fill.solid'
                                  top='6'
                                  rounded='sm'
-                                 px='1.5'
-                              >
-                                 {}
-                              </Slider.DraggingIndicator>
+                                 py='2'
+                                 px='3'
+                                 fontWeight='medium'
+                              />
                            </Slider.Thumb>
                            <Slider.Thumb index={1}>
                               <Slider.DraggingIndicator
                                  layerStyle='fill.solid'
                                  top='6'
                                  rounded='sm'
-                                 px='1.5'
-                              >
-                                 {state!.value![1]}
-                              </Slider.DraggingIndicator>
+                                 py='2'
+                                 px='3'
+                                 fontWeight='medium'
+                              />
                            </Slider.Thumb>
-                           <Slider.Marks marks={marks} />
+                           <Slider.Marks fontWeight='medium' marks={marks} />
                         </Slider.Control>
                      </Slider.Root>
                   )}

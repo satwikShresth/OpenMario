@@ -16,7 +16,7 @@ import { Salary } from '@/components/Salary';
 import { getV1SubmissionsOptions } from '@/client';
 import { useQuery } from '@tanstack/react-query';
 import { coopCycle, coopYear, programLevel, zodCheckUnique } from '@/helpers';
-import { HiFilter, HiPlus } from 'react-icons/hi';
+import { HiFilter } from 'react-icons/hi';
 
 const submissionSearchSchema = z.object({
    pageIndex: z.catch(z._default(z.coerce.number(), 1).check(z.minimum(1)), 1),
@@ -103,7 +103,7 @@ function App() {
          <VStack align='center'>
             <Box maxW='99%'>
                <Salary.Root Route={Route}>
-                  <Flex justify='space-between' mb={4}>
+                  <Flex justify='space-between' mb={4} mt={4}>
                      {isMobile
                         ? (
                            <Button onClick={openFilter} variant='solid' mb={4}>
@@ -114,7 +114,7 @@ function App() {
                         : <Text fontSize='3xl' fontWeight='bolder'>Self Reported Salaries</Text>}
                      <Salary.Menu />
                   </Flex>
-                  <Separator mb={3} />
+                  <Separator mb={4} />
                   <Salary.DataTable.Filters open={isFilterOpen} onClose={closeFilter} />
                   <Salary.DataTable.Body data={data?.data!} count={data?.data.length!} />
                   <Salary.DataTable.Pagination count={data?.count!} />

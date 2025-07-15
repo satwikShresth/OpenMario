@@ -11,7 +11,7 @@ export default (
    const [submission, setSubmission] = useState<SubmissionListItem | null>(null);
 
    return (
-      <Box overflow='auto' w='full'>
+      <Box overflow='auto' w='full' mt={4}>
          <Table.Root
             tableLayout={count === 0 ? 'fixed' : 'auto'}
             variant='outline'
