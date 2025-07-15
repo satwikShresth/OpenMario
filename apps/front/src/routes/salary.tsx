@@ -1,22 +1,8 @@
-import * as z from 'zod/mini';
-import {
-   Box,
-   Button,
-   Container,
-   Flex,
-   Icon,
-   Separator,
-   Text,
-   useBreakpointValue,
-   useDisclosure,
-   VStack,
-} from '@chakra-ui/react';
-import { createFileRoute } from '@tanstack/react-router';
-import { Salary } from '@/components/Salary';
-import { getV1SubmissionsOptions } from '@/client';
-import { useQuery } from '@tanstack/react-query';
+import { createFileRoute, Outlet } from '@tanstack/react-router';
+import { Container, VStack } from '@chakra-ui/react';
 import { coopCycle, coopYear, programLevel, zodCheckUnique } from '@/helpers';
-import { HiFilter } from 'react-icons/hi';
+import * as z from 'zod/mini';
+import { getV1SubmissionsOptions } from '@/client';
 
 const submissionSearchSchema = z.object({
    pageIndex: z.catch(z._default(z.coerce.number(), 1).check(z.minimum(1)), 1),
@@ -77,51 +63,16 @@ const submissionSearchSchema = z.object({
 });
 
 export type SubmissionSearch = z.infer<typeof submissionSearchSchema>;
-
-export const Route = createFileRoute('/home')({
+export const Route = createFileRoute('/salary')({
    validateSearch: submissionSearchSchema,
    loaderDeps: ({ search }) => search,
    loader: ({ deps: query, context: { queryClient } }) =>
       queryClient.ensureQueryData(getV1SubmissionsOptions({ query })),
-   component: App,
-});
-
-export type Route = typeof Route;
-
-function App() {
-   const query = Route.useSearch();
-   const isMobile = useBreakpointValue({ base: true, md: false });
-   const { open: isFilterOpen, onOpen: openFilter, onClose: closeFilter } = useDisclosure();
-   const { data } = useQuery({
-      ...getV1SubmissionsOptions({ query }),
-      staleTime: 3000,
-      refetchOnWindowFocus: true,
-   });
-
-   return (
+   component: () => (
       <Container>
          <VStack align='center'>
-            <Box maxW='99%'>
-               <Salary.Root Route={Route}>
-                  <Flex justify='space-between' mb={4} mt={4}>
-                     {isMobile
-                        ? (
-                           <Button onClick={openFilter} variant='solid' mb={4}>
-                              <Icon as={HiFilter} />
-                              <Text>Filters</Text>
-                           </Button>
-                        )
-                        : <Text fontSize='3xl' fontWeight='bolder'>Self Reported Salaries</Text>}
-                     <Salary.Menu />
-                  </Flex>
-                  <Separator mb={4} />
-                  <Salary.DataTable.Filters open={isFilterOpen} onClose={closeFilter} />
-                  <Salary.DataTable.Body data={data?.data!} count={data?.data.length!} />
-                  <Salary.DataTable.Pagination count={data?.count!} />
-                  <Salary.DataTable.Footer />
-               </Salary.Root>
-            </Box>
+            <Outlet />
          </VStack>
       </Container>
-   );
-}
+   ),
+});

@@ -1,4 +1,14 @@
-import { Badge, Box, EmptyState, List, Table, Text, useDialog, VStack } from '@chakra-ui/react';
+import {
+   Badge,
+   Box,
+   EmptyState,
+   Flex,
+   List,
+   Table,
+   Text,
+   useDialog,
+   VStack,
+} from '@chakra-ui/react';
 import type { SubmissionListItem, SubmissionListResponse } from '@/client';
 import DataTableDialog from './Dialog';
 import { HiColorSwatch } from 'react-icons/hi';
@@ -12,13 +22,14 @@ export default (
    console.log(data);
 
    return (
-      <Box overflow='auto' w='full' mt={4}>
+      <Flex overflow='auto' w='full' mt={4}>
          <Table.Root
             tableLayout={count === 0 ? 'fixed' : 'auto'}
             size='lg'
             variant='outline'
             interactive
             borderRadius='2xl'
+            native
          >
             <Table.Header>
                <Table.Row>
@@ -54,7 +65,7 @@ export default (
                   </Table.ColumnHeader>
                </Table.Row>
             </Table.Header>
-            <Table.Body>
+            <Table.Body columnWidth='10px'>
                {count > 0
                   ? (
                      data?.map((row, index) => (
@@ -66,7 +77,9 @@ export default (
                               dialog.setOpen(true);
                            }}
                         >
-                           <Table.Cell>{row?.company || 'N/A'}</Table.Cell>
+                           <Table.Cell>
+                              {row?.company || 'N/A'}
+                           </Table.Cell>
                            <Table.Cell>{row?.position || 'N/A'}</Table.Cell>
                            <Table.Cell
                               display={{ base: 'none', md: 'table-cell' }}
@@ -141,6 +154,6 @@ export default (
             </Table.Body>
          </Table.Root>
          <DataTableDialog dialog={dialog} submission={submission} />
-      </Box>
+      </Flex>
    );
 };

@@ -1,6 +1,5 @@
 import type { ReactNode } from 'react';
-import { SalaryTableStoreProvider } from './Store.ts';
-import type { Route } from '@/routes/home';
+import { type Route, SalaryTableStoreProvider } from './Store.ts';
 import DataTable from './DataTable';
 import Menu from './Menu';
 
