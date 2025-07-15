@@ -8,7 +8,7 @@ import {
 } from '@chakra-ui/react';
 import { PaginationLink } from '../../common/index.tsx';
 import { LuChevronLeft, LuChevronRight } from 'react-icons/lu';
-import { useSalaryTableStore } from './Store.ts';
+import { useSalaryTableStore } from '../Store.ts';
 
 const pageSizes = createListCollection({
    items: ['10', '20', '30', '40', '50'].map((value) => ({

@@ -1,10 +1,22 @@
 import * as z from 'zod/mini';
-import { Box, Container, VStack } from '@chakra-ui/react';
+import {
+   Box,
+   Button,
+   Container,
+   Flex,
+   Icon,
+   Separator,
+   Text,
+   useBreakpointValue,
+   useDisclosure,
+   VStack,
+} from '@chakra-ui/react';
 import { createFileRoute } from '@tanstack/react-router';
-import { DataTable } from '@/components/Salary';
+import { Salary } from '@/components/Salary';
 import { getV1SubmissionsOptions } from '@/client';
 import { useQuery } from '@tanstack/react-query';
 import { coopCycle, coopYear, programLevel, zodCheckUnique } from '@/helpers';
+import { HiFilter, HiPlus } from 'react-icons/hi';
 
 const submissionSearchSchema = z.object({
    pageIndex: z.catch(z._default(z.coerce.number(), 1).check(z.minimum(1)), 1),
@@ -78,21 +90,36 @@ export type Route = typeof Route;
 
 function App() {
    const query = Route.useSearch();
+   const isMobile = useBreakpointValue({ base: true, md: false });
+   const { open: isFilterOpen, onOpen: openFilter, onClose: closeFilter } = useDisclosure();
    const { data } = useQuery({
       ...getV1SubmissionsOptions({ query }),
       staleTime: 3000,
       refetchOnWindowFocus: true,
    });
+
    return (
       <Container>
          <VStack align='center'>
             <Box maxW='99%'>
-               <DataTable.Root Route={Route}>
-                  <DataTable.Filters />
-                  <DataTable.Body data={data?.data!} count={data?.data.length!} />
-                  <DataTable.Pagination count={data?.count!} />
-                  <DataTable.Footer />
-               </DataTable.Root>
+               <Salary.Root Route={Route}>
+                  <Flex justify='space-between' mb={4}>
+                     {isMobile
+                        ? (
+                           <Button onClick={openFilter} variant='solid' mb={4}>
+                              <Icon as={HiFilter} />
+                              <Text>Filters</Text>
+                           </Button>
+                        )
+                        : <Text fontSize='3xl' fontWeight='bolder'>Self Reported Salaries</Text>}
+                     <Salary.Menu />
+                  </Flex>
+                  <Separator mb={3} />
+                  <Salary.DataTable.Filters open={isFilterOpen} onClose={closeFilter} />
+                  <Salary.DataTable.Body data={data?.data!} count={data?.data.length!} />
+                  <Salary.DataTable.Pagination count={data?.count!} />
+                  <Salary.DataTable.Footer />
+               </Salary.Root>
             </Box>
          </VStack>
       </Container>

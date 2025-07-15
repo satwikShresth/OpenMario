@@ -1,15 +1,17 @@
 import {
    createListCollection,
-   HStack,
+   Field,
    Portal,
    Select,
    Slider,
+   Stack,
    Switch,
+   useBreakpointValue,
    VStack,
 } from '@chakra-ui/react';
-import { AsyncSelect, type GroupBase } from 'chakra-react-select';
+import { AsyncSelect } from 'chakra-react-select';
 import { useQueryClient } from '@tanstack/react-query';
-import { useSalaryTableStore } from './Store.ts';
+import { useSalaryTableStore } from '../../Store.ts';
 import { useForm } from '@tanstack/react-form';
 import { HiCheck, HiX } from 'react-icons/hi';
 import { asyncComponents } from '@/components/common';
@@ -19,7 +21,7 @@ import {
    getV1AutocompletePositionOptions,
    type GetV1SubmissionsData,
 } from '@/client';
-import { coopCycle, coopYear, programLevel } from '@/helpers';
+import { capitalizeWords, coopCycle, coopYear, programLevel } from '@/helpers';
 
 type AutocompleteOptions = {
    value: string;
@@ -58,12 +60,32 @@ export default () => {
       distinct: true,
    };
 
+   const isMobile = useBreakpointValue({ base: true, md: false });
    const form = useForm({ defaultValues });
+
+   //@ts-ignore: shut up
+   const selectProps = ({ state, name, handleChange, handleBlur }) => ({
+      name,
+      isMulti: true,
+      value: state.value?.map(ConvertMapFunc),
+      loadingMessage: () => 'Loading...',
+      placeholder: `Select a ${name}`,
+      components: asyncComponents,
+      onBlur: handleBlur,
+      //@ts-ignore: shut up
+      onChange: (values) => handleChange(values.map(({ value }) => value)),
+      noOptionsMessage: () => 'Keeping typing for autocomplete',
+   });
 
    return (
       <form>
          <VStack width='full'>
-            <HStack mb={2} w='full' gap={5}>
+            <Stack
+               direction={isMobile ? 'column' : 'row'}
+               w='full'
+               mb={2}
+               gap={5}
+            >
                <form.Field
                   name='company'
                   listeners={{
@@ -80,32 +102,24 @@ export default () => {
                         }),
                   }}
                >
-                  {({ state, handleChange, handleBlur }) => (
-                     <AsyncSelect<
-                        AutocompleteOptions,
-                        true,
-                        GroupBase<AutocompleteOptions>
-                     >
-                        isMulti
-                        name='company'
-                        placeholder='Select a company'
-                        value={state.value?.map(ConvertMapFunc)}
-                        components={asyncComponents}
-                        onBlur={handleBlur}
-                        onChange={(values) => handleChange(values.map(({ value }) => value))}
-                        noOptionsMessage={() => 'Keeping typing for autocomplete'}
-                        loadOptions={(inputValue, callback) => {
-                           const query = { comp: inputValue };
-                           if (inputValue?.length >= 3) {
-                              queryClient
-                                 .ensureQueryData(
-                                    getV1AutocompleteCompanyOptions({ query }),
-                                 )
-                                 .then((data) => callback(data?.map(ConvertMapFunc) || []))
-                                 .catch(() => callback([]));
-                           }
-                        }}
-                     />
+                  {(form) => (
+                     <Field.Root>
+                        <Field.Label>{capitalizeWords(form.name)}</Field.Label>
+                        <AsyncSelect
+                           {...selectProps(form)}
+                           loadOptions={(inputValue, callback) => {
+                              const query = { comp: inputValue };
+                              if (inputValue?.length >= 3) {
+                                 queryClient
+                                    .ensureQueryData(
+                                       getV1AutocompleteCompanyOptions({ query }),
+                                    )
+                                    .then((data) => callback(data?.map(ConvertMapFunc) || []))
+                                    .catch(() => callback([]));
+                              }
+                           }}
+                        />
+                     </Field.Root>
                   )}
                </form.Field>
                <form.Field
@@ -124,32 +138,24 @@ export default () => {
                         }),
                   }}
                >
-                  {({ state, handleChange, handleBlur }) => (
-                     <AsyncSelect<
-                        AutocompleteOptions,
-                        true,
-                        GroupBase<AutocompleteOptions>
-                     >
-                        isMulti
-                        name='position'
-                        placeholder='Select a position'
-                        value={state.value?.map(ConvertMapFunc)}
-                        components={asyncComponents}
-                        onBlur={handleBlur}
-                        onChange={(values) => handleChange(values.map(({ value }) => value))}
-                        noOptionsMessage={() => 'Keeping typing for autocomplete'}
-                        loadOptions={(inputValue, callback) => {
-                           const query = { comp: '*', pos: inputValue };
-                           if (inputValue?.length >= 3) {
-                              queryClient
-                                 .ensureQueryData(
-                                    getV1AutocompletePositionOptions({ query }),
-                                 )
-                                 .then((data) => callback(data?.map(ConvertMapFunc) || []))
-                                 .catch(() => callback([]));
-                           }
-                        }}
-                     />
+                  {(form) => (
+                     <Field.Root>
+                        <Field.Label>{capitalizeWords(form.name)}</Field.Label>
+                        <AsyncSelect
+                           {...selectProps(form)}
+                           loadOptions={(inputValue, callback) => {
+                              const query = { comp: '*', pos: inputValue };
+                              if (inputValue?.length >= 3) {
+                                 queryClient
+                                    .ensureQueryData(
+                                       getV1AutocompletePositionOptions({ query }),
+                                    )
+                                    .then((data) => callback(data?.map(ConvertMapFunc) || []))
+                                    .catch(() => callback([]));
+                              }
+                           }}
+                        />
+                     </Field.Root>
                   )}
                </form.Field>
 
@@ -169,32 +175,24 @@ export default () => {
                         }),
                   }}
                >
-                  {({ state, handleChange, handleBlur }) => (
-                     <AsyncSelect<
-                        AutocompleteOptions,
-                        true,
-                        GroupBase<AutocompleteOptions>
-                     >
-                        isMulti
-                        name='location'
-                        placeholder='Select a location'
-                        value={state.value?.map(ConvertMapFunc)}
-                        components={asyncComponents}
-                        onBlur={handleBlur}
-                        onChange={(values) => handleChange(values.map(({ value }) => value))}
-                        noOptionsMessage={() => 'Keeping typing for autocomplete'}
-                        loadOptions={(inputValue, callback) => {
-                           const query = { loc: inputValue };
-                           if (inputValue?.length >= 3) {
-                              queryClient
-                                 .ensureQueryData(
-                                    getV1AutocompleteLocationOptions({ query }),
-                                 )
-                                 .then((data) => callback(data?.map(ConvertMapFunc) || []))
-                                 .catch(() => callback([]));
-                           }
-                        }}
-                     />
+                  {(form) => (
+                     <Field.Root>
+                        <Field.Label>{capitalizeWords(form.name)}</Field.Label>
+                        <AsyncSelect
+                           {...selectProps(form)}
+                           loadOptions={(inputValue, callback) => {
+                              const query = { loc: inputValue };
+                              if (inputValue?.length >= 3) {
+                                 queryClient
+                                    .ensureQueryData(
+                                       getV1AutocompleteLocationOptions({ query }),
+                                    )
+                                    .then((data) => callback(data?.map(ConvertMapFunc) || []))
+                                    .catch(() => callback([]));
+                              }
+                           }}
+                        />
+                     </Field.Root>
                   )}
                </form.Field>
                <form.Field
@@ -214,12 +212,14 @@ export default () => {
                      },
                   }}
                >
-                  {({ state, handleChange }) => (
+                  {({ state, handleChange, name }) => (
                      <Switch.Root
                         size='lg'
                         checked={state.value}
                         onCheckedChange={({ checked }) => handleChange(checked)}
+                        mt={5}
                      >
+                        <Switch.Label>{capitalizeWords(name)}</Switch.Label>
                         <Switch.HiddenInput />
                         <Switch.Control>
                            <Switch.Thumb>
@@ -230,12 +230,16 @@ export default () => {
                               </Switch.ThumbIndicator>
                            </Switch.Thumb>
                         </Switch.Control>
-                        <Switch.Label>Distinct</Switch.Label>
                      </Switch.Root>
                   )}
                </form.Field>
-            </HStack>
-            <HStack mb={4} w='full' gap={5}>
+            </Stack>
+            <Stack
+               direction={isMobile ? 'column' : 'row'}
+               w='full'
+               mb={2}
+               gap={5}
+            >
                <form.Field
                   name='year'
                   listeners={{
@@ -249,7 +253,7 @@ export default () => {
                      },
                   }}
                >
-                  {({ state, handleChange }) => (
+                  {({ state, handleChange, name }) => (
                      <Slider.Root
                         width='full'
                         value={state.value}
@@ -260,7 +264,7 @@ export default () => {
                         step={1}
                         colorPalette='cyan'
                      >
-                        <Slider.Label>Year</Slider.Label>
+                        <Slider.Label>{capitalizeWords(name)}</Slider.Label>
                         <Slider.Control>
                            <Slider.Track>
                               <Slider.Range />
@@ -307,7 +311,7 @@ export default () => {
                      },
                   }}
                >
-                  {({ state, handleChange }) => (
+                  {({ state, handleChange, name }) => (
                      <Select.Root
                         value={state?.value}
                         multiple
@@ -316,7 +320,7 @@ export default () => {
                         collection={coopYearCollection}
                      >
                         <Select.HiddenSelect />
-                        <Select.Label>Coop Year</Select.Label>
+                        <Select.Label>{capitalizeWords(name.replaceAll('_', ' '))}</Select.Label>
                         <Select.Control>
                            <Select.Trigger>
                               <Select.ValueText placeholder='Select coop year' />
@@ -363,7 +367,7 @@ export default () => {
                      },
                   }}
                >
-                  {({ state, handleChange }) => (
+                  {({ state, handleChange, name }) => (
                      <Select.Root
                         value={state?.value}
                         //@ts-ignore: shut up
@@ -372,7 +376,7 @@ export default () => {
                         multiple
                      >
                         <Select.HiddenSelect />
-                        <Select.Label>Coop Cycle</Select.Label>
+                        <Select.Label>{capitalizeWords(name.replaceAll('_', ' '))}</Select.Label>
                         <Select.Control>
                            <Select.Trigger>
                               <Select.ValueText placeholder='Select coop cycle' />
@@ -420,7 +424,7 @@ export default () => {
                      },
                   }}
                >
-                  {({ state, handleChange }) => (
+                  {({ state, handleChange, name }) => (
                      <Select.Root
                         value={[state?.value!]}
                         //@ts-ignore: shut up
@@ -428,7 +432,7 @@ export default () => {
                         collection={programLevelCollection}
                      >
                         <Select.HiddenSelect />
-                        <Select.Label>Program Level</Select.Label>
+                        <Select.Label>{capitalizeWords(name.replaceAll('_', ' '))}</Select.Label>
                         <Select.Control>
                            <Select.Trigger>
                               <Select.ValueText />
@@ -457,7 +461,7 @@ export default () => {
                      </Select.Root>
                   )}
                </form.Field>
-            </HStack>
+            </Stack>
          </VStack>
       </form>
    );
