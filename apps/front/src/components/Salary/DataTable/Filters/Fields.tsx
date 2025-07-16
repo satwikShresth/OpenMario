@@ -11,7 +11,7 @@ import {
 } from '@chakra-ui/react';
 import { AsyncSelect } from 'chakra-react-select';
 import { useQueryClient } from '@tanstack/react-query';
-import { useSalaryTableStore } from '@/components/Salary';
+import { useSalaryStore } from '@/components/Salary';
 import { useForm } from '@tanstack/react-form';
 import { HiCheck, HiX } from 'react-icons/hi';
 import { asyncComponents } from '@/components/common';
@@ -38,7 +38,7 @@ const ConvertMapFunc = (
 });
 
 export default () => {
-   const Route = useSalaryTableStore(({ Route }) => Route);
+   const Route = useSalaryStore(({ Route }) => Route);
    const query = Route.useSearch();
    const queryClient = useQueryClient();
    const navigate = Route.useNavigate();

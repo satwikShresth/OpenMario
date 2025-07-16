@@ -1,14 +1,4 @@
-import {
-   Badge,
-   Box,
-   EmptyState,
-   Flex,
-   List,
-   Table,
-   Text,
-   useDialog,
-   VStack,
-} from '@chakra-ui/react';
+import { Badge, EmptyState, Flex, List, Table, Text, useDialog, VStack } from '@chakra-ui/react';
 import type { SubmissionListItem, SubmissionListResponse } from '@/client';
 import DataTableDialog from './Dialog';
 import { HiColorSwatch } from 'react-icons/hi';
@@ -19,7 +9,6 @@ export default (
 ) => {
    const dialog = useDialog();
    const [submission, setSubmission] = useState<SubmissionListItem | null>(null);
-   console.log(data);
 
    return (
       <Flex overflow='auto' w='full' mt={4}>

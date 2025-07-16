@@ -1,21 +1,21 @@
 import type { ReactNode } from 'react';
-import { type Route, SalaryTableStoreProvider } from './Store.ts';
+import { type SalaryStore, SalaryStoreProvider } from './Store.ts';
 import DataTable from './DataTable';
-import Menu from './Menu';
+import { ReportSalaryMenu } from './Menu';
 
 export const Salary = {
    Root: (
       { Route, children }: {
-         Route: Route;
+         Route: SalaryStore['Route'];
          children?: ReactNode;
       },
    ) => (
-      <SalaryTableStoreProvider initialValue={{ Route }}>
+      <SalaryStoreProvider initialValue={{ Route }}>
          {children}
-      </SalaryTableStoreProvider>
+      </SalaryStoreProvider>
    ),
    DataTable,
-   Menu,
+   ReportSalaryMenu,
 };
 
 export * from './Store';

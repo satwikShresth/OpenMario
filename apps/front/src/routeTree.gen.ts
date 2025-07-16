@@ -11,8 +11,10 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SalaryRouteImport } from './routes/salary'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as SalaryIndexRouteImport } from './routes/salary/index'
-import { Route as SalaryReportRouteImport } from './routes/salary/report'
+import { Route as SalaryDialogRouteImport } from './routes/salary/_dialog'
+import { Route as SalaryDialogReportRouteImport } from './routes/salary/_dialog.report'
+import { Route as SalaryDialogDraftsRouteImport } from './routes/salary/_dialog.drafts'
+import { Route as SalaryDialogAutoFillRouteImport } from './routes/salary/_dialog.auto-fill'
 
 const SalaryRoute = SalaryRouteImport.update({
   id: '/salary',
@@ -24,41 +26,72 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const SalaryIndexRoute = SalaryIndexRouteImport.update({
-  id: '/',
-  path: '/',
+const SalaryDialogRoute = SalaryDialogRouteImport.update({
+  id: '/_dialog',
   getParentRoute: () => SalaryRoute,
 } as any)
-const SalaryReportRoute = SalaryReportRouteImport.update({
+const SalaryDialogReportRoute = SalaryDialogReportRouteImport.update({
   id: '/report',
   path: '/report',
-  getParentRoute: () => SalaryRoute,
+  getParentRoute: () => SalaryDialogRoute,
+} as any)
+const SalaryDialogDraftsRoute = SalaryDialogDraftsRouteImport.update({
+  id: '/drafts',
+  path: '/drafts',
+  getParentRoute: () => SalaryDialogRoute,
+} as any)
+const SalaryDialogAutoFillRoute = SalaryDialogAutoFillRouteImport.update({
+  id: '/auto-fill',
+  path: '/auto-fill',
+  getParentRoute: () => SalaryDialogRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/salary': typeof SalaryRouteWithChildren
-  '/salary/report': typeof SalaryReportRoute
-  '/salary/': typeof SalaryIndexRoute
+  '/salary': typeof SalaryDialogRouteWithChildren
+  '/salary/auto-fill': typeof SalaryDialogAutoFillRoute
+  '/salary/drafts': typeof SalaryDialogDraftsRoute
+  '/salary/report': typeof SalaryDialogReportRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/salary/report': typeof SalaryReportRoute
-  '/salary': typeof SalaryIndexRoute
+  '/salary': typeof SalaryDialogRouteWithChildren
+  '/salary/auto-fill': typeof SalaryDialogAutoFillRoute
+  '/salary/drafts': typeof SalaryDialogDraftsRoute
+  '/salary/report': typeof SalaryDialogReportRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/salary': typeof SalaryRouteWithChildren
-  '/salary/report': typeof SalaryReportRoute
-  '/salary/': typeof SalaryIndexRoute
+  '/salary/_dialog': typeof SalaryDialogRouteWithChildren
+  '/salary/_dialog/auto-fill': typeof SalaryDialogAutoFillRoute
+  '/salary/_dialog/drafts': typeof SalaryDialogDraftsRoute
+  '/salary/_dialog/report': typeof SalaryDialogReportRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/salary' | '/salary/report' | '/salary/'
+  fullPaths:
+    | '/'
+    | '/salary'
+    | '/salary/auto-fill'
+    | '/salary/drafts'
+    | '/salary/report'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/salary/report' | '/salary'
-  id: '__root__' | '/' | '/salary' | '/salary/report' | '/salary/'
+  to:
+    | '/'
+    | '/salary'
+    | '/salary/auto-fill'
+    | '/salary/drafts'
+    | '/salary/report'
+  id:
+    | '__root__'
+    | '/'
+    | '/salary'
+    | '/salary/_dialog'
+    | '/salary/_dialog/auto-fill'
+    | '/salary/_dialog/drafts'
+    | '/salary/_dialog/report'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -82,31 +115,59 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/salary/': {
-      id: '/salary/'
-      path: '/'
-      fullPath: '/salary/'
-      preLoaderRoute: typeof SalaryIndexRouteImport
+    '/salary/_dialog': {
+      id: '/salary/_dialog'
+      path: ''
+      fullPath: '/salary'
+      preLoaderRoute: typeof SalaryDialogRouteImport
       parentRoute: typeof SalaryRoute
     }
-    '/salary/report': {
-      id: '/salary/report'
+    '/salary/_dialog/report': {
+      id: '/salary/_dialog/report'
       path: '/report'
       fullPath: '/salary/report'
-      preLoaderRoute: typeof SalaryReportRouteImport
-      parentRoute: typeof SalaryRoute
+      preLoaderRoute: typeof SalaryDialogReportRouteImport
+      parentRoute: typeof SalaryDialogRoute
+    }
+    '/salary/_dialog/drafts': {
+      id: '/salary/_dialog/drafts'
+      path: '/drafts'
+      fullPath: '/salary/drafts'
+      preLoaderRoute: typeof SalaryDialogDraftsRouteImport
+      parentRoute: typeof SalaryDialogRoute
+    }
+    '/salary/_dialog/auto-fill': {
+      id: '/salary/_dialog/auto-fill'
+      path: '/auto-fill'
+      fullPath: '/salary/auto-fill'
+      preLoaderRoute: typeof SalaryDialogAutoFillRouteImport
+      parentRoute: typeof SalaryDialogRoute
     }
   }
 }
 
+interface SalaryDialogRouteChildren {
+  SalaryDialogAutoFillRoute: typeof SalaryDialogAutoFillRoute
+  SalaryDialogDraftsRoute: typeof SalaryDialogDraftsRoute
+  SalaryDialogReportRoute: typeof SalaryDialogReportRoute
+}
+
+const SalaryDialogRouteChildren: SalaryDialogRouteChildren = {
+  SalaryDialogAutoFillRoute: SalaryDialogAutoFillRoute,
+  SalaryDialogDraftsRoute: SalaryDialogDraftsRoute,
+  SalaryDialogReportRoute: SalaryDialogReportRoute,
+}
+
+const SalaryDialogRouteWithChildren = SalaryDialogRoute._addFileChildren(
+  SalaryDialogRouteChildren,
+)
+
 interface SalaryRouteChildren {
-  SalaryReportRoute: typeof SalaryReportRoute
-  SalaryIndexRoute: typeof SalaryIndexRoute
+  SalaryDialogRoute: typeof SalaryDialogRouteWithChildren
 }
 
 const SalaryRouteChildren: SalaryRouteChildren = {
-  SalaryReportRoute: SalaryReportRoute,
-  SalaryIndexRoute: SalaryIndexRoute,
+  SalaryDialogRoute: SalaryDialogRouteWithChildren,
 }
 
 const SalaryRouteWithChildren =
