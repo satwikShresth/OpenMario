@@ -17,4 +17,3 @@ export const Route = createFileRoute('/salary/_dialog/drafts')({
       </>
    ),
 });
-

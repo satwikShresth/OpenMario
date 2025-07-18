@@ -1,7 +1,6 @@
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
 import { createZustandContext } from "zustand-context";
-import type { SalaryRoute } from "@/routes/salary";
 import type { SubmissionAggregate as SubmissionBase } from "@/client";
 
 export type CompanyPosition = {
@@ -12,9 +11,7 @@ export type CompanyPosition = {
 };
 
 type Submission = SubmissionBase & { id?: string };
-type InitialSalaryStore = { Route: SalaryRoute };
-export type SalaryStore = {
-  Route: SalaryRoute;
+export type SalaryFormStore = {
   submissions: Map<string, Submission>;
   draftSubmissions: Submission[];
   companyPositions: CompanyPosition[];
@@ -37,12 +34,12 @@ export type SalaryStore = {
 
   replaceAllSubmissions: (submissions: Array<Submission>) => void;
 };
-export const [SalaryStoreProvider, useSalaryStore] = createZustandContext(
-  (initialState: InitialSalaryStore) =>
-    create<SalaryStore>()(
+
+export const [SalaryFormStoreProvider, useSalaryFormStore] =
+  createZustandContext(() =>
+    create<SalaryFormStore>()(
       persist(
         (set) => ({
-          Route: initialState.Route,
           submissions: new Map<string, Submission>(),
           draftSubmissions: [],
           companyPositions: [],
@@ -144,4 +141,4 @@ export const [SalaryStoreProvider, useSalaryStore] = createZustandContext(
         },
       ),
     ),
-);
+  );

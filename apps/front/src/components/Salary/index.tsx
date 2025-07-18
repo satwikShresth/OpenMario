@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react';
 import { type SalaryStore, SalaryStoreProvider } from './Store.ts';
 import DataTable from './DataTable';
+import { Form } from './Form';
 import { ReportSalaryMenu } from './Menu';
 
 export const Salary = {
@@ -15,6 +16,7 @@ export const Salary = {
       </SalaryStoreProvider>
    ),
    DataTable,
+   Form,
    ReportSalaryMenu,
 };
 

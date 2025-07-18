@@ -24,7 +24,7 @@ export type SalaryStore = {
   addSubmission: (id: string, submission: Submission) => void;
   updateSubmission: (id: string, submission: Submission) => void;
   removeSubmission: (id: string) => void;
-  addDraftSubmission: (submission: Submission) => void;
+  addDraftSubmission: (submission: Submission) => number;
   updateDraftSubmission: (index: number, submission: Submission) => void;
   removeDraftSubmission: (index: number) => void;
   moveDraftToSubmission: (

@@ -1,7 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router';
 import { CloseButton, Dialog } from '@chakra-ui/react';
 
-export const Route = createFileRoute('/salary/_dialog/auto-fill')({
+export const Route = createFileRoute('/salary/_dialog/submissions')({
    component: () => (
       <>
          <Dialog.Header>

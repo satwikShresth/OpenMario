@@ -10,10 +10,10 @@ export const Route = createFileRoute('/salary/_dialog')({
       return (
          <Dialog.Root
             open
-            onOpenChange={({ open }: { open: boolean }) =>
-               navigate({ to: `/salary${open ? '/report' : ''}` })}
-            size='cover'
-            placement='center'
+            onOpenChange={() => navigate({ to: `/salary` })}
+            size='xl'
+            placement='top'
+            closeOnInteractOutside={false}
             motionPreset='slide-in-bottom'
          >
             <Portal>
