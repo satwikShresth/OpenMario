@@ -1,6 +1,6 @@
 import { Badge, Field, Textarea, VStack } from '@chakra-ui/react';
-import type { withForm } from './index.tsx';
-import { defaultValues, isInvalid } from '../helpers.ts';
+import type { withForm } from './context';
+import { defaultValues, isInvalid } from '@/helpers';
 import { capitalizeWords } from '@/helpers/index.ts';
 
 export default (withForm: withForm) =>

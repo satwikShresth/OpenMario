@@ -36,7 +36,7 @@ export const Route = createFileRoute('/salary')({
       return (
          <Container>
             <VStack align='center'>
-               <Salary.Root Route={Route}>
+               <Salary.Root>
                   <Box maxW='99%'>
                      <Flex justify='space-between' mb={4} mt={4}>
                         {isMobile
@@ -49,7 +49,7 @@ export const Route = createFileRoute('/salary')({
                            : <Text fontSize='3xl' fontWeight='bolder'>Self Reported Salaries</Text>}
 
                         <HStack>
-                           <Salary.ReportSalaryMenu />
+                           <Salary.ReportSalaryMenu Route={Route} />
 
                            <Clipboard.Root value={globalThis.location.href} timeout={1000}>
                               <Clipboard.Trigger asChild>
@@ -62,9 +62,13 @@ export const Route = createFileRoute('/salary')({
                         </HStack>
                      </Flex>
                      <Separator mb={4} />
-                     <Salary.DataTable.Filters open={isFilterOpen} onClose={closeFilter} />
+                     <Salary.DataTable.Filters
+                        open={isFilterOpen}
+                        onClose={closeFilter}
+                        Route={Route}
+                     />
                      <Salary.DataTable.Body data={data?.data!} count={data?.data.length!} />
-                     <Salary.DataTable.Pagination count={data?.count!} />
+                     <Salary.DataTable.Pagination count={data?.count!} Route={Route} />
                      <Salary.DataTable.Footer />
                      <Outlet />
                   </Box>

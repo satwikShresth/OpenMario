@@ -6,9 +6,9 @@ import {
    Portal,
    Select,
 } from '@chakra-ui/react';
-import { PaginationLink } from '@/components/common/index.tsx';
+import { PaginationLink } from '@/components/common';
 import { LuChevronLeft, LuChevronRight } from 'react-icons/lu';
-import { useSalaryStore } from '../Store.ts';
+import type { SalaryRoute } from '@/routes/salary';
 
 const pageSizes = createListCollection({
    items: ['10', '20', '30', '40', '50'].map((value) => ({
@@ -17,8 +17,7 @@ const pageSizes = createListCollection({
    })),
 });
 
-export default ({ count }: { count: number }) => {
-   const { Route } = useSalaryStore();
+export default ({ count, Route }: { count: number; Route: SalaryRoute }) => {
    const query = Route.useSearch();
    const navigate = Route.useNavigate();
 

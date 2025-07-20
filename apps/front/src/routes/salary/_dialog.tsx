@@ -1,11 +1,9 @@
 import { createFileRoute } from '@tanstack/react-router';
-import { Box, Dialog, Portal } from '@chakra-ui/react';
-import { useSalaryStore } from '@/components/Salary';
+import { Dialog, Portal } from '@chakra-ui/react';
 import { Outlet } from '@tanstack/react-router';
 
 export const Route = createFileRoute('/salary/_dialog')({
    component: () => {
-      const Route = useSalaryStore(({ Route }) => Route);
       const navigate = Route.useNavigate();
       return (
          <Dialog.Root
@@ -19,10 +17,8 @@ export const Route = createFileRoute('/salary/_dialog')({
             <Portal>
                <Dialog.Backdrop />
                <Dialog.Positioner>
-                  <Dialog.Content>
-                     <Box p={2} m={3}>
-                        <Outlet />
-                     </Box>
+                  <Dialog.Content p={5}>
+                     <Outlet />
                   </Dialog.Content>
                </Dialog.Positioner>
             </Portal>

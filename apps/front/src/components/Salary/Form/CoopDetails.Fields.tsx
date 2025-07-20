@@ -7,9 +7,14 @@ import {
    Text,
    useBreakpointValue,
 } from '@chakra-ui/react';
-import type { withForm } from './index.tsx';
-import { coopCycleCollection, coopYearCollection, defaultValues, isInvalid } from '../helpers.ts';
-import { capitalizeWords } from '@/helpers/index.ts';
+import type { withForm } from './context';
+import {
+   capitalizeWords,
+   coopCycleCollection,
+   coopYearCollection,
+   defaultValues,
+   isInvalid,
+} from '@/helpers';
 
 export default (withForm: withForm) =>
    withForm({

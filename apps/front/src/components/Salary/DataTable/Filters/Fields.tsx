@@ -11,10 +11,10 @@ import {
 } from '@chakra-ui/react';
 import { AsyncSelect } from 'chakra-react-select';
 import { useQueryClient } from '@tanstack/react-query';
-import { useSalaryStore } from '@/components/Salary';
 import { useForm } from '@tanstack/react-form';
 import { HiCheck, HiX } from 'react-icons/hi';
 import { asyncComponents } from '@/components/common';
+import type { SalaryRoute } from '@/routes/salary';
 import {
    getV1AutocompleteCompanyOptions,
    getV1AutocompleteLocationOptions,
@@ -37,8 +37,7 @@ const ConvertMapFunc = (
    variant: 'subtle',
 });
 
-export default () => {
-   const Route = useSalaryStore(({ Route }) => Route);
+export default ({ Route }: { Route: SalaryRoute }) => {
    const query = Route.useSearch();
    const queryClient = useQueryClient();
    const navigate = Route.useNavigate();

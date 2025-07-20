@@ -1,13 +1,13 @@
 import { Field, Select, Stack, useBreakpointValue } from '@chakra-ui/react';
-import type { withForm } from './index.tsx';
+import type { withForm } from './context';
 import {
+   capitalizeWords,
    convertFunc,
    defaultValues,
    isInvalid,
    programLevelCollection,
    selectProps,
-} from '../helpers.ts';
-import { capitalizeWords } from '@/helpers/index.ts';
+} from '@/helpers';
 import { AsyncCreatableSelect } from 'chakra-react-select';
 import { useQueryClient } from '@tanstack/react-query';
 import { getV1AutocompleteLocationOptions } from '@/client';
@@ -21,9 +21,28 @@ export default (withForm: withForm) =>
 
          return (
             <Stack direction={isMobile ? 'column' : 'row'} mb={2} gap={6} mt={3}>
-               <form.Field name='location'>
+               <form.Field
+                  name='location'
+                  validators={{
+                     onSubmitAsync: ({ value: loc }) =>
+                        queryClient
+                           .ensureQueryData(
+                              getV1AutocompleteLocationOptions({ query: { loc } }),
+                           )
+                           .then((data) =>
+                              data.some(({ name }) => name === loc) ? undefined : 'Unknown Location'
+                           )
+                           .catch((e) => {
+                              console.error(e);
+                              return 'Value is unable to be validated';
+                           }),
+                  }}
+               >
                   {(field) => (
-                     <Field.Root required invalid={isInvalid({ field })}>
+                     <Field.Root
+                        required
+                        invalid={isInvalid({ field })}
+                     >
                         <Field.Label fontSize='md'>
                            {capitalizeWords(field.name)}
                            <Field.RequiredIndicator />
@@ -34,7 +53,8 @@ export default (withForm: withForm) =>
                            required
                            onBlur={field.handleBlur}
                            loadOptions={(inputValue, callback) => {
-                              const query = { loc: inputValue };
+                              const loc = (inputValue.length >= 3) ? inputValue : field.state.value;
+                              const query = { loc };
                               if (inputValue?.length >= 3) {
                                  queryClient
                                     .ensureQueryData(
@@ -47,7 +67,7 @@ export default (withForm: withForm) =>
                         />
                         <Field.ErrorText>
                            {/*@ts-ignore: shut up*/}
-                           {field.state.meta.errors.map(({ message }) => message).join(', ')}
+                           {field.state.meta.errors.join(', ')}
                         </Field.ErrorText>
                      </Field.Root>
                   )}

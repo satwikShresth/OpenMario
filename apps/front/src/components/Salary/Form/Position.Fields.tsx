@@ -1,6 +1,6 @@
 import { Field, Stack, useBreakpointValue } from '@chakra-ui/react';
-import type { withForm } from './index.tsx';
-import { convertFunc, defaultValues, isInvalid, selectProps } from '../helpers.ts';
+import type { withForm } from './context';
+import { convertFunc, defaultValues, isInvalid, selectProps } from '@/helpers';
 import { capitalizeWords } from '@/helpers/index.ts';
 import { AsyncCreatableSelect } from 'chakra-react-select';
 import { useQueryClient } from '@tanstack/react-query';
@@ -17,6 +17,20 @@ export default (withForm: withForm) =>
             <Stack direction={isMobile ? 'column' : 'row'} mb={2} gap={6}>
                <form.Field
                   name='company'
+                  validators={{
+                     onSubmitAsync: ({ value: comp }) =>
+                        queryClient
+                           .ensureQueryData(
+                              getV1AutocompleteCompanyOptions({ query: { comp } }),
+                           )
+                           .then((data) =>
+                              data.some(({ name }) => name === comp) ? undefined : 'Unknown Company'
+                           )
+                           .catch((e) => {
+                              console.error(e);
+                              return 'Value is unable to be validated';
+                           }),
+                  }}
                   listeners={{ onChange: ({ fieldApi }) => fieldApi.form.resetField('position') }}
                >
                   {(field) => (
@@ -30,8 +44,11 @@ export default (withForm: withForm) =>
                            {...selectProps(field)}
                            required
                            loadOptions={(inputValue, callback) => {
-                              const query = { comp: inputValue };
-                              if (inputValue?.length >= 3) {
+                              const comp = (inputValue.length >= 3)
+                                 ? inputValue
+                                 : field.state.value;
+                              const query = { comp };
+                              if (comp?.length >= 3) {
                                  queryClient
                                     .ensureQueryData(
                                        getV1AutocompleteCompanyOptions({ query }),
@@ -43,9 +60,7 @@ export default (withForm: withForm) =>
                         />
                         <Field.ErrorText>
                            {/*@ts-ignore: shut up*/}
-                           {field.state.meta.errors.map(({ message }) => message).join(
-                              ', ',
-                           )}
+                           {field.state.meta.errors.join(', ')}
                         </Field.ErrorText>
                      </Field.Root>
                   )}
@@ -54,7 +69,25 @@ export default (withForm: withForm) =>
                   selector={(state) => state.values.company}
                >
                   {(comp) => (
-                     <form.Field name='position'>
+                     <form.Field
+                        name='position'
+                        validators={{
+                           onSubmitAsync: ({ value: pos }) =>
+                              queryClient
+                                 .ensureQueryData(
+                                    getV1AutocompletePositionOptions({ query: { comp, pos } }),
+                                 )
+                                 .then((data) => {
+                                    return data.some(({ name }) => name === pos)
+                                       ? undefined
+                                       : "Unknown Company's Position";
+                                 })
+                                 .catch((e) => {
+                                    console.error(e);
+                                    return 'Value is unable to be validated';
+                                 }),
+                        }}
+                     >
                         {(field) => (
                            <Field.Root required invalid={isInvalid({ field })}>
                               <Field.Label fontSize='md'>
@@ -67,8 +100,11 @@ export default (withForm: withForm) =>
                                  required
                                  disabled={comp.length == 0}
                                  loadOptions={(inputValue, callback) => {
-                                    const query = { comp, pos: inputValue };
-                                    if (inputValue?.length >= 3) {
+                                    const pos = (inputValue.length >= 3)
+                                       ? inputValue
+                                       : field.state.value;
+                                    const query = { comp, pos };
+                                    if (pos?.length >= 3) {
                                        queryClient
                                           .ensureQueryData(
                                              getV1AutocompletePositionOptions({ query }),
@@ -80,9 +116,7 @@ export default (withForm: withForm) =>
                               />
                               <Field.ErrorText>
                                  {/*@ts-ignore: shut up*/}
-                                 {field.state.meta.errors.map(({ message }) => message).join(
-                                    ', ',
-                                 )}
+                                 {field.state.meta.errors.join(', ')}
                               </Field.ErrorText>
                            </Field.Root>
                         )}

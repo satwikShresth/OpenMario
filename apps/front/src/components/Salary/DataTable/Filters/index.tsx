@@ -1,20 +1,23 @@
 import { Drawer, IconButton, useBreakpointValue } from '@chakra-ui/react';
 import Fields from './Fields';
 import { HiX } from 'react-icons/hi';
+import type { SalaryRoute } from '@/routes/salary';
 
 interface FilterDrawerProps {
    open: boolean;
+   Route: SalaryRoute;
    onClose: () => void;
 }
 
 export default ({
+   Route,
    open,
    onClose,
 }: FilterDrawerProps) => {
    const isMobile = useBreakpointValue({ base: true, md: false });
 
    if (!isMobile) {
-      return <Fields />;
+      return <Fields Route={Route} />;
    }
 
    return (
@@ -31,7 +34,7 @@ export default ({
                   </Drawer.CloseTrigger>
                </Drawer.Header>
                <Drawer.Body>
-                  <Fields />
+                  <Fields Route={Route} />
                </Drawer.Body>
             </Drawer.Content>
          </Drawer.Positioner>

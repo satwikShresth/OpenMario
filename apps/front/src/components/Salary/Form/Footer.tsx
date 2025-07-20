@@ -1,6 +1,6 @@
 import { Button, HStack } from '@chakra-ui/react';
-import { defaultValues } from '../helpers.ts';
-import type { withForm } from './index.tsx';
+import { defaultValues } from '@/helpers';
+import type { withForm } from './context';
 
 export default (withForm: withForm) =>
    withForm({
@@ -24,7 +24,7 @@ export default (withForm: withForm) =>
                      <Button
                         type='submit'
                         colorPalette='green'
-                        disabled={isSubmitting || isPristine || !canSubmit}
+                        disabled={isSubmitting || !canSubmit}
                         loading={isSubmitting}
                         loadingText='Submiting...'
                         onClick={() => form.handleSubmit()}

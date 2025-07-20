@@ -1,6 +1,14 @@
 import * as z from "zod/mini";
 import { coopCycle, coopYear, programLevel, zodCheckUnique } from "@/helpers";
 
+export const year = z.coerce.number().check(
+  z.nonnegative({ message: "Amount cannot be negative" }),
+  z.gte(2005, { message: "Year cannot be before 2005" }),
+  z.lte(new Date().getFullYear() + 1, {
+    message: `Year cannot be after ${new Date().getFullYear() + 1}`,
+  }),
+);
+
 export const salarySearchSchema = z.object({
   pageIndex: z.catch(z._default(z.coerce.number(), 1).check(z.minimum(1)), 1),
   pageSize: z.catch(
@@ -28,13 +36,7 @@ export const salarySearchSchema = z.object({
   year: z.catch(
     z._default(
       z.optional(
-        z
-          .array(
-            z.coerce
-              .number()
-              .check(z.maximum(new Date().getFullYear()), z.minimum(2005)),
-          )
-          .check(z.minLength(2), z.maxLength(2), zodCheckUnique),
+        z.array(year).check(z.minLength(2), z.maxLength(2), zodCheckUnique),
       ),
       [2005, new Date().getFullYear()],
     ),
@@ -89,14 +91,7 @@ export const submissionSchema = z.object({
   details: z
     .string()
     .check(z.maxLength(255, "Cannot be more than 255 characters")),
-  year: z.number().check(
-    z.refine((val) => Number.isInteger(val)),
-    z.nonnegative({ message: "Amount cannot be negative" }),
-    z.gte(2005, { message: "Year cannot be before 2005" }),
-    z.refine((year: number) => year <= new Date().getFullYear() + 1, {
-      error: `Year must be between 2004 and ${new Date().getFullYear() + 2}`,
-    }),
-  ),
+  year,
   coop_year: z.enum(coopYear),
   coop_cycle: z.enum(coopCycle),
   program_level: z.enum(programLevel),

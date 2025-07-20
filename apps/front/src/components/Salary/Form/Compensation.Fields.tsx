@@ -8,9 +8,8 @@ import {
    Stack,
    useBreakpointValue,
 } from '@chakra-ui/react';
-import type { withForm } from './index.tsx';
-import { defaultValues, isInvalid } from '../helpers.ts';
-import { capitalizeWords } from '@/helpers/index.ts';
+import type { withForm } from './context';
+import { capitalizeWords, defaultValues, isInvalid } from '@/helpers';
 import { LuDollarSign } from 'react-icons/lu';
 
 export default (withForm: withForm) =>
