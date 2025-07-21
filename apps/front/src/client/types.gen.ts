@@ -26,26 +26,34 @@ export type LoginResponse = {
     token_type: string;
 };
 
-export type CompanyPositionListResponse = {
-    data: Array<CompanyPositionItem>;
-};
-
-export type CompanyPositionItem = {
-    company_id: string | null;
-    position_id: string | null;
-    company_name: string;
-    position_name: string;
-};
-
-export type CompanyPositionCreateResponse = {
-    company_id: string;
-    position_id: string;
+export type CompanyCreateResponse = {
+    company: {
+        id: string;
+        name: string;
+        owner_id: string | null;
+    };
     message: string;
 };
 
-export type CompanyPostionInsert = {
-    company: string;
-    position: string;
+export type CompanyInsert = {
+    name: string;
+};
+
+export type PositionCreateResponse = {
+    position: PositionItem;
+    message: string;
+};
+
+export type PositionItem = {
+    id: string;
+    name: string;
+    company_id: string;
+    owner_id: string | null;
+};
+
+export type PositionInsert = {
+    name: string;
+    company_id: string;
 };
 
 export type SubmissionListResponse = {
@@ -240,59 +248,59 @@ export type GetV1AuthLoginByTokenResponses = {
 
 export type GetV1AuthLoginByTokenResponse = GetV1AuthLoginByTokenResponses[keyof GetV1AuthLoginByTokenResponses];
 
-export type GetV1CompanyPositionData = {
-    body?: never;
+export type PostV1CompanyData = {
+    body?: CompanyInsert;
     path?: never;
     query?: never;
-    url: '/v1/company-position';
+    url: '/v1/company';
 };
 
-export type GetV1CompanyPositionErrors = {
+export type PostV1CompanyErrors = {
     /**
-     * Error response
+     * Error response - company creation failed
      */
     409: ErrorResponse;
 };
 
-export type GetV1CompanyPositionError = GetV1CompanyPositionErrors[keyof GetV1CompanyPositionErrors];
+export type PostV1CompanyError = PostV1CompanyErrors[keyof PostV1CompanyErrors];
 
-export type GetV1CompanyPositionResponses = {
+export type PostV1CompanyResponses = {
     /**
-     * Success response with user's companies and positions
+     * Successfully created company
      */
-    200: CompanyPositionListResponse;
+    201: CompanyCreateResponse;
 };
 
-export type GetV1CompanyPositionResponse = GetV1CompanyPositionResponses[keyof GetV1CompanyPositionResponses];
+export type PostV1CompanyResponse = PostV1CompanyResponses[keyof PostV1CompanyResponses];
 
-export type PostV1CompanyPositionData = {
-    body?: CompanyPostionInsert;
+export type PostV1PositionData = {
+    body?: PositionInsert;
     path?: never;
     query?: never;
-    url: '/v1/company-position';
+    url: '/v1/position';
 };
 
-export type PostV1CompanyPositionErrors = {
+export type PostV1PositionErrors = {
     /**
-     * Error response - position already exists or creation failed
+     * Error response - position creation failed
      */
     409: ErrorResponse;
 };
 
-export type PostV1CompanyPositionError = PostV1CompanyPositionErrors[keyof PostV1CompanyPositionErrors];
+export type PostV1PositionError = PostV1PositionErrors[keyof PostV1PositionErrors];
 
-export type PostV1CompanyPositionResponses = {
+export type PostV1PositionResponses = {
     /**
-     * Success
+     * Successfully created position
      */
-    200: CompanyPositionListResponse;
+    200: PositionCreateResponse;
     /**
-     * Successfully created company and position
+     * Successfully created position
      */
-    201: CompanyPositionCreateResponse;
+    201: PositionCreateResponse;
 };
 
-export type PostV1CompanyPositionResponse = PostV1CompanyPositionResponses[keyof PostV1CompanyPositionResponses];
+export type PostV1PositionResponse = PostV1PositionResponses[keyof PostV1PositionResponses];
 
 export type GetV1SubmissionsData = {
     body?: never;

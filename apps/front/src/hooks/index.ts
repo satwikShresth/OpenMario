@@ -1,2 +1,2 @@
-export * from "./useJobParser";
-export * from "./useTesseract";
+export * from './useJobParser';
+export * from './useTesseract';
