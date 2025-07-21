@@ -377,9 +377,9 @@ export type PostV1SubmissionsError = PostV1SubmissionsErrors[keyof PostV1Submiss
 
 export type PostV1SubmissionsResponses = {
     /**
-     * Success
+     * Successfully created submission
      */
-    200: SubmissionListResponse;
+    200: SubmissionCreateResponse;
     /**
      * Successfully created submission
      */
@@ -447,7 +447,7 @@ export type GetV1AutocompletePositionData = {
     path?: never;
     query: {
         comp: string;
-        pos?: string;
+        pos: string;
     };
     url: '/v1/autocomplete/position';
 };

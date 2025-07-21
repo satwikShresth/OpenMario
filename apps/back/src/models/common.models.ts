@@ -33,10 +33,10 @@ export const DescribeRouteBase = ({
       (acc, [code, res]) => ({
         ...acc,
         [code]: {
-          description: res.description,
-          ...(res.schema && {
+          description: res?.description!,
+          ...(res?.schema! && {
             content: {
-              "application/json": { schema: resolver(res.schema) },
+              "application/json": { schema: resolver(res?.schema!)! },
             },
           }),
         },

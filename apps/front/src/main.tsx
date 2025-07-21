@@ -11,6 +11,9 @@ import { routeTree } from './routeTree.gen';
 import './styles.css';
 import reportWebVitals from './reportWebVitals.ts';
 import { parseSearchWith } from '@tanstack/react-router';
+import { enableMapSet } from 'immer';
+
+enableMapSet();
 // import { client } from './client/client.gen';
 
 // // Request interceptor - logs outgoing requests

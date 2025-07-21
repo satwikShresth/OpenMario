@@ -11,7 +11,7 @@ export type CompanyPosition = {
   position_id: string;
 };
 
-type Submission = SubmissionBase & { id?: string };
+type Submission = SubmissionBase & { owner_id?: string; id?: string };
 
 export type SalaryStore = {
   submissions: Map<string, Submission>;
