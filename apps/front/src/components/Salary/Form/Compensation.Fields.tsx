@@ -9,7 +9,7 @@ import {
    useBreakpointValue,
 } from '@chakra-ui/react';
 import type { withForm } from './context';
-import { capitalizeWords, defaultValues, isInvalid } from '@/helpers';
+import { capitalizeWords, defaultValues, isInvalid, marksMaker } from '@/helpers';
 import { LuDollarSign } from 'react-icons/lu';
 
 export default (withForm: withForm) =>
@@ -19,17 +19,11 @@ export default (withForm: withForm) =>
          const isMobile = useBreakpointValue({ base: true, md: false });
          const min = 0;
          const max = 60;
-         const marks = Array.from(
-            { length: max - min + 1 },
-            (_, i) => i % 5 === 0 ? ({ value: i + min, label: i + min }) : null,
-         ).filter((value) => value !== null);
+         const marks = marksMaker(min, max, 5);
 
          const wageMin = 0;
          const wageMax = 100;
-         const wageMarks = Array.from(
-            { length: wageMax - wageMin + 1 },
-            (_, i) => i % 10 === 0 ? ({ value: i + min, label: i + min }) : null,
-         ).filter((value) => value !== null);
+         const wageMarks = marksMaker(wageMin, wageMax, 10);
 
          return (
             <Stack
@@ -164,10 +158,9 @@ export default (withForm: withForm) =>
                                     Weekly Compensation: ${work_hours * state.value}
                                  </Field.HelperText>
                                  <Field.ErrorText>
-                                    {/*@ts-ignore: shut up*/}
-                                    {state.meta.errors.map(({ message }) => message).join(
-                                       ', ',
-                                    )}
+                                    {state.meta.errors
+                                       //@ts-ignore: shut up
+                                       .map(({ message }) => message).join(', ')}
                                  </Field.ErrorText>
                               </Slider.Root>
                            </Field.Root>

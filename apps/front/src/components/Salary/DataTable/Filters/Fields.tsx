@@ -20,7 +20,7 @@ import {
    getV1AutocompleteLocationOptions,
    getV1AutocompletePositionOptions,
 } from '@/client';
-import { capitalizeWords, coopCycle, coopYear, programLevel } from '@/helpers';
+import { capitalizeWords, coopCycle, coopYear, marksMaker, programLevel } from '@/helpers';
 
 type AutocompleteOptions = {
    value: string;
@@ -42,10 +42,7 @@ export default ({ Route }: { Route: SalaryRoute }) => {
    const navigate = Route.useNavigate();
    const min = 2016;
    const max = new Date().getFullYear();
-   const marks = Array.from(
-      { length: max - min + 1 },
-      (_, i) => ({ value: i + min, label: i % 3 === 0 ? i + min : '' }),
-   );
+   const marks = marksMaker(min, max, 3);
 
    const defaultValues = {
       company: [...((query?.company!) ? query?.company : [])],
