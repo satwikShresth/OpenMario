@@ -1,14 +1,80 @@
-import { Badge, EmptyState, Flex, List, Table, Text, useDialog, VStack } from '@chakra-ui/react';
-import type { SubmissionListItem, SubmissionListResponse } from '@/client';
+import {
+   Badge,
+   EmptyState,
+   Flex,
+   HStack,
+   Icon,
+   List,
+   Table,
+   Text,
+   useDialog,
+   VStack,
+} from '@chakra-ui/react';
+import type { GetV1SubmissionsData, SubmissionListItem, SubmissionListResponse } from '@/client';
 import DataTableDialog from './Dialog';
 import { HiColorSwatch } from 'react-icons/hi';
+import type { SalaryRoute } from '@/routes/salary';
 import { useState } from 'react';
+import { capitalizeWords } from '../../../helpers/index.ts';
+import { FaSort, FaSortDown, FaSortUp } from 'react-icons/fa';
+import { Tooltip } from '../../ui/tooltip.jsx';
+import { Link } from '@tanstack/react-router';
 
 export default (
-   { data, count }: { data: SubmissionListResponse['data']; count: number },
+   { Route, data, count }: {
+      Route: SalaryRoute;
+      data: SubmissionListResponse['data'];
+      count: number;
+   },
 ) => {
+   const search = Route.useSearch();
    const dialog = useDialog();
    const [submission, setSubmission] = useState<SubmissionListItem | null>(null);
+
+   const SortableColumnHeader = ({
+      label,
+      textAlign = 'start',
+      display = { base: 'table-cell', md: 'table-cell' },
+      ...props
+   }: {
+      label: GetV1SubmissionsData['query']['sortField'];
+      textAlign?: string;
+      display?: any;
+   }) => {
+      return (
+         <Table.ColumnHeader
+            textAlign={textAlign}
+            display={display}
+            {...props}
+         >
+            <Link
+               //@ts-ignore: stip
+               search={(prev) => {
+                  const sort = (prev.sortField === label)
+                     ? (prev.sort === 'DESC') ? 'ASC' : 'DESC'
+                     : 'DESC';
+                  return { ...prev, pageIndex: 1, sort, sortField: label };
+               }}
+            >
+               <HStack justify='space-between'>
+                  {capitalizeWords(label.replace('_', ' '))}
+                  {/*//@ts-ignore: stip*/}
+                  <Tooltip
+                     content={(search.sortField === label)
+                        ? (search.sort === 'ASC') ? 'ASC' : 'DESC'
+                        : 'SORT'}
+                  >
+                     <Icon size='sm'>
+                        {(search.sortField === label)
+                           ? (search.sort === 'ASC') ? <FaSortUp /> : <FaSortDown />
+                           : <FaSort />}
+                     </Icon>
+                  </Tooltip>
+               </HStack>
+            </Link>
+         </Table.ColumnHeader>
+      );
+   };
 
    return (
       <Flex overflow='auto' w='full' mt={4}>
@@ -18,27 +84,27 @@ export default (
             variant='outline'
             interactive
             borderRadius='2xl'
-            native
          >
             <Table.Header>
                <Table.Row>
-                  <Table.ColumnHeader>Company</Table.ColumnHeader>
-                  <Table.ColumnHeader>Position</Table.ColumnHeader>
-                  <Table.ColumnHeader
+                  <SortableColumnHeader label='company' />
+                  <SortableColumnHeader label='position' />
+                  <SortableColumnHeader
+                     label='location'
                      display={{ base: 'none', md: 'table-cell' }}
-                  >
-                     Location
-                  </Table.ColumnHeader>
-                  <Table.ColumnHeader
-                     display={{ base: 'table-cell', md: 'table-cell' }}
-                  >
-                     Year
-                  </Table.ColumnHeader>
-                  <Table.ColumnHeader
+                  />
+                  <SortableColumnHeader
+                     label='year'
                      display={{ base: 'none', md: 'table-cell' }}
-                  >
-                     Coop Year
-                  </Table.ColumnHeader>
+                  />
+                  <SortableColumnHeader
+                     label='coop_year'
+                     display={{ base: 'none', md: 'table-cell' }}
+                  />
+                  <SortableColumnHeader
+                     label='salary'
+                     display={{ base: 'none', md: 'table-cell' }}
+                  />
                   <Table.ColumnHeader
                      display={{ base: 'none', md: 'table-cell' }}
                   >
@@ -48,9 +114,6 @@ export default (
                      display={{ base: 'none', md: 'table-cell' }}
                   >
                      Program Level
-                  </Table.ColumnHeader>
-                  <Table.ColumnHeader textAlign='end'>
-                     Salary
                   </Table.ColumnHeader>
                </Table.Row>
             </Table.Header>
@@ -86,6 +149,18 @@ export default (
                            >
                               {row?.coop_year || 'N/A'}
                            </Table.Cell>
+                           <Table.Cell textAlign='end'>
+                              {row?.compensation
+                                 ? (
+                                    <Text
+                                       fontWeight='semibold'
+                                       color='green.600'
+                                    >
+                                       ${row?.compensation?.toLocaleString()}/hr
+                                    </Text>
+                                 )
+                                 : 'N/A'}
+                           </Table.Cell>
                            <Table.Cell
                               display={{ base: 'none', md: 'table-cell' }}
                            >
@@ -101,18 +176,6 @@ export default (
                               display={{ base: 'none', md: 'table-cell' }}
                            >
                               {row?.program_level || 'N/A'}
-                           </Table.Cell>
-                           <Table.Cell textAlign='end'>
-                              {row?.compensation
-                                 ? (
-                                    <Text
-                                       fontWeight='semibold'
-                                       color='green.600'
-                                    >
-                                       ${row?.compensation?.toLocaleString()}
-                                    </Text>
-                                 )
-                                 : 'N/A'}
                            </Table.Cell>
                         </Table.Row>
                      ))

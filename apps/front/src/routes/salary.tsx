@@ -69,7 +69,11 @@ export const Route = createFileRoute('/salary')({
                      />
                      <Box m={2} />
                      <Salary.DataTable.Pagination count={data?.count!} Route={Route} />
-                     <Salary.DataTable.Body data={data?.data!} count={data?.data.length!} />
+                     <Salary.DataTable.Body
+                        Route={Route}
+                        data={data?.data!}
+                        count={data?.data.length!}
+                     />
                      <Salary.DataTable.Pagination count={data?.count!} Route={Route} />
                      <Salary.DataTable.Footer />
                      <Outlet />

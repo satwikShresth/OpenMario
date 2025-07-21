@@ -4,6 +4,14 @@ import { createListCollection } from "@chakra-ui/react";
 import type { SubmissionAggregate as Submission } from "@/client";
 
 export const coopYear = ["1st", "2nd", "3rd"] as const;
+export const queryFields = [
+  "company",
+  "position",
+  "location",
+  "year",
+  "coop_year",
+  "salary",
+] as const;
 export const coopCycle = [
   "Fall/Winter",
   "Winter/Spring",

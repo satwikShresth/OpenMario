@@ -5,7 +5,6 @@ import { company, db, location, position, submission } from "#db";
 import {
   type SubmissionAggregate,
   SubmissionAggregateSchema,
-  type SubmissionAggregateUpdate,
   SubmissionAggregateUpdateSchema,
   SubmissionCreateResponseSchema,
   type SubmissionInsert,
@@ -49,7 +48,7 @@ export default () => {
       zValidator("query", SubmissionQuerySchema),
       async (c) => {
         const queryRaw = c.req.valid("query") as SubmissionQuery;
-        const { distinct, skip, limit, query, pageIndex } =
+        const { distinct, order, skip, limit, query, pageIndex } =
           transformQuery(queryRaw);
 
         //@ts-ignore: I duuno why
@@ -76,7 +75,7 @@ export default () => {
           other_compensation: submission.other_compensation,
           details: submission.details,
           company: sql`${company.name}`.as("company_name"),
-          position: position.name,
+          position: sql`${position.name}`.as("position_name"),
           location_city: location.city,
           location_state: location.state,
           location_state_code: location.state_code,
@@ -93,6 +92,7 @@ export default () => {
           const data = await db
             .select()
             .from(subQuery)
+            .orderBy(order!)
             .offset(skip!)
             .limit(limit!);
 
