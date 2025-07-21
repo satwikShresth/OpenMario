@@ -153,7 +153,7 @@ export const postV1CompanyMutation = (options?: Partial<Options<PostV1CompanyDat
 export const postV1PositionQueryKey = (options?: Options<PostV1PositionData>) => createQueryKey('postV1Position', options);
 
 /**
- * Create a new position for an existing company
+ * Create a new position for an existing company using company name
  */
 export const postV1PositionOptions = (options?: Options<PostV1PositionData>) => {
     return queryOptions({
@@ -171,7 +171,7 @@ export const postV1PositionOptions = (options?: Options<PostV1PositionData>) => 
 };
 
 /**
- * Create a new position for an existing company
+ * Create a new position for an existing company using company name
  */
 export const postV1PositionMutation = (options?: Partial<Options<PostV1PositionData>>): UseMutationOptions<PostV1PositionResponse, PostV1PositionError, Options<PostV1PositionData>> => {
     const mutationOptions: UseMutationOptions<PostV1PositionResponse, PostV1PositionError, Options<PostV1PositionData>> = {

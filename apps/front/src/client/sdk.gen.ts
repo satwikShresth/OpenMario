@@ -67,7 +67,7 @@ export const postV1Company = <ThrowOnError extends boolean = false>(options?: Op
 };
 
 /**
- * Create a new position for an existing company
+ * Create a new position for an existing company using company name
  */
 export const postV1Position = <ThrowOnError extends boolean = false>(options?: Options<PostV1PositionData, ThrowOnError>) => {
     return (options?.client ?? _heyApiClient).post<PostV1PositionResponses, PostV1PositionErrors, ThrowOnError>({

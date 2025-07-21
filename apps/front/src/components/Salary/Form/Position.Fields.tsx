@@ -3,8 +3,14 @@ import type { withForm } from './context';
 import { convertFunc, defaultValues, isInvalid, selectProps } from '@/helpers';
 import { capitalizeWords } from '@/helpers/index.ts';
 import { AsyncCreatableSelect } from 'chakra-react-select';
-import { useQueryClient } from '@tanstack/react-query';
-import { getV1AutocompleteCompanyOptions, getV1AutocompletePositionOptions } from '@/client';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import {
+   getV1AutocompleteCompanyOptions,
+   getV1AutocompletePositionOptions,
+   postV1CompanyMutation,
+   postV1PositionMutation,
+} from '@/client';
+import { toaster } from '@/components/ui/toaster';
 
 export default (withForm: withForm) =>
    withForm({
@@ -12,6 +18,8 @@ export default (withForm: withForm) =>
       render: ({ form }) => {
          const isMobile = useBreakpointValue({ base: true, md: false });
          const queryClient = useQueryClient();
+         const createCompany = useMutation(postV1CompanyMutation());
+         const createPosition = useMutation(postV1PositionMutation());
 
          return (
             <Stack direction={isMobile ? 'column' : 'row'} mb={2} gap={6}>
@@ -43,6 +51,30 @@ export default (withForm: withForm) =>
                         <AsyncCreatableSelect
                            {...selectProps(field)}
                            required
+                           onCreateOption={(name) => {
+                              const promise = createCompany
+                                 .mutateAsync({ body: { name } })
+                                 .then(({ company: { name } }) => {
+                                    field.handleChange(name);
+                                    queryClient.getQueryCache().clear();
+                                 })
+                                 .catch(console.error);
+
+                              toaster.promise(promise, {
+                                 success: {
+                                    title: 'Successfully created a new Comapny!',
+                                    description: 'Everything looks great',
+                                 },
+                                 error: {
+                                    title: 'Failed to create your new company',
+                                    description: 'Something wrong with the submission',
+                                 },
+                                 loading: {
+                                    title: 'Creating Company...',
+                                    description: 'Please wait',
+                                 },
+                              });
+                           }}
                            loadOptions={(inputValue, callback) => {
                               const comp = (inputValue.length >= 3)
                                  ? inputValue
@@ -99,6 +131,30 @@ export default (withForm: withForm) =>
                                  {...selectProps(field)}
                                  required
                                  disabled={comp.length == 0}
+                                 onCreateOption={(name) => {
+                                    const promise = createPosition
+                                       .mutateAsync({ body: { name, company: comp } })
+                                       .then(({ position: { name } }) => {
+                                          field.handleChange(name);
+                                          queryClient.getQueryCache().clear();
+                                       })
+                                       .catch(console.error);
+
+                                    toaster.promise(promise, {
+                                       success: {
+                                          title: 'Successfully created a new Comapny!',
+                                          description: 'Everything looks great',
+                                       },
+                                       error: {
+                                          title: 'Failed to create your new company',
+                                          description: 'Something wrong with the submission',
+                                       },
+                                       loading: {
+                                          title: 'Creating Company...',
+                                          description: 'Please wait',
+                                       },
+                                    });
+                                 }}
                                  loadOptions={(inputValue, callback) => {
                                     const pos = (inputValue.length >= 3)
                                        ? inputValue

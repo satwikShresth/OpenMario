@@ -13,7 +13,7 @@ export const { useAppForm, withForm } = createFormHook({
 export type withForm = typeof withForm;
 
 export const defaultValues = {
-   step: 2,
+   step: 0,
    canPrev: true,
    canFinish: false,
    program_level: 'Undergraduate',

@@ -6,7 +6,7 @@ import type { SubmissionAggregate } from '@/client';
 
 export type FormProps = {
    defaultValues?: SubmissionAggregate;
-   onSubmit: ({ value }: { value: SubmissionAggregate }) => Promise<void>;
+   onSubmit: ({ value }: { value: SubmissionAggregate }) => void;
 };
 
 export const Form = ({ defaultValues, onSubmit }: FormProps) => {

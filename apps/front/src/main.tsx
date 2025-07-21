@@ -12,6 +12,7 @@ import './styles.css';
 import reportWebVitals from './reportWebVitals.ts';
 import { parseSearchWith } from '@tanstack/react-router';
 import { enableMapSet } from 'immer';
+import { Toaster } from '@/components/ui/toaster';
 
 enableMapSet();
 // import { client } from './client/client.gen';
@@ -67,6 +68,7 @@ if (rootElement && !rootElement.innerHTML) {
    root.render(
       <StrictMode>
          <Provider>
+            <Toaster />
             <TanStackQueryProvider.Provider>
                <RouterProvider router={router} />
             </TanStackQueryProvider.Provider>

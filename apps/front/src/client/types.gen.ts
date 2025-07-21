@@ -53,7 +53,7 @@ export type PositionItem = {
 
 export type PositionInsert = {
     name: string;
-    company_id: string;
+    company: string;
 };
 
 export type SubmissionListResponse = {
@@ -101,6 +101,21 @@ export type SubmissionAggregate = {
 
 export type SubmissionUpdateResponse = {
     message: string;
+};
+
+export type SubmissionAggregateUpdate = {
+    company: string;
+    position: string;
+    location: string;
+    work_hours: number;
+    compensation: number;
+    other_compensation: string;
+    details: string;
+    year: number;
+    coop_year: '1st' | '2nd' | '3rd';
+    coop_cycle: 'Fall/Winter' | 'Winter/Spring' | 'Spring/Summer' | 'Summer/Fall';
+    program_level: 'Undergraduate' | 'Graduate';
+    readonly id: string;
 };
 
 export type SubmissionMeResponse = {
@@ -282,6 +297,10 @@ export type PostV1PositionData = {
 
 export type PostV1PositionErrors = {
     /**
+     * Company not found
+     */
+    404: ErrorResponse;
+    /**
      * Error response - position creation failed
      */
     409: ErrorResponse;
@@ -290,10 +309,6 @@ export type PostV1PositionErrors = {
 export type PostV1PositionError = PostV1PositionErrors[keyof PostV1PositionErrors];
 
 export type PostV1PositionResponses = {
-    /**
-     * Successfully created position
-     */
-    200: PositionCreateResponse;
     /**
      * Successfully created position
      */
@@ -339,7 +354,7 @@ export type GetV1SubmissionsResponses = {
 export type GetV1SubmissionsResponse = GetV1SubmissionsResponses[keyof GetV1SubmissionsResponses];
 
 export type PatchV1SubmissionsData = {
-    body?: SubmissionAggregate;
+    body?: SubmissionAggregateUpdate;
     path?: never;
     query?: never;
     url: '/v1/submissions';

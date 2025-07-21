@@ -1,4 +1,3 @@
-'use no memo';
 import { createFileRoute } from '@tanstack/react-router';
 import { toaster } from '@/components/ui/toaster';
 import { Salary, useSalaryStore } from '@/components/Salary';
@@ -21,14 +20,13 @@ export const Route = createFileRoute('/salary/_dialog/_form/report/{-$idx}')({
             .then(({ id, owner_id, message }) => {
                console.log(message);
                if (defaultValues) {
-                  actions.moveDraftToSubmission(parseInt(idx!), id!, { ...value, owner_id });
+                  actions.moveDraftToSubmission(parseInt(idx!)!, id!, {
+                     ...value!,
+                     owner_id: owner_id!,
+                  });
                } else {
-                  actions.addSubmission(id, { ...value, owner_id });
+                  actions.addSubmission(id, { ...value, owner_id: owner_id! });
                }
-               toaster.success({
-                  title: 'Update successful',
-                  description: 'File saved successfully to the server',
-               });
                navigate({ to: '/salary' });
             })
             .catch(console.error);
@@ -54,40 +52,3 @@ export const Route = createFileRoute('/salary/_dialog/_form/report/{-$idx}')({
       );
    },
 });
-// {
-//             onSuccess: ({ id, owner_id, message }) => {
-//                addSubmission(id, { ...data, owner_id });
-//                enqueueSnackbar(message, { variant: 'success' });
-//                navigate({ to: '/submission' });
-//             },
-//             onError: (error: any) => {
-//                console.error('Error submitting job:', error);
-//                if (error.response?.data) {
-//                   const errorData = error.response.data;
-//                   if (
-//                      errorData.message === 'Validation failed' &&
-//                      Array.isArray(errorData.details)
-//                   ) {
-//                      // Set external errors to be passed to the form
-//                      setExternalErrors(errorData.details);
-//
-//                      // Also show as snackbar notifications
-//                      errorData.details.forEach((detail: any) => {
-//                         const fieldName = detail.field.charAt(0).toUpperCase() +
-//                            detail.field.slice(1);
-//                         enqueueSnackbar(`${fieldName}: ${detail.message}`, {
-//                            variant: 'error',
-//                         });
-//                      });
-//                   } else {
-//                      enqueueSnackbar(errorData.message || 'Failed to submit job', {
-//                         variant: 'error',
-//                      });
-//                   }
-//                } else {
-//                   enqueueSnackbar('An unexpected error occurred. Please try again.', {
-//                      variant: 'error',
-//                   });
-//                }
-//             },
-//          }
