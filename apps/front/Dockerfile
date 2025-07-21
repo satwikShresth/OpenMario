@@ -12,7 +12,7 @@ RUN deno install
 
 COPY . ./
 
-RUN npm task build
+RUN deno task build
 
 
 FROM caddy:latest
