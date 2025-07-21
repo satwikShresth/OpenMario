@@ -8,6 +8,7 @@ WORKDIR /app
 
 COPY deno.json ./
 
+ENV DENO_DIR=/.deno_cache
 RUN deno install 
 RUN deno install --allow-scripts=npm:tesseract.js@6.0.1,npm:core-js@3.44.0,npm:unrs-resolver@1.11.1,npm:napi-postinstall@0.3.1
 
