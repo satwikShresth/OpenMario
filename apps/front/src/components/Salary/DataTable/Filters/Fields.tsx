@@ -198,7 +198,7 @@ export default ({ Route }: { Route: SalaryRoute }) => {
                         onValueChange={({ value }) => handleChange(value)}
                         min={min}
                         max={max}
-                        minStepsBetweenThumbs={2}
+                        minStepsBetweenThumbs={1}
                         step={1}
                         colorPalette='cyan'
                      >
