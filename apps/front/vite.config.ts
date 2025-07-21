@@ -10,9 +10,10 @@ import { FixDir } from "./plugins/heyapifix.ts";
 const ReactCompilerConfig = {
   /* ... */
 };
+
 // https://vitejs.dev/config/
-export default defineConfig({
-  plugins: [
+export default defineConfig(({ command }) => {
+  const plugins = [
     tanstackRouter({ target: "react", autoCodeSplitting: true }),
     react({
       babel: {
@@ -20,55 +21,65 @@ export default defineConfig({
       },
     }),
     deno(),
-    //@ts-ignore: shut up
-    heyApiPlugin({
-      config: {
-        input: {
-          path: "http://localhost:3000/openapi",
-        },
-        output: {
-          path: "./src/client",
-        },
-        plugins: [
-          ...defaultPlugins,
-          {
-            name: "@hey-api/client-fetch",
-            exportFromIndex: "true",
-            path: "./src/client",
-            runtimeConfigPath: "./src/client.config.ts",
-          },
-          {
-            name: "@tanstack/react-query",
-            //@ts-ignore: shut up
-            exportFromIndex: true,
-          },
-          {
-            name: "@hey-api/sdk",
-            operationId: true,
-            exportFromIndex: false,
-          },
-        ],
-      },
-    }),
     FixDir(),
-  ],
-  resolve: {
-    alias: {
-      "@": resolve(__dirname, "./src"),
-    },
-  },
-  server: {
-    proxy: {
-      "/api/v1": {
-        target: "http://localhost:3000",
-        changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api/, ""),
+  ];
+
+  // Only add heyApiPlugin during development
+  if (command === "serve") {
+    plugins.push(
+      //@ts-ignore: shut up
+      heyApiPlugin({
+        config: {
+          input: {
+            path: "http://localhost:3000/openapi",
+          },
+          output: {
+            path: "./src/client",
+          },
+          plugins: [
+            ...defaultPlugins,
+            {
+              name: "@hey-api/client-fetch",
+              exportFromIndex: "true",
+              path: "./src/client",
+              runtimeConfigPath: "./src/client.config.ts",
+            },
+            {
+              name: "@tanstack/react-query",
+              //@ts-ignore: shut up
+              exportFromIndex: true,
+            },
+            {
+              name: "@hey-api/sdk",
+              operationId: true,
+              exportFromIndex: false,
+            },
+          ],
+        },
+      }),
+    );
+  }
+
+  return {
+    plugins,
+    resolve: {
+      alias: {
+        "@": resolve(__dirname, "./src"),
       },
-      // "/api/search": {
-      //   target: "http://localhost:7700",
-      //   changeOrigin: true,
-      //   rewrite: (path) => path.replace(/^\/api\/search/, ""),
-      // },
     },
-  },
+    server: {
+      proxy: {
+        "/api/v1": {
+          target: "http://localhost:3000",
+          changeOrigin: true,
+          rewrite: (path) => path.replace(/^\/api/, ""),
+        },
+        // "/api/search": {
+        //   target: "http://localhost:7700",
+        //   changeOrigin: true,
+        //   rewrite: (path) => path.replace(/^\/api\/search/, ""),
+        // },
+      },
+    },
+  };
 });
