@@ -14,7 +14,13 @@ export const PaginationLink = (
 
    return (
       <IconButton asChild {...rest}>
-         <Link search={{ pageIndex: pageValue() ?? 1 }}>
+         {/*@ts-ignore: shutup*/}
+         <Link
+            search={(prev) => ({ ...prev, pageIndex: pageValue() ?? 1 })}
+            replace
+            reloadDocument={false}
+            resetScroll={false}
+         >
             {props.children}
          </Link>
       </IconButton>

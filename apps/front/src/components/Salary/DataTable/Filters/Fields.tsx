@@ -19,7 +19,6 @@ import {
    getV1AutocompleteCompanyOptions,
    getV1AutocompleteLocationOptions,
    getV1AutocompletePositionOptions,
-   type GetV1SubmissionsData,
 } from '@/client';
 import { capitalizeWords, coopCycle, coopYear, programLevel } from '@/helpers';
 
@@ -48,7 +47,7 @@ export default ({ Route }: { Route: SalaryRoute }) => {
       (_, i) => ({ value: i + min, label: i % 3 === 0 ? i + min : '' }),
    );
 
-   const defaultValues: GetV1SubmissionsData['query'] = {
+   const defaultValues = {
       company: [...((query?.company!) ? query?.company : [])],
       position: [...((query?.position!) ? query?.position : [])],
       location: [...((query?.location!) ? query?.location : [])],
@@ -60,7 +59,23 @@ export default ({ Route }: { Route: SalaryRoute }) => {
    };
 
    const isMobile = useBreakpointValue({ base: true, md: false });
-   const form = useForm({ defaultValues });
+   const form = useForm({
+      defaultValues,
+      listeners: {
+         onChange: ({ formApi }) => {
+            navigate({
+               search: (prev) => ({
+                  ...prev,
+                  ...formApi.state.values,
+                  pageIndex: 1,
+               }),
+               reloadDocument: false,
+               resetScroll: false,
+               replace: true,
+            });
+         },
+      },
+   });
 
    //@ts-ignore: shut up
    const selectProps = ({ state, name, handleChange, handleBlur }) => ({
@@ -85,22 +100,7 @@ export default ({ Route }: { Route: SalaryRoute }) => {
                mb={2}
                gap={5}
             >
-               <form.Field
-                  name='company'
-                  listeners={{
-                     onChange: ({ value: company }) =>
-                        navigate({
-                           search: (prev) => ({
-                              ...prev,
-                              pageIndex: 1,
-                              company,
-                           }),
-                           reloadDocument: false,
-                           replace: true,
-                           startTransition: true,
-                        }),
-                  }}
-               >
+               <form.Field name='company'>
                   {(form) => (
                      <Field.Root>
                         <Field.Label>{capitalizeWords(form.name)}</Field.Label>
@@ -121,22 +121,7 @@ export default ({ Route }: { Route: SalaryRoute }) => {
                      </Field.Root>
                   )}
                </form.Field>
-               <form.Field
-                  name='position'
-                  listeners={{
-                     onChange: ({ value: position }) =>
-                        navigate({
-                           search: (prev) => ({
-                              ...prev,
-                              pageIndex: 1,
-                              position,
-                           }),
-                           reloadDocument: false,
-                           replace: true,
-                           startTransition: true,
-                        }),
-                  }}
-               >
+               <form.Field name='position'>
                   {(form) => (
                      <Field.Root>
                         <Field.Label>{capitalizeWords(form.name)}</Field.Label>
@@ -158,22 +143,7 @@ export default ({ Route }: { Route: SalaryRoute }) => {
                   )}
                </form.Field>
 
-               <form.Field
-                  name='location'
-                  listeners={{
-                     onChange: ({ value: location }) =>
-                        navigate({
-                           search: (prev) => ({
-                              ...prev,
-                              pageIndex: 1,
-                              location,
-                           }),
-                           reloadDocument: false,
-                           replace: true,
-                           startTransition: true,
-                        }),
-                  }}
-               >
+               <form.Field name='location'>
                   {(form) => (
                      <Field.Root>
                         <Field.Label>{capitalizeWords(form.name)}</Field.Label>
@@ -194,23 +164,7 @@ export default ({ Route }: { Route: SalaryRoute }) => {
                      </Field.Root>
                   )}
                </form.Field>
-               <form.Field
-                  name='distinct'
-                  listeners={{
-                     onChange: ({ value: distinct }) => {
-                        navigate({
-                           search: (prev) => ({
-                              ...prev,
-                              pageIndex: 1,
-                              distinct,
-                           }),
-                           reloadDocument: false,
-                           replace: true,
-                           startTransition: true,
-                        });
-                     },
-                  }}
-               >
+               <form.Field name='distinct'>
                   {({ state, handleChange, name }) => (
                      <Switch.Root
                         size='lg'
@@ -239,19 +193,7 @@ export default ({ Route }: { Route: SalaryRoute }) => {
                mb={2}
                gap={5}
             >
-               <form.Field
-                  name='year'
-                  listeners={{
-                     onChange: ({ value: year }) => {
-                        navigate({
-                           search: (prev) => ({ ...prev, pageIndex: 1, year }),
-                           reloadDocument: false,
-                           replace: true,
-                           startTransition: true,
-                        });
-                     },
-                  }}
-               >
+               <form.Field name='year'>
                   {({ state, handleChange, name }) => (
                      <Slider.Root
                         width='full'
@@ -293,23 +235,7 @@ export default ({ Route }: { Route: SalaryRoute }) => {
                      </Slider.Root>
                   )}
                </form.Field>
-               <form.Field
-                  name='coop_year'
-                  listeners={{
-                     onChange: ({ value: coop_year }) => {
-                        navigate({
-                           search: (prev) => ({
-                              ...prev,
-                              pageIndex: 1,
-                              coop_year,
-                           }),
-                           reloadDocument: false,
-                           replace: true,
-                           startTransition: true,
-                        });
-                     },
-                  }}
-               >
+               <form.Field name='coop_year'>
                   {({ state, handleChange, name }) => (
                      <Select.Root
                         value={state?.value}
@@ -349,23 +275,7 @@ export default ({ Route }: { Route: SalaryRoute }) => {
                      </Select.Root>
                   )}
                </form.Field>
-               <form.Field
-                  name='coop_cycle'
-                  listeners={{
-                     onChange: ({ value: coop_cycle }) => {
-                        navigate({
-                           search: (prev) => ({
-                              ...prev,
-                              pageIndex: 1,
-                              coop_cycle,
-                           }),
-                           reloadDocument: false,
-                           replace: true,
-                           startTransition: true,
-                        });
-                     },
-                  }}
-               >
+               <form.Field name='coop_cycle'>
                   {({ state, handleChange, name }) => (
                      <Select.Root
                         value={state?.value}
@@ -406,23 +316,7 @@ export default ({ Route }: { Route: SalaryRoute }) => {
                   )}
                </form.Field>
 
-               <form.Field
-                  name='program_level'
-                  listeners={{
-                     onChange: ({ value: program_level }) => {
-                        navigate({
-                           search: (prev) => ({
-                              ...prev,
-                              pageIndex: 1,
-                              program_level,
-                           }),
-                           reloadDocument: false,
-                           replace: true,
-                           startTransition: true,
-                        });
-                     },
-                  }}
-               >
+               <form.Field name='program_level'>
                   {({ state, handleChange, name }) => (
                      <Select.Root
                         value={[state?.value!]}

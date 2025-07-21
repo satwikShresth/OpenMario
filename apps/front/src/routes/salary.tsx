@@ -61,12 +61,14 @@ export const Route = createFileRoute('/salary')({
                            </Clipboard.Root>
                         </HStack>
                      </Flex>
-                     <Separator mb={4} />
+                     <Separator mb={5} />
                      <Salary.DataTable.Filters
                         open={isFilterOpen}
                         onClose={closeFilter}
                         Route={Route}
                      />
+                     <Box m={2} />
+                     <Salary.DataTable.Pagination count={data?.count!} Route={Route} />
                      <Salary.DataTable.Body data={data?.data!} count={data?.data.length!} />
                      <Salary.DataTable.Pagination count={data?.count!} Route={Route} />
                      <Salary.DataTable.Footer />

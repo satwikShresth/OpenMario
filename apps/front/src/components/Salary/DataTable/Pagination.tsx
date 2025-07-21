@@ -63,11 +63,6 @@ export default ({ count, Route }: { count: number; Route: SalaryRoute }) => {
             count={count}
             pageSize={query.pageSize}
             page={query.pageIndex}
-            onPageChange={({ page }) => {
-               navigate({
-                  search: (prev) => ({ ...prev, pageIndex: page }),
-               });
-            }}
          >
             <ButtonGroup variant='ghost' size='sm' wrap='wrap'>
                <PaginationLink to={Route.path} page='prev'>
