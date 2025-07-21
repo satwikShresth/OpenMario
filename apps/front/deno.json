@@ -46,7 +46,6 @@
       "tesseract.js": "npm:tesseract.js@^6.0.1",
       "typescript": "npm:typescript@^5.7.2",
       "vite": "npm:vite@^7.0.5",
-      "vite-plugin-babel": "npm:vite-plugin-babel@^1.3.2",
       "vitest": "npm:vitest@^3.0.5",
       "web-vitals": "npm:web-vitals@^5.0.3",
       "zod": "npm:zod@^4.0.5",

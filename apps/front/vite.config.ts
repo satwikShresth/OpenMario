@@ -7,17 +7,13 @@ import { resolve } from "node:path";
 import { defaultPlugins } from "@hey-api/openapi-ts";
 import { FixDir } from "./plugins/heyapifix.ts";
 
-const ReactCompilerConfig = {
-  /* ... */
-};
-
 // https://vitejs.dev/config/
 export default defineConfig(({ command }) => {
   const plugins = [
     tanstackRouter({ target: "react", autoCodeSplitting: true }),
     react({
       babel: {
-        plugins: [["babel-plugin-react-compiler", ReactCompilerConfig]],
+        plugins: ["babel-plugin-react-compiler"],
       },
     }),
     deno(),
