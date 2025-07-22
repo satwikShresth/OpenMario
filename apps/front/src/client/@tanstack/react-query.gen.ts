@@ -47,7 +47,9 @@ const createQueryKey = <TOptions extends Options>(
    id: string,
    options?: TOptions,
    infinite?: boolean,
-): [QueryKey<TOptions>[0]] => {
+): [
+   QueryKey<TOptions>[0],
+] => {
    const params: QueryKey<TOptions>[0] = {
       _id: id,
       baseUrl: (options?.client ?? _heyApiClient).getConfig().baseUrl,
@@ -67,19 +69,18 @@ const createQueryKey = <TOptions extends Options>(
    if (options?.query) {
       params.query = options.query;
    }
-   return [params];
+   return [
+      params,
+   ];
 };
 
-export const getV1AuthSearchTokenQueryKey = (
-   options?: Options<GetV1AuthSearchTokenData>,
-) => createQueryKey('getV1AuthSearchToken', options);
+export const getV1AuthSearchTokenQueryKey = (options?: Options<GetV1AuthSearchTokenData>) =>
+   createQueryKey('getV1AuthSearchToken', options);
 
 /**
  * Get a tenant token for searching, filtering, and sorting (expires in 1 day)
  */
-export const getV1AuthSearchTokenOptions = (
-   options?: Options<GetV1AuthSearchTokenData>,
-) => {
+export const getV1AuthSearchTokenOptions = (options?: Options<GetV1AuthSearchTokenData>) => {
    return queryOptions({
       queryFn: async ({ queryKey, signal }) => {
          const { data } = await getV1AuthSearchToken({
@@ -120,11 +121,7 @@ export const postV1CompanyOptions = (options?: Options<PostV1CompanyData>) => {
  */
 export const postV1CompanyMutation = (
    options?: Partial<Options<PostV1CompanyData>>,
-): UseMutationOptions<
-   PostV1CompanyResponse,
-   PostV1CompanyError,
-   Options<PostV1CompanyData>
-> => {
+): UseMutationOptions<PostV1CompanyResponse, PostV1CompanyError, Options<PostV1CompanyData>> => {
    const mutationOptions: UseMutationOptions<
       PostV1CompanyResponse,
       PostV1CompanyError,
@@ -148,9 +145,7 @@ export const postV1PositionQueryKey = (options?: Options<PostV1PositionData>) =>
 /**
  * Create a new position for an existing company using company name
  */
-export const postV1PositionOptions = (
-   options?: Options<PostV1PositionData>,
-) => {
+export const postV1PositionOptions = (options?: Options<PostV1PositionData>) => {
    return queryOptions({
       queryFn: async ({ queryKey, signal }) => {
          const { data } = await postV1Position({
@@ -170,11 +165,7 @@ export const postV1PositionOptions = (
  */
 export const postV1PositionMutation = (
    options?: Partial<Options<PostV1PositionData>>,
-): UseMutationOptions<
-   PostV1PositionResponse,
-   PostV1PositionError,
-   Options<PostV1PositionData>
-> => {
+): UseMutationOptions<PostV1PositionResponse, PostV1PositionError, Options<PostV1PositionData>> => {
    const mutationOptions: UseMutationOptions<
       PostV1PositionResponse,
       PostV1PositionError,
@@ -192,16 +183,13 @@ export const postV1PositionMutation = (
    return mutationOptions;
 };
 
-export const getV1SubmissionsQueryKey = (
-   options: Options<GetV1SubmissionsData>,
-) => createQueryKey('getV1Submissions', options);
+export const getV1SubmissionsQueryKey = (options: Options<GetV1SubmissionsData>) =>
+   createQueryKey('getV1Submissions', options);
 
 /**
  * Retrieve co-op submission records with pagination and filtering
  */
-export const getV1SubmissionsOptions = (
-   options: Options<GetV1SubmissionsData>,
-) => {
+export const getV1SubmissionsOptions = (options: Options<GetV1SubmissionsData>) => {
    return queryOptions({
       queryFn: async ({ queryKey, signal }) => {
          const { data } = await getV1Submissions({
@@ -243,16 +231,13 @@ export const patchV1SubmissionsMutation = (
    return mutationOptions;
 };
 
-export const postV1SubmissionsQueryKey = (
-   options?: Options<PostV1SubmissionsData>,
-) => createQueryKey('postV1Submissions', options);
+export const postV1SubmissionsQueryKey = (options?: Options<PostV1SubmissionsData>) =>
+   createQueryKey('postV1Submissions', options);
 
 /**
  * Create new co-op submission(s)
  */
-export const postV1SubmissionsOptions = (
-   options?: Options<PostV1SubmissionsData>,
-) => {
+export const postV1SubmissionsOptions = (options?: Options<PostV1SubmissionsData>) => {
    return queryOptions({
       queryFn: async ({ queryKey, signal }) => {
          const { data } = await postV1Submissions({
@@ -294,16 +279,13 @@ export const postV1SubmissionsMutation = (
    return mutationOptions;
 };
 
-export const getV1SubmissionsMeQueryKey = (
-   options?: Options<GetV1SubmissionsMeData>,
-) => createQueryKey('getV1SubmissionsMe', options);
+export const getV1SubmissionsMeQueryKey = (options?: Options<GetV1SubmissionsMeData>) =>
+   createQueryKey('getV1SubmissionsMe', options);
 
 /**
  * Retrieve all co-op submissions owned by the authenticated user
  */
-export const getV1SubmissionsMeOptions = (
-   options?: Options<GetV1SubmissionsMeData>,
-) => {
+export const getV1SubmissionsMeOptions = (options?: Options<GetV1SubmissionsMeData>) => {
    return queryOptions({
       queryFn: async ({ queryKey, signal }) => {
          const { data } = await getV1SubmissionsMe({
@@ -318,16 +300,13 @@ export const getV1SubmissionsMeOptions = (
    });
 };
 
-export const getV1AutocompleteCompanyQueryKey = (
-   options: Options<GetV1AutocompleteCompanyData>,
-) => createQueryKey('getV1AutocompleteCompany', options);
+export const getV1AutocompleteCompanyQueryKey = (options: Options<GetV1AutocompleteCompanyData>) =>
+   createQueryKey('getV1AutocompleteCompany', options);
 
 /**
  * Search for companies by name with fuzzy matching
  */
-export const getV1AutocompleteCompanyOptions = (
-   options: Options<GetV1AutocompleteCompanyData>,
-) => {
+export const getV1AutocompleteCompanyOptions = (options: Options<GetV1AutocompleteCompanyData>) => {
    return queryOptions({
       queryFn: async ({ queryKey, signal }) => {
          const { data } = await getV1AutocompleteCompany({

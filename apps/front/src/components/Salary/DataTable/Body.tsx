@@ -14,10 +14,10 @@ import type { GetV1SubmissionsData, SubmissionListItem, SubmissionListResponse }
 import DataTableDialog from './Dialog';
 import { HiColorSwatch } from 'react-icons/hi';
 import type { SalaryRoute } from '@/routes/salary';
-import { useState } from 'react';
-import { capitalizeWords } from '../../../helpers/index.ts';
+import { useCallback, useState } from 'react';
+import { capitalizeWords } from '@/helpers/index.ts';
 import { FaSort, FaSortDown, FaSortUp } from 'react-icons/fa';
-import { Tooltip } from '../../ui/tooltip.jsx';
+import { Tooltip } from '@/components/ui/tooltip.jsx';
 import { Link } from '@tanstack/react-router';
 
 export default (
@@ -31,50 +31,48 @@ export default (
    const dialog = useDialog();
    const [submission, setSubmission] = useState<SubmissionListItem | null>(null);
 
-   const SortableColumnHeader = ({
+   const SortableColumnHeader = useCallback(({
       label,
+      value,
       textAlign = 'start',
       display = { base: 'table-cell', md: 'table-cell' },
-      ...props
    }: {
-      label: GetV1SubmissionsData['query']['sortField'];
+      label: string;
+      value: GetV1SubmissionsData['query']['sortField'];
       textAlign?: string;
       display?: any;
-   }) => {
-      return (
-         <Table.ColumnHeader
-            textAlign={textAlign}
-            display={display}
-            {...props}
+   }) => (
+      <Table.ColumnHeader
+         textAlign={textAlign}
+         display={display}
+      >
+         <Link
+            //@ts-ignore: stip
+            search={(prev) => {
+               const sort = (prev.sortField === value)
+                  ? (prev.sort === 'DESC') ? 'ASC' : 'DESC'
+                  : 'DESC';
+               return { ...prev, pageIndex: 1, sort, sortField: value };
+            }}
          >
-            <Link
-               //@ts-ignore: stip
-               search={(prev) => {
-                  const sort = (prev.sortField === label)
-                     ? (prev.sort === 'DESC') ? 'ASC' : 'DESC'
-                     : 'DESC';
-                  return { ...prev, pageIndex: 1, sort, sortField: label };
-               }}
-            >
-               <HStack justify='space-between'>
-                  {capitalizeWords(label.replace('_', ' '))}
-                  {/*//@ts-ignore: stip*/}
-                  <Tooltip
-                     content={(search.sortField === label)
-                        ? (search.sort === 'ASC') ? 'ASC' : 'DESC'
-                        : 'SORT'}
-                  >
-                     <Icon size='sm'>
-                        {(search.sortField === label)
-                           ? (search.sort === 'ASC') ? <FaSortUp /> : <FaSortDown />
-                           : <FaSort />}
-                     </Icon>
-                  </Tooltip>
-               </HStack>
-            </Link>
-         </Table.ColumnHeader>
-      );
-   };
+            <HStack justify='space-between'>
+               {label}
+               {/*//@ts-ignore: stip*/}
+               <Tooltip
+                  content={(search.sortField === value)
+                     ? (search.sort === 'ASC') ? 'ASC' : 'DESC'
+                     : 'SORT'}
+               >
+                  <Icon size='sm'>
+                     {(search.sortField === value)
+                        ? (search.sort === 'ASC') ? <FaSortUp /> : <FaSortDown />
+                        : <FaSort />}
+                  </Icon>
+               </Tooltip>
+            </HStack>
+         </Link>
+      </Table.ColumnHeader>
+   ), [search]);
 
    return (
       <Flex overflow='auto' w='full' mt={4}>
@@ -87,22 +85,22 @@ export default (
          >
             <Table.Header>
                <Table.Row>
-                  <SortableColumnHeader label='company' />
-                  <SortableColumnHeader label='position' />
+                  <SortableColumnHeader label='Company' value='company' />
+                  <SortableColumnHeader label='Position' value='position' />
                   <SortableColumnHeader
-                     label='location'
+                     label='Location'
+                     value='location'
                      display={{ base: 'none', md: 'table-cell' }}
                   />
-                  <SortableColumnHeader label='year' />
-                  <SortableColumnHeader label='salary' />
+                  <SortableColumnHeader label='Year' value='year' />
+                  <SortableColumnHeader label='Salary' value='compensation' />
                   <SortableColumnHeader
-                     label='coop_year'
+                     label='Coop'
                      display={{ base: 'none', md: 'table-cell' }}
+                     value='coop'
                   />
-                  <Table.ColumnHeader
-                     display={{ base: 'none', md: 'table-cell' }}
-                  >
-                     Coop Cycle
+                  <Table.ColumnHeader display={{ base: 'none', md: 'table-cell' }}>
+                     Cycle
                   </Table.ColumnHeader>
                   <Table.ColumnHeader
                      display={{ base: 'none', md: 'table-cell' }}
@@ -133,15 +131,8 @@ export default (
                               {`${row.location_city}, ${row.location_state_code}` ||
                                  'N/A'}
                            </Table.Cell>
-                           <Table.Cell
-                              display={{ base: 'table-cell', md: 'table-cell' }}
-                           >
+                           <Table.Cell>
                               {row?.year || 'N/A'}
-                           </Table.Cell>
-                           <Table.Cell
-                              display={{ base: 'none', md: 'table-cell' }}
-                           >
-                              {row?.coop_year || 'N/A'}
                            </Table.Cell>
                            <Table.Cell textAlign='end'>
                               {row?.compensation
@@ -154,6 +145,11 @@ export default (
                                     </Text>
                                  )
                                  : 'N/A'}
+                           </Table.Cell>
+                           <Table.Cell
+                              display={{ base: 'none', md: 'table-cell' }}
+                           >
+                              {row?.coop_year || 'N/A'}
                            </Table.Cell>
                            <Table.Cell
                               display={{ base: 'none', md: 'table-cell' }}
