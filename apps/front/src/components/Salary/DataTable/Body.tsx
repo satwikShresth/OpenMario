@@ -78,7 +78,6 @@ export default (
       <Flex overflow='auto' w='full' mt={4}>
          <Table.Root
             tableLayout={count === 0 ? 'fixed' : 'auto'}
-            size='lg'
             variant='outline'
             interactive
             borderRadius='2xl'
@@ -92,7 +91,11 @@ export default (
                      value='location'
                      display={{ base: 'none', md: 'table-cell' }}
                   />
-                  <SortableColumnHeader label='Year' value='year' />
+                  <SortableColumnHeader
+                     label='Year'
+                     value='year'
+                     display={{ base: 'none', md: 'table-cell' }}
+                  />
                   <SortableColumnHeader label='Salary' value='compensation' />
                   <SortableColumnHeader
                      label='Coop'
@@ -122,16 +125,24 @@ export default (
                            }}
                         >
                            <Table.Cell>
-                              {row?.company || 'N/A'}
+                              <Text lineClamp={2}>
+                                 {row?.company || 'N/A'}
+                              </Text>
                            </Table.Cell>
-                           <Table.Cell>{row?.position || 'N/A'}</Table.Cell>
+                           <Table.Cell>
+                              <Text lineClamp={2}>
+                                 {row?.position || 'N/A'}
+                              </Text>
+                           </Table.Cell>
                            <Table.Cell
                               display={{ base: 'none', md: 'table-cell' }}
                            >
                               {`${row.location_city}, ${row.location_state_code}` ||
                                  'N/A'}
                            </Table.Cell>
-                           <Table.Cell>
+                           <Table.Cell
+                              display={{ base: 'none', md: 'table-cell' }}
+                           >
                               {row?.year || 'N/A'}
                            </Table.Cell>
                            <Table.Cell textAlign='end'>

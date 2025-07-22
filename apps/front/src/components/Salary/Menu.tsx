@@ -1,25 +1,17 @@
-import {
-   Badge,
-   Button,
-   HStack,
-   Icon,
-   Menu,
-   Portal,
-   Text,
-   useBreakpointValue,
-} from '@chakra-ui/react';
+import { Badge, Button, HStack, Icon, IconButton, Menu, Portal, Text } from '@chakra-ui/react';
 import { FaWandMagicSparkles } from 'react-icons/fa6';
 import { RiSurveyFill } from 'react-icons/ri';
 import { MdDrafts, MdMarkEmailRead } from 'react-icons/md';
 import { HiPlus } from 'react-icons/hi';
 import type { SalaryRoute } from '@/routes/salary.tsx';
+import { useMobile } from '@/hooks';
 import { useSalaryStore } from './Store.ts';
 
 export const ReportSalaryMenu = ({ Route }: { Route: SalaryRoute }) => {
    const navigate = Route.useNavigate();
    const drafts = useSalaryStore(({ draftSubmissions }) => draftSubmissions.length);
    const submissions = useSalaryStore(({ submissions }) => submissions.size);
-   const isMobile = useBreakpointValue({ base: true, md: false });
+   const isMobile = useMobile();
    return (
       <Menu.Root
          onSelect={({ value }) =>
@@ -31,10 +23,18 @@ export const ReportSalaryMenu = ({ Route }: { Route: SalaryRoute }) => {
             })}
       >
          <Menu.Trigger asChild>
-            <Button variant='solid' size='md'>
-               <Icon as={HiPlus} />
-               <Text>Report Salary</Text>
-            </Button>
+            {isMobile
+               ? (
+                  <IconButton variant='solid' size='md'>
+                     <Icon as={HiPlus} />
+                  </IconButton>
+               )
+               : (
+                  <Button variant='solid' size='md'>
+                     <Icon as={HiPlus} />
+                     <Text>Report Salary</Text>
+                  </Button>
+               )}
          </Menu.Trigger>
 
          <Portal>

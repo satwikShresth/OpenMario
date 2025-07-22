@@ -9,6 +9,7 @@ import {
 import { PaginationLink } from '@/components/common';
 import { LuChevronLeft, LuChevronRight } from 'react-icons/lu';
 import type { SalaryRoute } from '@/routes/salary';
+import { useMobile } from '@/hooks';
 
 const pageSizes = createListCollection({
    items: ['10', '20', '30', '40', '50'].map((value) => ({
@@ -19,13 +20,14 @@ const pageSizes = createListCollection({
 
 export default ({ count, Route }: { count: number; Route: SalaryRoute }) => {
    const query = Route.useSearch();
+   const isMobile = useMobile();
    const navigate = Route.useNavigate();
 
    return (
       <HStack mt='3' justifySelf='center'>
          <Select.Root
             collection={pageSizes}
-            width='70px'
+            width='80px'
             defaultValue={[String(query.pageSize)]}
             value={[String(query.pageSize)]}
             onValueChange={({ value: [pageSize] }) => {
@@ -64,6 +66,7 @@ export default ({ count, Route }: { count: number; Route: SalaryRoute }) => {
             </Portal>
          </Select.Root>
          <Pagination.Root
+            width='full'
             count={count}
             pageSize={query.pageSize}
             page={query.pageIndex}
@@ -73,20 +76,22 @@ export default ({ count, Route }: { count: number; Route: SalaryRoute }) => {
                   <LuChevronLeft />
                </PaginationLink>
 
-               <Pagination.Items
-                  render={(page) => (
-                     <PaginationLink
-                        to={Route.path}
-                        page={page.value}
-                        variant={{
-                           base: 'ghost',
-                           _selected: 'outline',
-                        }}
-                     >
-                        {page.value}
-                     </PaginationLink>
-                  )}
-               />
+               {isMobile ? <Pagination.PageText /> : (
+                  <Pagination.Items
+                     render={(page) => (
+                        <PaginationLink
+                           to={Route.path}
+                           page={page.value}
+                           variant={{
+                              base: 'ghost',
+                              _selected: 'outline',
+                           }}
+                        >
+                           {page.value}
+                        </PaginationLink>
+                     )}
+                  />
+               )}
 
                <PaginationLink to={Route.path} page='next'>
                   <LuChevronRight />

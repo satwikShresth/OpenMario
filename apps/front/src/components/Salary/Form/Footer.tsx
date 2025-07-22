@@ -11,12 +11,13 @@ export default (withForm: withForm) =>
                selector={(state) => [state.canSubmit, state.isSubmitting, state.isPristine]}
             >
                {([canSubmit, isSubmitting, isPristine]) => (
-                  <HStack gap={5} justify='space-between'>
+                  <HStack gap={5} justify='space-between' width='full'>
                      <Button
                         type='reset'
                         colorPalette='red'
                         disabled={isSubmitting || isPristine}
-                        onClick={() => form.reset()}
+                        onClick={() =>
+                           form.reset()}
                      >
                         Clear
                      </Button>
@@ -27,7 +28,8 @@ export default (withForm: withForm) =>
                         disabled={isSubmitting || !canSubmit}
                         loading={isSubmitting}
                         loadingText='Submiting...'
-                        onClick={() => form.handleSubmit()}
+                        onClick={() =>
+                           form.handleSubmit()}
                      >
                         Submit
                      </Button>

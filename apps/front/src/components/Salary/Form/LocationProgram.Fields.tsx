@@ -1,4 +1,4 @@
-import { Field, Select, Stack, useBreakpointValue } from '@chakra-ui/react';
+import { Field, Select, Stack } from '@chakra-ui/react';
 import type { withForm } from './context';
 import {
    capitalizeWords,
@@ -8,6 +8,7 @@ import {
    programLevelCollection,
    selectProps,
 } from '@/helpers';
+import { useMobile } from '@/hooks';
 import { AsyncCreatableSelect } from 'chakra-react-select';
 import { useQueryClient } from '@tanstack/react-query';
 import { getV1AutocompleteLocationOptions } from '@/client';
@@ -16,7 +17,7 @@ export default (withForm: withForm) =>
    withForm({
       defaultValues,
       render: ({ form }) => {
-         const isMobile = useBreakpointValue({ base: true, md: false });
+         const isMobile = useMobile();
          const queryClient = useQueryClient();
 
          return (

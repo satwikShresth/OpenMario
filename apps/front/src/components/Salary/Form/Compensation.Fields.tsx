@@ -6,8 +6,8 @@ import {
    NumberInput,
    Slider,
    Stack,
-   useBreakpointValue,
 } from '@chakra-ui/react';
+import { useMobile } from '@/hooks';
 import type { withForm } from './context';
 import { capitalizeWords, defaultValues, isInvalid, marksMaker } from '@/helpers';
 import { LuDollarSign } from 'react-icons/lu';
@@ -16,7 +16,7 @@ export default (withForm: withForm) =>
    withForm({
       defaultValues,
       render: ({ form }) => {
-         const isMobile = useBreakpointValue({ base: true, md: false });
+         const isMobile = useMobile();
          const min = 0;
          const max = 60;
          const marks = marksMaker(min, max, 5);
