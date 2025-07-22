@@ -26,3 +26,4 @@ CMD ["./openmario"]
 # ENV DENO_DIR=/.deno_cache
 # COPY --from=development-stage /app /app
 # RUN deno task install
+
