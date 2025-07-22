@@ -1,5 +1,5 @@
 {
-  "workspace": ["./apps/back/", "./apps/front"],
+  "workspace": ["./apps/back", "./apps/front"],
   "fmt": {
     "useTabs": false,
     "indentWidth": 3,
@@ -8,7 +8,7 @@
     "lineWidth": 100,
     "proseWrap": "preserve",
     "exclude": ["./apps/front/src/routeTree.gen.ts","./apps/front/.vite/*","./apps/back/email_templates/*"],
-    "include": ["./apps/back/","./apps/front"]
+    "include": ["./apps/back","./apps/front"]
   },
   "lint": {
     "rules": {
