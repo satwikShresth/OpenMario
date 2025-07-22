@@ -21,7 +21,7 @@
     },
     "server:dev": "deno task -f '@openmario/back' dev:watch",
     "client:dev": "deno task -f '@openmario/front' dev",
-    "server:build": "deno task -f '@openmario/back' build",
+    "server:build": "deno compile --no-check -A -c apps/back/deno.json -o ./bin/openmario apps/back/src/server.ts",
     "client:build": "deno task -f '@openmario/front' build"
   },
   "unstable": ["sloppy-imports"],

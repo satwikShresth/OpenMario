@@ -1,6 +1,7 @@
 sendgrid.env
 volumes
 .env
+bin
 
 # Logs
 logs
