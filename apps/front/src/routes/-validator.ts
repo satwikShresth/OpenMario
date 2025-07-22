@@ -47,7 +47,10 @@ export const salarySearchSchema = z.object({
       undefined,
    ),
    sort: z.catch(z.enum(['ASC', 'DESC']), 'DESC'),
-   sortField: z.catch(z.enum(queryFields), 'year'),
+   sortField: z.catch(
+      z.enum(['coop', 'company', 'position', 'location', 'year', 'compensation']),
+      'compensation',
+   ),
    coop_year: z.catch(
       z.optional(z.array(z.enum(coopYear)).check(zodCheckUnique)),
       undefined,

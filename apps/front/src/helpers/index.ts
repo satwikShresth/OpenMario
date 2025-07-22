@@ -10,7 +10,7 @@ export const queryFields = [
    'location',
    'year',
    'coop_year',
-   'salary',
+   'compensation',
 ] as const;
 export const coopCycle = [
    'Fall/Winter',

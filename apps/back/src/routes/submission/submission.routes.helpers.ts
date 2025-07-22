@@ -153,14 +153,14 @@ export const transformQuery = (
             return sql`company_name`;
          case 'position':
             return sql`position_name`;
-         case 'salary':
+         case 'compensation':
             return sql`compensation`;
          case 'year':
             return sql`year`;
-         case 'coop_year':
+         case 'coop':
             return sql`coop_year`;
          case 'location':
-            return sql`location`;
+            return sql`city`;
          default:
             return sql`compensation`; // safe default
       }

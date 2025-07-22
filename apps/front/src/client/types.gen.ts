@@ -250,7 +250,7 @@ export type GetV1SubmissionsData = {
       coop_cycle?: Array<'Fall/Winter' | 'Winter/Spring' | 'Spring/Summer' | 'Summer/Fall'>;
       program_level?: 'Undergraduate' | 'Graduate';
       sort: 'ASC' | 'DESC';
-      sortField: 'company' | 'position' | 'location' | 'year' | 'coop_year' | 'salary';
+      sortField: 'company' | 'position' | 'location' | 'year' | 'coop_year' | 'compensation';
       pageIndex?: number;
       pageSize?: number;
       distinct: boolean;

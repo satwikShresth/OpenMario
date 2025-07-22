@@ -81,9 +81,9 @@ export const SubmissionQuerySchema = z
       program_level: z.enum(program_level).optional(),
       sort: z.enum(['ASC', 'DESC']).optional().default('DESC'),
       sortField: z
-         .enum(['company', 'position', 'location', 'year', 'coop_year', 'salary'])
+         .enum(['company', 'position', 'location', 'year', 'coop', 'compensation'])
          .optional()
-         .default('year'),
+         .default('compensation'),
       pageIndex: parseOptionalInt('pageIndex', 0),
       pageSize: parseOptionalInt('pageSize', 1, 100),
       distinct: z.preprocess((val) => val === 'true', z.boolean()).default(true),
