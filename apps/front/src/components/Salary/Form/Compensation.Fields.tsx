@@ -1,12 +1,4 @@
-import {
-   Badge,
-   Field,
-   HStack,
-   InputGroup,
-   NumberInput,
-   Slider,
-   Stack,
-} from '@chakra-ui/react';
+import { Badge, Field, HStack, InputGroup, NumberInput, Slider, Stack } from '@chakra-ui/react';
 import { useMobile } from '@/hooks';
 import type { withForm } from './context';
 import { capitalizeWords, defaultValues, isInvalid, marksMaker } from '@/helpers';

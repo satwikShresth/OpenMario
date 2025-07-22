@@ -1,5 +1,6 @@
 import {
    Box,
+   Button,
    Clipboard,
    Container,
    Flex,
@@ -41,25 +42,31 @@ export const Route = createFileRoute('/salary')({
                      <Flex justify='space-between' mb={2} mt={10}>
                         {isMobile
                            ? (
-                              <IconButton onClick={openFilter} variant='solid'>
+                              <Button onClick={openFilter} variant='solid'>
                                  <Icon as={HiFilter} />
-                              </IconButton>
+                                 <Text>Filters</Text>
+                              </Button>
                            )
                            : <Text fontSize='3xl' fontWeight='bolder'>Self Reported Salaries</Text>}
 
                         <HStack>
                            <Salary.ReportSalaryMenu Route={Route} />
 
-                           <Clipboard.Root value={globalThis.location.href} timeout={1000}>
-                              <Clipboard.Trigger asChild>
-                                 <IconButton variant='solid'>
-                                    <Clipboard.Indicator />
-                                 </IconButton>
-                              </Clipboard.Trigger>
-                           </Clipboard.Root>
+                           {isMobile
+                              ? null
+                              : (
+                                 <Clipboard.Root value={globalThis.location.href} timeout={1000}>
+                                    <Clipboard.Trigger asChild>
+                                       <IconButton variant='solid'>
+                                          <Clipboard.Indicator />
+                                       </IconButton>
+                                    </Clipboard.Trigger>
+                                 </Clipboard.Root>
+                              )}
                         </HStack>
                      </Flex>
-                     <Separator mb={5} />
+
+                     {isMobile ? null : <Separator mb={5} />}
                      <Salary.DataTable.Filters
                         open={isFilterOpen}
                         onClose={closeFilter}
