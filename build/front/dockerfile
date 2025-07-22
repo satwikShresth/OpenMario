@@ -11,6 +11,6 @@ RUN deno task client:build
 
 
 FROM caddy:latest
-COPY ./apps/front/Caddyfile /etc/caddy/Caddyfile
+COPY ./build/front/Caddyfile /etc/caddy/Caddyfile
 RUN caddy fmt /etc/caddy/Caddyfile --overwrite
 COPY --from=build-stage /app/apps/front/dist/ /usr/share/caddy
