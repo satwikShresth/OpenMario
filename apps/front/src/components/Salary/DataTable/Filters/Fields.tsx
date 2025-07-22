@@ -6,7 +6,6 @@ import {
    Slider,
    Stack,
    Switch,
-   useBreakpointValue,
    VStack,
 } from '@chakra-ui/react';
 import { AsyncSelect } from 'chakra-react-select';
@@ -15,6 +14,7 @@ import { useForm } from '@tanstack/react-form';
 import { HiCheck, HiX } from 'react-icons/hi';
 import { asyncComponents } from '@/components/common';
 import type { SalaryRoute } from '@/routes/salary';
+import { useMobile } from '@/hooks';
 import {
    getV1AutocompleteCompanyOptions,
    getV1AutocompleteLocationOptions,
@@ -55,7 +55,7 @@ export default ({ Route }: { Route: SalaryRoute }) => {
       distinct: true,
    };
 
-   const isMobile = useBreakpointValue({ base: true, md: false });
+   const isMobile = useMobile();
    const form = useForm({
       defaultValues,
       listeners: {

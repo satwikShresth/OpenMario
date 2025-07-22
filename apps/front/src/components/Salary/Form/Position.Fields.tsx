@@ -1,4 +1,4 @@
-import { Field, Stack, useBreakpointValue } from '@chakra-ui/react';
+import { Field, Stack } from '@chakra-ui/react';
 import type { withForm } from './context';
 import { convertFunc, defaultValues, isInvalid, selectProps } from '@/helpers';
 import { capitalizeWords } from '@/helpers/index.ts';
@@ -10,13 +10,14 @@ import {
    postV1CompanyMutation,
    postV1PositionMutation,
 } from '@/client';
+import { useMobile } from '@/hooks';
 import { toaster } from '@/components/ui/toaster';
 
 export default (withForm: withForm) =>
    withForm({
       defaultValues,
       render: ({ form }) => {
-         const isMobile = useBreakpointValue({ base: true, md: false });
+         const isMobile = useMobile();
          const queryClient = useQueryClient();
          const createCompany = useMutation(postV1CompanyMutation());
          const createPosition = useMutation(postV1PositionMutation());

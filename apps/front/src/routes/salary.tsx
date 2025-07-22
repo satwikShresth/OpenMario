@@ -1,14 +1,13 @@
 import {
    Box,
-   Button,
    Clipboard,
    Container,
    Flex,
    HStack,
    Icon,
+   IconButton,
    Separator,
    Text,
-   useBreakpointValue,
    useDisclosure,
    VStack,
 } from '@chakra-ui/react';
@@ -18,6 +17,7 @@ import { useQuery } from '@tanstack/react-query';
 import { getV1SubmissionsOptions } from '@/client';
 import { createFileRoute, Outlet } from '@tanstack/react-router';
 import { salarySearchSchema } from './-validator.ts';
+import { useMobile } from '@/hooks';
 
 export const Route = createFileRoute('/salary')({
    validateSearch: salarySearchSchema,
@@ -26,7 +26,7 @@ export const Route = createFileRoute('/salary')({
       queryClient.ensureQueryData(getV1SubmissionsOptions({ query })),
    component: () => {
       const query = Route.useSearch();
-      const isMobile = useBreakpointValue({ base: true, md: false });
+      const isMobile = useMobile();
       const { open: isFilterOpen, onOpen: openFilter, onClose: closeFilter } = useDisclosure();
       const { data } = useQuery({
          ...getV1SubmissionsOptions({ query }),
@@ -41,10 +41,9 @@ export const Route = createFileRoute('/salary')({
                      <Flex justify='space-between' mb={4} mt={4}>
                         {isMobile
                            ? (
-                              <Button onClick={openFilter} variant='solid'>
+                              <IconButton onClick={openFilter} variant='solid'>
                                  <Icon as={HiFilter} />
-                                 <Text>Filters</Text>
-                              </Button>
+                              </IconButton>
                            )
                            : <Text fontSize='3xl' fontWeight='bolder'>Self Reported Salaries</Text>}
 
@@ -53,10 +52,9 @@ export const Route = createFileRoute('/salary')({
 
                            <Clipboard.Root value={globalThis.location.href} timeout={1000}>
                               <Clipboard.Trigger asChild>
-                                 <Button variant='solid' size='md'>
+                                 <IconButton variant='solid'>
                                     <Clipboard.Indicator />
-                                    <Text>Copy Link</Text>
-                                 </Button>
+                                 </IconButton>
                               </Clipboard.Trigger>
                            </Clipboard.Root>
                         </HStack>

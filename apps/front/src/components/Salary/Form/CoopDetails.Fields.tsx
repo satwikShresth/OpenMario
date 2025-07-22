@@ -1,12 +1,4 @@
-import {
-   Badge,
-   Field,
-   NumberInput,
-   Select,
-   Stack,
-   Text,
-   useBreakpointValue,
-} from '@chakra-ui/react';
+import { Badge, Field, NumberInput, Select, Stack, Text } from '@chakra-ui/react';
 import type { withForm } from './context';
 import {
    capitalizeWords,
@@ -15,12 +7,13 @@ import {
    defaultValues,
    isInvalid,
 } from '@/helpers';
+import { useMobile } from '@/hooks';
 
 export default (withForm: withForm) =>
    withForm({
       defaultValues,
       render: ({ form }) => {
-         const isMobile = useBreakpointValue({ base: true, md: false });
+         const isMobile = useMobile();
          return (
             <Stack
                direction={isMobile ? 'column' : 'row'}

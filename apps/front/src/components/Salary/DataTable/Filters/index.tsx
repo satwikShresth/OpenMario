@@ -1,4 +1,5 @@
-import { Drawer, IconButton, useBreakpointValue } from '@chakra-ui/react';
+import { Drawer, IconButton } from '@chakra-ui/react';
+import { useMobile } from '@/hooks';
 import Fields from './Fields';
 import { HiX } from 'react-icons/hi';
 import type { SalaryRoute } from '@/routes/salary';
@@ -14,7 +15,7 @@ export default ({
    open,
    onClose,
 }: FilterDrawerProps) => {
-   const isMobile = useBreakpointValue({ base: true, md: false });
+   const isMobile = useMobile();
 
    if (!isMobile) {
       return <Fields Route={Route} />;
