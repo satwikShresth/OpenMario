@@ -1,15 +1,20 @@
 # Build stage
 FROM denoland/deno:alpine AS builder-stage
+
 WORKDIR /app
-COPY . .
+COPY ./deno.json ./
+COPY ./apps ./apps
+
+RUN deno install 
+RUN deno install --allow-scripts=npm:tesseract.js@6.0.1,npm:napi-postinstall@0.3.1
 ENV DENO_DIR=/.deno_cache
-RUN deno compile --no-check -A -o openmario src/server.ts  \
-    && chmod +x openmario
+RUN deno compile --no-check -A -o ./bin/openmario apps/back/src/server.ts  \
+    && chmod +x ./bin/openmario
 
 
 FROM denoland/deno:alpine
 WORKDIR /app
-COPY --from=builder-stage /app/openmario /app
+COPY --from=builder-stage /app/bin/openmario /app
 EXPOSE 3000
 CMD ["./openmario"]
 
