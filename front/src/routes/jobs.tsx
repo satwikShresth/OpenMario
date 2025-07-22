@@ -15,7 +15,7 @@ import { LoadingComponent, ErrorComponent, } from "#/components/search/Shared";
 import SearchLayout from "#/components/search/SearchLayout";
 import { FavoritesProvider, useFavoritesStore } from "#/stores/useFavoriteStore";
 
-export const Route = createFileRoute("/jobs/")({
+export const Route = createFileRoute("/jobs")({
   loader: async ({ context: { queryClient } }) => {
     await queryClient.fetchQuery(getAuthSearchTokenOptions())
   },

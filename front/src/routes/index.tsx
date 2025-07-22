@@ -5,5 +5,5 @@ export const Route = createFileRoute("/")({
 });
 
 function HomeComponent() {
-  return <Navigate to="/salary" replace />;
+  return <Navigate to="/jobs" replace />;
 }

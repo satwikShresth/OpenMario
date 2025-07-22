@@ -1,17 +1,14 @@
 import { Link, useLocation } from "@tanstack/react-router";
-import { AppBar, Box, Container, createTheme, Drawer, IconButton, List, ListItem, ListItemIcon, ListItemText, Toolbar, Tooltip, useMediaQuery, useTheme } from "@mui/material";
-import { Briefcase, GraduationCap, DollarSign, Menu, Moon, Sun, Upload, User, X } from "lucide-react";
+import { AppBar, Box, Container, createTheme, Drawer, IconButton, List, ListItem, ListItemIcon, ListItemText, Toolbar, Tooltip, useMediaQuery } from "@mui/material";
+import { Briefcase, GraduationCap, Menu, Moon, Sun, X } from "lucide-react";
 import { useAppTheme } from "#/utils/useThemeProvider";
-import React, { useEffect, useState } from "react";
-import { clearToken, isLoggedIn } from "#/hooks/useAuth";
+import { useState } from "react";
 
-const Nav = ({ onLoginClick }) => {
+const Nav = () => {
   const { toggleColorMode, mode } = useAppTheme();
   const location = useLocation();
   const [isLogoHovered, setIsLogoHovered] = useState(false);
-  const [authState, setAuthState] = useState(isLoggedIn());
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const theme = useTheme();
   const customTheme = createTheme({
     breakpoints: {
       values: {
@@ -24,25 +21,6 @@ const Nav = ({ onLoginClick }) => {
     },
   });
   const isMobile = useMediaQuery(customTheme.breakpoints.down('md'));
-
-  useEffect(() => {
-    setAuthState(isLoggedIn());
-
-    const handleStorageChange = () => {
-      setAuthState(isLoggedIn());
-    };
-
-    window.addEventListener("storage", handleStorageChange);
-
-    return () => {
-      window.removeEventListener("storage", handleStorageChange);
-    };
-  }, []);
-
-  const handleLogout = () => {
-    clearToken();
-    setAuthState(false);
-  };
 
   const colors = {
     // Light mode colors
@@ -70,20 +48,6 @@ const Nav = ({ onLoginClick }) => {
   // Navigation links - updated Home to Salaries
   const navLinks = [
     {
-      text: "Salary",
-      path: "/salary",
-      icon: <DollarSign size={20} />,
-      color: getColor(colors.red, colors.green),
-      glowColor: "rgba(255, 255, 0, 0.7)", // Yellow glow
-    },
-    {
-      text: "Submissions",
-      path: "/submission",
-      icon: <Upload size={20} />,
-      color: getColor(colors.green, colors.neonPink),
-      glowColor: "rgba(255, 51, 153, 0.7)", // Pink glow
-    },
-    {
       text: "Jobs",
       path: "/jobs",
       icon: <Briefcase size={20} />,
@@ -99,13 +63,13 @@ const Nav = ({ onLoginClick }) => {
     },
   ];
 
-  const profileLink = {
-    text: authState ? "Profile" : "Login",
-    path: authState ? "/logout" : "/login",
-    icon: <User size={20} />,
-    color: getColor(colors.blue, colors.neonPink),
-    glowColor: "rgba(255, 51, 153, 0.7)", // Pink glow
-  };
+  // const profileLink = {
+  //   text: authState ? "Profile" : "Login",
+  //   path: authState ? "/logout" : "/login",
+  //   icon: <User size={20} />,
+  //   color: getColor(colors.blue, colors.neonPink),
+  //   glowColor: "rgba(255, 51, 153, 0.7)", // Pink glow
+  // };
 
   const isActive = (path) => {
     if (path === "/" && location.pathname === "/") return true;
@@ -428,7 +392,7 @@ const Nav = ({ onLoginClick }) => {
             </Box>
           )}
 
-          {/* Profile/Login Link - visible on both */}
+          {/* Profile/Login Link - visible on both
           <Tooltip title={authState ? "Logout" : "Login"}>
             <IconButton
               onClick={authState ? handleLogout : onLoginClick}
@@ -482,6 +446,7 @@ const Nav = ({ onLoginClick }) => {
               )}
             </IconButton>
           </Tooltip>
+           */}
 
           {/* Theme Toggle Button - visible on both */}
           <Tooltip
