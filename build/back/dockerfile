@@ -3,6 +3,7 @@ FROM denoland/deno:alpine AS builder-stage
 WORKDIR /app
 COPY ./apps/back/ ./
 ENV DENO_DIR=/.deno_cache
+RUN deno install
 RUN deno compile --no-check -A -o openmario src/server.ts  \
     && chmod +x openmario
 
