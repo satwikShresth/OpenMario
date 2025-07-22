@@ -7,7 +7,7 @@
     "singleQuote": true,
     "lineWidth": 100,
     "proseWrap": "preserve",
-    "exclude": ["./apps/front/src/routeTree.gen.ts","./apps/front/.vite/*","./apps/back/email_templates/*"]
+    "exclude": ["./apps/front/src/routeTree.gen.ts","./apps/front/.vite/*","./apps/back/email_templates/*"],
     "include": ["./apps/back/","./apps/front"]
   },
   "lint": {
