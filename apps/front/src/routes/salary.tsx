@@ -38,7 +38,7 @@ export const Route = createFileRoute('/salary')({
             <VStack align='center'>
                <Salary.Root>
                   <Box>
-                     <Flex justify='space-between' mb={4} mt={4}>
+                     <Flex justify='space-between' mb={2} mt={10}>
                         {isMobile
                            ? (
                               <IconButton onClick={openFilter} variant='solid'>
