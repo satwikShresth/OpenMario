@@ -1,6 +1,8 @@
 # OpenMario - Co-op Salary Board
 
-OpenMario is a platform for anonymously collecting and sharing cooperative education (co-op) salary information. This project helps students make informed decisions about co-op opportunities by providing transparent salary data.
+OpenMario is a platform for anonymously collecting and sharing cooperative
+education (co-op) salary information. This project helps students make informed
+decisions about co-op opportunities by providing transparent salary data.
 
 ## Features
 
@@ -43,7 +45,8 @@ OpenMario is a platform for anonymously collecting and sharing cooperative educa
      - `DOMAIN` or `APP_URL`: Your application domain
      - `JWT_SECRET_MAGIC_LINK`: Secret key for magic link tokens
      - `JWT_SECRET_CLIENT`: Secret key for client authentication
-     - Update image names in `PRESTART_IMAGE`, `BACKEND_IMAGE`, and `REVERSE_PROXY_IMAGE`
+     - Update image names in `PRESTART_IMAGE`, `BACKEND_IMAGE`, and
+       `REVERSE_PROXY_IMAGE`
 
 ### Running Locally
 
@@ -53,7 +56,8 @@ The application setup requires just two main steps:
    ```bash
    docker compose --profile seed up
    ```
-   This initializes the PostgreSQL database with the necessary tables and initial data.
+   This initializes the PostgreSQL database with the necessary tables and
+   initial data.
 
 2. **Start all services**:
    ```bash
@@ -65,9 +69,11 @@ The application setup requires just two main steps:
    - Backend API server (Deno)
    - Frontend server with reverse proxy
 
-The application should now be accessible at http://localhost (or the domain you configured).
+The application should now be accessible at http://localhost (or the domain you
+configured).
 
 To stop all services, press `Ctrl+C` or run:
+
 ```bash
 docker compose --profile deploy down
 ```
@@ -81,6 +87,7 @@ docker compose --profile deploy up
 ```
 
 This configuration enables:
+
 - File watching and automatic reloading
 - Exposed ports for direct access to services
 - Development-specific settings
@@ -94,17 +101,20 @@ docker compose --profile deploy -f docker-compose.yml up -d
 ```
 
 This will:
+
 - Start all services in detached mode with production configurations
 - Use production-optimized Docker images
 - Apply memory limits as defined in the docker-compose.yml file
 
 ## API Documentation
 
-The API follows OpenAPI 3.0 standards. The full API documentation is available in the `openapi.json` file.
+The API follows OpenAPI 3.0 standards. The full API documentation is available
+in the `openapi.json` file.
 
 ### Authentication
 
 The application uses magic link authentication:
+
 1. Users request a login by providing their email
 2. A magic link is sent to their email
 3. Clicking the link validates the token and authenticates the user
@@ -145,6 +155,7 @@ The application uses magic link authentication:
 ## Memory Usage
 
 The application is optimized for low memory usage:
+
 - Backend: 250MB limit, 150MB reservation
 - Frontend: 200MB limit, 100MB reservation
 - Database: 200MB limit, 100MB reservation
@@ -153,6 +164,7 @@ The application is optimized for low memory usage:
 ## Search Implementation
 
 The application uses Meilisearch for:
+
 - Fast full-text search
 - Typo-tolerant autocomplete
 - Filtering and faceting of salary data
@@ -161,4 +173,5 @@ A search token is generated for users to perform searches securely.
 
 ## Contributing
 
-Contributions are welcome! Please refer to our contribution guidelines for more information.
+Contributions are welcome! Please refer to our contribution guidelines for more
+information.

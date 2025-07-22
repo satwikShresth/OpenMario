@@ -1,0 +1,29 @@
+{
+  "workspace": ["./apps/back", "./apps/front"],
+  "fmt": {
+    "useTabs": false,
+    "indentWidth": 3,
+    "semiColons": true,
+    "singleQuote": true,
+    "lineWidth": 100,
+    "proseWrap": "preserve",
+    "exclude": ["./apps/front/src/routeTree.gen.ts","./apps/front/.vite/*","./apps/back/email_templates/*"],
+    "include": ["./apps/back","./apps/front"]
+  },
+  "lint": {
+    "rules": {
+      "exclude": ["no-sloppy-imports"]
+    }
+  },
+  "tasks": {
+    "dev": {
+      "dependencies": ["server:dev", "client:dev"]
+    },
+    "server:dev": "deno task -f '@openmario/back' dev:watch",
+    "client:dev": "deno task -f '@openmario/front' dev",
+    "server:build": "deno compile --no-check -A -c apps/back/deno.json -o ./bin/openmario apps/back/src/server.ts",
+    "client:build": "deno task -f '@openmario/front' build"
+  },
+  "unstable": ["sloppy-imports"],
+  "nodeModulesDir": "auto"
+}

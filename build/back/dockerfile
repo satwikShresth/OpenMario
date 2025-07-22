@@ -1,0 +1,30 @@
+# Build stage
+FROM denoland/deno:alpine AS builder-stage
+WORKDIR /app
+COPY ./apps/back/ ./
+ENV DENO_DIR=/.deno_cache
+RUN deno install
+RUN deno compile --no-check -A -o openmario src/server.ts  \
+    && chmod +x openmario
+
+
+FROM denoland/deno:alpine
+WORKDIR /app
+COPY --from=builder-stage /app/openmario /app
+EXPOSE 3000
+CMD ["./openmario"]
+
+#
+# FROM denoland/deno:alpine AS development-stage
+# WORKDIR /app
+# COPY . /app
+# ENV DENO_DIR=/.deno_cache
+# RUN deno install
+#
+#
+# FROM denoland/deno:alpine AS seeding-stage
+# WORKDIR /app
+# ENV DENO_DIR=/.deno_cache
+# COPY --from=development-stage /app /app
+# RUN deno task install
+

@@ -1,0 +1,1361 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Coop Salary Board API",
+    "description": "API for collection coop salaries anonymously",
+    "termsOfService": "",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:{port}/{basePath}",
+      "description": "The Development API server",
+      "variables": {
+        "port": {
+          "default": "3000"
+        },
+        "basePath": {
+          "default": "v1"
+        }
+      }
+    }
+  ],
+  "components": {
+    "schemas": {
+      "JwtPayload": {
+        "type": "object",
+        "properties": {
+          "user_id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Unique identifier for the user",
+            "example": "123e4567-e89b-12d3-a456-426614174000"
+          },
+          "username": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 50,
+            "description": "Username of the authenticated user",
+            "example": "john_doe"
+          },
+          "email": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 50,
+            "format": "email",
+            "description": "Username of the authenticated user",
+            "example": "john_doe"
+          },
+          "exp": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Issued at timestamp (in seconds since Unix epoch)",
+            "example": 1620000000
+          }
+        },
+        "required": [
+          "user_id",
+          "username",
+          "email",
+          "exp"
+        ],
+        "description": "Schema for JWT payload containing user authentication information",
+        "title": "JSON Web Token",
+        "example": {
+          "user_id": "123e4567-e89b-12d3-a456-426614174000",
+          "username": "john_doe",
+          "iat": 1620000000
+        }
+      },
+      "Login": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "format": "email"
+          }
+        },
+        "required": [
+          "email"
+        ]
+      },
+      "Major": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "program_level": {
+            "type": "string",
+            "enum": [
+              "Undergraduate",
+              "Graduate"
+            ]
+          },
+          "name": {
+            "type": "string",
+            "maxLength": 255
+          }
+        },
+        "required": [
+          "id",
+          "program_level",
+          "name"
+        ]
+      },
+      "Minor": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "program_level": {
+            "type": "string",
+            "enum": [
+              "Undergraduate",
+              "Graduate"
+            ]
+          },
+          "name": {
+            "type": "string",
+            "maxLength": 255
+          }
+        },
+        "required": [
+          "id",
+          "program_level",
+          "name"
+        ]
+      },
+      "Location": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "state_code": {
+            "type": "string",
+            "maxLength": 3
+          },
+          "state": {
+            "type": "string",
+            "maxLength": 100
+          },
+          "city": {
+            "type": "string",
+            "maxLength": 100
+          }
+        },
+        "required": [
+          "id",
+          "state_code",
+          "state",
+          "city"
+        ]
+      },
+      "CoopYear": {
+        "type": "string",
+        "enum": [
+          "1st",
+          "2nd",
+          "3rd"
+        ]
+      },
+      "CoopCycle": {
+        "type": "string",
+        "enum": [
+          "Fall/Winter",
+          "Winter/Spring",
+          "Spring/Summer",
+          "Summer/Fall"
+        ]
+      },
+      "ProgramLevel": {
+        "type": "string",
+        "enum": [
+          "Undergraduate",
+          "Graduate"
+        ]
+      },
+      "Company": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string",
+            "maxLength": 255
+          },
+          "owner_id": {
+            "type": "string",
+            "nullable": true,
+            "format": "uuid"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "owner_id"
+        ]
+      },
+      "CompanyInsert": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 100
+          },
+          "owner_id": {
+            "type": "string",
+            "nullable": true,
+            "format": "uuid"
+          }
+        },
+        "required": [
+          "name"
+        ]
+      },
+      "Position": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "company_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string",
+            "maxLength": 255
+          },
+          "owner_id": {
+            "type": "string",
+            "nullable": true,
+            "format": "uuid"
+          }
+        },
+        "required": [
+          "id",
+          "company_id",
+          "name",
+          "owner_id"
+        ]
+      },
+      "PositionInsert": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "company_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 100
+          },
+          "owner_id": {
+            "type": "string",
+            "nullable": true,
+            "format": "uuid"
+          }
+        },
+        "required": [
+          "company_id",
+          "name"
+        ]
+      },
+      "CompanyPositionInsert": {
+        "type": "object",
+        "properties": {
+          "company": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 100
+          },
+          "position": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 100
+          }
+        },
+        "required": [
+          "company",
+          "position"
+        ]
+      },
+      "Submission": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "position_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "location_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "program_level": {
+            "type": "string",
+            "enum": [
+              "Undergraduate",
+              "Graduate"
+            ]
+          },
+          "work_hours": {
+            "type": "integer",
+            "minimum": -2147483648,
+            "maximum": 2147483647
+          },
+          "coop_cycle": {
+            "type": "string",
+            "enum": [
+              "Fall/Winter",
+              "Winter/Spring",
+              "Spring/Summer",
+              "Summer/Fall"
+            ]
+          },
+          "coop_year": {
+            "type": "string",
+            "enum": [
+              "1st",
+              "2nd",
+              "3rd"
+            ]
+          },
+          "year": {
+            "type": "integer",
+            "minimum": -2147483648,
+            "maximum": 2147483647
+          },
+          "compensation": {
+            "type": "number",
+            "nullable": true,
+            "minimum": -140737488355328,
+            "maximum": 140737488355327
+          },
+          "other_compensation": {
+            "type": "string",
+            "nullable": true,
+            "maxLength": 255
+          },
+          "details": {
+            "type": "string",
+            "nullable": true,
+            "maxLength": 255
+          },
+          "owner_id": {
+            "type": "string",
+            "nullable": true,
+            "format": "uuid"
+          },
+          "created_at": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "position_id",
+          "location_id",
+          "program_level",
+          "work_hours",
+          "coop_cycle",
+          "coop_year",
+          "year",
+          "compensation",
+          "other_compensation",
+          "details",
+          "owner_id",
+          "created_at"
+        ]
+      },
+      "SubmissionAggregate": {
+        "type": "object",
+        "properties": {
+          "company": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 100
+          },
+          "position": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 100
+          },
+          "location": {
+            "type": "string"
+          },
+          "work_hours": {
+            "type": "integer",
+            "minimum": 5,
+            "maximum": 60,
+            "description": "Expected Work Hours",
+            "example": 40
+          },
+          "compensation": {
+            "type": "number",
+            "minimum": 0,
+            "description": "Compensation amount",
+            "example": 100
+          },
+          "other_compensation": {
+            "type": "string",
+            "maxLength": 255
+          },
+          "details": {
+            "type": "string",
+            "maxLength": 255
+          },
+          "year": {
+            "type": "integer",
+            "minimum": 2005
+          },
+          "coop_year": {
+            "type": "string",
+            "enum": [
+              "1st",
+              "2nd",
+              "3rd"
+            ]
+          },
+          "coop_cycle": {
+            "type": "string",
+            "enum": [
+              "Fall/Winter",
+              "Winter/Spring",
+              "Spring/Summer",
+              "Summer/Fall"
+            ]
+          },
+          "program_level": {
+            "type": "string",
+            "enum": [
+              "Undergraduate",
+              "Graduate"
+            ]
+          }
+        },
+        "required": [
+          "company",
+          "position",
+          "location",
+          "work_hours",
+          "compensation",
+          "other_compensation",
+          "details",
+          "year",
+          "coop_year",
+          "coop_cycle",
+          "program_level"
+        ]
+      },
+      "SubmissionAggregateUpdate": {
+        "type": "object",
+        "properties": {
+          "company": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 100
+          },
+          "position": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 100
+          },
+          "location": {
+            "type": "string"
+          },
+          "work_hours": {
+            "type": "integer",
+            "minimum": 5,
+            "maximum": 60,
+            "description": "Expected Work Hours",
+            "example": 40
+          },
+          "compensation": {
+            "type": "number",
+            "minimum": 0,
+            "description": "Compensation amount",
+            "example": 100
+          },
+          "other_compensation": {
+            "type": "string",
+            "maxLength": 255
+          },
+          "details": {
+            "type": "string",
+            "maxLength": 255
+          },
+          "year": {
+            "type": "integer",
+            "minimum": 2005
+          },
+          "coop_year": {
+            "type": "string",
+            "enum": [
+              "1st",
+              "2nd",
+              "3rd"
+            ]
+          },
+          "coop_cycle": {
+            "type": "string",
+            "enum": [
+              "Fall/Winter",
+              "Winter/Spring",
+              "Spring/Summer",
+              "Summer/Fall"
+            ]
+          },
+          "program_level": {
+            "type": "string",
+            "enum": [
+              "Undergraduate",
+              "Graduate"
+            ]
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "required": [
+          "company",
+          "position",
+          "location",
+          "work_hours",
+          "compensation",
+          "other_compensation",
+          "details",
+          "year",
+          "coop_year",
+          "coop_cycle",
+          "program_level",
+          "id"
+        ]
+      },
+      "SubmissionInsert": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "position_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "location_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "program_level": {
+            "type": "string",
+            "enum": [
+              "Undergraduate",
+              "Graduate"
+            ]
+          },
+          "work_hours": {
+            "type": "integer",
+            "minimum": 5,
+            "maximum": 60,
+            "description": "Expected Work Hours",
+            "example": 40
+          },
+          "coop_cycle": {
+            "type": "string",
+            "enum": [
+              "Fall/Winter",
+              "Winter/Spring",
+              "Spring/Summer",
+              "Summer/Fall"
+            ]
+          },
+          "coop_year": {
+            "type": "string",
+            "enum": [
+              "1st",
+              "2nd",
+              "3rd"
+            ]
+          },
+          "year": {
+            "type": "integer",
+            "minimum": 2005,
+            "maximum": 2147483647,
+            "description": "Submission Year",
+            "example": 2025
+          },
+          "compensation": {
+            "type": "number",
+            "nullable": true,
+            "minimum": 0,
+            "maximum": 140737488355327,
+            "description": "Compensation amount",
+            "example": 100
+          },
+          "other_compensation": {
+            "type": "string",
+            "nullable": true,
+            "maxLength": 255
+          },
+          "details": {
+            "type": "string",
+            "nullable": true,
+            "maxLength": 255
+          },
+          "owner_id": {
+            "type": "string",
+            "nullable": true,
+            "format": "uuid"
+          },
+          "created_at": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "position_id",
+          "location_id",
+          "program_level",
+          "coop_cycle",
+          "coop_year",
+          "year"
+        ]
+      },
+      "SubmissionMeIds": {
+        "type": "object",
+        "properties": {
+          "ids": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        }
+      },
+      "SubmissionUpdate": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "position_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "location_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "program_level": {
+            "type": "string",
+            "enum": [
+              "Undergraduate",
+              "Graduate"
+            ]
+          },
+          "work_hours": {
+            "type": "integer",
+            "minimum": 5,
+            "maximum": 60,
+            "description": "Expected Work Hours",
+            "example": 40
+          },
+          "coop_cycle": {
+            "type": "string",
+            "enum": [
+              "Fall/Winter",
+              "Winter/Spring",
+              "Spring/Summer",
+              "Summer/Fall"
+            ]
+          },
+          "coop_year": {
+            "type": "string",
+            "enum": [
+              "1st",
+              "2nd",
+              "3rd"
+            ]
+          },
+          "year": {
+            "type": "integer",
+            "minimum": 2005,
+            "maximum": 2147483647,
+            "description": "Submission Year",
+            "example": 2025
+          },
+          "compensation": {
+            "type": "number",
+            "nullable": true,
+            "minimum": 0,
+            "maximum": 140737488355327,
+            "description": "Compensation amount",
+            "example": 100
+          },
+          "other_compensation": {
+            "type": "string",
+            "nullable": true,
+            "maxLength": 255
+          },
+          "details": {
+            "type": "string",
+            "nullable": true,
+            "maxLength": 255
+          },
+          "owner_id": {
+            "type": "string",
+            "nullable": true,
+            "format": "uuid"
+          },
+          "created_at": {
+            "type": "string"
+          }
+        }
+      },
+      "SubmissionQuery": {
+        "type": "object",
+        "properties": {
+          "company": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 3,
+              "maxLength": 100
+            }
+          },
+          "position": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 3,
+              "maxLength": 100
+            }
+          },
+          "location": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "^[A-Za-z\\s.-]+,\\s*[A-Z]{2}$"
+            }
+          },
+          "year": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "type": "number",
+              "nullable": true
+            }
+          },
+          "coop_year": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "1st",
+                "2nd",
+                "3rd"
+              ]
+            }
+          },
+          "coop_cycle": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "Fall/Winter",
+                "Winter/Spring",
+                "Spring/Summer",
+                "Summer/Fall"
+              ]
+            }
+          },
+          "program_level": {
+            "type": "string",
+            "enum": [
+              "Undergraduate",
+              "Graduate"
+            ]
+          },
+          "pageIndex": {
+            "type": "integer",
+            "nullable": true,
+            "minimum": 0,
+            "maximum": null
+          },
+          "pageSize": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100
+          },
+          "distinct": {
+            "type": "boolean",
+            "nullable": true,
+            "default": true
+          }
+        }
+      },
+      "SubmissionResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "year": {
+            "type": "number"
+          },
+          "coop_year": {
+            "type": "number"
+          },
+          "coop_cycle": {
+            "type": "string"
+          },
+          "program_level": {
+            "type": "string"
+          },
+          "work_hours": {
+            "type": "number"
+          },
+          "compensation": {
+            "type": "number"
+          },
+          "other_compensation": {
+            "type": "string"
+          },
+          "details": {
+            "type": "string"
+          },
+          "position": {
+            "type": "string"
+          },
+          "company": {
+            "type": "string"
+          },
+          "location_city": {
+            "type": "string"
+          },
+          "location_state": {
+            "type": "string"
+          },
+          "location_state_code": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "year",
+          "coop_year",
+          "coop_cycle",
+          "program_level",
+          "work_hours",
+          "compensation",
+          "other_compensation",
+          "details",
+          "position",
+          "company",
+          "location_city",
+          "location_state",
+          "location_state_code"
+        ]
+      }
+    },
+    "securitySchemes": {
+      "JWT": {
+        "type": "oauth2",
+        "description": "Using OAuth2 for password validation flow of generating jwt",
+        "flows": {
+          "implicit": {
+            "authorizationUrl": "/api/v1/login/:jwt"
+          }
+        }
+      }
+    },
+    "parameters": {
+    }
+  },
+  "paths": {
+    "/auth/search-token": {
+      "get": {
+        "deprecated": false,
+        "summary": "Get a tenant token for searching, filtering, and sorting (expires in 1 day)",
+        "security": [],
+        "responses": {
+        },
+        "parameters": [],
+        "tags": [
+          "Meilisearch"
+        ]
+      }
+    },
+    "/auth/login": {
+      "post": {
+        "deprecated": false,
+        "summary": "Request a magic link for authentication",
+        "security": [],
+        "responses": {
+        },
+        "parameters": [],
+        "tags": [
+          "Auth"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Login"
+              }
+            }
+          },
+          "description": "User email",
+          "required": true
+        }
+      }
+    },
+    "/auth/login/{token}": {
+      "get": {
+        "deprecated": false,
+        "summary": "Verify magic link token and authenticate user",
+        "security": [],
+        "responses": {
+        },
+        "parameters": [
+          {
+            "name": "token",
+            "in": "path",
+            "description": "Magic link token",
+            "required": true,
+            "deprecated": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "tags": [
+          "Auth"
+        ]
+      }
+    },
+    "/autocomplete/company": {
+      "get": {
+        "deprecated": false,
+        "summary": "Search for companies by name with fuzzy matching",
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "List of matching company names",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "examples": {
+                  "example1": {
+                    "summary": "Example success response",
+                    "value": [
+                      "Apple Inc",
+                      "Apple Technologies",
+                      "Appleseed Solutions"
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Error response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                },
+                "examples": {
+                  "example2": {
+                    "summary": "Example error response",
+                    "value": {
+                      "message": "Database query failed"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "comp",
+            "in": "query",
+            "description": "Search parameters for company name",
+            "required": true,
+            "deprecated": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "tags": [
+          "Search"
+        ]
+      }
+    },
+    "/autocomplete/position": {
+      "get": {
+        "deprecated": false,
+        "summary": "Search for positions within a specific company",
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "List of matching position titles",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "examples": {
+                  "example1": {
+                    "summary": "Example success response",
+                    "value": [
+                      "Software Engineer",
+                      "Senior Software Engineer",
+                      "Software Engineering Intern"
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Error response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                },
+                "examples": {
+                  "example2": {
+                    "summary": "Example error response",
+                    "value": {
+                      "message": "Database query failed"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "comp",
+            "in": "query",
+            "description": "Company name and optional position search term",
+            "required": true,
+            "deprecated": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "pos",
+            "in": "query",
+            "description": "Company name and optional position search term",
+            "required": true,
+            "deprecated": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "tags": [
+          "Search"
+        ]
+      }
+    },
+    "/autocomplete/location": {
+      "get": {
+        "deprecated": false,
+        "summary": "Search for locations with fuzzy matching across city, state, and state code",
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "List of matching locations in \"City, State_Code\" format",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "examples": {
+                  "example1": {
+                    "summary": "Example success response",
+                    "value": [
+                      "Boston, MA",
+                      "Cambridge, MA",
+                      "Waltham, MA"
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Error response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                },
+                "examples": {
+                  "example2": {
+                    "summary": "Example error response",
+                    "value": {
+                      "message": "Database query failed"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "loc",
+            "in": "query",
+            "description": "Search parameters for location",
+            "required": true,
+            "deprecated": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "tags": [
+          "Search"
+        ]
+      }
+    },
+    "/company-position": {
+      "get": {
+        "deprecated": false,
+        "summary": "Retrieve companies and positions owned by the authenticated user",
+        "security": [
+          {
+            "JWT": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success response with user's companies and positions",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                },
+                "examples": {
+                  "example1": {
+                    "summary": "Example success response",
+                    "value": {
+                      "data": [
+                        {
+                          "company_id": "123e4567-e89b-12d3-a456-426614174000",
+                          "position_id": "123e4567-e89b-12d3-a456-426614174001",
+                          "company_name": "Tech Corp",
+                          "position_name": "Software Engineer"
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Error response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                },
+                "examples": {
+                  "example2": {
+                    "summary": "Example error response",
+                    "value": {
+                      "message": "Failed to retrieve companies and positions"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "parameters": [],
+        "tags": [
+          "Companies and Positions"
+        ]
+      },
+      "post": {
+        "deprecated": false,
+        "summary": "Create a new company and position pair",
+        "security": [
+          {
+            "JWT": []
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Successfully created company and position",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                },
+                "examples": {
+                  "example1": {
+                    "summary": "Success response example",
+                    "value": {
+                      "company_id": "123e4567-e89b-12d3-a456-426614174000",
+                      "position_id": "123e4567-e89b-12d3-a456-426614174001",
+                      "message": "Added Postion Successfully"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Error response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                },
+                "examples": {
+                  "example2": {
+                    "summary": "Error response example when position already exists",
+                    "value": {
+                      "message": "Position Already Exists"
+                    }
+                  },
+                  "example3": {
+                    "summary": "Other error response example",
+                    "value": {
+                      "message": "Error: Failed to create company or position"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "parameters": [],
+        "tags": [
+          "Companies and Positions"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CompanyPositionInsert"
+              },
+              "examples": {
+                "example1": {
+                  "summary": "Example request body",
+                  "value": "{\n  \"company_name\": \"New Tech Corp\",\n  \"position_name\": \"Frontend Developer\"\n}"
+                }
+              }
+            }
+          },
+          "description": "Company and position data",
+          "required": true
+        }
+      }
+    },
+    "/submissions": {
+      "get": {
+        "deprecated": false,
+        "summary": "Retrieve co-op submission records with pagination and filtering",
+        "security": [],
+        "responses": {
+        },
+        "parameters": [],
+        "tags": []
+      },
+      "post": {
+        "deprecated": false,
+        "summary": "Create new co-op submission(s)",
+        "security": [],
+        "responses": {
+        },
+        "parameters": [],
+        "tags": []
+      },
+      "patch": {
+        "deprecated": false,
+        "summary": "Update an existing co-op submission",
+        "security": [],
+        "responses": {
+        },
+        "parameters": [],
+        "tags": []
+      }
+    },
+    "/submissions/me": {
+      "get": {
+        "deprecated": false,
+        "summary": "Retrieve all co-op submissions owned by the authenticated user",
+        "security": [],
+        "responses": {
+        },
+        "parameters": [],
+        "tags": []
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "Auth",
+      "description": ""
+    },
+    {
+      "name": "Companies and Positions",
+      "description": ""
+    },
+    {
+      "name": "Meilisearch",
+      "description": ""
+    },
+    {
+      "name": "Search",
+      "description": ""
+    }
+  ]
+}

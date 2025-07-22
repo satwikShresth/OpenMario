@@ -1,7 +1,6 @@
 sendgrid.env
 volumes
 .env
-bin
 
 # Logs
 logs
@@ -27,3 +26,4 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
