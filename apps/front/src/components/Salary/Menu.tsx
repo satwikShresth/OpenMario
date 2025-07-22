@@ -1,4 +1,4 @@
-import { Badge, Button, HStack, Icon, IconButton, Menu, Portal, Text } from '@chakra-ui/react';
+import { Badge, Button, HStack, Icon, Menu, Portal, Text } from '@chakra-ui/react';
 import { FaWandMagicSparkles } from 'react-icons/fa6';
 import { RiSurveyFill } from 'react-icons/ri';
 import { MdDrafts, MdMarkEmailRead } from 'react-icons/md';
@@ -25,9 +25,10 @@ export const ReportSalaryMenu = ({ Route }: { Route: SalaryRoute }) => {
          <Menu.Trigger asChild>
             {isMobile
                ? (
-                  <IconButton variant='solid' size='md'>
+                  <Button variant='solid' size='md'>
+                     <Text>Report</Text>
                      <Icon as={HiPlus} />
-                  </IconButton>
+                  </Button>
                )
                : (
                   <Button variant='solid' size='md'>
