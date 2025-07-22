@@ -19,8 +19,10 @@
     "dev": {
       "dependencies": ["server:dev", "client:dev"]
     },
-    "server:dev": "deno task -f '@openmario/back' dev:watch"
-    "client:dev": "deno task -f '@openmario/front' dev"
+    "server:dev": "deno task -f '@openmario/back' dev:watch",
+    "client:dev": "deno task -f '@openmario/front' dev",
+    "server:build": "deno task -f '@openmario/back' build",
+    "client:build": "deno task -f '@openmario/front' build"
   },
   "unstable": ["sloppy-imports"],
   "nodeModulesDir": "auto"

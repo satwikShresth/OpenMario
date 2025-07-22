@@ -92,7 +92,5 @@
       "paths": {
          "@/*": ["./src/*"]
       }
-   },
-   "unstable": ["sloppy-imports"],
-   "nodeModulesDir": "auto"
+   }
 }
