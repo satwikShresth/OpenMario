@@ -1,7 +1,12 @@
 export const NAV_ITEMS = [
-   // {
-   //    label: 'Experience',
-   //    href: '/experience',
-   //    section: '',
-   // },
+   {
+      label: 'Job Listings',
+      href: 'https://old.openmario.com/jobs',
+      section: '',
+   },
+   {
+      label: 'Courses',
+      href: 'https://old.openmario.com/courses',
+      section: '',
+   },
 ];

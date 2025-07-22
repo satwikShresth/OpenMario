@@ -30,7 +30,11 @@ export default ({ count, Route }: { count: number; Route: SalaryRoute }) => {
             value={[String(query.pageSize)]}
             onValueChange={({ value: [pageSize] }) => {
                navigate({
-                  search: (prev) => ({ ...prev, pageSize }),
+                  search: (prev) => ({
+                     ...prev,
+                     pageIndex: Math.floor(prev.pageIndex * prev.pageSize / parseInt(pageSize)!),
+                     pageSize,
+                  }),
                });
             }}
          >

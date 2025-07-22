@@ -1,48 +1,19 @@
-import { StrictMode } from 'react';
-import { Provider } from '@/components/ui/provider';
-import ReactDOM from 'react-dom/client';
 import { createRouter, RouterProvider, stringifySearchWith } from '@tanstack/react-router';
-import { parse, stringify } from 'jsurl2';
-
-import * as TanStackQueryProvider from './integrations/tanstack-query/root-provider.tsx';
-
-// Import the generated route tree
-import { routeTree } from './routeTree.gen';
-import './styles.css';
-import reportWebVitals from './reportWebVitals.ts';
+import * as TanStackQueryProvider from '@/integrations/tanstack-query/root-provider';
 import { parseSearchWith } from '@tanstack/react-router';
-import { enableMapSet } from 'immer';
-import { Toaster } from '@/components/ui/toaster';
-import postHog from 'posthog-js';
+import { ErrorComponent, NotFoundComponent } from '@/components/common';
+import { Provider } from '@/components/ui/provider';
+import reportWebVitals from '@/reportWebVitals.ts';
 import { PostHogProvider } from 'posthog-js/react';
+import { Toaster } from '@/components/ui/toaster';
+import { routeTree } from '@/routeTree.gen';
+import ReactDOM from 'react-dom/client';
+import { parse, stringify } from 'jsurl2';
+import { enableMapSet } from 'immer';
+import { StrictMode } from 'react';
+import postHog from 'posthog-js';
+import './styles.css';
 
-enableMapSet();
-// import { client } from './client/client.gen';
-
-// // Request interceptor - logs outgoing requests
-// client.interceptors.request.use(async (request) => {
-//    console.log('→ Request:', {
-//       method: request.method,
-//       url: request.url,
-//       headers: Object.fromEntries(request.headers.entries()),
-//    });
-//
-//    return request;
-// });
-//
-// // Response interceptor - logs incoming responses
-// client.interceptors.response.use(async (response) => {
-//    console.log('← Response:', {
-//       status: response.status,
-//       statusText: response.statusText,
-//       url: response.url,
-//       headers: Object.fromEntries(response.headers.entries()),
-//    });
-//
-//    return response;
-// });
-
-// Create a new router instance
 const router = createRouter({
    routeTree,
    context: TanStackQueryProvider.getContext(),
@@ -52,6 +23,8 @@ const router = createRouter({
    parseSearch: parseSearchWith(parse),
    defaultStructuralSharing: true,
    defaultPreloadStaleTime: 0,
+   defaultErrorComponent: (props) => <ErrorComponent {...props} />,
+   defaultNotFoundComponent: (props) => <NotFoundComponent {...props} />,
 });
 
 // Register the router instance for type safety
@@ -60,7 +33,7 @@ declare module '@tanstack/react-router' {
       router: typeof router;
    }
 }
-console.log(import.meta.env);
+enableMapSet();
 
 // Render the app
 const rootElement = document.getElementById('app');
