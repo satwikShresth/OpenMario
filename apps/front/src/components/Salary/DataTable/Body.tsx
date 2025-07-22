@@ -93,16 +93,10 @@ export default (
                      label='location'
                      display={{ base: 'none', md: 'table-cell' }}
                   />
-                  <SortableColumnHeader
-                     label='year'
-                     display={{ base: 'none', md: 'table-cell' }}
-                  />
+                  <SortableColumnHeader label='year' />
+                  <SortableColumnHeader label='salary' />
                   <SortableColumnHeader
                      label='coop_year'
-                     display={{ base: 'none', md: 'table-cell' }}
-                  />
-                  <SortableColumnHeader
-                     label='salary'
                      display={{ base: 'none', md: 'table-cell' }}
                   />
                   <Table.ColumnHeader
