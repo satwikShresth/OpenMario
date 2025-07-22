@@ -1,7 +1,6 @@
 FROM denoland/deno:latest AS build-stage
 
 WORKDIR /app
-
 COPY ./deno.json ./
 COPY ./apps ./apps
 
