@@ -2,11 +2,11 @@ FROM denoland/deno:latest AS build-stage
 
 WORKDIR /app
 COPY deno.json ./
+COPY ./apps ./
 
 ENV DENO_DIR=/.deno_cache
 RUN deno install 
 RUN deno install --allow-scripts=npm:tesseract.js@6.0.1,npm:napi-postinstall@0.3.1
-COPY ./apps ./
 RUN deno task client:build
 
 
