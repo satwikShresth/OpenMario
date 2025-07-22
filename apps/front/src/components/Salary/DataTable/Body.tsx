@@ -80,7 +80,7 @@ export default (
             tableLayout={count === 0 ? 'fixed' : 'auto'}
             variant='outline'
             interactive
-            borderRadius='2xl'
+            borderRadius='xl'
          >
             <Table.Header>
                <Table.Row>

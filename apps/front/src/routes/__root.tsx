@@ -3,25 +3,48 @@ import { TanStackRouterDevtools } from '@tanstack/react-router-devtools';
 import { Box, Center, Flex } from '@chakra-ui/react';
 import type { QueryClient } from '@tanstack/react-query';
 import TanStackQueryLayout from '@/integrations/tanstack-query/layout.tsx';
-import Navbar from '@/components/nav/index.tsx';
+import Navbar from '@/components/nav';
+import { useMobile } from '@/hooks';
+import type { ReactNode } from 'react';
 
 interface MyRouterContext {
    queryClient: QueryClient;
 }
+
+const MobileLayout = ({ children }: { children: ReactNode }) => {
+   const isMobile = useMobile();
+   if (isMobile) {
+      return (
+         <>
+            <Navbar />
+            <Flex flex='fit-content' scrollbar='hidden'>
+               {children}
+            </Flex>
+         </>
+      );
+   }
+   return (
+      <>
+         <Flex direction='column' minH='100vh' w='90%' mx='auto'>
+            <Navbar />
+            <Flex flex='1' scrollbar='hidden' overflowY='auto'>
+               {children}
+            </Flex>
+         </Flex>
+         <TanStackRouterDevtools />
+         <TanStackQueryLayout />
+      </>
+   );
+};
 
 export const Route = createRootRouteWithContext<MyRouterContext>()({
    component: () => (
       <>
          <Center>
             <Box width='100%' maxWidth='1800px' position='relative'>
-               <Flex direction='column' minH='100vh' w='90%' mx='auto'>
-                  <Navbar />
-                  <Flex flex='1' scrollbar='hidden' overflowY='auto'>
-                     <Outlet />
-                  </Flex>
-               </Flex>
-               <TanStackRouterDevtools />
-               <TanStackQueryLayout />
+               <MobileLayout>
+                  <Outlet />
+               </MobileLayout>
             </Box>
          </Center>
       </>
