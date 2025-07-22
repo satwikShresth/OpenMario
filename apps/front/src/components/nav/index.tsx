@@ -30,7 +30,7 @@ export default function Navbar() {
       >
          <Flex
             minH='60px'
-            py={{ base: 2 }}
+            pt={{ base: 2 }}
             px={{ base: 4 }}
             align='center'
             transition='all 0.3s ease'
@@ -121,7 +121,7 @@ export default function Navbar() {
          </Flex>
 
          {/* Mobile Navigation */}
-         <Collapsible.Root open={open}>
+         <Collapsible.Root open={open} mt={-4}>
             <Collapsible.Content>
                <MobileNav onToggle={onToggle} />
             </Collapsible.Content>

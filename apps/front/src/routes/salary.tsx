@@ -37,7 +37,7 @@ export const Route = createFileRoute('/salary')({
          <Container>
             <VStack align='center'>
                <Salary.Root>
-                  <Box maxW='99%'>
+                  <Box>
                      <Flex justify='space-between' mb={4} mt={4}>
                         {isMobile
                            ? (
@@ -66,7 +66,9 @@ export const Route = createFileRoute('/salary')({
                         Route={Route}
                      />
                      <Box m={2} />
-                     <Salary.DataTable.Pagination count={data?.count!} Route={Route} />
+                     {isMobile
+                        ? null
+                        : <Salary.DataTable.Pagination count={data?.count!} Route={Route} />}
                      <Salary.DataTable.Body
                         Route={Route}
                         data={data?.data!}
