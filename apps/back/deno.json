@@ -6,6 +6,7 @@
       "noFallthroughCasesInSwitch": true
    },
    "imports": {
+      "@hono/zod-validator": "npm:@hono/zod-validator@^0.7.0",
       "@types/pg": "npm:@types/pg@^8.15.4",
       "drizzle-kit": "npm:drizzle-kit@^0.31.4",
       "pg-native": "npm:pg-native@^3.5.2",
