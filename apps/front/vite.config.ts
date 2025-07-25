@@ -10,56 +10,55 @@ import { FixDir } from "./plugins/heyapifix.ts";
 
 // https://vitejs.dev/config/
 export default defineConfig(({ command }) => {
-  const plugins = [
-    deno(),
-    tanstackRouter({ target: "react", autoCodeSplitting: true }),
-    react({
-      babel: {
-        plugins: ["babel-plugin-react-compiler"],
-      },
-    }),
-  ];
   console.log(JSON.stringify(process.env.MEILI_HOST));
-
-  // Only add heyApiPlugin during development
-  if (command === "serve") {
-    plugins.push(
-      //@ts-ignore: shut up
-      heyApiPlugin({
-        config: {
-          input: {
-            path: "http://localhost:3000/openapi",
-          },
-          output: {
-            path: "./src/client",
-          },
-          plugins: [
-            ...defaultPlugins,
-            {
-              name: "@hey-api/client-fetch",
-              exportFromIndex: "true",
-              path: "./src/client",
-              runtimeConfigPath: "./src/client.config.ts",
-            },
-            {
-              name: "@tanstack/react-query",
-              //@ts-ignore: shut up
-              exportFromIndex: true,
-            },
-            {
-              name: "@hey-api/sdk",
-              operationId: true,
-              exportFromIndex: false,
-            },
-          ],
+  return {
+    plugins: [
+      deno(),
+      tanstackRouter({ target: "react", autoCodeSplitting: true }),
+      react({
+        babel: {
+          plugins: ["babel-plugin-react-compiler"],
         },
       }),
-      FixDir(),
-    );
-  }
-
-  return {
-    plugins,
+      ...(command === "serve"
+        ? [
+            //@ts-ignore: shut up
+            heyApiPlugin({
+              config: {
+                input: {
+                  path: "http://localhost:3000/openapi",
+                },
+                output: {
+                  path: "./src/client",
+                },
+                plugins: [
+                  ...defaultPlugins,
+                  {
+                    name: "@hey-api/client-fetch",
+                    exportFromIndex: "true",
+                    path: "./src/client",
+                    runtimeConfigPath: "./src/client.config.ts",
+                  },
+                  {
+                    name: "@tanstack/react-query",
+                    //@ts-ignore: shut up
+                    exportFromIndex: true,
+                  },
+                  {
+                    name: "@hey-api/sdk",
+                    operationId: true,
+                    exportFromIndex: false,
+                  },
+                ],
+              },
+            }),
+            FixDir(),
+          ]
+        : []),
+    ],
+    define: {
+      __MEILI_HOST__: JSON.stringify(process.env.MEILI_HOST),
+    },
     resolve: {
       alias: {
         "@": resolve(__dirname, "./src"),
