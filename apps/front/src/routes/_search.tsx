@@ -4,7 +4,7 @@ import { instantMeiliSearch } from '@meilisearch/instant-meilisearch';
 import { getV1AuthSearchTokenOptions } from '@/client';
 import { useSuspenseQuery } from '@tanstack/react-query';
 import { Outlet } from '@tanstack/react-router';
-import { Search } from '../components/Search/index.tsx';
+import { Search } from '@/components/Search';
 
 export const Route = createFileRoute('/_search')({
    component: () => {
