@@ -1,6 +1,6 @@
 import { useRefinementList } from 'react-instantsearch';
 import { useEffect, useState } from 'react';
-import { capitalizeWords } from '../../helpers/index.ts';
+import { capitalizeWords } from '@/helpers';
 import {
    Badge,
    Box,
@@ -14,7 +14,7 @@ import {
    Input,
    Text,
 } from '@chakra-ui/react';
-import { Tooltip } from '../ui';
+import { Tooltip } from '@/components/ui';
 
 export const RefinementCheckbox = ({ attribute }: { attribute: string }) => {
    const refinements = useRefinementList({
