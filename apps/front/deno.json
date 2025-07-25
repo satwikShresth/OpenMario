@@ -6,7 +6,7 @@
       "gen:client": "deno run -A @hey-api/openapi-ts -f ./openapi.config.ts",
       "dev:watch": "deno run --env-file=../../.env -A --unstable-no-legacy-abort npm:vite",
       "dev": "deno run -A --env-file=../../.env --unstable-no-legacy-abort npm:vite",
-      "build": "deno run -A npm:vite build",
+      "build": "deno run -A --env-file=../../.env npm:vite build",
       "serve": "deno run --allow-net --allow-read --allow-env --allow-write npm:vite -- preview",
       "test": "deno run --allow-net --allow-read --allow-env --allow-write npm:vitest -- run",
       "check": "deno run --allow-net --allow-read --allow-env --allow-write npm:prettier -- --write . && deno run --allow-net --allow-read --allow-env --allow-write npm:eslint -- --fix"
