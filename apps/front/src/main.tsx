@@ -1,7 +1,7 @@
 import { createRouter, RouterProvider, stringifySearchWith } from '@tanstack/react-router';
 import * as TanStackQueryProvider from '@/integrations/tanstack-query/root-provider';
 import { parseSearchWith } from '@tanstack/react-router';
-import { ErrorComponent, NotFoundComponent } from '@/components/common';
+import { ErrorComponent, LoadingComponent, NotFoundComponent } from '@/components/common';
 import { Provider } from '@/components/ui/provider';
 import reportWebVitals from '@/reportWebVitals.ts';
 import { PostHogProvider } from 'posthog-js/react';
@@ -25,6 +25,7 @@ const router = createRouter({
    defaultPreloadStaleTime: 0,
    defaultErrorComponent: (props) => <ErrorComponent {...props} />,
    defaultNotFoundComponent: (props) => <NotFoundComponent {...props} />,
+   defaultPendingComponent: (props) => <LoadingComponent {...props} />,
 });
 
 // Register the router instance for type safety

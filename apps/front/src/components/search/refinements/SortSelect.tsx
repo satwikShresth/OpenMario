@@ -7,7 +7,7 @@ export const SortSelect = () => {
    return (
       <Select.Root
          collection={sortBy}
-         maxW='320px'
+         maxW='300px'
          value={[sort.currentRefinement]}
          onValueChange={(e) => sort.refine(e.value[0])}
       >

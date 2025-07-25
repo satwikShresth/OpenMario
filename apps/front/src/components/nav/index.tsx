@@ -27,7 +27,6 @@ export default function Navbar() {
          zIndex='sticky'
          borderBottomRadius='lg'
          bgColor='bg'
-         mb={5}
       >
          <Flex
             minH='60px'

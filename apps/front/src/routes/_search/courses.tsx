@@ -44,7 +44,7 @@ export const Route = createFileRoute('/_search/courses')({
                      <RefinementCheckbox attribute='instructors.department' />
                   </Box>
                   <VStack w='full'>
-                     <HStack w='full' justify='space-between'>
+                     <HStack w='97%' justify='space-between'>
                         <Stats />
                         <SortSelect />
                      </HStack>
