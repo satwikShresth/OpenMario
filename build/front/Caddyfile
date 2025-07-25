@@ -32,17 +32,9 @@
 
 	handle_path /* {
 		root * /usr/share/caddy
-      encode gzip
+		encode gzip
 		try_files {path} /index.html
 		file_server
-	}
-
-	# Handle API requests
-	handle_path /api/search/* {
-		reverse_proxy {$MEILI_HOST} {
-			header_up Host {host}
-			header_up X-Real-IP {remote}
-		}
 	}
 
 	handle_path /api/v1/* {
