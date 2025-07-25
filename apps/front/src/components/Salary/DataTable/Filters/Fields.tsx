@@ -13,7 +13,6 @@ import { useQueryClient } from '@tanstack/react-query';
 import { useForm } from '@tanstack/react-form';
 import { HiCheck, HiX } from 'react-icons/hi';
 import { asyncComponents } from '@/components/common';
-import type { SalaryRoute } from '@/routes/salary';
 import { useMobile } from '@/hooks';
 import {
    getV1AutocompleteCompanyOptions,
@@ -21,6 +20,8 @@ import {
    getV1AutocompletePositionOptions,
 } from '@/client';
 import { capitalizeWords, coopCycle, coopYear, marksMaker, programLevel } from '@/helpers';
+import { useSearch } from '@tanstack/react-router';
+import { useNavigate } from '@tanstack/react-router';
 
 type AutocompleteOptions = {
    value: string;
@@ -36,22 +37,22 @@ const ConvertMapFunc = (
    variant: 'subtle',
 });
 
-export default ({ Route }: { Route: SalaryRoute }) => {
-   const query = Route.useSearch();
+export default () => {
+   const query = useSearch({ from: '/salary' });
+   const navigate = useNavigate({ from: '/salary' });
    const queryClient = useQueryClient();
-   const navigate = Route.useNavigate();
    const min = 2016;
    const max = new Date().getFullYear();
    const marks = marksMaker(min, max, 3);
 
    const defaultValues = {
-      company: [...((query?.company!) ? query?.company : [])],
-      position: [...((query?.position!) ? query?.position : [])],
-      location: [...((query?.location!) ? query?.location : [])],
-      year: [...((query?.year!) ? query?.year : [])],
-      coop_cycle: [...((query?.coop_cycle!) ? query?.coop_cycle : [])],
-      coop_year: [...((query?.coop_year!) ? query?.coop_year : [])],
-      program_level: query?.program_level!,
+      company: query?.company ?? [],
+      position: query?.position ?? [],
+      location: query?.location ?? [],
+      year: query?.year ?? [],
+      coop_cycle: query?.coop_cycle ?? [],
+      coop_year: query?.coop_year ?? [],
+      program_level: query?.program_level ?? '', // or whatever default you want
       distinct: true,
    };
 

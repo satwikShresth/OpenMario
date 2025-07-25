@@ -8,8 +8,9 @@ import {
 } from '@chakra-ui/react';
 import { PaginationLink } from '@/components/common';
 import { LuChevronLeft, LuChevronRight } from 'react-icons/lu';
-import type { SalaryRoute } from '@/routes/salary';
 import { useMobile } from '@/hooks';
+import { useSearch } from '@tanstack/react-router';
+import { useNavigate } from '@tanstack/react-router';
 
 const pageSizes = createListCollection({
    items: ['10', '20', '30', '40', '50'].map((value) => ({
@@ -18,10 +19,10 @@ const pageSizes = createListCollection({
    })),
 });
 
-export default ({ count, Route }: { count: number; Route: SalaryRoute }) => {
-   const query = Route.useSearch();
+export default ({ count }: { count: number }) => {
+   const query = useSearch({ from: '/salary' });
+   const navigate = useNavigate({ from: '/salary' });
    const isMobile = useMobile();
-   const navigate = Route.useNavigate();
 
    return (
       <HStack mt='3' justifySelf='center'>
@@ -34,7 +35,7 @@ export default ({ count, Route }: { count: number; Route: SalaryRoute }) => {
                navigate({
                   search: (prev) => ({
                      ...prev,
-                     pageIndex: Math.floor(prev.pageIndex * prev.pageSize / parseInt(pageSize)!),
+                     pageIndex: Math.floor(prev?.pageIndex! * prev?.pageSize / parseInt(pageSize)!),
                      pageSize,
                   }),
                });
@@ -72,7 +73,7 @@ export default ({ count, Route }: { count: number; Route: SalaryRoute }) => {
             page={query.pageIndex}
          >
             <ButtonGroup variant='ghost' size='sm' wrap='wrap'>
-               <PaginationLink to={Route.path} page='prev'>
+               <PaginationLink to='/salary' page='prev'>
                   <LuChevronLeft />
                </PaginationLink>
 
@@ -80,7 +81,7 @@ export default ({ count, Route }: { count: number; Route: SalaryRoute }) => {
                   <Pagination.Items
                      render={(page) => (
                         <PaginationLink
-                           to={Route.path}
+                           to='/salary'
                            page={page.value}
                            variant={{
                               base: 'ghost',
@@ -93,7 +94,7 @@ export default ({ count, Route }: { count: number; Route: SalaryRoute }) => {
                   />
                )}
 
-               <PaginationLink to={Route.path} page='next'>
+               <PaginationLink to='/salary' page='next'>
                   <LuChevronRight />
                </PaginationLink>
             </ButtonGroup>

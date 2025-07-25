@@ -13,21 +13,19 @@ import {
 import type { GetV1SubmissionsData, SubmissionListItem, SubmissionListResponse } from '@/client';
 import DataTableDialog from './Dialog';
 import { HiColorSwatch } from 'react-icons/hi';
-import type { SalaryRoute } from '@/routes/salary';
 import { useCallback, useState } from 'react';
-import { capitalizeWords } from '@/helpers/index.ts';
 import { FaSort, FaSortDown, FaSortUp } from 'react-icons/fa';
 import { Tooltip } from '@/components/ui/tooltip.jsx';
 import { Link } from '@tanstack/react-router';
+import { useSearch } from '@tanstack/react-router';
 
 export default (
-   { Route, data, count }: {
-      Route: SalaryRoute;
+   { data, count }: {
       data: SubmissionListResponse['data'];
       count: number;
    },
 ) => {
-   const search = Route.useSearch();
+   const search = useSearch({ from: '/salary' });
    const dialog = useDialog();
    const [submission, setSubmission] = useState<SubmissionListItem | null>(null);
 

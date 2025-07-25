@@ -50,7 +50,7 @@ export const Route = createFileRoute('/salary')({
                            : <Text fontSize='3xl' fontWeight='bolder'>Self Reported Salaries</Text>}
 
                         <HStack>
-                           <Salary.ReportSalaryMenu Route={Route} />
+                           <Salary.ReportSalaryMenu />
 
                            {isMobile
                               ? null
@@ -70,18 +70,14 @@ export const Route = createFileRoute('/salary')({
                      <Salary.DataTable.Filters
                         open={isFilterOpen}
                         onClose={closeFilter}
-                        Route={Route}
                      />
                      <Box m={2} />
-                     {isMobile
-                        ? null
-                        : <Salary.DataTable.Pagination count={data?.count!} Route={Route} />}
+                     {isMobile ? null : <Salary.DataTable.Pagination count={data?.count!} />}
                      <Salary.DataTable.Body
-                        Route={Route}
                         data={data?.data!}
                         count={data?.data.length!}
                      />
-                     <Salary.DataTable.Pagination count={data?.count!} Route={Route} />
+                     <Salary.DataTable.Pagination count={data?.count!} />
                      <Salary.DataTable.Footer />
                      <Outlet />
                   </Box>
