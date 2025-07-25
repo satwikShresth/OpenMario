@@ -1,15 +1,12 @@
 import { useSearchBox } from 'react-instantsearch';
 import { CloseButton, Field, Input, InputGroup } from '@chakra-ui/react';
-import { useMobile } from '@/hooks';
 
 export const SearchBox = () => {
-   const isMobile = useMobile();
    const search = useSearchBox();
    return (
-      <Field.Root>
-         <Field.Label hidden={!isMobile} fontSize='xl' fontWeight='semibold'>
-            Search
-         </Field.Label>
+      <Field.Root
+         fontSize={{ base: 'lg', md: 'xl' }}
+      >
          <InputGroup
             startAddon='Search'
             endElement={search.query
@@ -22,8 +19,7 @@ export const SearchBox = () => {
                : undefined}
          >
             <Input
-               size='xl'
-               fontSize='xl'
+               size={{ base: 'lg', md: 'xl' }}
                placeholder='Start typing to search...'
                value={search.query}
                onChange={(e) => search.refine(e.target.value)}

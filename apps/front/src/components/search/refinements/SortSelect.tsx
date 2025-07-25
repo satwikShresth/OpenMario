@@ -1,18 +1,27 @@
-import { createListCollection, Portal, Select } from '@chakra-ui/react';
+import { type ListCollection, Portal, Select } from '@chakra-ui/react';
 import { useSortBy } from 'react-instantsearch';
+import { useMobile } from '@/hooks/useMobile.ts';
 
-export const SortSelect = () => {
+type SortSelectProps = {
+   sortBy: ListCollection<{
+      label: string;
+      value: string;
+   }>;
+};
+export const SortSelect = ({ sortBy }: SortSelectProps) => {
    const sort = useSortBy({ items: sortBy.items });
+   const isMobile = useMobile();
 
    return (
       <Select.Root
          collection={sortBy}
          maxW='300px'
+         minW='150px'
          value={[sort.currentRefinement]}
          onValueChange={(e) => sort.refine(e.value[0])}
       >
          <Select.HiddenSelect />
-         <Select.Label>Sort</Select.Label>
+         {!isMobile ? <Select.Label>Sort</Select.Label> : null}
          <Select.Control>
             <Select.Trigger>
                <Select.ValueText />
@@ -36,37 +45,3 @@ export const SortSelect = () => {
       </Select.Root>
    );
 };
-
-const sortBy = createListCollection({
-   items: [
-      { label: 'Most Relevant', value: 'sections' },
-      {
-         label: 'Course Number (Low to High)',
-         value: 'sections:course_number:asc',
-      },
-      {
-         label: 'Course Number (High to Low)',
-         value: 'sections:course_number:desc',
-      },
-      {
-         label: 'Credits (Highest)',
-         value: 'sections:credits:desc',
-      },
-      {
-         label: 'Credits (Lowest)',
-         value: 'sections:credits:asc',
-      },
-      {
-         label: 'Start Time (Earliest)',
-         value: 'sections:start_time:asc',
-      },
-      {
-         label: 'Start Time (Latest)',
-         value: 'sections:start_time:desc',
-      },
-      {
-         label: 'Instructor Rating (Highest)',
-         value: 'sections:instructors.avg_rating:desc',
-      },
-   ],
-});

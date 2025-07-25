@@ -32,7 +32,7 @@ export const weekItems = [
     label: "Th",
     icon: TbSquareLetterT,
     filledIcon: TbSquareLetterTFilled,
-    value: "Thrusday",
+    value: "Thursday",
   },
   {
     label: "F",

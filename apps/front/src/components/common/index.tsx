@@ -1,6 +1,6 @@
 export * from './PaginationLink';
 export * from './Footer';
-export * from './Loading';
+export * from './Pending';
 export * from './Autocomplete';
 export * from './asyncComponents';
 export * from './404';

@@ -3,6 +3,7 @@ import { Card, Cards } from './Card';
 import { FavoritesProvider } from '../Store.tsx';
 import { Index } from 'react-instantsearch';
 import type { ReactNode } from 'react';
+import { Filters } from './Filters';
 
 type CoursesProps = { index: string; children?: ReactNode };
 export default {
@@ -14,6 +15,7 @@ export default {
       </Index>
    ),
    Pagination,
+   Filters,
    Cards,
    Card,
 };

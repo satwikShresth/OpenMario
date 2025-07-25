@@ -6,6 +6,7 @@ import {
    HStack,
    Icon,
    Separator,
+   Stack,
    Text,
    VStack,
 } from '@chakra-ui/react';
@@ -16,136 +17,254 @@ import { Link, linkOptions } from '@tanstack/react-router';
 import { getDifficultyColor, getRatingColor, weekItems } from './helpers';
 import { formatTime } from '@/helpers';
 import { useHits } from 'react-instantsearch';
+import { useMobile } from '@/hooks';
 
 export const Cards = () => {
    const infiniteHits = useHits<Section>();
    return (
-      <For each={infiniteHits.items}>
-         {(section) => <Card section={section} />}
-      </For>
+      <Flex
+         direction='column'
+         gap={5}
+         width='full'
+      >
+         <For each={infiniteHits.items}>
+            {(section) => <Card section={section} />}
+         </For>
+      </Flex>
    );
 };
 
-export const Card = ({ section }: { section: Section }) => (
-   <CCard.Root flex='content' p={2} width='full'>
-      <CCard.Header>
-         <Text fontSize='sm'>{section.college_name}</Text>
-         <HStack>
-            <Text fontSize='xl' fontWeight='semibold'>
-               {section.course}: {section.title}
-            </Text>
-            <Text fontSize='sm'>({section.subject_name})</Text>
-         </HStack>
-         <Flex wrap='wrap' gap={3}>
-            {section.credits ? <Tag size='lg'>Credits: {section.credits}</Tag> : null}
-            <Tag size='lg'>{section.instruction_method}</Tag>
-            <Tag size='lg'>{section.instruction_type}</Tag>
-         </Flex>
-      </CCard.Header>
-      <CCard.Body>
-         <Box borderRadius='lg' borderWidth='thin' p={2}>
-            <Flex wrap='wrap' gap={3}>
-               {section.days
+export const Card = ({ section }: { section: Section }) => {
+   const isMobile = useMobile();
+   return (
+      <CCard.Root
+         flex='1'
+         p={{ base: 0, md: 3 }}
+         width='full'
+         maxWidth='full'
+         overflow='hidden'
+      >
+         <CCard.Header pb={3}>
+            <Stack
+               direction={{ base: 'column', sm: 'row' }}
+               width='full'
+               gap={4}
+               justify='space-between'
+            >
+               <Box>
+                  <Text fontSize={{ base: 'xs', md: 'sm' }} color='gray.600' mb={1}>
+                     {section.college_name} ({section.subject_name})
+                  </Text>
+                  <VStack align='start' gap={2}>
+                     <Flex
+                        direction={{ base: 'column', sm: 'row' }}
+                        align={{ base: 'start', sm: 'center' }}
+                        gap={{ base: 1, sm: 2 }}
+                        width='full'
+                     >
+                        <Text
+                           fontSize={{ base: 'lg', md: 'xl' }}
+                           fontWeight='semibold'
+                           lineHeight='1.2'
+                        >
+                           {section.course}: {section.title}
+                        </Text>
+                     </Flex>
+                  </VStack>
+                  <Flex
+                     wrap='wrap'
+                     gap={{ base: 2, md: 3 }}
+                     mt={3}
+                  >
+                     {section.credits
+                        ? (
+                           <Tag size={{ base: 'md', md: 'lg' }}>
+                              Credits: {section.credits}
+                           </Tag>
+                        )
+                        : null}
+                     <Tag size={{ base: 'md', md: 'lg' }}>
+                        {section.instruction_method}
+                     </Tag>
+                     <Tag size={{ base: 'md', md: 'lg' }}>
+                        {section.instruction_type}
+                     </Tag>
+                  </Flex>
+               </Box>
+
+               {section.days && section.days.length > 0
                   ? (
-                     <Tag size='xl'>
-                        <HStack gap={.8} borderRadius='none'>
-                           {weekItems.map((item) => (
-                              <>
-                                 <Tooltip content={item.value}>
+                     <Tag
+                        size='xl'
+                        width={isMobile ? 'full' : 'fit-content'}
+                        minWidth='fit-content'
+                        display='flex'
+                        justifyContent='center'
+                        alignItems='center'
+                        px={4}
+                        py={2}
+                     >
+                        <VStack>
+                           <HStack
+                              gap={4}
+                              justify='center'
+                              align='center'
+                              width='auto'
+                           >
+                              {weekItems.map((item) => (
+                                 <Tooltip key={item.label} content={item.value}>
                                     <Icon
-                                       key={item.label}
                                        size='lg'
                                        as={section?.days.includes(item?.value)
                                           ? item.filledIcon
                                           : item.icon}
                                     />
                                  </Tooltip>
-                              </>
-                           ))}
-                        </HStack>
-                     </Tag>
-                  )
-                  : null}
-               {section?.start_time
-                  ? (
-                     <Tag size='xl'>
-                        Time:{' '}
-                        {`${formatTime(section?.start_time)} - ${formatTime(section?.end_time)}`}
-                     </Tag>
-                  )
-                  : null}
-               <Tag size='xl'>Term: {section.term}</Tag>
-               <Tag size='xl'>Section: {section.section}</Tag>
-               <Tag size='xl'>CRN: {section.crn}</Tag>
-            </Flex>
-         </Box>
-      </CCard.Body>
-      <CCard.Footer>
-         <Box width='full'>
-            <Text fontSize='lg' fontWeight='semibold'>
-               Instructors
-            </Text>
-            <Separator width='full' mb={2} />
-            {section?.instructors?.length > 0
-               ? (
-                  <VStack align='start'>
-                     <For each={section.instructors}>
-                        {(instructor) => (
-                           <HStack justify='space-between' width='full'>
-                              <Text fontSize='md'>
-                                 {instructor.name}
-                              </Text>
-                              <HStack>
-                                 {instructor.avg_difficulty && (
-                                    <Tag
-                                       size='xl'
-                                       colorPalette={getDifficultyColor(
-                                          instructor.avg_difficulty,
-                                       )}
-                                    >
-                                       Difficulty: {instructor.avg_difficulty.toFixed(1)}
-                                    </Tag>
-                                 )}
-
-                                 {instructor.avg_rating && (
-                                    <Tag
-                                       size='xl'
-                                       colorPalette={getRatingColor(
-                                          instructor.avg_rating,
-                                       )}
-                                    >
-                                       Rating: {instructor.avg_rating.toFixed(1)}
-                                       {instructor.num_ratings &&
-                                          ` (${instructor.num_ratings})`}
-                                    </Tag>
-                                 )}
-                                 {instructor.rmp_id && (
-                                    <Tag
-                                       colorPalette='blue'
-                                       as={Link}
-                                       {...linkOptions({
-                                          //@ts-ignore: shuuup
-                                          to: `https://www.ratemyprofessors.com/professor/${instructor.rmp_id}`,
-                                       })}
-                                       size='xl'
-                                    >
-                                       <HStack>
-                                          RMP<BiLinkExternal />
-                                       </HStack>
-                                    </Tag>
-                                 )}
-                              </HStack>
+                              ))}
                            </HStack>
-                        )}
-                     </For>
-                  </VStack>
-               )
-               : (
-                  <Text fontSize='md'>
-                     TBD
-                  </Text>
-               )}
-         </Box>
-      </CCard.Footer>
-   </CCard.Root>
-);
+
+                           {section?.start_time
+                              ? (
+                                 <Text fontSize='sm' lineClamp={1}>
+                                    Time:{' '}
+                                    {`${formatTime(section?.start_time)} - ${
+                                       formatTime(section?.end_time)
+                                    }`}
+                                 </Text>
+                              )
+                              : null}
+                        </VStack>
+                     </Tag>
+                  )
+                  : null}
+            </Stack>
+         </CCard.Header>
+
+         <CCard.Body py={3}>
+            <Box
+               borderRadius='lg'
+               borderWidth='thin'
+               p={{ base: 2, md: 3 }}
+               overflow='hidden'
+            >
+               <Flex
+                  direction={{ base: 'column', sm: 'row' }}
+                  wrap='wrap'
+                  gap={{ base: 2, md: 3 }}
+               >
+                  <Tag size='xl'>
+                     Term: {section.term}
+                  </Tag>
+                  <Tag size={{ base: 'lg', md: 'xl' }}>
+                     Section: {section.section}
+                  </Tag>
+                  <Tag size={{ base: 'lg', md: 'xl' }}>
+                     CRN: {section.crn}
+                  </Tag>
+               </Flex>
+            </Box>
+         </CCard.Body>
+
+         <CCard.Footer pt={3}>
+            <Box width='full'>
+               <Text
+                  fontSize={{ base: 'md', md: 'lg' }}
+                  fontWeight='semibold'
+                  mb={2}
+               >
+                  Instructors
+               </Text>
+               <Separator width='full' mb={3} />
+
+               {section?.instructors?.length > 0
+                  ? (
+                     <VStack align='start' gap={3}>
+                        <For each={section.instructors}>
+                           {(instructor) => (
+                              <Flex
+                                 as={isMobile ? Tag : undefined}
+                                 direction={{ base: 'column', md: 'row' }}
+                                 justify={{ base: 'start', md: 'space-between' }}
+                                 align={{ base: 'start', md: 'center' }}
+                                 width='full'
+                                 p={isMobile ? 2 : undefined}
+                                 gap='3'
+                              >
+                                 <Text
+                                    fontSize='md'
+                                    fontWeight='medium'
+                                    p={1}
+                                    mb={{ base: 2, md: 0 }}
+                                 >
+                                    {instructor.name}
+                                 </Text>
+
+                                 <Flex
+                                    wrap='wrap'
+                                    gap={2}
+                                    align='center'
+                                 >
+                                    {instructor.avg_difficulty && (
+                                       <Tag
+                                          size={{ base: 'md', md: 'lg' }}
+                                          colorPalette={getDifficultyColor(
+                                             instructor.avg_difficulty,
+                                          )}
+                                       >
+                                          <Text fontSize={{ base: 'xs', md: 'sm' }}>
+                                             Difficulty: {instructor.avg_difficulty.toFixed(1)}
+                                          </Text>
+                                       </Tag>
+                                    )}
+
+                                    {instructor.avg_rating && (
+                                       <Tag
+                                          size={{ base: 'md', md: 'lg' }}
+                                          colorPalette={getRatingColor(
+                                             instructor.avg_rating,
+                                          )}
+                                       >
+                                          <Text fontSize={{ base: 'xs', md: 'sm' }}>
+                                             Rating: {instructor.avg_rating.toFixed(1)}
+                                             {instructor.num_ratings &&
+                                                ` (${instructor.num_ratings})`}
+                                          </Text>
+                                       </Tag>
+                                    )}
+
+                                    {instructor.rmp_id && (
+                                       <Tag
+                                          colorPalette='blue'
+                                          as={Link}
+                                          {...linkOptions({
+                                             //@ts-ignore: shuuup
+                                             to: `https://www.ratemyprofessors.com/professor/${instructor.rmp_id}`,
+                                          })}
+                                          size={{ base: 'md', md: 'lg' }}
+                                          cursor='pointer'
+                                          _hover={{ opacity: 0.8 }}
+                                       >
+                                          <HStack gap={1}>
+                                             <Text fontSize={{ base: 'xs', md: 'sm' }}>
+                                                RMP
+                                             </Text>
+                                             <BiLinkExternal size={14} />
+                                          </HStack>
+                                       </Tag>
+                                    )}
+                                 </Flex>
+                              </Flex>
+                           )}
+                        </For>
+                     </VStack>
+                  )
+                  : (
+                     <Text fontSize={{ base: 'sm', md: 'md' }} color='gray.500'>
+                        TBD
+                     </Text>
+                  )}
+            </Box>
+         </CCard.Footer>
+      </CCard.Root>
+   );
+};

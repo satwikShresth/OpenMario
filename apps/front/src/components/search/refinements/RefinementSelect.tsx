@@ -72,7 +72,7 @@ export const RefinementSelect = (
    });
 
    return (
-      <Combobox.RootProvider value={combobox} my={3} width='xs' {...props}>
+      <Combobox.RootProvider value={combobox} {...props}>
          <Combobox.Control>
             <Combobox.Input />
             <Combobox.IndicatorGroup>
