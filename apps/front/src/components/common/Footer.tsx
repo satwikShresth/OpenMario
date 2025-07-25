@@ -5,7 +5,7 @@ export const Footer = () => {
    return (
       <Box as='footer' width='100%'>
          <Separator />
-         <Container maxW='container.xl' py={2}>
+         <Container maxW='container.xl' py={2} maxHeight='16'>
             <Flex
                direction={{ base: 'column', md: 'row' }}
                justify='space-between'

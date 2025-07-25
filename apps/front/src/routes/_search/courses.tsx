@@ -79,17 +79,15 @@ export const Route = createFileRoute('/_search/courses')({
 
                {/* Mobile Filter and Sort Controls */}
                {isMobile && (
-                  <Flex direction='row' width='full' gap={3}>
+                  <Flex direction='row' width='full' gap={3} justify='space-between'>
                      {/* Filter Button */}
-                     <Button onClick={openFilter} variant='outline' flex='1' size='md'>
+                     <Button onClick={openFilter} variant='outline' size='md'>
                         <Icon as={HiFilter} />
                         <Text>Filters</Text>
                      </Button>
 
                      {/* Sort Select */}
-                     <Box flex='1'>
-                        <SortSelect sortBy={sortBy} />
-                     </Box>
+                     <SortSelect sortBy={sortBy} />
                   </Flex>
                )}
 
