@@ -9,7 +9,8 @@ import process from "node:process";
 import { FixDir } from "./plugins/heyapifix.ts";
 
 // https://vitejs.dev/config/
-export default defineConfig(({ command }) => ({
+export default defineConfig(({ command }) => {
+  return {
     plugins: [
       deno(),
       tanstackRouter({ target: "react", autoCodeSplitting: true }),
@@ -76,5 +77,5 @@ export default defineConfig(({ command }) => ({
         },
       },
     },
-  }
+  };
 });
