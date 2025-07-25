@@ -125,7 +125,7 @@ export const Card = ({ section }: { section: Section }) => {
 
                            {section?.start_time
                               ? (
-                                 <Text fontSize='sm' lineClamp={1}>
+                                 <Text fontSize='sm'>
                                     {`${formatTime(section?.start_time)} - ${
                                        formatTime(section?.end_time)
                                     }`}
@@ -186,6 +186,7 @@ export const Card = ({ section }: { section: Section }) => {
                                  justify={{ base: 'start', md: 'space-between' }}
                                  align={{ base: 'start', md: 'center' }}
                                  width='full'
+                                 height='fit-content'
                                  p={isMobile ? 2 : undefined}
                                  gap='3'
                               >
