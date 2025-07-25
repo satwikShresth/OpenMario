@@ -9,9 +9,7 @@ import process from "node:process";
 import { FixDir } from "./plugins/heyapifix.ts";
 
 // https://vitejs.dev/config/
-export default defineConfig(({ command }) => {
-  console.log(JSON.stringify(process.env.MEILI_HOST));
-  return {
+export default defineConfig(({ command }) => ({
     plugins: [
       deno(),
       tanstackRouter({ target: "react", autoCodeSplitting: true }),
@@ -78,5 +76,5 @@ export default defineConfig(({ command }) => {
         },
       },
     },
-  };
+  }
 });
