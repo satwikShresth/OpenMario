@@ -15,7 +15,7 @@ export const SortSelect = ({ sortBy }: SortSelectProps) => {
    return (
       <Select.Root
          collection={sortBy}
-         maxW='300px'
+         maxW='200px'
          minW='150px'
          value={[sort.currentRefinement]}
          onValueChange={(e) => sort.refine(e.value[0])}

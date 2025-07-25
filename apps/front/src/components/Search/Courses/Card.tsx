@@ -181,14 +181,14 @@ export const Card = ({ section }: { section: Section }) => {
                         <For each={section.instructors}>
                            {(instructor) => (
                               <Flex
-                                 as={isMobile ? Tag : undefined}
+                                 borderRadius='lg'
+                                 borderWidth={isMobile ? 1 : 0}
                                  direction={{ base: 'column', md: 'row' }}
                                  justify={{ base: 'start', md: 'space-between' }}
                                  align={{ base: 'start', md: 'center' }}
                                  width='full'
                                  height='fit-content'
                                  p={isMobile ? 2 : undefined}
-                                 gap='3'
                               >
                                  <Text
                                     fontSize='md'
