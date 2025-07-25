@@ -17,7 +17,7 @@ export const Route = createFileRoute('/_search')({
          refetchIntervalInBackground: true,
       });
       const { searchClient } = instantMeiliSearch(
-         `${location.origin}/api/search`,
+         import.meta.env.MEILI_HOST,
          () => data.token,
       );
 
