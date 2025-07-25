@@ -4,7 +4,7 @@ import { Link, type LinkOptions } from '@tanstack/react-router';
 export const PaginationLink = (
    props: IconButtonProps & { to: LinkOptions['to'] } & { page?: 'prev' | 'next' | number },
 ) => {
-   const { page, to, ...rest } = props;
+   const { page, to: _, ...rest } = props;
    const pagination = usePaginationContext();
    const pageValue = () => {
       if (page === 'prev') return pagination.previousPage;
@@ -14,8 +14,8 @@ export const PaginationLink = (
 
    return (
       <IconButton asChild {...rest}>
-         {/*@ts-ignore: shutup*/}
          <Link
+            //@ts-ignore: shutup
             search={(prev) => ({ ...prev, pageIndex: pageValue() ?? 1 })}
             replace
             reloadDocument={false}

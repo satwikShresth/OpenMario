@@ -1,13 +1,4 @@
-import {
-   AbsoluteCenter,
-   Button,
-   Card,
-   EmptyState,
-   HStack,
-   Icon,
-   Text,
-   VStack,
-} from '@chakra-ui/react';
+import { Button, Card, Center, EmptyState, HStack, Icon, Text, VStack } from '@chakra-ui/react';
 import { MdError, MdHome, MdRefresh } from 'react-icons/md';
 import { type ErrorComponentProps as TanStackErrorProps, useRouter } from '@tanstack/react-router';
 import { Link } from '@tanstack/react-router';
@@ -37,7 +28,7 @@ export const ErrorComponent: React.FC<ErrorComponentProps> = ({
    };
 
    return (
-      <AbsoluteCenter mt='-100px'>
+      <Center>
          <EmptyState.Root size='lg'>
             <EmptyState.Content>
                <Card.Root size='lg' p='10'>
@@ -73,6 +64,6 @@ export const ErrorComponent: React.FC<ErrorComponentProps> = ({
                </Card.Root>
             </EmptyState.Content>
          </EmptyState.Root>
-      </AbsoluteCenter>
+      </Center>
    );
 };

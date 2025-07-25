@@ -3,12 +3,12 @@ import { FaWandMagicSparkles } from 'react-icons/fa6';
 import { RiSurveyFill } from 'react-icons/ri';
 import { MdDrafts, MdMarkEmailRead } from 'react-icons/md';
 import { HiPlus } from 'react-icons/hi';
-import type { SalaryRoute } from '@/routes/salary.tsx';
 import { useMobile } from '@/hooks';
 import { useSalaryStore } from './Store.ts';
+import { useNavigate } from '@tanstack/react-router';
 
-export const ReportSalaryMenu = ({ Route }: { Route: SalaryRoute }) => {
-   const navigate = Route.useNavigate();
+export const ReportSalaryMenu = () => {
+   const navigate = useNavigate();
    const drafts = useSalaryStore(({ draftSubmissions }) => draftSubmissions.length);
    const submissions = useSalaryStore(({ submissions }) => submissions.size);
    const isMobile = useMobile();

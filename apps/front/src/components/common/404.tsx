@@ -1,7 +1,7 @@
 import {
-   AbsoluteCenter,
    Button,
    Card,
+   Center,
    EmptyState,
    HStack,
    Icon,
@@ -42,7 +42,7 @@ export const NotFoundComponent: React.FC<NotFoundComponentProps> = ({
    }, [router]);
 
    return (
-      <AbsoluteCenter mt='-100px'>
+      <Center>
          <EmptyState.Root size='lg'>
             <EmptyState.Content>
                <Card.Root size='lg' p='10'>
@@ -99,6 +99,6 @@ export const NotFoundComponent: React.FC<NotFoundComponentProps> = ({
                </Card.Root>
             </EmptyState.Content>
          </EmptyState.Root>
-      </AbsoluteCenter>
+      </Center>
    );
 };

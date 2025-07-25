@@ -27,10 +27,11 @@ export default function Navbar() {
          zIndex='sticky'
          borderBottomRadius='lg'
          bgColor='bg'
+         mb={5}
       >
          <Flex
             minH='60px'
-            pt={{ base: 2 }}
+            py={{ base: 2 }}
             px={{ base: 4 }}
             align='center'
             transition='all 0.3s ease'
@@ -121,7 +122,7 @@ export default function Navbar() {
          </Flex>
 
          {/* Mobile Navigation */}
-         <Collapsible.Root open={open} mt={-4}>
+         <Collapsible.Root open={open}>
             <Collapsible.Content>
                <MobileNav onToggle={onToggle} />
             </Collapsible.Content>
