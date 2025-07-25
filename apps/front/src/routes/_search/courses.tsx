@@ -9,13 +9,12 @@ import {
    Stats,
 } from '@/components/Search';
 // import { useMobile } from '@/hooks';
-import { Index } from 'react-instantsearch';
 
 export const Route = createFileRoute('/_search/courses')({
    component: () => {
       // const isMobile = useMobile();
       return (
-         <Index indexName='sections'>
+         <Search.Courses.Root index='sections'>
             <VStack>
                <HStack width='full' gap={5} justify='space-between'>
                   <SearchBox />
@@ -55,7 +54,7 @@ export const Route = createFileRoute('/_search/courses')({
                   </VStack>
                </HStack>
             </VStack>
-         </Index>
+         </Search.Courses.Root>
       );
    },
 });

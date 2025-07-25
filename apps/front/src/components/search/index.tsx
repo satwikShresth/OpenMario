@@ -1,12 +1,21 @@
 import type { ReactNode } from 'react';
-import { FavoritesProvider } from './Store';
+import type { InstantMeiliSearchInstance } from '@meilisearch/instant-meilisearch';
+import { InstantSearch } from 'react-instantsearch';
 import Courses from './Courses';
 
-type SalaryProps = { index: string; children?: ReactNode };
+type SearchProps = { searchClient: InstantMeiliSearchInstance; children?: ReactNode };
 export const Search = {
-   Root: ({ index, children }: SalaryProps) => (
-      <FavoritesProvider initialValue={{ index }}>{children}</FavoritesProvider>
-   ),
+   Root: ({ searchClient, children }: SearchProps) => {
+      return (
+         <InstantSearch
+            //@ts-ignore: shupp
+            searchClient={searchClient}
+            future={{ preserveSharedStateOnUnmount: true }}
+         >
+            {children}
+         </InstantSearch>
+      );
+   },
    Courses,
 };
 

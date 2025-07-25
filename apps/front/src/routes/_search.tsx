@@ -1,10 +1,10 @@
 import { createFileRoute } from '@tanstack/react-router';
 import { Container } from '@chakra-ui/react';
-import { InstantSearch } from 'react-instantsearch';
 import { instantMeiliSearch } from '@meilisearch/instant-meilisearch';
 import { getV1AuthSearchTokenOptions } from '@/client';
 import { useSuspenseQuery } from '@tanstack/react-query';
 import { Outlet } from '@tanstack/react-router';
+import { Search } from '../components/Search/index.tsx';
 
 export const Route = createFileRoute('/_search')({
    component: () => {
@@ -24,13 +24,9 @@ export const Route = createFileRoute('/_search')({
       return (
          <Container>
             {/*@ts-ignore: shupp*/}
-            <InstantSearch
-               //@ts-ignore: shupp
-               searchClient={searchClient}
-               future={{ preserveSharedStateOnUnmount: true }}
-            >
+            <Search.Root searchClient={searchClient}>
                <Outlet />
-            </InstantSearch>
+            </Search.Root>
          </Container>
       );
    },
