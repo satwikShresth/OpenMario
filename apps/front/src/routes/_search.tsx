@@ -16,8 +16,9 @@ export const Route = createFileRoute('/_search')({
          refetchInterval, // 1 hour and 50 minutes in milliseconds
          refetchIntervalInBackground: true,
       });
+
       const { searchClient } = instantMeiliSearch(
-         __MEILI_HOST__,
+         import.meta.env.VITE_MEILI_HOST,
          () => data.token,
       );
 
