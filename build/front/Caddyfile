@@ -37,6 +37,14 @@
 		file_server
 	}
 
+	# Handle API requests
+	handle_path /api/search/* {
+		reverse_proxy {$MEILI_HOST} {
+			header_up Host {host}
+			header_up X-Real-IP {remote}
+		}
+	}
+
 	handle_path /api/v1/* {
 		rewrite * /v1{uri}
 		reverse_proxy {$BACKEND_URL} {

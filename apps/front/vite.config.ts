@@ -19,6 +19,7 @@ export default defineConfig(({ command }) => {
       },
     }),
   ];
+  console.log(JSON.stringify(process.env.MEILI_HOST));
 
   // Only add heyApiPlugin during development
   if (command === "serve") {
@@ -59,9 +60,6 @@ export default defineConfig(({ command }) => {
 
   return {
     plugins,
-    define: {
-      __MEILI_HOST__: JSON.stringify(process.env.MEILI_HOST),
-    },
     resolve: {
       alias: {
         "@": resolve(__dirname, "./src"),
