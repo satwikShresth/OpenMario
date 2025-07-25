@@ -126,7 +126,6 @@ export const Card = ({ section }: { section: Section }) => {
                            {section?.start_time
                               ? (
                                  <Text fontSize='sm' lineClamp={1}>
-                                    Time:{' '}
                                     {`${formatTime(section?.start_time)} - ${
                                        formatTime(section?.end_time)
                                     }`}
