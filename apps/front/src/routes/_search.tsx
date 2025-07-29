@@ -8,7 +8,7 @@ import { Search } from '@/components/Search';
 
 export const Route = createFileRoute('/_search')({
    component: () => {
-      const refetchInterval = 1000 * 60 * 110;
+      const refetchInterval = 1000 * 60 * 10;
       const { data } = useSuspenseQuery({
          ...getV1AuthSearchTokenOptions(),
          staleTime: refetchInterval - 1000, // 1 hour and 50 minutes in milliseconds

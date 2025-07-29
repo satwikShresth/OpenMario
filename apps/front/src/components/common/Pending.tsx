@@ -88,14 +88,12 @@ export const LoadingComponent: React.FC<LoadingComponentProps> = ({
                            </Text>
                         </EmptyState.Title>
 
-                        <EmptyState.Description>
-                           <Text
-                              fontSize={size === 'sm' ? 'sm' : 'md'}
-                              color='gray.600'
-                              maxW='300px'
-                           >
-                              {message}
-                           </Text>
+                        <EmptyState.Description
+                           fontSize={size === 'sm' ? 'sm' : 'md'}
+                           color='gray.600'
+                           maxW='300px'
+                        >
+                           {message}
                         </EmptyState.Description>
 
                         <Box pt={2}>
