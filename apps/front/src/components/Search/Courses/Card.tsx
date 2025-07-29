@@ -28,7 +28,12 @@ export const Cards = () => {
          width='full'
       >
          <For each={infiniteHits.items}>
-            {(section) => <Card section={section} />}
+            {(section) => (
+               <Card
+                  key={`${section.crn}-${section.instruction_method}-${section.instruction_type}`}
+                  section={section}
+               />
+            )}
          </For>
       </Flex>
    );
@@ -181,6 +186,7 @@ export const Card = ({ section }: { section: Section }) => {
                         <For each={section.instructors}>
                            {(instructor) => (
                               <Flex
+                                 key={`${section.crn}-${instructor.id}`}
                                  borderRadius='lg'
                                  borderWidth={isMobile ? 1 : 0}
                                  direction={{ base: 'column', md: 'row' }}

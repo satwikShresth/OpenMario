@@ -47,9 +47,10 @@ const sortBy = createListCollection({
 });
 
 export const Route = createFileRoute('/_search/courses')({
-   component: () => {
-      const isMobile = useMobile();
+   beforeLoad: ({ search, cause }) => ({ search, cause }),
+   component: function Component() {
       const { open: isFilterOpen, onOpen: openFilter, onClose: closeFilter } = useDisclosure();
+      const isMobile = useMobile();
 
       return (
          <Search.Courses.Root index='sections'>
