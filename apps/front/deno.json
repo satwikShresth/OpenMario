@@ -31,6 +31,7 @@
       "chakra-react-select": "npm:chakra-react-select@^6.1.0",
       "immer": "npm:immer@^10.1.1",
       "instantsearch.css": "npm:instantsearch.css@^8.5.1",
+      "instantsearch.js": "npm:instantsearch.js@^4.79.2",
       "jsurl2": "npm:jsurl2@^2.2.0",
       "next-themes": "npm:next-themes@^0.4.6",
       "posthog-js": "npm:posthog-js@^1.257.1",
