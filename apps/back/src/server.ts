@@ -7,7 +7,7 @@ import routes from "#routes";
 import { neo4jService } from "./services/neo4j.service.ts";
 
 // Create Hono app
-const app = new Hono<{ Variables: JwtVariables }>();
+const app = new Hono();
 const port = 3000;
 const hostname = "::";
 const protocol = "http";

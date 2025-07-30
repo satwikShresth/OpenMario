@@ -65,6 +65,7 @@
          "end_time",
          "days",
          "term",
+         "course_id",
          "course",
          "title",
          "description",

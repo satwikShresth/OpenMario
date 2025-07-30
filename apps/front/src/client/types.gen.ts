@@ -149,16 +149,16 @@ export type LocationResult = {
     name: string;
 };
 
-export type GetV1PrereqByCourseIdData = {
+export type GetV1GraphPrereqByCourseIdData = {
     body?: never;
     path: {
         course_id: string;
     };
     query?: never;
-    url: '/v1/prereq/{course_id}';
+    url: '/v1/graph/prereq/{course_id}';
 };
 
-export type GetV1PrereqByCourseIdErrors = {
+export type GetV1GraphPrereqByCourseIdErrors = {
     /**
      * Course not found
      */
@@ -169,9 +169,9 @@ export type GetV1PrereqByCourseIdErrors = {
     409: ErrorResponse;
 };
 
-export type GetV1PrereqByCourseIdError = GetV1PrereqByCourseIdErrors[keyof GetV1PrereqByCourseIdErrors];
+export type GetV1GraphPrereqByCourseIdError = GetV1GraphPrereqByCourseIdErrors[keyof GetV1GraphPrereqByCourseIdErrors];
 
-export type GetV1PrereqByCourseIdResponses = {
+export type GetV1GraphPrereqByCourseIdResponses = {
     /**
      * Course prerequisites data
      */
@@ -197,18 +197,18 @@ export type GetV1PrereqByCourseIdResponses = {
     };
 };
 
-export type GetV1PrereqByCourseIdResponse = GetV1PrereqByCourseIdResponses[keyof GetV1PrereqByCourseIdResponses];
+export type GetV1GraphPrereqByCourseIdResponse = GetV1GraphPrereqByCourseIdResponses[keyof GetV1GraphPrereqByCourseIdResponses];
 
-export type GetV1CoursesByCourseIdData = {
+export type GetV1GraphCoursesByCourseIdData = {
     body?: never;
     path: {
         course_id: string;
     };
     query?: never;
-    url: '/v1/courses/{course_id}';
+    url: '/v1/graph/courses/{course_id}';
 };
 
-export type GetV1CoursesByCourseIdErrors = {
+export type GetV1GraphCoursesByCourseIdErrors = {
     /**
      * Course not found
      */
@@ -219,9 +219,9 @@ export type GetV1CoursesByCourseIdErrors = {
     409: ErrorResponse;
 };
 
-export type GetV1CoursesByCourseIdError = GetV1CoursesByCourseIdErrors[keyof GetV1CoursesByCourseIdErrors];
+export type GetV1GraphCoursesByCourseIdError = GetV1GraphCoursesByCourseIdErrors[keyof GetV1GraphCoursesByCourseIdErrors];
 
-export type GetV1CoursesByCourseIdResponses = {
+export type GetV1GraphCoursesByCourseIdResponses = {
     /**
      * Course data with all attributes
      */
@@ -239,7 +239,7 @@ export type GetV1CoursesByCourseIdResponses = {
     };
 };
 
-export type GetV1CoursesByCourseIdResponse = GetV1CoursesByCourseIdResponses[keyof GetV1CoursesByCourseIdResponses];
+export type GetV1GraphCoursesByCourseIdResponse = GetV1GraphCoursesByCourseIdResponses[keyof GetV1GraphCoursesByCourseIdResponses];
 
 export type GetV1AuthSearchTokenData = {
     body?: never;

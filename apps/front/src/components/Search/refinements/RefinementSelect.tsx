@@ -56,11 +56,14 @@ export const RefinementSelect = (
    useEffect(() => set(refinements.items), [refinements.items]);
    const placeholder = capitalizeWords(attribute.replace('_', ' ').replace('.', ' '));
 
-   const value = useMemo(() =>
-      refinements
-         .items
-         .filter(({ isRefined }) => isRefined)
-         .map(({ value }) => value), [refinements.items]);
+   const value = useMemo(
+      () =>
+         refinements
+            .items
+            .filter(({ isRefined }) => isRefined)
+            .map(({ value }) => value),
+      [refinements.items],
+   );
 
    const combobox = useCombobox({
       placeholder,

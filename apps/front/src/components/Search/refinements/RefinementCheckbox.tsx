@@ -1,5 +1,5 @@
 import { useRefinementList } from 'react-instantsearch';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { capitalizeWords } from '@/helpers';
 import {
    Badge,
@@ -27,6 +27,10 @@ export const RefinementCheckbox = ({ attribute }: { attribute: string }) => {
    const [inputValue, setInputValue] = useState('');
    useEffect(() => refinements.searchForItems(inputValue), [inputValue]);
    const placeholder = capitalizeWords(attribute.replace('_', ' ').replace('.', ' '));
+   const checkedItems = useMemo(
+      () => refinements.items.filter(({ isRefined }) => isRefined).map(({ value }) => value),
+      [refinements.items],
+   );
 
    return (
       <Box p={2}>
@@ -40,7 +44,7 @@ export const RefinementCheckbox = ({ attribute }: { attribute: string }) => {
                   onChange={({ target: { value } }) => setInputValue(value)}
                />
             </Field.Root>
-            <CheckboxGroup>
+            <CheckboxGroup value={checkedItems}>
                <Fieldset.Content width='60%'>
                   <For each={refinements.items}>
                      {({ value, isRefined, label, count }) => (

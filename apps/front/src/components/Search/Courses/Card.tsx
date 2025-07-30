@@ -23,7 +23,7 @@ import { formatTime } from '@/helpers';
 import { useHits } from 'react-instantsearch';
 import { useMobile } from '@/hooks';
 import { useQuery } from '@tanstack/react-query';
-import { getV1PrereqByCourseIdOptions } from '../../../client/index.ts';
+import { getV1GraphPrereqByCourseIdOptions } from '@/client';
 
 export const Cards = () => {
    const infiniteHits = useHits<Section>();
@@ -48,7 +48,7 @@ export const Cards = () => {
 export const Card = ({ section }: { section: Section }) => {
    const isMobile = useMobile();
    const { data, isPending } = useQuery(
-      getV1PrereqByCourseIdOptions({ path: { course_id: section.course_id } }),
+      getV1GraphPrereqByCourseIdOptions({ path: { course_id: section.course_id } }),
    );
 
    const { data: preReqInfo } = data ?? {};

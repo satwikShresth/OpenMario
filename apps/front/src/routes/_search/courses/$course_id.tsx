@@ -13,7 +13,7 @@ import {
    VStack,
 } from '@chakra-ui/react';
 import { IoIosInformationCircleOutline } from 'react-icons/io';
-import { getV1CoursesByCourseIdOptions, getV1PrereqByCourseIdOptions } from '@/client';
+import { getV1GraphCoursesByCourseIdOptions, getV1GraphPrereqByCourseIdOptions } from '@/client';
 import { useQuery } from '@tanstack/react-query';
 import { Tag } from '@/components/ui';
 
@@ -22,11 +22,13 @@ export const Route = createFileRoute('/_search/courses/$course_id')({
       const { course_id } = Route.useParams();
       const navigate = Route.useNavigate();
       const { data: preReqRaw, isPending: preReqPending } = useQuery(
-         getV1PrereqByCourseIdOptions({ path: { course_id } }),
+         getV1GraphPrereqByCourseIdOptions({ path: { course_id } }),
       );
       const { data: preReqInfo } = preReqRaw ?? {};
 
-      const { data: courseRaw } = useQuery(getV1CoursesByCourseIdOptions({ path: { course_id } }));
+      const { data: courseRaw } = useQuery(
+         getV1GraphCoursesByCourseIdOptions({ path: { course_id } }),
+      );
       const { data: courseInfo } = courseRaw ?? {};
 
       if (!courseInfo) return null;
