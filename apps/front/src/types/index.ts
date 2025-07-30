@@ -12,6 +12,7 @@ export interface Instructor {
 export interface Section {
   crn: number;
   section: string;
+  course_id: string;
   instruction_type: string;
   instruction_method: string;
   credits: number;
