@@ -21,8 +21,7 @@ export const paramsIdSchema = z
 
 export type ParamsId = z.infer<typeof paramsIdSchema>;
 export * from "#/models/enums.models.ts";
-export * from "#/models/courses.models.ts";
-export * from "#/models/prereq.models.ts";
+export * from "#/models/graph.models.ts";
 export * from "#/models/autocomplete.models.ts";
 export * from "#/models/users.models.ts";
 export * from "#/models/auth.models.ts";
