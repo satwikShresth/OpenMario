@@ -100,7 +100,6 @@ export const Route = createFileRoute('/_search/courses/$course_id')({
                               </Text>
                               <Text
                                  fontSize={{ base: 'sm', md: 'md' }}
-                                 color='gray.700'
                                  lineHeight='1.6'
                               >
                                  {courseInfo.description}
