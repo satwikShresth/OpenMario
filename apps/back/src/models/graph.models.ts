@@ -54,3 +54,27 @@ export const GetCourseResponseSchema = z.object({
 
 export type Course = z.infer<typeof CourseSchema>;
 export type GetCourseResponse = z.infer<typeof GetCourseResponseSchema>;
+
+const InstructorSchema = z.object({
+  id: z.number(),
+  avg_rating: z.number(),
+  num_ratings: z.number(),
+  name: z.string(),
+  avg_difficulty: z.number(),
+});
+
+const CourseAvailabilitySchema = z.object({
+  instructor: InstructorSchema,
+  term: z.number(),
+  crn: z.number(),
+});
+
+export const GetCourseAvailabilitiesResponseSchema = z.array(
+  CourseAvailabilitySchema,
+);
+
+export type Instructor = z.infer<typeof InstructorSchema>;
+export type CourseAvailability = z.infer<typeof CourseAvailabilitySchema>;
+export type CourseAvailabilities = z.infer<
+  typeof GetCourseAvailabilitiesResponseSchema
+>;

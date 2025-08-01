@@ -241,6 +241,47 @@ export type GetV1GraphCoursesByCourseIdResponses = {
 
 export type GetV1GraphCoursesByCourseIdResponse = GetV1GraphCoursesByCourseIdResponses[keyof GetV1GraphCoursesByCourseIdResponses];
 
+export type GetV1GraphCoursesAvailabilitiesByCourseIdData = {
+    body?: never;
+    path: {
+        course_id: string;
+    };
+    query?: never;
+    url: '/v1/graph/courses/availabilities/{course_id}';
+};
+
+export type GetV1GraphCoursesAvailabilitiesByCourseIdErrors = {
+    /**
+     * Course not found
+     */
+    404: unknown;
+    /**
+     * Database query failed
+     */
+    409: ErrorResponse;
+};
+
+export type GetV1GraphCoursesAvailabilitiesByCourseIdError = GetV1GraphCoursesAvailabilitiesByCourseIdErrors[keyof GetV1GraphCoursesAvailabilitiesByCourseIdErrors];
+
+export type GetV1GraphCoursesAvailabilitiesByCourseIdResponses = {
+    /**
+     * Course availabilities data with all sections and terms
+     */
+    200: Array<{
+        instructor: {
+            id: number;
+            avg_rating: number;
+            num_ratings: number;
+            name: string;
+            avg_difficulty: number;
+        };
+        term: number;
+        crn: number;
+    }>;
+};
+
+export type GetV1GraphCoursesAvailabilitiesByCourseIdResponse = GetV1GraphCoursesAvailabilitiesByCourseIdResponses[keyof GetV1GraphCoursesAvailabilitiesByCourseIdResponses];
+
 export type GetV1AuthSearchTokenData = {
     body?: never;
     path?: never;

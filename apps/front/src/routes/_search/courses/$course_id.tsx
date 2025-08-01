@@ -93,10 +93,10 @@ export const Route = createFileRoute('/_search/courses/$course_id')({
                            >
                               <Text
                                  fontSize={{ base: 'md', md: 'lg' }}
-                                 fontWeight='medium'
+                                 fontWeight='semibold'
                                  mb={2}
                               >
-                                 Description
+                                 Description:
                               </Text>
                               <Text
                                  fontSize={{ base: 'sm', md: 'md' }}
@@ -115,7 +115,7 @@ export const Route = createFileRoute('/_search/courses/$course_id')({
                            >
                               <Text
                                  fontSize={{ base: 'md', md: 'lg' }}
-                                 fontWeight='medium'
+                                 fontWeight='semibold'
                                  mb={3}
                               >
                                  Course Details
@@ -147,7 +147,7 @@ export const Route = createFileRoute('/_search/courses/$course_id')({
                            >
                               <Text
                                  fontSize={{ base: 'md', md: 'lg' }}
-                                 fontWeight='medium'
+                                 fontWeight='semibold'
                                  mb={3}
                               >
                                  Prerequisites
@@ -247,7 +247,7 @@ export const Route = createFileRoute('/_search/courses/$course_id')({
                                              </For>
                                           </HStack>
                                        )
-                                       : <Text color='gray.500'>None</Text>
+                                       : <Text color='gray.500' fontSize='md'>None</Text>
                                  )
                                  : <SkeletonText noOfLines={1} gap='4' />}
                            </Box>

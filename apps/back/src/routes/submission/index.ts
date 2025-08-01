@@ -16,7 +16,7 @@ import {
   SubmissionQuerySchema,
   SubmissionUpdateResponseSchema,
 } from "#models";
-import { validateUser } from "#/middleware/validation.middleware.ts";
+// import { validateUser } from "#/middleware/validation.middleware.ts";
 import { and, eq, inArray, isNull, or, sql } from "drizzle-orm";
 import {
   DescribeSubmissionRoute,
@@ -232,7 +232,7 @@ export default () => {
         },
       },
     }),
-    validateUser,
+    // validateUser,
     zValidator("query", SubmissionMeIdsSchema),
     async (c) => {
       const { ids } = c.req.valid("query") as SubmissionMeIds;
