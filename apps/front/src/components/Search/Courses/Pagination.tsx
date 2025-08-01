@@ -77,10 +77,10 @@ export const Pagination = () => {
 
          {/* Pagination Controls */}
          <CPagination.Root
-            page={instantPagination.currentRefinement}
+            page={instantPagination.currentRefinement + 1}
             count={instantPagination.nbHits}
             pageSize={parseInt(currentValue)}
-            onPageChange={({ page }) => instantPagination.refine(page)}
+            onPageChange={({ page }) => instantPagination.refine(page - 1)}
             siblingCount={isMobile ? 0 : 2}
             order={{ base: 1, sm: 2 }}
          >
