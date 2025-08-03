@@ -1,30 +1,14 @@
 import { createFileRoute } from '@tanstack/react-router';
-import {
-   Box,
-   CloseButton,
-   Dialog,
-   Flex,
-   For,
-   HoverCard,
-   HStack,
-   Portal,
-   SkeletonText,
-   Text,
-   VStack,
-} from '@chakra-ui/react';
-import { IoIosInformationCircleOutline } from 'react-icons/io';
-import { getV1GraphCoursesByCourseIdOptions, getV1GraphPrereqByCourseIdOptions } from '@/client';
+import { Box, CloseButton, Dialog, Flex, Portal, Text, VStack } from '@chakra-ui/react';
+import { getV1GraphCoursesByCourseIdOptions } from '@/client';
 import { useQuery } from '@tanstack/react-query';
 import { Tag } from '@/components/ui';
+import { Search } from '@/components/Search';
 
 export const Route = createFileRoute('/_search/courses/$course_id')({
    component: () => {
       const { course_id } = Route.useParams();
       const navigate = Route.useNavigate();
-      const { data: preReqRaw, isPending: preReqPending } = useQuery(
-         getV1GraphPrereqByCourseIdOptions({ path: { course_id } }),
-      );
-      const { data: preReqInfo } = preReqRaw ?? {};
 
       const { data: courseRaw } = useQuery(
          getV1GraphCoursesByCourseIdOptions({ path: { course_id } }),
@@ -145,111 +129,7 @@ export const Route = createFileRoute('/_search/courses/$course_id')({
                               p={{ base: 3, md: 4 }}
                               overflow='hidden'
                            >
-                              <Text
-                                 fontSize={{ base: 'md', md: 'lg' }}
-                                 fontWeight='semibold'
-                                 mb={3}
-                              >
-                                 Prerequisites
-                              </Text>
-                              {!preReqPending
-                                 ? (
-                                    (preReqInfo?.prerequisites?.length! > 0)
-                                       ? (
-                                          <HStack align='start' gap={3} wrap='wrap'>
-                                             <For each={preReqInfo?.prerequisites}>
-                                                {(preReqGroup, idx) => (
-                                                   <>
-                                                      {(idx === 0) ? null : <Text>and</Text>}
-                                                      <For each={preReqGroup}>
-                                                         {(preReq, courseIdx) => (
-                                                            <Flex
-                                                               key={`${preReq.subjectId}-${preReq.courseNumber}`}
-                                                            >
-                                                               <HoverCard.Root size='md'>
-                                                                  <HoverCard.Trigger asChild>
-                                                                     <HStack gap={2}>
-                                                                        {(courseIdx === 0)
-                                                                           ? preReqGroup.length > 1
-                                                                              ? '('
-                                                                              : null
-                                                                           : 'or'}
-                                                                        <Tag
-                                                                           minHeight='7'
-                                                                           size='lg'
-                                                                           colorPalette='blue'
-                                                                           cursor='pointer'
-                                                                           _hover={{
-                                                                              bg: 'blue.100',
-                                                                           }}
-                                                                           endElement={
-                                                                              <IoIosInformationCircleOutline />
-                                                                           }
-                                                                        >
-                                                                           {`${preReq.subjectId} ${preReq.courseNumber}`}
-                                                                        </Tag>
-                                                                        {(preReqGroup.length > 1 &&
-                                                                              preReqGroup.length -
-                                                                                       1 ===
-                                                                                 courseIdx)
-                                                                           ? ')'
-                                                                           : null}
-                                                                     </HStack>
-                                                                  </HoverCard.Trigger>
-
-                                                                  <Portal>
-                                                                     <HoverCard.Positioner>
-                                                                        <HoverCard.Content maxWidth='280px'>
-                                                                           <HoverCard.Arrow />
-                                                                           <VStack
-                                                                              align='start'
-                                                                              gap={2}
-                                                                           >
-                                                                              <Text
-                                                                                 fontWeight='semibold'
-                                                                                 fontSize='sm'
-                                                                              >
-                                                                                 {`${preReq.subjectId} ${preReq.courseNumber}: ${preReq.name}`}
-                                                                              </Text>
-
-                                                                              <VStack
-                                                                                 align='start'
-                                                                                 gap={1}
-                                                                              >
-                                                                                 <Text fontSize='sm'>
-                                                                                    {'Minimum Grade: '}
-                                                                                    {preReq
-                                                                                       .minimumGrade}
-                                                                                 </Text>
-
-                                                                                 {preReq
-                                                                                    .canTakeConcurrent &&
-                                                                                    (
-                                                                                       <Text
-                                                                                          color='green.600'
-                                                                                          fontSize='sm'
-                                                                                       >
-                                                                                          ✓ Can take
-                                                                                          concurrently
-                                                                                       </Text>
-                                                                                    )}
-                                                                              </VStack>
-                                                                           </VStack>
-                                                                        </HoverCard.Content>
-                                                                     </HoverCard.Positioner>
-                                                                  </Portal>
-                                                               </HoverCard.Root>
-                                                            </Flex>
-                                                         )}
-                                                      </For>
-                                                   </>
-                                                )}
-                                             </For>
-                                          </HStack>
-                                       )
-                                       : <Text color='gray.500' fontSize='md'>None</Text>
-                                 )
-                                 : <SkeletonText noOfLines={1} gap='4' />}
+                              <Search.Courses.PreReq course_id={course_id} />
                            </Box>
                         </VStack>
                      </Dialog.Body>

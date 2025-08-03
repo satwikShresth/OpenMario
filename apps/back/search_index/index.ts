@@ -1,24 +1,24 @@
-import job_posting from "./seeds/job_posting.ts";
-import courses from "./seeds/courses.ts";
-import sections from "./seeds/sections.ts";
-import instructors from "./seeds/instructors.ts";
-import { meilisearchService } from "#/services/meilisearch.service.ts";
-import type { MeiliSearch } from "meilisearch";
+import job_posting from './seeds/job_posting.ts';
+import courses from './seeds/courses.ts';
+import sections from './seeds/sections.ts';
+import instructors from './seeds/instructors.ts';
+import { meilisearchService } from '#/services/meilisearch.service.ts';
+import type { MeiliSearch } from 'meilisearch';
 
 const migrateAndSeed = async (
-  meilisearch: MeiliSearch,
-  index: string,
-  jsonFilePath: string,
-  seeder: (meilisearch: MeiliSearch, index: string) => Promise<void>,
+   meilisearch: MeiliSearch,
+   index: string,
+   jsonFilePath: string,
+   seeder: (meilisearch: MeiliSearch, index: string) => Promise<void>,
 ) => {
-  const {
-    default: { primaryKey, settings },
-  } = await import(jsonFilePath, {
-    with: { type: "json" },
-  });
-  await meilisearch.createIndex(index, { primaryKey });
-  await seeder(meilisearch, index);
-  await meilisearch.index(index).updateSettings(settings);
+   const {
+      default: { primaryKey, settings },
+   } = await import(jsonFilePath, {
+      with: { type: 'json' },
+   });
+   await meilisearch.createIndex(index, { primaryKey });
+   await seeder(meilisearch, index);
+   await meilisearch.index(index).updateSettings(settings);
 };
 
 const meilisearch = meilisearchService.client;
@@ -30,14 +30,14 @@ const meilisearch = meilisearchService.client;
 //   instructors,
 // );
 await migrateAndSeed(
-  meilisearch,
-  "job_postings",
-  "./indexes/job_postings.json",
-  job_posting,
+   meilisearch,
+   'job_postings',
+   './indexes/job_postings.json',
+   job_posting,
 );
 await migrateAndSeed(
-  meilisearch,
-  "sections",
-  "./indexes/sections.json",
-  sections,
+   meilisearch,
+   'sections',
+   './indexes/sections.json',
+   sections,
 );

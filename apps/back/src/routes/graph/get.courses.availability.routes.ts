@@ -1,11 +1,11 @@
-import { validator as zValidator } from "hono-openapi/zod";
-import { neo4jService } from "#/services/neo4j.service.ts";
+import { validator as zValidator } from 'hono-openapi/zod';
+import { neo4jService } from '#/services/neo4j.service.ts';
 import {
-  PrereqParamsSchema,
-  type PrereqParams,
-  GetCourseAvailabilitiesResponseSchema,
-} from "#models";
-import { DescribeGraphRoute, factory } from "./common.ts";
+   GetCourseAvailabilitiesResponseSchema,
+   type PrereqParams,
+   PrereqParamsSchema,
+} from '#models';
+import { DescribeGraphRoute, factory } from './common.ts';
 
 const cypher = `
     MATCH (course:Course)-[offers:OFFERS]->(section:Section)-[:OFFERED_ON]->(term:Term)
@@ -29,47 +29,46 @@ const cypher = `
  * Retrieve all sections available for a specific course across all terms
  */
 export default factory.createHandlers(
-  DescribeGraphRoute({
-    description:
-      "Retrieve all sections available for a specific course across all terms",
-    responses: {
-      "200": {
-        description: "Course availabilities data with all sections and terms",
-        schema: GetCourseAvailabilitiesResponseSchema,
+   DescribeGraphRoute({
+      description: 'Retrieve all sections available for a specific course across all terms',
+      responses: {
+         '200': {
+            description: 'Course availabilities data with all sections and terms',
+            schema: GetCourseAvailabilitiesResponseSchema,
+         },
+         '404': {
+            description: 'Course not found',
+         },
       },
-      "404": {
-        description: "Course not found",
-      },
-    },
-  }),
-  zValidator("param", PrereqParamsSchema),
-  async (c) => {
-    const { course_id } = c.req.valid("param") as PrereqParams;
+   }),
+   zValidator('param', PrereqParamsSchema),
+   async (c) => {
+      const { course_id } = c.req.valid('param') as PrereqParams;
 
-    return await neo4jService
-      .executeReadQuery(cypher, { course_id })
-      .then((records) => {
-        if (!records || records.length === 0) {
-          return c.json(
-            { message: "Course not found or no availabilities" },
-            404,
-          );
-        }
+      return await neo4jService
+         .executeReadQuery(cypher, { course_id })
+         .then((records) => {
+            if (!records || records.length === 0) {
+               return c.json(
+                  { message: 'Course not found or no availabilities' },
+                  404,
+               );
+            }
 
-        const terms = records[0].get("terms");
+            const terms = records[0].get('terms');
 
-        if (!terms || terms.length === 0) {
-          return c.json(
-            { message: "Course not found or no availabilities" },
-            404,
-          );
-        }
+            if (!terms || terms.length === 0) {
+               return c.json(
+                  { message: 'Course not found or no availabilities' },
+                  404,
+               );
+            }
 
-        return c.json(terms, 200);
-      })
-      .catch((error) => {
-        console.error("Error fetching course availabilities:", error);
-        return c.json({ message: error.message }, 500);
-      });
-  },
+            return c.json(terms, 200);
+         })
+         .catch((error) => {
+            console.error('Error fetching course availabilities:', error);
+            return c.json({ message: error.message }, 500);
+         });
+   },
 );
