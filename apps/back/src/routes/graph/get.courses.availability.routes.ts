@@ -4,32 +4,29 @@ import { GetCourseAvailabilitiesResponseSchema, ReqParamsSchema } from '#models'
 import { DescribeGraphRoute, factory } from './common.ts';
 
 const cypher = `
-    MATCH (course:Course)
-    WHERE course.id = $course_id
-    MATCH (course)-[offers:OFFERS]->(section:Section)-[:OFFERED_ON]->(term:Term)
-    OPTIONAL MATCH (instructor:Instructor)-[:TEACHES]->(section)
-    WHERE offers IS NULL OR offers.instruction_type = 'Lecture'
-    WITH course, 
-         COLLECT(DISTINCT CASE 
-           WHEN section IS NOT NULL AND term IS NOT NULL THEN {
-             term: term.id,
-             crn: section.crn,
-             instructor: CASE 
-               WHEN instructor IS NULL THEN null
-               ELSE {
-                 id: instructor.id,
-                 name: instructor.name,
-                 avg_difficulty: instructor.avg_difficulty,
-                 avg_rating: instructor.avg_rating,
-                 num_ratings: instructor.num_ratings
-               }
-             END
-           }
-           ELSE null
-         END) AS collected_terms
-    RETURN 
-      course.id AS course_id,
-      [term IN collected_terms WHERE term IS NOT NULL] AS terms
+   MATCH (course:Course)
+   WHERE course.id = $course_id
+   MATCH (course)-[offers:OFFERS]->(section:Section)
+   WHERE offers.instruction_type = 'Lecture' OR offers.instruction_type IS NOT NULL
+   OPTIONAL MATCH (instructor:Instructor)-[:TEACHES]->(section)
+   WITH course,
+      COLLECT(DISTINCT {
+         term: section.term,
+         crn: section.crn,
+         instructor: CASE WHEN instructor IS NULL 
+            THEN null
+            ELSE {
+              id: instructor.id,
+              name: instructor.name,
+              avg_difficulty: instructor.avg_difficulty,
+              avg_rating: instructor.avg_rating,
+              num_ratings: instructor.num_ratings
+            }
+          END
+        }) AS terms
+   RETURN 
+     course.id AS course_id,
+     terms
 `;
 
 interface TermData {
@@ -77,6 +74,7 @@ export default factory.createHandlers(
             const record = records[0];
             const courseId = record.get('course_id');
             const terms = record.get('terms');
+            console.log(terms);
 
             if (!courseId) {
                return c.json(
