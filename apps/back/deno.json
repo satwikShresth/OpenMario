@@ -6,6 +6,7 @@
       "noFallthroughCasesInSwitch": true
    },
    "imports": {
+      "@douglasgabr/cypher-builder": "npm:@douglasgabr/cypher-builder@^4.4.0",
       "@hono/zod-validator": "npm:@hono/zod-validator@^0.7.0",
       "@neo4j/cypher-builder": "npm:@neo4j/cypher-builder@^2.7.1",
       "@types/pg": "npm:@types/pg@^8.15.4",

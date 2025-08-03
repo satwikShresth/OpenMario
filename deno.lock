@@ -5,6 +5,7 @@
     "jsr:@std/path@^1.1.1": "1.1.1",
     "npm:@chakra-ui/react@^3.22.0": "3.22.0_@emotion+react@11.14.0__react@19.1.0_react@19.1.0_react-dom@19.1.0__react@19.1.0",
     "npm:@deno/vite-plugin@^1.0.5": "1.0.5_vite@7.0.5__picomatch@4.0.3_@types+node@22.15.15",
+    "npm:@douglasgabr/cypher-builder@^4.4.0": "4.4.0_neo4j-driver@5.28.1",
     "npm:@emotion/react@^11.14.0": "11.14.0_react@19.1.0",
     "npm:@faker-js/faker@^9.6.0": "9.9.0",
     "npm:@hey-api/openapi-ts@~0.78.3": "0.78.3_typescript@5.8.3",
@@ -45,6 +46,7 @@
     "npm:jsurl2@^2.2.0": "2.2.0",
     "npm:mailgun.js@^12.0.1": "12.0.3",
     "npm:meilisearch@0.51": "0.51.0",
+    "npm:neo4j-driver@*": "5.28.1",
     "npm:neo4j-driver@^5.28.1": "5.28.1",
     "npm:next-themes@~0.4.6": "0.4.6_react@19.1.0_react-dom@19.1.0__react@19.1.0",
     "npm:pg-native@^3.5.2": "3.5.2",
@@ -560,6 +562,12 @@
       "integrity": "sha512-tLja5n4dyMhcze1NzvSs2iiriBymfBlDCZIrjMTxb9O2ru0gvmV6mn5oBD2teNw5Sd92cj3YJzKwsAs8tMJXlg==",
       "dependencies": [
         "vite@7.0.5_picomatch@4.0.3_@types+node@22.15.15"
+      ]
+    },
+    "@douglasgabr/cypher-builder@4.4.0_neo4j-driver@5.28.1": {
+      "integrity": "sha512-XpkEw4zES45w8PsUhc1lIBjVJcVUPYFjF+C3ymoI54QiBZBZcDjB7zvfpxadxL9ydWx5mdYDjH6F+Ffu/4dXZg==",
+      "dependencies": [
+        "neo4j-driver"
       ]
     },
     "@drizzle-team/brocli@0.10.2": {
@@ -5141,6 +5149,7 @@
       "apps/back": {
         "dependencies": [
           "jsr:@std/path@^1.1.1",
+          "npm:@douglasgabr/cypher-builder@^4.4.0",
           "npm:@hono/zod-validator@0.7",
           "npm:@neo4j/cypher-builder@^2.7.1",
           "npm:@types/pg@^8.15.4",
