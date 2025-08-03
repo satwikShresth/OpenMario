@@ -1,4 +1,4 @@
-import { Flex, For, HoverCard, HStack, Portal, SkeletonText, Text, VStack } from '@chakra-ui/react';
+import { Flex, For, HoverCard, HStack, Portal, Text, VStack } from '@chakra-ui/react';
 import { IoIosInformationCircleOutline } from 'react-icons/io';
 import { getV1GraphReqByCourseIdOptions } from '@/client';
 import { useQuery } from '@tanstack/react-query';
@@ -16,38 +16,7 @@ export default ({ course_id }: PreReqProps) => {
    );
    const { data: reqInfo } = preReqRaw ?? {};
 
-   if (isPending) {
-      return (
-         <VStack width='full' gap={4} align='stretch'>
-            <Flex
-               width='full'
-               borderRadius='lg'
-               borderWidth='thin'
-               p={{ base: 2, md: 3 }}
-               align='center'
-               gap={3}
-            >
-               <Text fontSize={{ base: 'md', md: 'lg' }} fontWeight='medium'>
-                  Prerequisite:
-               </Text>
-               <SkeletonText noOfLines={1} gap='4' />
-            </Flex>
-            <Flex
-               width='full'
-               borderRadius='lg'
-               borderWidth='thin'
-               p={{ base: 2, md: 3 }}
-               align='center'
-               gap={3}
-            >
-               <Text fontSize={{ base: 'md', md: 'lg' }} fontWeight='medium'>
-                  Corequisite:
-               </Text>
-               <SkeletonText noOfLines={1} gap='4' />
-            </Flex>
-         </VStack>
-      );
-   }
+   if (isPending) return null;
 
    return (
       <VStack width='full' gap={4} align='stretch'>
@@ -166,9 +135,8 @@ export default ({ course_id }: PreReqProps) => {
                   </Text>
                   <HStack align='start' gap={3} wrap='wrap'>
                      <For each={reqInfo?.corequisites}>
-                        {(coreq, idx) => (
+                        {(coreq) => (
                            <Flex>
-                              {idx > 0 && <Text mr={2}>and</Text>}
                               <Tag
                                  as={Link}
                                  {...linkOptions({

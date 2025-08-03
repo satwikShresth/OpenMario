@@ -4,21 +4,45 @@ import { GetCourseAvailabilitiesResponseSchema, ReqParamsSchema } from '#models'
 import { DescribeGraphRoute, factory } from './common.ts';
 
 const cypher = `
-    MATCH (course:Course)-[offers:OFFERS]->(section:Section)-[:OFFERED_ON]->(term:Term)
-    WHERE course.id = $course_id AND offers.instruction_type = 'Lecture'
+    MATCH (course:Course)
+    WHERE course.id = $course_id
+    MATCH (course)-[offers:OFFERS]->(section:Section)-[:OFFERED_ON]->(term:Term)
     OPTIONAL MATCH (instructor:Instructor)-[:TEACHES]->(section)
-    RETURN COLLECT(DISTINCT {
-      term: term.id,
-      crn: section.crn,
-      instructor: {
-        id: instructor.id,
-        name: instructor.name,
-        avg_difficulty: instructor.avg_difficulty,
-        avg_rating: instructor.avg_rating,
-        num_ratings: instructor.num_ratings
-      }
-    }) AS terms
-  `;
+    WHERE offers IS NULL OR offers.instruction_type = 'Lecture'
+    WITH course, 
+         COLLECT(DISTINCT CASE 
+           WHEN section IS NOT NULL AND term IS NOT NULL THEN {
+             term: term.id,
+             crn: section.crn,
+             instructor: CASE 
+               WHEN instructor IS NULL THEN null
+               ELSE {
+                 id: instructor.id,
+                 name: instructor.name,
+                 avg_difficulty: instructor.avg_difficulty,
+                 avg_rating: instructor.avg_rating,
+                 num_ratings: instructor.num_ratings
+               }
+             END
+           }
+           ELSE null
+         END) AS collected_terms
+    RETURN 
+      course.id AS course_id,
+      [term IN collected_terms WHERE term IS NOT NULL] AS terms
+`;
+
+interface TermData {
+   term: string;
+   crn: string;
+   instructor: {
+      id: string;
+      name: string;
+      avg_difficulty: number;
+      avg_rating: number;
+      num_ratings: number;
+   } | null;
+}
 
 /**
  * GET graph/course/availabilities/{course_id}
@@ -41,8 +65,7 @@ export default factory.createHandlers(
    async (c) => {
       const { course_id } = c.req.valid('param');
 
-      return await neo4jService
-         .executeReadQuery(cypher, { course_id })
+      return await neo4jService.executeReadQuery(cypher, { course_id })
          .then((records) => {
             if (!records || records.length === 0) {
                return c.json(
@@ -51,20 +74,37 @@ export default factory.createHandlers(
                );
             }
 
-            const terms = records[0].get('terms');
+            const record = records[0];
+            const courseId = record.get('course_id');
+            const terms = record.get('terms');
 
-            if (!terms || terms.length === 0) {
+            if (!courseId) {
                return c.json(
-                  { message: 'Course not found or no availabilities' },
+                  { message: 'Course not found' },
                   404,
                );
             }
 
-            return c.json(terms, 200);
+            if (!terms || terms.length === 0) {
+               return c.json([], 200);
+            }
+
+            const validTerms = terms.filter((term: TermData) =>
+               term &&
+               term.term &&
+               term.crn
+            );
+
+            return c.json(validTerms, 200);
          })
          .catch((error) => {
-            console.error('Error fetching course availabilities:', error);
-            return c.json({ message: error.message }, 500);
+            return c.json(
+               {
+                  message: 'Internal server error',
+                  error: error.message,
+               },
+               500,
+            );
          });
    },
 );
