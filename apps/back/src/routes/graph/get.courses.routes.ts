@@ -1,11 +1,6 @@
 import { validator as zValidator } from 'hono-openapi/zod';
 import { neo4jService } from '#/services/neo4j.service.ts';
-import {
-   type Course,
-   GetCourseResponseSchema,
-   type PrereqParams,
-   PrereqParamsSchema,
-} from '#models';
+import { GetCourseResponseSchema, ReqParamsSchema } from '#models';
 import { DescribeGraphRoute, factory } from './common.ts';
 
 const cypher = `
@@ -42,9 +37,9 @@ export default factory.createHandlers(
          },
       },
    }),
-   zValidator('param', PrereqParamsSchema),
+   zValidator('param', ReqParamsSchema),
    async (c) => {
-      const { course_id } = c.req.valid('param') as PrereqParams;
+      const { course_id } = c.req.valid('param');
       return await neo4jService
          .executeReadQuery(cypher, { course_id })
          .then(

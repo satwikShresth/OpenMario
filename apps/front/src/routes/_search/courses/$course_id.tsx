@@ -124,14 +124,8 @@ export const Route = createFileRoute('/_search/courses/$course_id')({
                            </Box>
 
                            {/* Prerequisites */}
-                           <Box
-                              borderRadius='lg'
-                              borderWidth='thin'
-                              p={{ base: 3, md: 4 }}
-                              overflow='hidden'
-                           >
-                              <Search.Courses.PreReq course_id={course_id} />
-                           </Box>
+
+                           <Search.Courses.Req course_id={course_id} />
                         </VStack>
                      </Dialog.Body>
                   </Dialog.Content>

@@ -4,7 +4,7 @@ import { FavoritesProvider } from '../Store.tsx';
 import { Index } from 'react-instantsearch';
 import type { ReactNode } from 'react';
 import { Filters } from './Filters';
-import PreReq from './PreReq.tsx';
+import Req from './Req.tsx';
 
 type CoursesProps = { index: string; children?: ReactNode };
 export default {
@@ -15,7 +15,7 @@ export default {
          </FavoritesProvider>
       </Index>
    ),
-   PreReq,
+   Req,
    Pagination,
    Filters,
    Cards,

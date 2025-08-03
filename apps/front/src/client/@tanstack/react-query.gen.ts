@@ -7,7 +7,7 @@ import {
    getV1AutocompletePosition,
    getV1GraphCoursesAvailabilitiesByCourseId,
    getV1GraphCoursesByCourseId,
-   getV1GraphPrereqByCourseId,
+   getV1GraphReqByCourseId,
    getV1Submissions,
    getV1SubmissionsMe,
    type Options,
@@ -24,7 +24,7 @@ import type {
    GetV1AutocompletePositionData,
    GetV1GraphCoursesAvailabilitiesByCourseIdData,
    GetV1GraphCoursesByCourseIdData,
-   GetV1GraphPrereqByCourseIdData,
+   GetV1GraphReqByCourseIdData,
    GetV1SubmissionsData,
    GetV1SubmissionsMeData,
    PatchV1SubmissionsData,
@@ -80,19 +80,16 @@ const createQueryKey = <TOptions extends Options>(
    ];
 };
 
-export const getV1GraphPrereqByCourseIdQueryKey = (
-   options: Options<GetV1GraphPrereqByCourseIdData>,
-) => createQueryKey('getV1GraphPrereqByCourseId', options);
+export const getV1GraphReqByCourseIdQueryKey = (options: Options<GetV1GraphReqByCourseIdData>) =>
+   createQueryKey('getV1GraphReqByCourseId', options);
 
 /**
- * Retrieve prerequisites for a specific course
+ * Retrieve prerequisites and corequisites for a specific course
  */
-export const getV1GraphPrereqByCourseIdOptions = (
-   options: Options<GetV1GraphPrereqByCourseIdData>,
-) => {
+export const getV1GraphReqByCourseIdOptions = (options: Options<GetV1GraphReqByCourseIdData>) => {
    return queryOptions({
       queryFn: async ({ queryKey, signal }) => {
-         const { data } = await getV1GraphPrereqByCourseId({
+         const { data } = await getV1GraphReqByCourseId({
             ...options,
             ...queryKey[0],
             signal,
@@ -100,7 +97,7 @@ export const getV1GraphPrereqByCourseIdOptions = (
          });
          return data;
       },
-      queryKey: getV1GraphPrereqByCourseIdQueryKey(options),
+      queryKey: getV1GraphReqByCourseIdQueryKey(options),
    });
 };
 

@@ -1,14 +1,12 @@
 import { z } from 'zod';
 
-// Parameter validation schema
-export const PrereqParamsSchema = z.object({
+export const ReqParamsSchema = z.object({
    course_id: z.uuid('Invalid uuid'),
 });
-
-export type PrereqParams = z.infer<typeof PrereqParamsSchema>;
+export type ReqParams = z.infer<typeof ReqParamsSchema>;
 
 // Zod schema for the transformed response
-export const PreReqCourseSchema = z.object({
+export const ReqCourseSchema = z.object({
    id: z.string(),
    name: z.string(),
    subjectId: z.string(),
@@ -26,14 +24,22 @@ export const PrerequisiteSchema = z.object({
    courseNumber: z.string(),
 });
 
-export const GetPrereqResponseSchema = z.object({
+export const CorequisiteSchema = z.object({
+   id: z.string(),
+   name: z.string(),
+   subjectId: z.string(),
+   courseNumber: z.string(),
+});
+
+export const GetReqResponseSchema = z.object({
    data: z.object({
-      course: PreReqCourseSchema,
+      course: ReqCourseSchema,
       prerequisites: z.array(z.array(PrerequisiteSchema)),
+      corequisites: z.array(CorequisiteSchema),
    }),
 });
 
-export type GetPrereqResponse = z.infer<typeof GetPrereqResponseSchema>;
+export type GetReqResponse = z.infer<typeof GetReqResponseSchema>;
 
 // Course response schema
 export const CourseSchema = z.object({

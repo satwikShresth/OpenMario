@@ -20,9 +20,9 @@ import type {
    GetV1GraphCoursesByCourseIdData,
    GetV1GraphCoursesByCourseIdErrors,
    GetV1GraphCoursesByCourseIdResponses,
-   GetV1GraphPrereqByCourseIdData,
-   GetV1GraphPrereqByCourseIdErrors,
-   GetV1GraphPrereqByCourseIdResponses,
+   GetV1GraphReqByCourseIdData,
+   GetV1GraphReqByCourseIdErrors,
+   GetV1GraphReqByCourseIdResponses,
    GetV1SubmissionsData,
    GetV1SubmissionsErrors,
    GetV1SubmissionsMeData,
@@ -61,17 +61,17 @@ export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends 
    };
 
 /**
- * Retrieve prerequisites for a specific course
+ * Retrieve prerequisites and corequisites for a specific course
  */
-export const getV1GraphPrereqByCourseId = <ThrowOnError extends boolean = false>(
-   options: Options<GetV1GraphPrereqByCourseIdData, ThrowOnError>,
+export const getV1GraphReqByCourseId = <ThrowOnError extends boolean = false>(
+   options: Options<GetV1GraphReqByCourseIdData, ThrowOnError>,
 ) => {
    return (options.client ?? _heyApiClient).get<
-      GetV1GraphPrereqByCourseIdResponses,
-      GetV1GraphPrereqByCourseIdErrors,
+      GetV1GraphReqByCourseIdResponses,
+      GetV1GraphReqByCourseIdErrors,
       ThrowOnError
    >({
-      url: '/v1/graph/prereq/{course_id}',
+      url: '/v1/graph/req/{course_id}',
       ...options,
    });
 };

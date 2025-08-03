@@ -149,16 +149,16 @@ export type LocationResult = {
    name: string;
 };
 
-export type GetV1GraphPrereqByCourseIdData = {
+export type GetV1GraphReqByCourseIdData = {
    body?: never;
    path: {
       course_id: string;
    };
    query?: never;
-   url: '/v1/graph/prereq/{course_id}';
+   url: '/v1/graph/req/{course_id}';
 };
 
-export type GetV1GraphPrereqByCourseIdErrors = {
+export type GetV1GraphReqByCourseIdErrors = {
    /**
     * Course not found
     */
@@ -169,12 +169,12 @@ export type GetV1GraphPrereqByCourseIdErrors = {
    409: ErrorResponse;
 };
 
-export type GetV1GraphPrereqByCourseIdError =
-   GetV1GraphPrereqByCourseIdErrors[keyof GetV1GraphPrereqByCourseIdErrors];
+export type GetV1GraphReqByCourseIdError =
+   GetV1GraphReqByCourseIdErrors[keyof GetV1GraphReqByCourseIdErrors];
 
-export type GetV1GraphPrereqByCourseIdResponses = {
+export type GetV1GraphReqByCourseIdResponses = {
    /**
-    * Course prerequisites data
+    * Course prerequisites and corequisites data
     */
    200: {
       data: {
@@ -196,12 +196,18 @@ export type GetV1GraphPrereqByCourseIdResponses = {
                courseNumber: string;
             }>
          >;
+         corequisites: Array<{
+            id: string;
+            name: string;
+            subjectId: string;
+            courseNumber: string;
+         }>;
       };
    };
 };
 
-export type GetV1GraphPrereqByCourseIdResponse =
-   GetV1GraphPrereqByCourseIdResponses[keyof GetV1GraphPrereqByCourseIdResponses];
+export type GetV1GraphReqByCourseIdResponse =
+   GetV1GraphReqByCourseIdResponses[keyof GetV1GraphReqByCourseIdResponses];
 
 export type GetV1GraphCoursesByCourseIdData = {
    body?: never;
@@ -240,6 +246,9 @@ export type GetV1GraphCoursesByCourseIdResponses = {
          credits: number;
          writing_intensive: boolean;
          repeat_status: string;
+         instruction_type: string;
+         instruction_method: string;
+         crn: number;
       };
    };
 };

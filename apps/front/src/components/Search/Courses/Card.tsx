@@ -18,7 +18,7 @@ import { getDifficultyColor, getRatingColor, weekItems } from './helpers';
 import { formatTime } from '@/helpers';
 import { useHits } from 'react-instantsearch';
 import { useMobile } from '@/hooks';
-import PreReq from './PreReq.tsx';
+import Req from './Req.tsx';
 import { useQuery } from '@tanstack/react-query';
 import { getV1GraphCoursesByCourseIdOptions } from '@/client';
 
@@ -190,16 +190,7 @@ export const Card = ({ section }: { section: Section }) => {
                   </Tag>
                </Flex>
             </Box>
-            <Flex
-               width='full'
-               borderRadius='lg'
-               borderWidth='thin'
-               p={{ base: 2, md: 3 }}
-               align='center'
-               gap={3}
-            >
-               <PreReq course_id={section.course_id} />
-            </Flex>
+            <Req course_id={section.course_id} />
          </CCard.Body>
 
          <CCard.Footer pt={3}>
