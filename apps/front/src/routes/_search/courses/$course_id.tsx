@@ -53,11 +53,12 @@ export const Route = createFileRoute('/_search/courses/$course_id')({
                                  <Tag size={{ base: 'md', md: 'lg' }}>
                                     Credits: {courseInfo.credits}
                                  </Tag>
-                                 {courseInfo.writing_intensive && (
-                                    <Tag size={{ base: 'md', md: 'lg' }} colorPalette='green'>
-                                       Writing Intensive
-                                    </Tag>
-                                 )}
+                                 <Tag size={{ base: 'md', md: 'lg' }}>
+                                    {courseInfo?.instruction_method}
+                                 </Tag>
+                                 <Tag size={{ base: 'md', md: 'lg' }}>
+                                    {courseInfo?.instruction_type}
+                                 </Tag>
                               </Flex>
                            </Box>
                         </Dialog.Title>
@@ -111,7 +112,7 @@ export const Route = createFileRoute('/_search/courses/$course_id')({
                               >
                                  {(courseInfo.writing_intensive)
                                     ? (
-                                       <Tag size={{ base: 'lg', md: 'xl' }}>
+                                       <Tag size={{ base: 'lg', md: 'xl' }} colorPalette='blue'>
                                           Writing Intensive
                                        </Tag>
                                     )

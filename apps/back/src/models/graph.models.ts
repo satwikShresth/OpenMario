@@ -45,6 +45,9 @@ export const CourseSchema = z.object({
    credits: z.number(),
    writing_intensive: z.boolean(),
    repeat_status: z.string(),
+   instruction_type: z.string(),
+   instruction_method: z.string(),
+   crn: z.number(),
 });
 
 // API response wrapper

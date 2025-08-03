@@ -76,6 +76,15 @@ export const Card = ({ section }: { section: Section }) => {
                         width='full'
                      >
                         <Text
+                           _hover={{ textDecoration: 'underline' }}
+                           as={Link}
+                           {...linkOptions({
+                              //@ts-ignore: hsupp
+                              to: `/courses/${section?.course_id!}`,
+                              reloadDocument: false,
+                              resetScroll: false,
+                              replace: true,
+                           })}
                            fontSize={{ base: 'lg', md: 'xl' }}
                            fontWeight='semibold'
                            lineHeight='1.2'
