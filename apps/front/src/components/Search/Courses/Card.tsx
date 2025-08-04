@@ -21,6 +21,7 @@ import { useMobile } from '@/hooks';
 import Req from './Req.tsx';
 import { useQuery } from '@tanstack/react-query';
 import { getV1GraphCoursesByCourseIdOptions } from '@/client';
+import Availabilites from './Availabilites.tsx';
 
 export const Cards = () => {
    const infiniteHits = useHits<Section>();
@@ -190,6 +191,7 @@ export const Card = ({ section }: { section: Section }) => {
                   </Tag>
                </Flex>
             </Box>
+            {!isMobile ? <Availabilites course_id={section.course_id} /> : null}
             <Req course_id={section.course_id} />
          </CCard.Body>
 

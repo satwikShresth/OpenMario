@@ -14,7 +14,6 @@ export const Route = createFileRoute('/_search/courses/$course_id')({
          getV1GraphCoursesByCourseIdOptions({ path: { course_id } }),
       );
       const { data: courseInfo } = courseRaw ?? {};
-
       if (!courseInfo) return null;
 
       return (
@@ -32,7 +31,7 @@ export const Route = createFileRoute('/_search/courses/$course_id')({
                      <Dialog.Header pb={4}>
                         <Dialog.Title>
                            <Box>
-                              <Text fontSize='sm' color='gray.600' mb={1}>
+                              <Text fontSize='sm' mb={1}>
                                  Course Information
                               </Text>
                               <VStack align='start' gap={2}>
@@ -53,12 +52,18 @@ export const Route = createFileRoute('/_search/courses/$course_id')({
                                  <Tag size={{ base: 'md', md: 'lg' }}>
                                     Credits: {courseInfo.credits}
                                  </Tag>
-                                 <Tag size={{ base: 'md', md: 'lg' }}>
-                                    {courseInfo?.instruction_method}
-                                 </Tag>
-                                 <Tag size={{ base: 'md', md: 'lg' }}>
-                                    {courseInfo?.instruction_type}
-                                 </Tag>
+                                 {courseInfo?.instruction_method &&
+                                    (
+                                       <Tag size={{ base: 'md', md: 'lg' }}>
+                                          {courseInfo?.instruction_method}
+                                       </Tag>
+                                    )}
+                                 {courseInfo?.instruction_type &&
+                                    (
+                                       <Tag size={{ base: 'md', md: 'lg' }}>
+                                          {courseInfo?.instruction_type}
+                                       </Tag>
+                                    )}
                               </Flex>
                            </Box>
                         </Dialog.Title>
@@ -91,19 +96,22 @@ export const Route = createFileRoute('/_search/courses/$course_id')({
                               </Text>
                            </Box>
 
+                           <Search.Courses.Availabilites course_id={course_id} />
+
                            {/* Course Details */}
-                           <Box
+                           <Flex
+                              width='full'
                               borderRadius='lg'
                               borderWidth='thin'
-                              p={{ base: 3, md: 4 }}
-                              overflow='hidden'
+                              p={{ base: 2, md: 3 }}
+                              align='center'
+                              gap={3}
                            >
                               <Text
                                  fontSize={{ base: 'md', md: 'lg' }}
-                                 fontWeight='semibold'
-                                 mb={3}
+                                 fontWeight='medium'
                               >
-                                 Course Details
+                                 Details:
                               </Text>
                               <Flex
                                  direction={{ base: 'column', sm: 'row' }}
@@ -121,10 +129,9 @@ export const Route = createFileRoute('/_search/courses/$course_id')({
                                     {courseInfo.repeat_status}
                                  </Tag>
                               </Flex>
-                           </Box>
+                           </Flex>
 
                            {/* Prerequisites */}
-
                            <Search.Courses.Req course_id={course_id} />
                         </VStack>
                      </Dialog.Body>
@@ -135,3 +142,11 @@ export const Route = createFileRoute('/_search/courses/$course_id')({
       );
    },
 });
+
+interface Instructor {
+   id: number;
+   name: string;
+   avg_difficulty: number;
+   avg_rating: number;
+   num_ratings: number;
+}
