@@ -42,72 +42,74 @@ export default ({ course_id }: PreReqProps) => {
                         {(preReqGroup, idx) => (
                            <>
                               {idx === 0 ? null : <Text>and</Text>}
-                              <For each={preReqGroup}>
-                                 {(preReq, courseIdx) => (
-                                    <Flex>
-                                       <HoverCard.Root size='md'>
-                                          <HoverCard.Trigger asChild>
-                                             <HStack gap={2}>
-                                                {courseIdx === 0
-                                                   ? preReqGroup.length > 1 ? '(' : null
-                                                   : 'or'}
-                                                <Tag
-                                                   as={Link}
-                                                   {...linkOptions({
-                                                      //@ts-ignore: hsupp
-                                                      to: `/courses/${preReq?.id!}`,
-                                                      reloadDocument: false,
-                                                      resetScroll: false,
-                                                      replace: true,
-                                                   })}
-                                                   minHeight='7'
-                                                   size='lg'
-                                                   colorScheme='blue'
-                                                   cursor='pointer'
-                                                   _hover={{ bg: 'blue.100' }}
-                                                   endElement={<IoIosInformationCircleOutline />}
-                                                >
-                                                   {`${preReq.subjectId} ${preReq.courseNumber}`}
-                                                </Tag>
-                                                {preReqGroup.length > 1 &&
-                                                      preReqGroup.length - 1 === courseIdx
-                                                   ? ')'
-                                                   : null}
-                                             </HStack>
-                                          </HoverCard.Trigger>
+                              <HStack>
+                                 <For each={preReqGroup}>
+                                    {(preReq, courseIdx) => (
+                                       <Flex>
+                                          <HoverCard.Root size='md'>
+                                             <HoverCard.Trigger asChild>
+                                                <HStack gap={2}>
+                                                   {courseIdx === 0
+                                                      ? preReqGroup.length > 1 ? '(' : null
+                                                      : 'or'}
+                                                   <Tag
+                                                      as={Link}
+                                                      {...linkOptions({
+                                                         //@ts-ignore: hsupp
+                                                         to: `/courses/${preReq?.id!}`,
+                                                         reloadDocument: false,
+                                                         resetScroll: false,
+                                                         replace: true,
+                                                      })}
+                                                      minHeight='7'
+                                                      size='lg'
+                                                      colorScheme='blue'
+                                                      cursor='pointer'
+                                                      _hover={{ bg: 'blue.100' }}
+                                                      endElement={<IoIosInformationCircleOutline />}
+                                                   >
+                                                      {`${preReq.subjectId} ${preReq.courseNumber}`}
+                                                   </Tag>
+                                                   {preReqGroup.length > 1 &&
+                                                         preReqGroup.length - 1 === courseIdx
+                                                      ? ')'
+                                                      : null}
+                                                </HStack>
+                                             </HoverCard.Trigger>
 
-                                          <Portal>
-                                             <HoverCard.Positioner>
-                                                <HoverCard.Content maxWidth='280px'>
-                                                   <HoverCard.Arrow />
-                                                   <VStack align='start' gap={2}>
-                                                      <Text
-                                                         fontWeight='semibold'
-                                                         fontSize='sm'
-                                                      >
-                                                         {`${preReq.subjectId} ${preReq.courseNumber}: ${preReq.name}`}
-                                                      </Text>
-
-                                                      <VStack align='start' gap={1}>
-                                                         <Text>
-                                                            {'Minimum Grade: '}
-                                                            {preReq.minimumGrade}
+                                             <Portal>
+                                                <HoverCard.Positioner>
+                                                   <HoverCard.Content maxWidth='280px'>
+                                                      <HoverCard.Arrow />
+                                                      <VStack align='start' gap={2}>
+                                                         <Text
+                                                            fontWeight='semibold'
+                                                            fontSize='sm'
+                                                         >
+                                                            {`${preReq.subjectId} ${preReq.courseNumber}: ${preReq.name}`}
                                                          </Text>
 
-                                                         {preReq.canTakeConcurrent && (
-                                                            <Text color='green.600'>
-                                                               ✓ Can take concurrently
+                                                         <VStack align='start' gap={1}>
+                                                            <Text>
+                                                               {'Minimum Grade: '}
+                                                               {preReq.minimumGrade}
                                                             </Text>
-                                                         )}
+
+                                                            {preReq.canTakeConcurrent && (
+                                                               <Text color='green.600'>
+                                                                  ✓ Can take concurrently
+                                                               </Text>
+                                                            )}
+                                                         </VStack>
                                                       </VStack>
-                                                   </VStack>
-                                                </HoverCard.Content>
-                                             </HoverCard.Positioner>
-                                          </Portal>
-                                       </HoverCard.Root>
-                                    </Flex>
-                                 )}
-                              </For>
+                                                   </HoverCard.Content>
+                                                </HoverCard.Positioner>
+                                             </Portal>
+                                          </HoverCard.Root>
+                                       </Flex>
+                                    )}
+                                 </For>
+                              </HStack>
                            </>
                         )}
                      </For>
