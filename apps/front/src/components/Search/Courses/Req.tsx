@@ -5,12 +5,14 @@ import { useQuery } from '@tanstack/react-query';
 import { Tag } from '@/components/ui';
 import { Link } from '@tanstack/react-router';
 import { linkOptions } from '@tanstack/react-router';
+import { useMobile } from '@/hooks';
 
 type PreReqProps = {
    course_id: string;
 };
 
 export default ({ course_id }: PreReqProps) => {
+   const isMobile = useMobile();
    const { data: preReqRaw, isPending } = useQuery(
       getV1GraphReqByCourseIdOptions({ path: { course_id } }),
    );
@@ -42,7 +44,7 @@ export default ({ course_id }: PreReqProps) => {
                         {(preReqGroup, idx) => (
                            <>
                               {idx === 0 ? null : <Text>and</Text>}
-                              <HStack>
+                              <HStack wrap={isMobile ? 'wrap' : null}>
                                  <For each={preReqGroup}>
                                     {(preReq, courseIdx) => (
                                        <Flex>
@@ -65,7 +67,6 @@ export default ({ course_id }: PreReqProps) => {
                                                       size='lg'
                                                       colorScheme='blue'
                                                       cursor='pointer'
-                                                      _hover={{ bg: 'blue.100' }}
                                                       endElement={<IoIosInformationCircleOutline />}
                                                    >
                                                       {`${preReq.subjectId} ${preReq.courseNumber}`}

@@ -5,8 +5,8 @@ import { DescribeGraphRoute, factory } from './common.ts';
 
 const cypher = `
     MATCH (course:Course)
-    MATCH (course)-[offers:OFFERS]->(section:Section)
     WHERE course.id = $course_id
+    OPTIONAL MATCH (course)-[offers:OFFERS]->(section:Section)
     RETURN course.id AS id,
            course.subject_id AS subject_id,
            course.course_number AS course_number,

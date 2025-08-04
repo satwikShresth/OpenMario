@@ -52,12 +52,18 @@ export const Route = createFileRoute('/_search/courses/$course_id')({
                                  <Tag size={{ base: 'md', md: 'lg' }}>
                                     Credits: {courseInfo.credits}
                                  </Tag>
-                                 <Tag size={{ base: 'md', md: 'lg' }}>
-                                    {courseInfo?.instruction_method}
-                                 </Tag>
-                                 <Tag size={{ base: 'md', md: 'lg' }}>
-                                    {courseInfo?.instruction_type}
-                                 </Tag>
+                                 {courseInfo?.instruction_method &&
+                                    (
+                                       <Tag size={{ base: 'md', md: 'lg' }}>
+                                          {courseInfo?.instruction_method}
+                                       </Tag>
+                                    )}
+                                 {courseInfo?.instruction_type &&
+                                    (
+                                       <Tag size={{ base: 'md', md: 'lg' }}>
+                                          {courseInfo?.instruction_type}
+                                       </Tag>
+                                    )}
                               </Flex>
                            </Box>
                         </Dialog.Title>

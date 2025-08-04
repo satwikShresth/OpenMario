@@ -48,7 +48,7 @@ export default ({ course_id }: AvailabilitesProps) => {
 
          // Check if instructor already exists in this term
          const existingSection = yearGroups[year][termSuffix].find(
-            section => section.name === instructorName
+            (section) => section.name === instructorName,
          );
 
          if (existingSection) {
@@ -78,7 +78,7 @@ export default ({ course_id }: AvailabilitesProps) => {
       return result;
    }, [courseAvailInfo]);
 
-   if (!courseAvailInfo) return null;
+   if (availabilityTableData.length < 1) return null;
 
    return (
       <Table.Root
@@ -157,7 +157,10 @@ export default ({ course_id }: AvailabilitesProps) => {
                                                                   gap={1}
                                                                >
                                                                   <Text fontSize='sm'>
-                                                                     CRN{section.crn.length > 1 ? 's' : ''}: {section.crn.join(', ')}
+                                                                     CRN{section.crn.length > 1
+                                                                        ? 's'
+                                                                        : ''}:{' '}
+                                                                     {section.crn.join(', ')}
                                                                   </Text>
 
                                                                   {section
