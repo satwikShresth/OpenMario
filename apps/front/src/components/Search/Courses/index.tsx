@@ -5,6 +5,7 @@ import { Index } from 'react-instantsearch';
 import type { ReactNode } from 'react';
 import { Filters } from './Filters';
 import Req from './Req.tsx';
+import Availabilites from './Availabilites.tsx';
 
 type CoursesProps = { index: string; children?: ReactNode };
 export default {
@@ -15,6 +16,7 @@ export default {
          </FavoritesProvider>
       </Index>
    ),
+   Availabilites,
    Req,
    Pagination,
    Filters,
