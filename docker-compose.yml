@@ -1,8 +1,34 @@
+version: "3.8"
 services:
+  memgraph:
+    image: memgraph/memgraph-mage
+    container_name: memgraph
+    restart: unless-stopped
+    networks:
+      - app_network
+    ports:
+      - "7687:7687"
+      - "7444:7444"
+    volumes:
+      - memgraph_data:/var/lib/memgraph
+
+  lab:
+    image: memgraph/lab
+    container_name: memgraph_lab
+    restart: unless-stopped
+    networks:
+      - app_network
+    ports:
+      - "3000:3000"
+    environment:
+      - QUICK_CONNECT_MG_HOST=memgraph
+    depends_on:
+      - memgraph
+
   meilisearch:
     image: getmeili/meilisearch:v1.13.3
     container_name: meilisearch
-    restart: always
+    restart: unless-stopped
     networks:
       - app_network
     env_file:
@@ -17,13 +43,20 @@ services:
       - MEILI_MASTER_KEY=${MEILI_MASTER_KEY?MEILI_MASTER_KEY variable not set}
       - MEILI_HOST=${MEILI_HOST?MEILI_HOST variable not set}
     healthcheck:
-      test: set -o pipefail;curl -fsS http://localhost:7700/health | grep -q '{"status":"available"}'
+      test: ["CMD", "curl", "-f", "http://localhost:7700/health"]
+      interval: 30s
+      timeout: 10s
       retries: 3
-      timeout: 5s
+      start_period: 40s
 
 volumes:
   meilisearch_data:
+    driver: local
+  memgraph_data:
+    driver: local
 
 networks:
   app_network:
     driver: bridge
+
+
