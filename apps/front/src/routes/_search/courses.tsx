@@ -12,7 +12,6 @@ import { RefinementSelect, Search, SearchBox, SortSelect, Stats } from '@/compon
 import { useMobile } from '@/hooks';
 import { HiFilter } from 'react-icons/hi';
 import { Outlet } from '@tanstack/react-router';
-import { retainSearchParams } from '@tanstack/react-router';
 
 const sortBy = createListCollection({
    items: [
@@ -49,8 +48,6 @@ const sortBy = createListCollection({
 });
 
 export const Route = createFileRoute('/_search/courses')({
-   search: { middlewares: [retainSearchParams(true)] },
-   beforeLoad: ({ search, cause }) => ({ search, cause }),
    component: () => {
       const { open: isFilterOpen, onOpen: openFilter, onClose: closeFilter } = useDisclosure();
       const isMobile = useMobile();

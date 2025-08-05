@@ -142,11 +142,3 @@ export const Route = createFileRoute('/_search/courses/$course_id')({
       );
    },
 });
-
-interface Instructor {
-   id: number;
-   name: string;
-   avg_difficulty: number;
-   avg_rating: number;
-   num_ratings: number;
-}
