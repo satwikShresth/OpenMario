@@ -74,7 +74,6 @@ export default factory.createHandlers(
             const record = records[0];
             const courseId = record.get('course_id');
             const terms = record.get('terms');
-            console.log(terms);
 
             if (!courseId) {
                return c.json(
