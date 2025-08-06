@@ -72,7 +72,6 @@ export default () => {
       async (c) => {
          const user_id = c.get('jwtPayload')?.user_id || null;
          const { name: company_name } = c.req.valid('json');
-         console.log(user_id);
 
          return await db
             .transaction(

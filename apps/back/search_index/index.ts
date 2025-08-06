@@ -29,12 +29,12 @@ const meilisearch = meilisearchService.client;
 //   "./indexes/instructors.json",
 //   instructors,
 // );
-await migrateAndSeed(
-   meilisearch,
-   'job_postings',
-   './indexes/job_postings.json',
-   job_posting,
-);
+// await migrateAndSeed(
+//    meilisearch,
+//    'job_postings',
+//    './indexes/job_postings.json',
+//    job_posting,
+// );
 await migrateAndSeed(
    meilisearch,
    'sections',

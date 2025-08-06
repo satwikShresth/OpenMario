@@ -131,7 +131,8 @@ export const Card = ({ section }: { section: Section }) => {
                         alignItems='center'
                         px={4}
                         py={2}
-                        maxH='24'
+                        maxW='64'
+                        maxH='28'
                      >
                         <VStack>
                            <HStack

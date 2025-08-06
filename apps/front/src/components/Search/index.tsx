@@ -3,14 +3,14 @@ import type { InstantMeiliSearchInstance } from '@meilisearch/instant-meilisearc
 import { InstantSearch } from 'react-instantsearch';
 import { history } from 'instantsearch.js/es/lib/routers';
 import Courses from './Courses';
-import { parse } from 'jsurl2';
-import { useRouter } from '@tanstack/react-router';
-import { parseSearchWith } from '@tanstack/react-router';
+import { parse, stringify } from 'jsurl2';
+import { parseSearchWith, stringifySearchWith } from '@tanstack/react-router';
+import { useNavigate } from '@tanstack/react-router';
 
 type SearchProps = { searchClient: InstantMeiliSearchInstance; children?: ReactNode };
 export const Search = {
    Root: ({ searchClient, children }: SearchProps) => {
-      const router = useRouter();
+      const navigate = useNavigate();
       return (
          <InstantSearch
             //@ts-ignore: shupp
@@ -18,18 +18,17 @@ export const Search = {
             future={{ preserveSharedStateOnUnmount: true }}
             routing={{
                router: history({
-                  createURL: ({ routeState, location }) => {
-                     const loc = router.parseLocation(location);
-                     const newLoc = router.buildLocation({ search: routeState, state: loc.state });
-                     return location.origin + newLoc.href;
-                  },
+                  createURL: ({ routeState, location }) =>
+                     location.origin +
+                     location.pathname +
+                     stringifySearchWith(stringify)(routeState),
                   parseURL: ({ location }) => {
+                     console.log('parseUrl', parseSearchWith(parse)(location.search));
                      return parseSearchWith(parse)(location.search);
                   },
                   push: (url) => {
                      const location = new URL(url);
-
-                     router.navigate({
+                     navigate({
                         //@ts-ignore: shupp
                         search: parseSearchWith(parse)(location.search),
                         replace: true,
@@ -44,6 +43,7 @@ export const Search = {
                      const indexUiState = uiState['sections'];
                      indexUiState?.configure && delete indexUiState?.configure;
                      indexUiState?.sortBy || delete indexUiState?.sortBy;
+                     console.log(indexUiState);
                      return { ...indexUiState };
                   },
                   routeToState: (routeState) => {
