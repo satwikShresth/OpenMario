@@ -5,13 +5,24 @@ import {
    createListCollection,
    Flex,
    Icon,
+   Switch,
    Text,
    useDisclosure,
 } from '@chakra-ui/react';
-import { RefinementSelect, Search, SearchBox, SortSelect, Stats } from '@/components/Search';
+import {
+   RefinementSelect,
+   Search,
+   SearchBox,
+   SortSelect,
+   Stats,
+   useFavoritesStore,
+} from '@/components/Search';
 import { useMobile } from '@/hooks';
 import { HiFilter } from 'react-icons/hi';
 import { Outlet } from '@tanstack/react-router';
+import { RiHeartFill, RiHeartLine } from 'react-icons/ri';
+import { Configure } from 'react-instantsearch';
+import { useState } from 'react';
 
 const sortBy = createListCollection({
    items: [
@@ -111,16 +122,19 @@ export const Route = createFileRoute('/_search/courses')({
                   {/* Results Area */}
                   <Flex direction='column' flex='1' minWidth='0' gap={{ base: 3, md: 4 }}>
                      {/* Desktop Stats and Sort Controls - Only show on desktop */}
-                     {!isMobile && (
-                        <Flex justify='space-between' align='center' gap={3}>
-                           <Box flex='1' minWidth='0'>
-                              <Stats />
-                           </Box>
-                           <Box flexShrink={0}>
-                              <SortSelect sortBy={sortBy} />
-                           </Box>
-                        </Flex>
-                     )}
+                     {!isMobile
+                        ? (
+                           <Flex justify='space-between' align='center' gap={3}>
+                              <Box flex='1' minWidth='0'>
+                                 <Stats />
+                              </Box>
+                              <ToggleFav />
+                              <Box flexShrink={0}>
+                                 <SortSelect sortBy={sortBy} />
+                              </Box>
+                           </Flex>
+                        )
+                        : <ToggleFav />}
 
                      {/* Cards and Pagination */}
                      {isMobile && <Stats />}
@@ -154,3 +168,48 @@ export const Route = createFileRoute('/_search/courses')({
       );
    },
 });
+
+const ToggleFav = () => {
+   const navigate = Route.useNavigate();
+   const showFavorites = Route.useSearch({ select: (s) => s?.showFavorites! === true });
+
+   const favoritesLength = useFavoritesStore((s) => s.actions.getAllFavorites().length);
+   const favoritesFilter = useFavoritesStore((s) =>
+      s.actions.getAllFavorites().map((fav) => `course_id = "${fav}"`).join(' OR ')
+   );
+
+   console.log(favoritesFilter);
+
+   const handleToggle = (checked: boolean) => {
+      navigate({
+         search: (prev) => ({
+            ...prev,
+            showFavorites: checked ? true : undefined,
+         }),
+      });
+   };
+
+   return (
+      <>
+         {showFavorites && favoritesLength > 0 && <Configure filters={favoritesFilter} />}
+         <Switch.Root
+            colorPalette='pink'
+            size='md'
+            checked={showFavorites}
+            onCheckedChange={({ checked }) => {
+               handleToggle(checked);
+            }}
+         >
+            <Switch.Label>Show liked courses ({favoritesLength})</Switch.Label>
+            <Switch.HiddenInput />
+            <Switch.Control>
+               <Switch.Thumb>
+                  <Switch.ThumbIndicator fallback={<Icon as={RiHeartLine} />}>
+                     <Icon as={RiHeartFill} />
+                  </Switch.ThumbIndicator>
+               </Switch.Thumb>
+            </Switch.Control>
+         </Switch.Root>
+      </>
+   );
+};

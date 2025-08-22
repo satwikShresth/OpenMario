@@ -41,7 +41,7 @@ const MobileLayout = ({ children }: { children: ReactNode }) => {
 export const Route = createRootRouteWithContext<MyRouterContext>()({
    component: () => (
       <VStack align='normal'>
-         <Box width='100%' maxWidth='1800px' position='relative'>
+         <Box width='100%' position='relative'>
             <MobileLayout>
                <Container>
                   <Outlet />

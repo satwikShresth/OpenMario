@@ -1,10 +1,12 @@
 import {
    Box,
    Card as CCard,
+   Clipboard,
    Flex,
    For,
    HStack,
    Icon,
+   IconButton,
    Separator,
    Stack,
    Text,
@@ -22,6 +24,8 @@ import Req from './Req.tsx';
 import { useQuery } from '@tanstack/react-query';
 import { getV1GraphCoursesByCourseIdOptions } from '@/client';
 import Availabilites from './Availabilites.tsx';
+import { RiHeartFill, RiHeartLine } from 'react-icons/ri';
+import { useFavoritesStore } from '../Store';
 
 export const Cards = () => {
    const infiniteHits = useHits<Section>();
@@ -119,53 +123,57 @@ export const Card = ({ section }: { section: Section }) => {
                      )}
                   </Flex>
                </Box>
-
-               {section.days && section.days.length > 0
-                  ? (
-                     <Tag
-                        size='xl'
-                        width={isMobile ? 'full' : 'fit-content'}
-                        minWidth='fit-content'
-                        display='flex'
-                        justifyContent='center'
-                        alignItems='center'
-                        px={4}
-                        py={2}
-                        maxW='64'
-                        maxH='28'
-                     >
-                        <VStack>
-                           <HStack
-                              gap={4}
-                              justify='center'
-                              align='center'
-                              width='auto'
+               <Flex>
+                  {section.days && section.days.length > 0
+                     ? (
+                        <HStack align='normal'>
+                           <Tag
+                              size='xl'
+                              width={isMobile ? 'full' : 'fit-content'}
+                              minWidth='fit-content'
+                              display='flex'
+                              justifyContent='center'
+                              alignItems='center'
+                              px={4}
+                              py={2}
+                              maxW='64'
+                              maxH='28'
                            >
-                              {weekItems.map((item) => (
-                                 <Tooltip key={item.label} content={item.value}>
-                                    <Icon
-                                       size='lg'
-                                       as={section?.days.includes(item?.value)
-                                          ? item.filledIcon
-                                          : item.icon}
-                                    />
-                                 </Tooltip>
-                              ))}
-                           </HStack>
+                              <VStack>
+                                 <HStack
+                                    gap={4}
+                                    justify='center'
+                                    align='center'
+                                    width='auto'
+                                 >
+                                    {weekItems.map((item) => (
+                                       <Tooltip key={item.label} content={item.value}>
+                                          <Icon
+                                             size='lg'
+                                             as={section?.days.includes(item?.value)
+                                                ? item.filledIcon
+                                                : item.icon}
+                                          />
+                                       </Tooltip>
+                                    ))}
+                                 </HStack>
 
-                           {section?.start_time
-                              ? (
-                                 <Text fontSize='sm'>
-                                    {`${formatTime(section?.start_time)} - ${
-                                       formatTime(section?.end_time)
-                                    }`}
-                                 </Text>
-                              )
-                              : null}
-                        </VStack>
-                     </Tag>
-                  )
-                  : null}
+                                 {section?.start_time
+                                    ? (
+                                       <Text fontSize='sm'>
+                                          {`${formatTime(section?.start_time)} - ${
+                                             formatTime(section?.end_time)
+                                          }`}
+                                       </Text>
+                                    )
+                                    : null}
+                              </VStack>
+                           </Tag>
+                           <CardButtons course_id={section?.course_id} />
+                        </HStack>
+                     )
+                     : <CardButtons course_id={section?.course_id} noSection />}
+               </Flex>
             </Stack>
          </CCard.Header>
 
@@ -299,5 +307,82 @@ export const Card = ({ section }: { section: Section }) => {
             </Box>
          </CCard.Footer>
       </CCard.Root>
+   );
+};
+
+const CardButtons = (
+   { course_id, noSection = false }: { course_id: string; noSection?: boolean },
+) => {
+   // const [isLiked, setIsLiked] = useState(false);
+
+   // const handleMenuSelect = ({ value }) => {
+   //    // Handle menu item selection
+   //    switch (value) {
+   //       case 'share':
+   //          // Handle share action
+   //          console.log('Share clicked');
+   //          break;
+   //       default:
+   //          break;
+   //    }
+   // };
+
+   const isMobile = useMobile();
+   const actions = useFavoritesStore((selector) => selector.actions);
+   const isLiked = useFavoritesStore((selector) => selector.actions.isFavorite(course_id));
+   const toggleHeart = () => {
+      isLiked ? actions.removeFavorite(course_id) : actions.addFavorite(course_id);
+   };
+
+   return (
+      <Stack
+         direction={isMobile && noSection ? 'row' : 'column'}
+         align='normal'
+         justify='space-between'
+      >
+         {
+            /*
+         <Menu.Root onSelect={handleMenuSelect} positioning={{ placement: 'bottom' }}>
+            <Menu.Trigger asChild>
+               <IconButton variant='outline' size='sm'>
+                  <Icon as={CiMenuKebab} size='md' />
+               </IconButton>
+            </Menu.Trigger>
+            <Portal>
+               <Menu.Positioner>
+                  <Menu.Content>
+                     <Menu.Item value='share' p={2}>
+                        <MdShare />
+                        Share
+                     </Menu.Item>
+                  </Menu.Content>
+               </Menu.Positioner>
+            </Portal>
+         </Menu.Root>
+         */
+         }
+         <IconButton
+            variant='surface'
+            size='sm'
+            onClick={toggleHeart}
+            color={isLiked ? 'pink.500' : 'gray.500'}
+            _hover={{
+               color: isLiked ? 'pink.600' : 'pink.400',
+               borderColor: isLiked ? 'pink.600' : 'pink.400',
+            }}
+         >
+            <Icon as={isLiked ? RiHeartFill : RiHeartLine} size='lg' />
+         </IconButton>
+         <Clipboard.Root
+            value={globalThis.location.origin + globalThis.location.pathname +
+               `/${course_id!}` + globalThis.location.search}
+         >
+            <Clipboard.Trigger asChild>
+               <IconButton variant='surface' size='sm'>
+                  <Clipboard.Indicator />
+               </IconButton>
+            </Clipboard.Trigger>
+         </Clipboard.Root>
+      </Stack>
    );
 };
