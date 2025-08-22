@@ -1,6 +1,5 @@
 import { type ListCollection, Portal, Select } from '@chakra-ui/react';
 import { useSortBy } from 'react-instantsearch';
-import { useMobile } from '@/hooks/useMobile.ts';
 
 type SortSelectProps = {
    sortBy: ListCollection<{
@@ -10,7 +9,6 @@ type SortSelectProps = {
 };
 export const SortSelect = ({ sortBy }: SortSelectProps) => {
    const sort = useSortBy({ items: sortBy.items });
-   const isMobile = useMobile();
 
    return (
       <Select.Root
@@ -21,7 +19,6 @@ export const SortSelect = ({ sortBy }: SortSelectProps) => {
          onValueChange={(e) => sort.refine(e.value[0])}
       >
          <Select.HiddenSelect />
-         {!isMobile ? <Select.Label>Sort</Select.Label> : null}
          <Select.Control>
             <Select.Trigger>
                <Select.ValueText />

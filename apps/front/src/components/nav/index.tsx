@@ -31,7 +31,7 @@ export default function Navbar() {
          <Flex
             minH='60px'
             py={{ base: 2 }}
-            px={{ base: 4 }}
+            px={{ base: 20 }}
             align='center'
             transition='all 0.3s ease'
          >

@@ -1,5 +1,4 @@
 import { Flex, Stat } from '@chakra-ui/react';
-import { InfoTip } from '@/components/ui';
 import { useStats } from 'react-instantsearch';
 import { useMobile } from '@/hooks';
 
@@ -8,12 +7,6 @@ export const Stats = () => {
    const stats = useStats();
    return (
       <Stat.Root ml={1}>
-         {!isMobile && (
-            <Stat.Label>
-               Stats
-               <InfoTip>Search performance</InfoTip>
-            </Stat.Label>
-         )}
          {isMobile
             ? (
                <Flex justify='space-between'>

@@ -4,14 +4,12 @@ import { parseSearchWith } from '@tanstack/react-router';
 import { ErrorComponent, LoadingComponent, NotFoundComponent } from '@/components/common';
 import { Provider } from '@/components/ui/provider';
 import reportWebVitals from '@/reportWebVitals.ts';
-import { PostHogProvider } from 'posthog-js/react';
 import { Toaster } from '@/components/ui/toaster';
 import { routeTree } from '@/routeTree.gen';
 import ReactDOM from 'react-dom/client';
 import { parse, stringify } from 'jsurl2';
 import { enableMapSet } from 'immer';
 import { StrictMode } from 'react';
-import postHog from 'posthog-js';
 import './styles.css';
 
 const router = createRouter({
@@ -42,19 +40,12 @@ if (rootElement && !rootElement.innerHTML) {
    const root = ReactDOM.createRoot(rootElement);
    root.render(
       <StrictMode>
-         <PostHogProvider
-            client={postHog.init(import.meta.env.VITE_PUBLIC_POSTHOG_KEY, {
-               api_host: import.meta.env.VITE_PUBLIC_POSTHOG_HOST,
-               defaults: '2025-05-24',
-            })}
-         >
-            <Provider>
-               <Toaster />
-               <TanStackQueryProvider.Provider>
-                  <RouterProvider router={router} />
-               </TanStackQueryProvider.Provider>
-            </Provider>
-         </PostHogProvider>
+         <Provider>
+            <Toaster />
+            <TanStackQueryProvider.Provider>
+               <RouterProvider router={router} />
+            </TanStackQueryProvider.Provider>
+         </Provider>
       </StrictMode>,
    );
 }
