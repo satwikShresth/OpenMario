@@ -94,7 +94,11 @@ export default ({ course_id }: AvailabilitesProps) => {
                </Table.ColumnHeader>
                <For each={['Fall', 'Winter', 'Spring', 'Summer']}>
                   {(term: string) => (
-                     <Table.ColumnHeader key={term} bgColor='Background'>
+                     <Table.ColumnHeader
+                        key={term}
+                        bgColor='Background'
+                        width='25%'
+                     >
                         {term}
                      </Table.ColumnHeader>
                   )}
@@ -114,6 +118,7 @@ export default ({ course_id }: AvailabilitesProps) => {
                               <Table.Cell
                                  key={`${yearData.Year}-${termSuffix}`}
                                  textJustify='left'
+                                 width='25%'
                               >
                                  {sections.length > 0
                                     ? (
