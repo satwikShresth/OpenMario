@@ -1,62 +1,23 @@
-version: "3.8"
 services:
   memgraph:
-    image: memgraph/memgraph-mage
-    container_name: memgraph
-    restart: unless-stopped
-    networks:
-      - app_network
+    image: memgraph/memgraph-mage:latest
+    container_name: memgraph-mage
+    pull_policy: always
     ports:
       - "7687:7687"
       - "7444:7444"
+    command: ["--log-level=TRACE", "--schema-info-enabled=true"]
     volumes:
-      - memgraph_data:/var/lib/memgraph
+      - ./memgraph_data:/var/lib/memgraph  # Persists your graph data here—create this dir on host first!
 
   lab:
-    image: memgraph/lab
-    container_name: memgraph_lab
-    restart: unless-stopped
-    networks:
-      - app_network
+    image: memgraph/lab:latest
+    container_name: memgraph-lab
+    pull_policy: always
     ports:
       - "3000:3000"
-    environment:
-      - QUICK_CONNECT_MG_HOST=memgraph
     depends_on:
       - memgraph
-
-  meilisearch:
-    image: getmeili/meilisearch:v1.13.3
-    container_name: meilisearch
-    restart: unless-stopped
-    networks:
-      - app_network
-    env_file:
-      - ./.env
-    ports:
-      - "7700:7700"
-    volumes:
-      - meilisearch_data:/meili_data
     environment:
-      - MEILI_NO_ANALYTICS=${MEILI_NO_ANALYTICS:-true}
-      - MEILI_ENV=${MEILI_ENV?MEILI_ENV variable not set}
-      - MEILI_MASTER_KEY=${MEILI_MASTER_KEY?MEILI_MASTER_KEY variable not set}
-      - MEILI_HOST=${MEILI_HOST?MEILI_HOST variable not set}
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:7700/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 40s
-
-volumes:
-  meilisearch_data:
-    driver: local
-  memgraph_data:
-    driver: local
-
-networks:
-  app_network:
-    driver: bridge
-
-
+      - QUICK_CONNECT_MG_HOST=memgraph
+      - QUICK_CONNECT_MG_PORT=7687
