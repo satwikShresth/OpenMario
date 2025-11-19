@@ -10,6 +10,9 @@ import ReactDOM from 'react-dom/client';
 import { parse, stringify } from 'jsurl2';
 import { enableMapSet } from 'immer';
 import { StrictMode } from 'react';
+import { withLDProvider } from 'launchdarkly-react-client-sdk';
+import Observability, { LDObserve } from '@launchdarkly/observability'
+import SessionReplay, { LDRecord } from '@launchdarkly/session-replay'
 import './styles.css';
 
 const router = createRouter({
