@@ -103,6 +103,7 @@ export default function Navbar() {
                   _hover={{ color: 'accent' }}
                   borderRadius='lg'
                   onClick={onClose}
+                  //@ts-expect-error
                   href='https://github.com/satwikShresth/openmario'
                >
                   <Icon as={FiGithub} />

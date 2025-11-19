@@ -1,84 +1,92 @@
 import { For, HoverCard, Portal, Table, Text, VStack } from '@chakra-ui/react';
-import { getV1GraphCoursesAvailabilitiesByCourseIdOptions } from '@/client';
-import { useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Tag } from '@/components/ui';
+import { orpc } from '@/helpers';
+import type { Instructor } from '@openmario/server/contracts';
 
 type AvailabilitesProps = {
    course_id: string;
 };
 
 export default ({ course_id }: AvailabilitesProps) => {
-   const { data: courseAvailRaw } = useQuery(
-      getV1GraphCoursesAvailabilitiesByCourseIdOptions({ path: { course_id } }),
-   );
-   const courseAvailInfo = courseAvailRaw ?? [];
+   const { data: availabilityTableData, isLoading } = useQuery(
+      orpc.graph.availabilities.queryOptions({
+         input: {
+            course_id
+         },
+         select: (courseAvailRaw) => {
+            const courseAvailInfo = courseAvailRaw ?? [];
+            if (!courseAvailInfo || courseAvailInfo.length === 0) {
+               return [];
+            }
 
-   const availabilityTableData = useMemo(() => {
-      if (!courseAvailInfo || courseAvailInfo.length === 0) {
-         return [];
-      }
-
-      const parseTermInfo = (termCode: number): { year: string; termSuffix: string } => {
-         const year = String(termCode).substring(0, 4);
-         const termSuffix = String(termCode).substring(4); // Get "15", "25", "35", "45"
-         return { year, termSuffix };
-      };
-
-      // Group data by year
-      const yearGroups: Record<
-         string,
-         Record<string, Array<{ name: string; crn: string[]; instructor: Instructor | null }>>
-      > = {};
-
-      courseAvailInfo.forEach((item: CourseAvailabilityItem) => {
-         const { year, termSuffix } = parseTermInfo(item.term);
-
-         if (!yearGroups[year]) {
-            yearGroups[year] = {
-               '15': [], // Fall
-               '25': [], // Winter
-               '35': [], // Spring
-               '45': [], // Summer
+            const parseTermInfo = (termCode: number | string): { year: string; termSuffix: string } => {
+               const year = String(termCode).substring(0, 4);
+               const termSuffix = String(termCode).substring(4); // Get "15", "25", "35", "45"
+               return { year, termSuffix };
             };
-         }
 
-         const instructorName = item.instructor?.name || 'TBA';
-         const crnString = String(item.crn);
+            // Group data by year
+            const yearGroups: Record<
+               string,
+               Record<string, Array<{ name: string; crn: string[]; instructor: Instructor | null }>>
+            > = {};
 
-         // Check if instructor already exists in this term
-         const existingSection = yearGroups[year][termSuffix].find(
-            (section) => section.name === instructorName,
-         );
+            courseAvailInfo.forEach((item) => {
+               const { year, termSuffix } = parseTermInfo(item.term);
 
-         if (existingSection) {
-            // Add CRN to existing instructor's CRN array
-            existingSection.crn.push(crnString);
-         } else {
-            // Create new entry for this instructor
-            yearGroups[year][termSuffix].push({
-               name: instructorName,
-               crn: [crnString],
-               instructor: item.instructor,
+               if (!yearGroups[year]) {
+                  yearGroups[year] = {
+                     '15': [], // Fall
+                     '25': [], // Winter
+                     '35': [], // Spring
+                     '45': [], // Summer
+                  };
+               }
+
+               const instructorName = item.instructor?.name || 'TBA';
+               const crnString = String(item.crn);
+
+               // Check if instructor already exists in this term
+               const existingSection = yearGroups!
+               [year!]!
+               [termSuffix!]!.find(
+                  (section) => section.name === instructorName,
+               );
+
+               if (existingSection) {
+                  // Add CRN to existing instructor's CRN array
+                  existingSection.crn.push(crnString);
+               } else {
+                  // Create new entry for this instructor
+                  yearGroups![year]![termSuffix]!.push({
+                     name: instructorName,
+                     crn: [crnString],
+                     instructor: item?.instructor!,
+                  });
+               }
             });
+
+            // Convert to desired array format
+            const result = Object.keys(yearGroups)
+               .sort()
+               .map((year) => ({
+                  Year: year,
+                  15: yearGroups![year]!['15'], // Fall
+                  25: yearGroups![year]!['25'], // Winter
+                  35: yearGroups![year]!['35'], // Spring
+                  45: yearGroups![year]!['45'], // Summer
+               }));
+
+            return result;
+
          }
-      });
+      })
+   );
 
-      // Convert to desired array format
-      const result = Object.keys(yearGroups)
-         .sort()
-         .map((year) => ({
-            Year: year,
-            15: yearGroups[year]['15'], // Fall
-            25: yearGroups[year]['25'], // Winter
-            35: yearGroups[year]['35'], // Spring
-            45: yearGroups[year]['45'], // Summer
-         }));
-
-      return result;
-   }, [courseAvailInfo]);
-
-   if (availabilityTableData.length < 1) return null;
+   if (isLoading || !availabilityTableData || availabilityTableData.length < 1) {
+      return null;
+   }
 
    return (
       <Table.Root
@@ -92,10 +100,9 @@ export default ({ course_id }: AvailabilitesProps) => {
                <Table.ColumnHeader bgColor='Background'>
                   Year
                </Table.ColumnHeader>
-               <For each={['Fall', 'Winter', 'Spring', 'Summer']}>
+               <For each={['Fall', 'Winter', 'Spring', 'Summer']} key={(term) => term}>
                   {(term: string) => (
                      <Table.ColumnHeader
-                        key={term}
                         bgColor='Background'
                         width='25%'
                      >
@@ -106,30 +113,28 @@ export default ({ course_id }: AvailabilitesProps) => {
             </Table.Row>
          </Table.Header>
          <Table.Body>
-            <For each={availabilityTableData}>
+            <For each={availabilityTableData} key={(yearData) => yearData.Year}>
                {(yearData: any) => (
-                  <Table.Row key={yearData.Year}>
+                  <Table.Row>
                      <Table.Cell>{yearData.Year}</Table.Cell>
-                     <For each={['15', '25', '35', '45']}>
+                     <For each={['15', '25', '35', '45']} key={(suffix) => suffix}>
                         {(termSuffix: string) => {
                            const sections = yearData[termSuffix] || [];
 
                            return (
                               <Table.Cell
-                                 key={`${yearData.Year}-${termSuffix}`}
                                  textJustify='left'
                                  width='25%'
                               >
                                  {sections.length > 0
                                     ? (
                                        <VStack align='start' gap={2}>
-                                          <For each={sections}>
+                                          <For each={sections} key={(section) => `${section.name}-${section.crn.join('-')}`}>
                                              {(section: Section) => (
-                                                <HoverCard.Root
-                                                   key={`${section.name}-${section.crn.join('-')}`}
-                                                >
+                                                <HoverCard.Root>
                                                    <HoverCard.Trigger asChild>
                                                       <Tag
+                                                         //@ts-expect-error it can accept px
                                                          size='10px'
                                                          cursor='pointer'
                                                       >
@@ -150,7 +155,7 @@ export default ({ course_id }: AvailabilitesProps) => {
                                                                   fontSize='sm'
                                                                >
                                                                   {section
-                                                                        .instructor
+                                                                     .instructor
                                                                      ? section
                                                                         .instructor
                                                                         .name
@@ -169,7 +174,7 @@ export default ({ course_id }: AvailabilitesProps) => {
                                                                   </Text>
 
                                                                   {section
-                                                                        .instructor
+                                                                     .instructor
                                                                      ? (
                                                                         <>
                                                                            <Text fontSize='sm'>
@@ -230,19 +235,5 @@ export default ({ course_id }: AvailabilitesProps) => {
       </Table.Root>
    );
 };
-
-interface Instructor {
-   id: number;
-   name: string;
-   avg_difficulty: number;
-   avg_rating: number;
-   num_ratings: number;
-}
-
-interface CourseAvailabilityItem {
-   term: number;
-   crn: number;
-   instructor: Instructor | null;
-}
 
 type Section = { name: string; crn: string[]; instructor?: Instructor | null };

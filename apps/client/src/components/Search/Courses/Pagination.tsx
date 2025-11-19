@@ -41,7 +41,7 @@ export const Pagination = () => {
                collection={pageSizes}
                defaultValue={['10']}
                value={[currentValue]}
-               onValueChange={({ value }) => hitsPerPage.refine(parseInt(value[0]))}
+               onValueChange={({ value }) => hitsPerPage.refine(parseInt(value[0]!))}
                width={{ base: '70px', sm: '80px' }}
             >
                <Select.HiddenSelect />

@@ -28,17 +28,17 @@ interface Corequisite {
    courseNumber: string;
 }
 
-interface CourseRequirementsData {
-   course: CourseInfo;
-   prerequisites: Prerequisite[][];
-   corequisites: Corequisite[];
-}
+// interface CourseRequirementsData {
+//    course: CourseInfo;
+//    prerequisites: Prerequisite[][];
+//    corequisites: Corequisite[];
+// }
 
 interface TermData {
    term: string;
    crn: string;
    instructor: {
-      id: string;
+      id: number;
       name: string;
       avg_difficulty: number | null;
       avg_rating: number | null;
@@ -212,11 +212,20 @@ export const getCourseAvailabilities = os.graph.availabilities.handler(
                instructor: CASE WHEN instructor IS NULL 
                   THEN null
                   ELSE {
-                    id: toString(instructor.id),
-                    name: instructor.name,
-                    avg_difficulty: instructor.avg_difficulty,
-                    avg_rating: instructor.avg_rating,
-                    num_ratings: instructor.num_ratings
+                    id: toInteger(instructor.id),
+                    name: COALESCE(instructor.name, ''),
+                    avg_difficulty: CASE 
+                        WHEN instructor.avg_difficulty IS NULL THEN null
+                        ELSE toFloat(instructor.avg_difficulty)
+                    END,
+                    avg_rating: CASE 
+                        WHEN instructor.avg_rating IS NULL THEN null
+                        ELSE toFloat(instructor.avg_rating)
+                    END,
+                    num_ratings: CASE 
+                        WHEN instructor.num_ratings IS NULL THEN null
+                        ELSE toInteger(instructor.num_ratings)
+                    END
                   }
                 END
               }) AS terms

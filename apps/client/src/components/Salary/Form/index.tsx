@@ -2,7 +2,7 @@ import { Box, Dialog, Separator, Text } from '@chakra-ui/react';
 import { defaultValues as overrideOption } from '@/helpers';
 import { submissionSchema } from '@/routes/-validator.ts';
 import { Fields } from './context';
-import type { SubmissionAggregate } from '@/client';
+import type { SubmissionAggregate } from '@openmario/server/contracts';
 
 export type FormProps = {
    defaultValues?: SubmissionAggregate;

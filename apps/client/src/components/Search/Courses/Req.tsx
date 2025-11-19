@@ -1,11 +1,11 @@
 import { Flex, For, HoverCard, HStack, Portal, Text, VStack } from '@chakra-ui/react';
 import { IoIosInformationCircleOutline } from 'react-icons/io';
-import { getV1GraphReqByCourseIdOptions } from '@/client';
 import { useQuery } from '@tanstack/react-query';
 import { Tag } from '@/components/ui';
 import { Link } from '@tanstack/react-router';
 import { linkOptions } from '@tanstack/react-router';
 import { useMobile } from '@/hooks';
+import { orpc } from '@/helpers';
 
 type PreReqProps = {
    course_id: string;
@@ -13,10 +13,12 @@ type PreReqProps = {
 
 export default ({ course_id }: PreReqProps) => {
    const isMobile = useMobile();
-   const { data: preReqRaw, isPending } = useQuery(
-      getV1GraphReqByCourseIdOptions({ path: { course_id } }),
+   const { data: reqInfo, isPending } = useQuery(
+      orpc.graph.requisites.queryOptions({
+         input: { course_id },
+         select: (s) => s.data!
+      })
    );
-   const { data: reqInfo } = preReqRaw ?? {};
 
    if (isPending) return null;
 
@@ -40,12 +42,12 @@ export default ({ course_id }: PreReqProps) => {
                      Prerequisite:
                   </Text>
                   <HStack align='start' gap={3} wrap='wrap'>
-                     <For each={reqInfo?.prerequisites}>
+                     <For each={reqInfo?.prerequisites} key={(group, idx) => `prereq-group-${idx}`}>
                         {(preReqGroup, idx) => (
                            <>
                               {idx === 0 ? null : <Text>and</Text>}
-                              <HStack wrap={isMobile ? 'wrap' : null}>
-                                 <For each={preReqGroup}>
+                              <HStack wrap={isMobile ? 'wrap' : ''}>
+                                 <For each={preReqGroup} key={(preReq) => preReq.id}>
                                     {(preReq, courseIdx) => (
                                        <Flex>
                                           <HoverCard.Root size='md'>
@@ -72,7 +74,7 @@ export default ({ course_id }: PreReqProps) => {
                                                       {`${preReq.subjectId} ${preReq.courseNumber}`}
                                                    </Tag>
                                                    {preReqGroup.length > 1 &&
-                                                         preReqGroup.length - 1 === courseIdx
+                                                      preReqGroup.length - 1 === courseIdx
                                                       ? ')'
                                                       : null}
                                                 </HStack>
@@ -137,7 +139,7 @@ export default ({ course_id }: PreReqProps) => {
                      Corequisite:
                   </Text>
                   <HStack align='start' gap={3} wrap='wrap'>
-                     <For each={reqInfo?.corequisites}>
+                     <For each={reqInfo?.corequisites} key={(coreq) => coreq.id}>
                         {(coreq) => (
                            <Flex>
                               <Tag

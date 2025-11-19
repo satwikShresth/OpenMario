@@ -36,7 +36,7 @@ export default (withForm: withForm) =>
                            onBlur={handleBlur}
                            value={[state.value]}
                            onValueChange={({ value }) =>
-                              handleChange(value[0])}
+                              handleChange(value[0]!)}
                            colorPalette='cyan'
                            _invalid={{ colorPalette: 'red' }}
                         >
@@ -57,7 +57,7 @@ export default (withForm: withForm) =>
                                  value={String(state.value)}
                                  //@ts-ignore: shut up
                                  onValueChange={({ value }) =>
-                                    handleChange(parseInt(value[0]))}
+                                    handleChange(parseInt(value[0]!)!)}
                               >
                                  <InputGroup endElement='hrs/week'>
                                     <NumberInput.Input />
@@ -104,7 +104,7 @@ export default (withForm: withForm) =>
                                  value={[state.value]}
                                  defaultValue={[15]}
                                  onValueChange={({ value }) =>
-                                    handleChange(value[0])}
+                                    handleChange(value[0]!)}
                                  colorPalette='cyan'
                                  _invalid={{ colorPalette: 'red' }}
                               >
@@ -123,7 +123,7 @@ export default (withForm: withForm) =>
                                        value={String(state.value)}
                                        //@ts-ignore: shut up
                                        onValueChange={({ value }) =>
-                                          handleChange(parseInt(value[0]))}
+                                          handleChange(parseInt(value[0]!))}
                                     >
                                        <InputGroup startElement={<LuDollarSign />} endElement='/hr'>
                                           <NumberInput.Input />

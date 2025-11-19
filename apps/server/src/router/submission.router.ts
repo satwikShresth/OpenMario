@@ -264,11 +264,12 @@ export const updateSubmission = os.submission.update.handler(
 
       return await db
          .update(submission)
-         //@ts-ignore: type issue with enum
          .set(toBeUpdated)
+         //@ts-ignore: type issue with enum
          .where(and(eq(submission.id, input.id), isNull(submission.owner_id)))
          .returning()
-         .then(_ => ({
+         .then(([value]) => ({
+            id: value?.id!,
             message: 'Updated position successfully'
          }))
          .catch(error => {

@@ -1,19 +1,23 @@
 import { createFileRoute } from '@tanstack/react-router';
 import { Box, CloseButton, Dialog, Flex, Portal, Text, VStack } from '@chakra-ui/react';
-import { getV1GraphCoursesByCourseIdOptions } from '@/client';
 import { useQuery } from '@tanstack/react-query';
 import { Tag } from '@/components/ui';
 import { Search } from '@/components/Search';
+import { orpc } from '@/helpers';
 
 export const Route = createFileRoute('/_search/courses/$course_id')({
    component: () => {
       const { course_id } = Route.useParams();
       const navigate = Route.useNavigate();
 
-      const { data: courseRaw } = useQuery(
-         getV1GraphCoursesByCourseIdOptions({ path: { course_id } }),
+      const { data: courseInfo } = useQuery(
+         orpc.graph.course.queryOptions({
+            input: {
+               course_id
+            },
+            select: (s) => s.data!
+         })
       );
-      const { data: courseInfo } = courseRaw ?? {};
       if (!courseInfo) return null;
 
       return (

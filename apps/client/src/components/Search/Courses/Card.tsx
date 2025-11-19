@@ -17,12 +17,11 @@ import { Tag, Tooltip } from '@/components/ui';
 import { BiLinkExternal } from 'react-icons/bi';
 import { Link, linkOptions } from '@tanstack/react-router';
 import { getDifficultyColor, getRatingColor, weekItems } from './helpers';
-import { formatTime } from '@/helpers';
+import { formatTime, orpc } from '@/helpers';
 import { useHits } from 'react-instantsearch';
 import { useMobile } from '@/hooks';
 import Req from './Req.tsx';
 import { useQuery } from '@tanstack/react-query';
-import { getV1GraphCoursesByCourseIdOptions } from '@/client';
 import Availabilites from './Availabilites.tsx';
 import { RiHeartFill, RiHeartLine } from 'react-icons/ri';
 import { useFavoritesStore } from '../Store';
@@ -35,10 +34,9 @@ export const Cards = () => {
          gap={5}
          width='full'
       >
-         <For each={infiniteHits.items}>
+         <For each={infiniteHits.items} key={(section) => `${section.crn}-${section.instruction_method}-${section.instruction_type}`}>
             {(section) => (
                <Card
-                  key={`${section.crn}-${section.instruction_method}-${section.instruction_type}`}
                   section={section}
                />
             )}
@@ -50,7 +48,7 @@ export const Cards = () => {
 export const Card = ({ section }: { section: Section }) => {
    const isMobile = useMobile();
    const { data: courseRaw } = useQuery(
-      getV1GraphCoursesByCourseIdOptions({ path: { course_id: section.course_id } }),
+      orpc.graph.course.queryOptions({ input: { course_id: section.course_id } })
    );
    const { data: courseInfo } = courseRaw ?? {};
 
@@ -161,9 +159,8 @@ export const Card = ({ section }: { section: Section }) => {
                                  {section?.start_time
                                     ? (
                                        <Text fontSize='sm'>
-                                          {`${formatTime(section?.start_time)} - ${
-                                             formatTime(section?.end_time)
-                                          }`}
+                                          {`${formatTime(section?.start_time)} - ${formatTime(section?.end_time)
+                                             }`}
                                        </Text>
                                     )
                                     : null}
@@ -218,10 +215,9 @@ export const Card = ({ section }: { section: Section }) => {
                {section?.instructors?.length > 0
                   ? (
                      <VStack align='start' gap={3}>
-                        <For each={section.instructors}>
+                        <For each={section.instructors} key={(instructor) => `${section.crn}-${instructor.id}`}>
                            {(instructor) => (
                               <Flex
-                                 key={`${section.crn}-${instructor.id}`}
                                  borderRadius='lg'
                                  borderWidth={isMobile ? 1 : 0}
                                  direction={{ base: 'column', md: 'row' }}

@@ -9,6 +9,9 @@ export const specs = await new OpenAPIGenerator({
       title: 'Openmario',
       version: '1.0.0'
    },
-   servers: [{ url: '/api' } /** Should use absolute URLs in production */]
+   servers: [
+      { url: 'http://localhost:3000/api', description: 'Development server' },
+      { url: '/api', description: 'Production (relative)' }
+   ]
 });
 export * from './queryHelpers';

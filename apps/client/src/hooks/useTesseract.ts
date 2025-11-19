@@ -9,19 +9,20 @@ export const useTesseract = () => {
       const initTesseract = async () => {
          setIsProcessing(true);
 
-         workerRef.current = (await createWorker('eng')
-            .then(async (worker: Tesseract.Worker) => {
-               await worker.setParameters({
-                  tessedit_pageseg_mode: PSM.SPARSE_TEXT_OSD,
-               });
-               return worker;
-            })
-            .catch((error) => {
-               console.error('Failed to initialize Tesseract:', error);
-            })
-            .finally(() => {
-               setIsProcessing(false);
-            })) || null;
+         workerRef.current =
+            (await createWorker('eng')
+               .then(async (worker: Tesseract.Worker) => {
+                  await worker.setParameters({
+                     tessedit_pageseg_mode: PSM.SPARSE_TEXT_OSD
+                  });
+                  return worker;
+               })
+               .catch(error => {
+                  console.error('Failed to initialize Tesseract:', error);
+               })
+               .finally(() => {
+                  setIsProcessing(false);
+               })) || null;
       };
 
       initTesseract();
@@ -30,7 +31,7 @@ export const useTesseract = () => {
          if (workerRef.current) {
             workerRef.current
                .terminate()
-               .catch((e) => console.error('Error terminating worker:', e));
+               .catch(e => console.error('Error terminating worker:', e));
          }
       };
    }, []);
@@ -45,8 +46,8 @@ export const useTesseract = () => {
 
       return await workerRef.current
          .recognize(imageUrl)
-         .then((result) => result.data.text)
-         .catch((error) => {
+         .then(result => result.data.text)
+         .catch(error => {
             console.error(`Error: ${error.message}`);
             throw error;
          })
@@ -55,6 +56,6 @@ export const useTesseract = () => {
 
    return {
       isProcessing,
-      recognizeText,
+      recognizeText
    };
 };

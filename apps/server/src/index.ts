@@ -11,7 +11,11 @@ import { specs } from '@/utils';
 
 const handler = new OpenAPIHandler(router, {
    plugins: [new ZodSmartCoercionPlugin()],
-   interceptors: [onError(error => console.error('RPC Error:', error))]
+   interceptors: [
+      onError(error => {
+         console.error('RPC Error:', error);
+      })
+   ]
 });
 
 const app = new Hono({
@@ -28,22 +32,24 @@ const app = new Hono({
          credentials: true
       })
    )
-   .get('/openapi.json', c => c.json(specs))
+   .get('/api/openapi.json', c => c.json(specs))
    .get(
-      '/docs',
+      '/api/docs',
       Scalar({
          pageTitle: 'API Documentation',
          url: '/openapi.json'
       })
    )
    .use('*', logger())
-   .get('/health', c => c.json({ status: 'ok', application: 'MDS-Banking' }))
+   .get('/api/health', c =>
+      c.json({ status: 'ok', application: 'MDS-Banking' })
+   )
    .use(
-      '/v1/*',
+      '/api/*',
       async (c, next) =>
          await handler
             .handle(c.req.raw, {
-               prefix: '/v1',
+               prefix: '/api',
                context: {}
             })
             .then(async ({ matched, response }) =>

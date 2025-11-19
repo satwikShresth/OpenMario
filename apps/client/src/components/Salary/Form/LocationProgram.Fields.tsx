@@ -5,13 +5,13 @@ import {
    convertFunc,
    defaultValues,
    isInvalid,
+   orpc,
    programLevelCollection,
    selectProps,
 } from '@/helpers';
 import { useMobile } from '@/hooks';
 import { AsyncCreatableSelect } from 'chakra-react-select';
 import { useQueryClient } from '@tanstack/react-query';
-import { getV1AutocompleteLocationOptions } from '@/client';
 
 export default (withForm: withForm) =>
    withForm({
@@ -28,11 +28,12 @@ export default (withForm: withForm) =>
                      onSubmitAsync: ({ value: loc }) =>
                         queryClient
                            .ensureQueryData(
-                              getV1AutocompleteLocationOptions({ query: { loc } }),
-                           )
-                           .then((data) =>
-                              data.some(({ name }) => name === loc) ? undefined : 'Unknown Location'
-                           )
+                              orpc.autocomplete.location.queryOptions({
+                                 input: { loc },
+                                 select: (data) => data
+                                    .some(({ name }) => name === loc) ? undefined : 'Unknown Location'
+
+                              }))
                            .catch((e) => {
                               console.error(e);
                               return 'Value is unable to be validated';
@@ -59,7 +60,7 @@ export default (withForm: withForm) =>
                               if (inputValue?.length >= 3) {
                                  queryClient
                                     .ensureQueryData(
-                                       getV1AutocompleteLocationOptions({ query }),
+                                       orpc.autocomplete.location.queryOptions({ input: query })
                                     )
                                     .then((data) => callback(data?.map(convertFunc) || []))
                                     .catch(() => callback([]));

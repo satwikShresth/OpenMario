@@ -16,7 +16,7 @@ export const SortSelect = ({ sortBy }: SortSelectProps) => {
          maxW='200px'
          minW='150px'
          value={[sort.currentRefinement]}
-         onValueChange={(e) => sort.refine(e.value[0])}
+         onValueChange={(e) => sort.refine(e.value![0]!)}
       >
          <Select.HiddenSelect />
          <Select.Control>

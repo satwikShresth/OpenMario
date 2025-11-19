@@ -18,6 +18,11 @@
         "@faker-js/faker": "^10.0.0",
         "@hey-api/openapi-ts": "^0.87.5",
         "@meilisearch/instant-meilisearch": "^0.29.0",
+        "@openmario/server": "workspace:*",
+        "@orpc/client": "^1.11.3",
+        "@orpc/contract": "^1.11.3",
+        "@orpc/openapi-client": "^1.11.3",
+        "@orpc/tanstack-query": "^1.11.3",
         "@t3-oss/env-core": "^0.13.8",
         "@tailwindcss/vite": "^4.0.6",
         "@tanstack/match-sorter-utils": "^8.19.4",
@@ -417,6 +422,8 @@
     "@orpc/standard-server-node": ["@orpc/standard-server-node@1.11.3", "", { "dependencies": { "@orpc/shared": "1.11.3", "@orpc/standard-server": "1.11.3", "@orpc/standard-server-fetch": "1.11.3" } }, "sha512-PvGKFMs1CGZ/phiftEadUh1KwLZXgN2Q5XEw2NNE8Q8YXAClwPBSLcCRp4dVRMwo06hONznW04uUubh2OA0MWA=="],
 
     "@orpc/standard-server-peer": ["@orpc/standard-server-peer@1.11.3", "", { "dependencies": { "@orpc/shared": "1.11.3", "@orpc/standard-server": "1.11.3" } }, "sha512-GkINRYjWRTOKQIsPWvqCvbjNjaLnhDAVJLrQNGTaqy7yLTDG8ome7hCrmH3bdjDY4nDlt8OoUaq9oABE/1rMew=="],
+
+    "@orpc/tanstack-query": ["@orpc/tanstack-query@1.11.3", "", { "dependencies": { "@orpc/shared": "1.11.3" }, "peerDependencies": { "@orpc/client": "1.11.3", "@tanstack/query-core": ">=5.80.2" } }, "sha512-oGCoNqQcVs/BH8pCjMQ2UPfuLvXtIkybMlVb3oG7/LKb7KnWPRUvadsCeKNOFGp+8zyrJkUJqkKV2DlHbihW5g=="],
 
     "@orpc/zod": ["@orpc/zod@1.11.3", "", { "dependencies": { "@orpc/json-schema": "1.11.3", "@orpc/openapi": "1.11.3", "@orpc/shared": "1.11.3", "escape-string-regexp": "^5.0.0", "wildcard-match": "^5.1.3" }, "peerDependencies": { "@orpc/contract": "1.11.3", "@orpc/server": "1.11.3", "zod": ">=3.25.0" } }, "sha512-nkZMK+LfNo4qtN59NCAyf+bG83R+T79Mvqx8KiRdjfGF/4nfFhaGIuNieQJIVRgddpzr7nFcHcJJf9DEyp2KnQ=="],
 

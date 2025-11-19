@@ -57,7 +57,7 @@ export const SubmissionAggregateSchema = z.object({
 
 export const SubmissionAggregateUpdateSchema = SubmissionAggregateSchema.extend(
    {
-      id: z.uuid()
+      id: z.uuid().optional()
    }
 );
 
@@ -111,6 +111,7 @@ export const SubmissionCreateResponseSchema = z.object({
 });
 
 export const SubmissionUpdateResponseSchema = z.object({
+   id: z.uuid(),
    message: z.string()
 });
 

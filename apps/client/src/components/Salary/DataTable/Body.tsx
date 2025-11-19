@@ -10,7 +10,6 @@ import {
    useDialog,
    VStack,
 } from '@chakra-ui/react';
-import type { GetV1SubmissionsData, SubmissionListItem, SubmissionListResponse } from '@/client';
 import DataTableDialog from './Dialog';
 import { HiColorSwatch } from 'react-icons/hi';
 import { useCallback, useState } from 'react';
@@ -18,6 +17,7 @@ import { FaSort, FaSortDown, FaSortUp } from 'react-icons/fa';
 import { Tooltip } from '@/components/ui/tooltip.jsx';
 import { Link } from '@tanstack/react-router';
 import { useSearch } from '@tanstack/react-router';
+import type { SubmissionListItem, SubmissionListResponse, SubmissionQuery } from '@openmario/server/contracts';
 
 export default (
    { data, count }: {
@@ -36,34 +36,33 @@ export default (
       display = { base: 'table-cell', md: 'table-cell' },
    }: {
       label: string;
-      value: GetV1SubmissionsData['query']['sortField'];
-      textAlign?: string;
-      display?: any;
+      value: NonNullable<SubmissionQuery['sortField']>;
+      textAlign?: 'start' | 'center' | 'end';
+      display?: Record<string, string>;
    }) => (
       <Table.ColumnHeader
          textAlign={textAlign}
          display={display}
       >
          <Link
-            //@ts-ignore: stip
+            //@ts-expect-error 
             search={(prev) => {
-               const sort = (prev.sortField === value)
-                  ? (prev.sort === 'DESC') ? 'ASC' : 'DESC'
+               const sort: 'ASC' | 'DESC' = (prev?.sortField === value)
+                  ? (prev?.sort === 'DESC') ? 'ASC' : 'DESC'
                   : 'DESC';
                return { ...prev, pageIndex: 1, sort, sortField: value };
             }}
          >
             <HStack justify='space-between'>
                {label}
-               {/*//@ts-ignore: stip*/}
                <Tooltip
-                  content={(search.sortField === value)
-                     ? (search.sort === 'ASC') ? 'ASC' : 'DESC'
+                  content={(search!.sortField === value)
+                     ? (search!.sort === 'ASC') ? 'ASC' : 'DESC'
                      : 'SORT'}
                >
                   <Icon size='sm'>
-                     {(search.sortField === value)
-                        ? (search.sort === 'ASC') ? <FaSortUp /> : <FaSortDown />
+                     {(search!.sortField === value)
+                        ? (search!.sort === 'ASC') ? <FaSortUp /> : <FaSortDown />
                         : <FaSort />}
                   </Icon>
                </Tooltip>

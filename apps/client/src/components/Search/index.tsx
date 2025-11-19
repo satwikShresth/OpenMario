@@ -39,7 +39,7 @@ export const Search = {
                   cleanUrlOnDispose: false,
                }),
                stateMapping: {
-                  stateToRoute: (uiState) => {
+                  stateToRoute: (uiState: any) => {
                      const indexUiState = uiState['sections'];
                      indexUiState?.configure && delete indexUiState?.configure;
                      indexUiState?.sortBy || delete indexUiState?.sortBy;

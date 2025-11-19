@@ -6,7 +6,7 @@ const MOBILE_THRESHOLD = 1020;
 
 export function useMobile() {
    const [isMobile, setIsMobile] = useState(
-      globalThis.innerWidth < MOBILE_THRESHOLD,
+      globalThis.innerWidth < MOBILE_THRESHOLD
    );
 
    useEffect(() => {

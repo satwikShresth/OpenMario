@@ -1,7 +1,8 @@
 import type { CheckFn } from 'zod/v4/core';
 import { asyncComponents } from '@/components/common';
 import { createListCollection } from '@chakra-ui/react';
-import type { SubmissionAggregate as Submission } from '@/client';
+import type { Submission } from '@/routes/-validator';
+export * from './rpc';
 
 export const coopYear = ['1st', '2nd', '3rd'] as const;
 export const queryFields = [
@@ -10,41 +11,43 @@ export const queryFields = [
    'position',
    'location',
    'year',
-   'compensation',
+   'compensation'
 ] as const;
 export const coopCycle = [
    'Fall/Winter',
    'Winter/Spring',
    'Spring/Summer',
-   'Summer/Fall',
+   'Summer/Fall'
 ] as const;
 export const programLevel = ['Undergraduate', 'Graduate'] as const;
 export const coopRound = ['A', 'B', 'C'] as const;
 
-export const zodCheckUnique: CheckFn<(string | number)[]> = (ctx) => {
+export const zodCheckUnique: CheckFn<(string | number)[]> = ctx => {
    if (ctx.value.length !== new Set(ctx.value).size) {
       ctx.issues.push({
          code: 'custom',
          message: `No duplicates allowed.`,
          input: ctx.value,
-         continue: false, // make this issue continuable (default: false)
+         continue: false // make this issue continuable (default: false)
       });
    }
 };
 
-export const capitalizeWords = (str: string) => str.replace(/\b\w/g, (char) => char.toUpperCase());
+export const capitalizeWords = (str: string) =>
+   str.replace(/\b\w/g, char => char.toUpperCase());
 
 export const selectProps = ({
    state,
    name,
    handleChange,
-   handleBlur,
+   handleBlur
 }: any) => ({
    name,
    required: true,
-   value: state?.value.length > 0
-      ? { value: state?.value, label: state?.value, variant: 'subtle' }
-      : null,
+   value:
+      state?.value.length > 0
+         ? { value: state?.value, label: state?.value, variant: 'subtle' }
+         : null,
    loadingMessage: () => 'Loading...',
    placeholder: `Select a ${name}`,
    components: asyncComponents,
@@ -52,7 +55,7 @@ export const selectProps = ({
    invalid: !state.meta.isValid,
    //@ts-ignore: shut up
    onChange: ({ value }) => handleChange(value),
-   noOptionsMessage: () => 'Keeping typing for autocomplete',
+   noOptionsMessage: () => 'Keeping typing for autocomplete'
 });
 
 export const isInvalid = ({ state, field }: any) =>
@@ -65,27 +68,27 @@ type AutocompleteOptions = {
 };
 
 export const convertFunc = (
-   value: string | { name: string } | undefined,
+   value: string | { name: string } | undefined
 ): AutocompleteOptions => ({
    value: typeof value === 'string' ? value : value?.name || '',
    label: typeof value === 'string' ? value : value?.name || '',
-   variant: 'subtle',
+   variant: 'subtle'
 });
 
 export const coopCycleCollection = createListCollection({
-   items: coopCycle.map((value) => ({ label: value, value })),
+   items: coopCycle.map(value => ({ label: value, value }))
 });
 
 export const coopRoundCollection = createListCollection({
-   items: coopRound.map((value) => ({ label: value, value })),
+   items: coopRound.map(value => ({ label: value, value }))
 });
 
 export const coopYearCollection = createListCollection({
-   items: coopYear.map((value) => ({ label: value, value })),
+   items: coopYear.map(value => ({ label: value, value }))
 });
 
 export const programLevelCollection = createListCollection({
-   items: programLevel.map((value) => ({ label: value, value })),
+   items: programLevel.map(value => ({ label: value, value }))
 });
 
 export const defaultValues: Submission = {
@@ -99,16 +102,15 @@ export const defaultValues: Submission = {
    work_hours: 40,
    compensation: 15.0,
    other_compensation: '',
-   details: `Employer ID: 'N/A', Position ID: 'N/A', Job Length: 'N/A', Coop Round: 'N/A'`,
+   details: `Employer ID: 'N/A', Position ID: 'N/A', Job Length: 'N/A', Coop Round: 'N/A'`
 };
 
 export const marksMaker = (min: number, max: number, div: number) =>
-   Array.from(
-      { length: max - min + 1 },
-      (_, i) => i % div === 0 ? { value: i + min, label: i + min } : null,
-   ).filter((value) => value !== null);
+   Array.from({ length: max - min + 1 }, (_, i) =>
+      i % div === 0 ? { value: i + min, label: i + min } : null
+   ).filter(value => value !== null);
 
-export const formatTime = (timeString) => {
+export const formatTime = (timeString: any) => {
    if (!timeString) return '';
 
    const [hours, minutes] = timeString.split(':');

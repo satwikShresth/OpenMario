@@ -14,12 +14,7 @@ import { useForm } from '@tanstack/react-form';
 import { HiCheck, HiX } from 'react-icons/hi';
 import { asyncComponents } from '@/components/common';
 import { useMobile } from '@/hooks';
-import {
-   getV1AutocompleteCompanyOptions,
-   getV1AutocompleteLocationOptions,
-   getV1AutocompletePositionOptions,
-} from '@/client';
-import { capitalizeWords, coopCycle, coopYear, marksMaker, programLevel } from '@/helpers';
+import { capitalizeWords, coopCycle, coopYear, marksMaker, orpc, programLevel } from '@/helpers';
 import { useSearch } from '@tanstack/react-router';
 import { useNavigate } from '@tanstack/react-router';
 
@@ -109,7 +104,9 @@ export default () => {
                               if (inputValue?.length >= 3) {
                                  queryClient
                                     .ensureQueryData(
-                                       getV1AutocompleteCompanyOptions({ query }),
+                                       orpc.autocomplete.company.queryOptions({
+                                          input: query,
+                                       })
                                     )
                                     .then((data) => callback(data?.map(ConvertMapFunc) || []))
                                     .catch(() => callback([]));
@@ -130,7 +127,9 @@ export default () => {
                               if (inputValue?.length >= 3) {
                                  queryClient
                                     .ensureQueryData(
-                                       getV1AutocompletePositionOptions({ query }),
+                                       orpc.autocomplete.position.queryOptions({
+                                          input: query,
+                                       })
                                     )
                                     .then((data) => callback(data?.map(ConvertMapFunc) || []))
                                     .catch(() => callback([]));
@@ -152,7 +151,9 @@ export default () => {
                               if (inputValue?.length >= 3) {
                                  queryClient
                                     .ensureQueryData(
-                                       getV1AutocompleteLocationOptions({ query }),
+                                       orpc.autocomplete.location.queryOptions({
+                                          input: query,
+                                       })
                                     )
                                     .then((data) => callback(data?.map(ConvertMapFunc) || []))
                                     .catch(() => callback([]));

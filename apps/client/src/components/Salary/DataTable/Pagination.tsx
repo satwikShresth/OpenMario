@@ -29,13 +29,14 @@ export default ({ count }: { count: number }) => {
          <Select.Root
             collection={pageSizes}
             width='80px'
-            defaultValue={[String(query.pageSize)]}
-            value={[String(query.pageSize)]}
+            defaultValue={[String(query!.pageSize)]}
+            value={[String(query!.pageSize)]}
             onValueChange={({ value: [pageSize] }) => {
                navigate({
                   search: (prev) => ({
                      ...prev,
-                     pageIndex: Math.floor(prev?.pageIndex! * prev?.pageSize / parseInt(pageSize)!),
+                     //@ts-expect-error
+                     pageIndex: Math.floor(prev?.pageIndex! * prev?.pageSize! / parseInt(pageSize!)!),
                      pageSize,
                   }),
                });
@@ -69,8 +70,8 @@ export default ({ count }: { count: number }) => {
          <Pagination.Root
             width='full'
             count={count}
-            pageSize={query.pageSize}
-            page={query.pageIndex}
+            pageSize={query!.pageSize}
+            page={query!.pageIndex}
          >
             <ButtonGroup variant='ghost' size='sm' wrap='wrap'>
                <PaginationLink to='/salary' page='prev'>

@@ -63,8 +63,8 @@ export const Route = createFileRoute('/salary/_dialog/auto-fill')({
                                              colorPalette='green'
                                              as={Link}
                                              {
-                                                //@ts-ignore: shuupp
-                                                ...linkOptions({ to: '/salary/drafts' })
+                                             //@ts-ignore: shuupp
+                                             ...linkOptions({ to: '/salary/drafts' })
                                              }
                                           >
                                              Finish

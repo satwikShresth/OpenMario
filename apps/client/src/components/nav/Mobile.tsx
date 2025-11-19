@@ -1,4 +1,4 @@
-import { Box, Link as ChakraLink, Stack, Text } from '@chakra-ui/react';
+import { Link as ChakraLink, Stack, Text } from '@chakra-ui/react';
 import { Link, linkOptions } from '@tanstack/react-router';
 import { NAV_ITEMS } from './items';
 

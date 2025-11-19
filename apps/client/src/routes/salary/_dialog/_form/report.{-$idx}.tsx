@@ -1,8 +1,9 @@
 import { createFileRoute } from '@tanstack/react-router';
 import { toaster } from '@/components/ui/toaster';
 import { Salary, useSalaryStore } from '@/components/Salary';
-import { postV1SubmissionsMutation, type SubmissionAggregate } from '@/client';
+import type { SubmissionAggregate } from '@openmario/server/contracts';
 import { useMutation } from '@tanstack/react-query';
+import { orpc } from '@/helpers';
 
 export const Route = createFileRoute('/salary/_dialog/_form/report/{-$idx}')({
    component: () => {
@@ -12,20 +13,19 @@ export const Route = createFileRoute('/salary/_dialog/_form/report/{-$idx}')({
          draftSubmissions[parseInt(idx!)]
       );
       const actions = useSalaryStore(({ actions }) => actions);
-      const submitMutation = useMutation(postV1SubmissionsMutation());
+      const submitMutation = useMutation(orpc.submission.update.mutationOptions());
 
       const onSubmit = ({ value }: { value: SubmissionAggregate }) => {
          const submissionPromise = submitMutation
-            .mutateAsync({ body: value })
-            .then(({ id, owner_id, message }) => {
+            .mutateAsync(value)
+            .then(({ id, message }) => {
                console.log(message);
                if (defaultValues) {
                   actions.moveDraftToSubmission(parseInt(idx!)!, id!, {
                      ...value!,
-                     owner_id: owner_id!,
                   });
                } else {
-                  actions.addSubmission(id, { ...value, owner_id: owner_id! });
+                  actions.addSubmission(id, { ...value });
                }
                navigate({ to: '/salary' });
             })

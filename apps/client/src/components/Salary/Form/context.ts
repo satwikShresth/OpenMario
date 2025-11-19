@@ -12,7 +12,7 @@ export const { useAppForm, withForm } = createFormHook({
    fieldContext,
    formContext,
    fieldComponents: {},
-   formComponents: {},
+   formComponents: {}
 });
 
 export type withForm = typeof withForm;
@@ -24,5 +24,5 @@ export const Fields = {
    CoopDetailsFields: CoopDetailsFields(withForm),
    OtherDetailFields: OtherDetailFields(withForm),
    LocationProgramFields: LocationProgramFields(withForm),
-   Footer: Footer(withForm),
+   Footer: Footer(withForm)
 };

@@ -1,8 +1,9 @@
 import { createFileRoute } from '@tanstack/react-router';
 import { Salary, useSalaryStore } from '@/components/Salary';
-import { patchV1SubmissionsMutation, type SubmissionAggregate } from '@/client';
 import { useMutation } from '@tanstack/react-query';
 import { toaster } from '@/components/ui/toaster';
+import type { SubmissionAggregate } from '@openmario/server/contracts';
+import { orpc } from '@/helpers';
 
 export const Route = createFileRoute('/salary/_dialog/_form/reported/$key')({
    component: () => {
@@ -10,11 +11,11 @@ export const Route = createFileRoute('/salary/_dialog/_form/reported/$key')({
       const navigate = Route.useNavigate();
       const defaultValues = useSalaryStore(({ submissions }) => submissions.get(key!));
       const actions = useSalaryStore(({ actions }) => actions);
-      const patchMutation = useMutation(patchV1SubmissionsMutation());
+      const patchMutation = useMutation(orpc.submission.update.mutationOptions());
 
       const onSubmit = ({ value }: { value: SubmissionAggregate }) => {
          const patchPromise = patchMutation
-            .mutateAsync({ body: { ...value, id: key! } })
+            .mutateAsync({ ...value, id: key! })
             .then(() => {
                console.log('updated submission');
                actions.updateSubmission(key!, value as SubmissionAggregate);

@@ -13,6 +13,7 @@ import {
    type UseDialogReturn,
    VStack,
 } from '@chakra-ui/react';
+import type { SubmissionListItem } from '@openmario/server/contracts';
 
 import {
    FaCalendarAlt,
@@ -22,7 +23,6 @@ import {
    FaMapMarkerAlt,
    FaSync,
 } from 'react-icons/fa';
-import type { SubmissionListItem } from '@/client';
 
 const formatCurrency = (amount: number) => {
    return new Intl.NumberFormat('en-US', {

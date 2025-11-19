@@ -22,6 +22,7 @@ import { HiFilter } from 'react-icons/hi';
 import { Outlet } from '@tanstack/react-router';
 import { RiHeartFill, RiHeartLine } from 'react-icons/ri';
 import { Configure } from 'react-instantsearch';
+import z from 'zod';
 
 const sortBy = createListCollection({
    items: [
@@ -58,6 +59,9 @@ const sortBy = createListCollection({
 });
 
 export const Route = createFileRoute('/_search/courses')({
+   validateSearch: z.object({
+      showFavorites: z.catch(z.optional(z.boolean()), false)
+   }),
    component: () => {
       const { open: isFilterOpen, onOpen: openFilter, onClose: closeFilter } = useDisclosure();
       const isMobile = useMobile();

@@ -99,7 +99,7 @@ export const getCourseRequisitesContract = oc
 // ============================================================================
 
 export const InstructorSchema = z.object({
-   id: z.string(),
+   id: z.number(),
    name: z.string(),
    avg_difficulty: z.number().nullable(),
    avg_rating: z.number().nullable(),

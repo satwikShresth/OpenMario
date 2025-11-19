@@ -15,25 +15,28 @@ import {
 import { HiFilter } from 'react-icons/hi';
 import { Salary } from '@/components/Salary';
 import { useQuery } from '@tanstack/react-query';
-import { getV1SubmissionsOptions } from '@/client';
 import { createFileRoute, Outlet } from '@tanstack/react-router';
 import { salarySearchSchema } from './-validator.ts';
 import { useMobile } from '@/hooks';
+import { orpc } from '@/helpers/rpc.ts';
+import z from 'zod';
 
 export const Route = createFileRoute('/salary')({
-   validateSearch: salarySearchSchema,
-   loaderDeps: ({ search }) => search,
+   validateSearch: z.optional(salarySearchSchema),
+   loaderDeps: ({ search }) => search!,
    loader: ({ deps: query, context: { queryClient } }) =>
-      queryClient.ensureQueryData(getV1SubmissionsOptions({ query })),
+      queryClient.ensureQueryData(orpc.submission.list.queryOptions({ input: query })),
    component: () => {
       const query = Route.useSearch();
       const isMobile = useMobile();
       const { open: isFilterOpen, onOpen: openFilter, onClose: closeFilter } = useDisclosure();
-      const { data } = useQuery({
-         ...getV1SubmissionsOptions({ query }),
-         staleTime: 3000,
-         refetchOnWindowFocus: true,
-      });
+      const { data } = useQuery(
+         orpc.submission.list.queryOptions({
+            input: query!,
+            staleTime: 3000,
+            refetchOnWindowFocus: true,
+         })
+      );
       return (
          <Container>
             <VStack align='center'>

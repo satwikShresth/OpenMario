@@ -6,7 +6,7 @@ import {
    TbSquareLetterT,
    TbSquareLetterTFilled,
    TbSquareLetterW,
-   TbSquareLetterWFilled,
+   TbSquareLetterWFilled
 } from 'react-icons/tb';
 
 export const weekItems = [
@@ -14,32 +14,32 @@ export const weekItems = [
       label: 'M',
       icon: TbSquareLetterM,
       filledIcon: TbSquareLetterMFilled,
-      value: 'Monday',
+      value: 'Monday'
    },
    {
       label: 'T',
       icon: TbSquareLetterT,
       filledIcon: TbSquareLetterTFilled,
-      value: 'Tuesday',
+      value: 'Tuesday'
    },
    {
       label: 'W',
       icon: TbSquareLetterW,
       filledIcon: TbSquareLetterWFilled,
-      value: 'Wednesday',
+      value: 'Wednesday'
    },
    {
       label: 'Th',
       icon: TbSquareLetterT,
       filledIcon: TbSquareLetterTFilled,
-      value: 'Thursday',
+      value: 'Thursday'
    },
    {
       label: 'F',
       icon: TbSquareLetterF,
       filledIcon: TbSquareLetterFFilled,
-      value: 'Friday',
-   },
+      value: 'Friday'
+   }
 ];
 
 export function getRatingColor(rating: number, opacity: number = 1) {

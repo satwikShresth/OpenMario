@@ -1,15 +1,9 @@
 import { Field, Stack } from '@chakra-ui/react';
 import type { withForm } from './context';
-import { convertFunc, defaultValues, isInvalid, selectProps } from '@/helpers';
+import { convertFunc, defaultValues, isInvalid, orpc, selectProps } from '@/helpers';
 import { capitalizeWords } from '@/helpers/index.ts';
 import { AsyncCreatableSelect } from 'chakra-react-select';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import {
-   getV1AutocompleteCompanyOptions,
-   getV1AutocompletePositionOptions,
-   postV1CompanyMutation,
-   postV1PositionMutation,
-} from '@/client';
 import { useMobile } from '@/hooks';
 import { toaster } from '@/components/ui/toaster';
 
@@ -19,8 +13,8 @@ export default (withForm: withForm) =>
       render: ({ form }) => {
          const isMobile = useMobile();
          const queryClient = useQueryClient();
-         const createCompany = useMutation(postV1CompanyMutation());
-         const createPosition = useMutation(postV1PositionMutation());
+         const createCompany = useMutation(orpc.company.create.mutationOptions());
+         const createPosition = useMutation(orpc.position.create.mutationOptions());
 
          return (
             <Stack direction={isMobile ? 'column' : 'row'} mb={2} gap={6}>
@@ -30,10 +24,12 @@ export default (withForm: withForm) =>
                      onSubmitAsync: ({ value: comp }) =>
                         queryClient
                            .ensureQueryData(
-                              getV1AutocompleteCompanyOptions({ query: { comp } }),
-                           )
-                           .then((data) =>
-                              data.some(({ name }) => name === comp) ? undefined : 'Unknown Company'
+                              orpc.autocomplete.company.queryOptions({
+                                 input: { comp },
+                                 select: ((data) =>
+                                    data.some(({ name }) => name === comp) ? undefined : 'Unknown Company'
+                                 )
+                              })
                            )
                            .catch((e) => {
                               console.error(e);
@@ -54,7 +50,7 @@ export default (withForm: withForm) =>
                            required
                            onCreateOption={(name) => {
                               const promise = createCompany
-                                 .mutateAsync({ body: { name } })
+                                 .mutateAsync({ name })
                                  .then(({ company: { name } }) => {
                                     field.handleChange(name);
                                     queryClient.getQueryCache().clear();
@@ -84,7 +80,9 @@ export default (withForm: withForm) =>
                               if (comp?.length >= 3) {
                                  queryClient
                                     .ensureQueryData(
-                                       getV1AutocompleteCompanyOptions({ query }),
+                                       orpc.autocomplete.company.queryOptions({
+                                          input: query,
+                                       })
                                     )
                                     .then((data) => callback(data?.map(convertFunc) || []))
                                     .catch(() => callback([]));
@@ -108,13 +106,16 @@ export default (withForm: withForm) =>
                            onSubmitAsync: ({ value: pos }) =>
                               queryClient
                                  .ensureQueryData(
-                                    getV1AutocompletePositionOptions({ query: { comp, pos } }),
+                                    orpc.autocomplete.position.queryOptions({
+                                       input: {
+                                          comp, pos
+                                       },
+                                       select: (data) =>
+                                          data.some(({ name }) => name === pos)
+                                             ? undefined
+                                             : "Unknown Company's Position"
+                                    })
                                  )
-                                 .then((data) => {
-                                    return data.some(({ name }) => name === pos)
-                                       ? undefined
-                                       : "Unknown Company's Position";
-                                 })
                                  .catch((e) => {
                                     console.error(e);
                                     return 'Value is unable to be validated';
@@ -134,7 +135,7 @@ export default (withForm: withForm) =>
                                  disabled={comp.length == 0}
                                  onCreateOption={(name) => {
                                     const promise = createPosition
-                                       .mutateAsync({ body: { name, company: comp } })
+                                       .mutateAsync({ name, company: comp })
                                        .then(({ position: { name } }) => {
                                           field.handleChange(name);
                                           queryClient.getQueryCache().clear();
@@ -164,7 +165,9 @@ export default (withForm: withForm) =>
                                     if (pos?.length >= 3) {
                                        queryClient
                                           .ensureQueryData(
-                                             getV1AutocompletePositionOptions({ query }),
+                                             orpc.autocomplete.position.queryOptions({
+                                                input: query,
+                                             })
                                           )
                                           .then((data) => callback(data?.map(convertFunc) || []))
                                           .catch(() => callback([]));
