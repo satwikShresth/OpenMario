@@ -45,8 +45,8 @@ export const selectProps = ({
    name,
    required: true,
    value:
-      state?.value.length > 0
-         ? { value: state?.value, label: state?.value, variant: 'subtle' }
+      state?.value && state.value.length > 0
+         ? { value: state.value, label: state.value, variant: 'subtle' }
          : null,
    loadingMessage: () => 'Loading...',
    placeholder: `Select a ${name}`,
@@ -102,7 +102,7 @@ export const defaultValues: Submission = {
    work_hours: 40,
    compensation: 15.0,
    other_compensation: '',
-   details: `Employer ID: 'N/A', Position ID: 'N/A', Job Length: 'N/A', Coop Round: 'N/A'`
+   details: ''
 };
 
 export const marksMaker = (min: number, max: number, div: number) =>
@@ -115,7 +115,7 @@ export const formatTime = (timeString: any) => {
 
    const [hours, minutes] = timeString.split(':');
 
-   let hour = parseInt(hours, 10);
+   let hour = Number.parseInt(hours, 10);
    const ampm = hour >= 12 ? 'PM' : 'AM';
    hour = hour % 12 || 12; // Convert 0 to 12 for 12 AM
 

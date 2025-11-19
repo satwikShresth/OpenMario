@@ -11,7 +11,7 @@ import {
    useFileUpload,
 } from '@chakra-ui/react';
 import { useJobParser, useTesseract } from '@/hooks';
-import { useSalaryStore } from '../../Store.ts';
+import { useSalaryStore } from '@/hooks';
 import { useStore } from '@tanstack/react-form';
 import { useCallback, useState } from 'react';
 import { FaUpload } from 'react-icons/fa';
@@ -23,7 +23,7 @@ export default ({ form }: any) => {
    const [fileLog, setFileLog] = useState('');
    const { recognizeText } = useTesseract();
    const { processText } = useJobParser();
-   const actions = useSalaryStore(({ actions }) => actions);
+   const { actions } = useSalaryStore();
    const commonData = useStore(
       form.store,
       //@ts-ignore: shutup

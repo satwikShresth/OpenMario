@@ -6,6 +6,7 @@ import { Outlet } from '@tanstack/react-router';
 import { Search } from '@/components/Search';
 import { env } from '@env';
 import { orpc } from '@/helpers';
+import { Suspense } from 'react';
 
 export const Route = createFileRoute('/_search')({
    component: () => {
@@ -24,12 +25,14 @@ export const Route = createFileRoute('/_search')({
       );
 
       return (
-         <Container>
-            {/*@ts-ignore: shupp*/}
-            <Search.Root searchClient={searchClient}>
-               <Outlet />
-            </Search.Root>
-         </Container>
+         <Suspense>
+            <Container>
+               {/*@ts-ignore: shupp*/}
+               <Search.Root searchClient={searchClient}>
+                  <Outlet />
+               </Search.Root>
+            </Container>
+         </Suspense>
       );
    },
 });

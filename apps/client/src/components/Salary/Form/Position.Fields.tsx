@@ -26,11 +26,9 @@ export default (withForm: withForm) =>
                            .ensureQueryData(
                               orpc.autocomplete.company.queryOptions({
                                  input: { comp },
-                                 select: ((data) =>
-                                    data.some(({ name }) => name === comp) ? undefined : 'Unknown Company'
-                                 )
                               })
                            )
+                           .then((data) => data.some(({ name }) => name === comp) ? undefined : 'Unknown Company')
                            .catch((e) => {
                               console.error(e);
                               return 'Value is unable to be validated';
@@ -110,11 +108,13 @@ export default (withForm: withForm) =>
                                        input: {
                                           comp, pos
                                        },
-                                       select: (data) =>
-                                          data.some(({ name }) => name === pos)
-                                             ? undefined
-                                             : "Unknown Company's Position"
                                     })
+                                 ).then(
+                                    (data) =>
+                                       data.some(({ name }) => name === pos)
+                                          ? undefined
+                                          : "Unknown Company's Position"
+
                                  )
                                  .catch((e) => {
                                     console.error(e);
@@ -132,7 +132,7 @@ export default (withForm: withForm) =>
                               <AsyncCreatableSelect
                                  {...selectProps(field)}
                                  required
-                                 disabled={comp.length == 0}
+                                 disabled={!comp || comp.length === 0}
                                  onCreateOption={(name) => {
                                     const promise = createPosition
                                        .mutateAsync({ name, company: comp })
@@ -183,7 +183,7 @@ export default (withForm: withForm) =>
                      </form.Field>
                   )}
                </form.Subscribe>
-            </Stack>
+            </Stack >
          );
       },
    });

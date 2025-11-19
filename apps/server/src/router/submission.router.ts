@@ -246,6 +246,10 @@ export const createSubmission = os.submission.create.handler(
  */
 export const updateSubmission = os.submission.update.handler(
    async ({ input }) => {
+      if (!input.id) {
+         throw new Error('Submission ID is required for update');
+      }
+
       const position_id = await getPositionId(input.company, input.position);
       const location_id = await getLocationId(input.location);
 
@@ -268,10 +272,15 @@ export const updateSubmission = os.submission.update.handler(
          //@ts-ignore: type issue with enum
          .where(and(eq(submission.id, input.id), isNull(submission.owner_id)))
          .returning()
-         .then(([value]) => ({
-            id: value?.id!,
-            message: 'Updated position successfully'
-         }))
+         .then(([value]) => {
+            if (!value) {
+               throw new Error('Submission not found or you do not have permission to update it');
+            }
+            return {
+               id: value.id,
+               message: 'Updated position successfully'
+            };
+         })
          .catch(error => {
             console.error('Error updating submission:', error);
             throw new Error(error.message || 'Failed to update submission');

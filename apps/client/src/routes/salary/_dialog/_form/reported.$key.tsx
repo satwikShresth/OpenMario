@@ -9,13 +9,15 @@ export const Route = createFileRoute('/salary/_dialog/_form/reported/$key')({
    component: () => {
       const { key } = Route.useParams();
       const navigate = Route.useNavigate();
-      const defaultValues = useSalaryStore(({ submissions }) => submissions.get(key!));
-      const actions = useSalaryStore(({ actions }) => actions);
+      const { submissions, actions } = useSalaryStore();
+      const defaultValues = submissions.get(key!);
       const patchMutation = useMutation(orpc.submission.update.mutationOptions());
 
       const onSubmit = ({ value }: { value: SubmissionAggregate }) => {
+         // Ensure id from route param, not from form value
+         const { id: _id, owner_id: _owner, ...updateData } = value as any;
          const patchPromise = patchMutation
-            .mutateAsync({ ...value, id: key! })
+            .mutateAsync({ id: key!, ...updateData })
             .then(() => {
                console.log('updated submission');
                actions.updateSubmission(key!, value as SubmissionAggregate);

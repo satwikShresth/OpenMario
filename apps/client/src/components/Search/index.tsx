@@ -63,6 +63,5 @@ export const Search = {
    Courses,
 };
 
-export * from './Store';
 export * from './refinements';
 export * from './Stats';

@@ -15,7 +15,6 @@ import {
    SearchBox,
    SortSelect,
    Stats,
-   useFavoritesStore,
 } from '@/components/Search';
 import { useMobile } from '@/hooks';
 import { HiFilter } from 'react-icons/hi';
@@ -23,6 +22,7 @@ import { Outlet } from '@tanstack/react-router';
 import { RiHeartFill, RiHeartLine } from 'react-icons/ri';
 import { Configure } from 'react-instantsearch';
 import z from 'zod';
+import { useFavoriteStore } from '@/hooks/useFavoriteStore';
 
 const sortBy = createListCollection({
    items: [
@@ -176,12 +176,10 @@ const ToggleFav = () => {
    const navigate = Route.useNavigate();
    const showFavorites = Route.useSearch({ select: (s) => s?.showFavorites! === true });
 
-   const favoritesLength = useFavoritesStore((s) => s.actions.getAllFavorites().length);
-   const favoritesFilter = useFavoritesStore((s) =>
-      s.actions.getAllFavorites().map((fav) => `course_id = "${fav}"`).join(' OR ')
-   );
-
-   console.log(favoritesFilter);
+   const actions = useFavoriteStore();
+   const favorites = actions.getAllFavorites()
+   const favoritesLength = favorites?.length
+   const favoritesFilter = favorites?.map((fav) => `crn = "${fav}"`).join(' OR ');
 
    const handleToggle = (checked: boolean) => {
       navigate({

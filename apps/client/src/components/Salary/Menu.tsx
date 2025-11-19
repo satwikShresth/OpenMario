@@ -4,13 +4,14 @@ import { RiSurveyFill } from 'react-icons/ri';
 import { MdDrafts, MdMarkEmailRead } from 'react-icons/md';
 import { HiPlus } from 'react-icons/hi';
 import { useMobile } from '@/hooks';
-import { useSalaryStore } from './Store.ts';
+import { useSalaryStore } from '@/hooks';
 import { useNavigate } from '@tanstack/react-router';
 
 export const ReportSalaryMenu = () => {
    const navigate = useNavigate();
-   const drafts = useSalaryStore(({ draftSubmissions }) => draftSubmissions.length);
-   const submissions = useSalaryStore(({ submissions }) => submissions.size);
+   const { draftSubmissions, submissions } = useSalaryStore();
+   const drafts = draftSubmissions.length;
+   const submissionsCount = submissions.size;
    const isMobile = useMobile();
    return (
       <Menu.Root
@@ -59,7 +60,7 @@ export const ReportSalaryMenu = () => {
                      <HStack>
                         <MdMarkEmailRead /> Submissions
                      </HStack>
-                     <Badge size='md' variant='outline' ml={3}>{submissions}</Badge>
+                     <Badge size='md' variant='outline' ml={3}>{submissionsCount}</Badge>
                   </Menu.Item>
                </Menu.Content>
             </Menu.Positioner>

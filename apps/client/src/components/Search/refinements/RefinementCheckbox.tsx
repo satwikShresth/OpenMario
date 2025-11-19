@@ -46,7 +46,7 @@ export const RefinementCheckbox = ({ attribute }: { attribute: string }) => {
             </Field.Root>
             <CheckboxGroup value={checkedItems}>
                <Fieldset.Content width='60%'>
-                  <For each={refinements.items} key={(item) => `${item.value}-${item.count}`}>
+                  <For each={refinements.items}>
                      {({ value, isRefined, label, count }) => (
                         <Checkbox.Root
                            name={value}

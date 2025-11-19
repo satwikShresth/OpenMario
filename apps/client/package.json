@@ -6,11 +6,14 @@
     "dev": "bun run --bun --env-file=../../.env vite",
     "build": "vite build && tsc",
     "serve": "vite preview",
-    "test": "vitest run"
+    "test": "vitest run",
+    "db:generate": "drizzle-kit generate"
   },
   "dependencies": {
     "@babel/plugin-transform-react-display-name": "^7.28.0",
     "@chakra-ui/react": "^3.29.0",
+    "@electric-sql/pglite": "^0.3.14",
+    "@electric-sql/pglite-react": "^0.2.32",
     "@emotion/react": "^11.14.0",
     "@faker-js/faker": "^10.0.0",
     "@hey-api/openapi-ts": "^0.87.5",
@@ -33,6 +36,7 @@
     "@tanstack/router-plugin": "^1.132.0",
     "@types/logrocket-react": "^3.0.3",
     "chakra-react-select": "^6.1.1",
+    "drizzle-orm": "^0.44.7",
     "immer": "^10.2.0",
     "instantsearch.js": "^4.83.0",
     "jsurl2": "^2.2.0",
@@ -59,6 +63,7 @@
     "@types/react-dom": "^19.2.0",
     "@vitejs/plugin-react": "^5.0.4",
     "babel-plugin-react-compiler": "^1.0.0",
+    "drizzle-kit": "^0.31.7",
     "jsdom": "^27.0.0",
     "typescript": "^5.7.2",
     "vite": "npm:rolldown-vite@^7.1.7",

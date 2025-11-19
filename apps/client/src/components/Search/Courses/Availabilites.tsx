@@ -100,7 +100,7 @@ export default ({ course_id }: AvailabilitesProps) => {
                <Table.ColumnHeader bgColor='Background'>
                   Year
                </Table.ColumnHeader>
-               <For each={['Fall', 'Winter', 'Spring', 'Summer']} key={(term) => term}>
+               <For each={['Fall', 'Winter', 'Spring', 'Summer']}>
                   {(term: string) => (
                      <Table.ColumnHeader
                         bgColor='Background'
@@ -113,11 +113,11 @@ export default ({ course_id }: AvailabilitesProps) => {
             </Table.Row>
          </Table.Header>
          <Table.Body>
-            <For each={availabilityTableData} key={(yearData) => yearData.Year}>
+            <For each={availabilityTableData}>
                {(yearData: any) => (
                   <Table.Row>
                      <Table.Cell>{yearData.Year}</Table.Cell>
-                     <For each={['15', '25', '35', '45']} key={(suffix) => suffix}>
+                     <For each={['15', '25', '35', '45']}>
                         {(termSuffix: string) => {
                            const sections = yearData[termSuffix] || [];
 
@@ -129,7 +129,7 @@ export default ({ course_id }: AvailabilitesProps) => {
                                  {sections.length > 0
                                     ? (
                                        <VStack align='start' gap={2}>
-                                          <For each={sections} key={(section) => `${section.name}-${section.crn.join('-')}`}>
+                                          <For each={sections}>
                                              {(section: Section) => (
                                                 <HoverCard.Root>
                                                    <HoverCard.Trigger asChild>

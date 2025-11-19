@@ -42,12 +42,12 @@ export default ({ course_id }: PreReqProps) => {
                      Prerequisite:
                   </Text>
                   <HStack align='start' gap={3} wrap='wrap'>
-                     <For each={reqInfo?.prerequisites} key={(group, idx) => `prereq-group-${idx}`}>
+                     <For each={reqInfo?.prerequisites}>
                         {(preReqGroup, idx) => (
                            <>
                               {idx === 0 ? null : <Text>and</Text>}
                               <HStack wrap={isMobile ? 'wrap' : ''}>
-                                 <For each={preReqGroup} key={(preReq) => preReq.id}>
+                                 <For each={preReqGroup}>
                                     {(preReq, courseIdx) => (
                                        <Flex>
                                           <HoverCard.Root size='md'>
@@ -139,7 +139,7 @@ export default ({ course_id }: PreReqProps) => {
                      Corequisite:
                   </Text>
                   <HStack align='start' gap={3} wrap='wrap'>
-                     <For each={reqInfo?.corequisites} key={(coreq) => coreq.id}>
+                     <For each={reqInfo?.corequisites}>
                         {(coreq) => (
                            <Flex>
                               <Tag

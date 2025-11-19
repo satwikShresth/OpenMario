@@ -9,11 +9,9 @@ export const Route = createFileRoute('/salary/_dialog/_form/report/{-$idx}')({
    component: () => {
       const { idx } = Route.useParams();
       const navigate = Route.useNavigate();
-      const defaultValues = useSalaryStore(({ draftSubmissions }) =>
-         draftSubmissions[parseInt(idx!)]
-      );
-      const actions = useSalaryStore(({ actions }) => actions);
-      const submitMutation = useMutation(orpc.submission.update.mutationOptions());
+      const { draftSubmissions, actions } = useSalaryStore();
+      const defaultValues = draftSubmissions[parseInt(idx!)];
+      const submitMutation = useMutation(orpc.submission.create.mutationOptions());
 
       const onSubmit = ({ value }: { value: SubmissionAggregate }) => {
          const submissionPromise = submitMutation
@@ -21,8 +19,8 @@ export const Route = createFileRoute('/salary/_dialog/_form/report/{-$idx}')({
             .then(({ id, message }) => {
                console.log(message);
                if (defaultValues) {
-                  actions.moveDraftToSubmission(parseInt(idx!)!, id!, {
-                     ...value!,
+                  actions.moveDraftToSubmission(parseInt(idx!)!, id, {
+                     ...value,
                   });
                } else {
                   actions.addSubmission(id, { ...value });

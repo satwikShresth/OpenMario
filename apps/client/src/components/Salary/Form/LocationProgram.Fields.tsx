@@ -30,10 +30,13 @@ export default (withForm: withForm) =>
                            .ensureQueryData(
                               orpc.autocomplete.location.queryOptions({
                                  input: { loc },
-                                 select: (data) => data
-                                    .some(({ name }) => name === loc) ? undefined : 'Unknown Location'
 
                               }))
+                           .then(
+                              (data) => data
+                                 .some(({ name }) => name === loc) ? undefined : 'Unknown Location'
+                           )
+
                            .catch((e) => {
                               console.error(e);
                               return 'Value is unable to be validated';
@@ -124,7 +127,7 @@ export default (withForm: withForm) =>
                      </Field.Root>
                   )}
                </form.Field>
-            </Stack>
+            </Stack >
          );
       },
    });

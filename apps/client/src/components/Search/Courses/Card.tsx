@@ -24,7 +24,7 @@ import Req from './Req.tsx';
 import { useQuery } from '@tanstack/react-query';
 import Availabilites from './Availabilites.tsx';
 import { RiHeartFill, RiHeartLine } from 'react-icons/ri';
-import { useFavoritesStore } from '../Store';
+import { useFavoriteStore } from '@/hooks';
 
 export const Cards = () => {
    const infiniteHits = useHits<Section>();
@@ -34,9 +34,11 @@ export const Cards = () => {
          gap={5}
          width='full'
       >
-         <For each={infiniteHits.items} key={(section) => `${section.crn}-${section.instruction_method}-${section.instruction_type}`}>
+         <For each={infiniteHits.items}
+         >
             {(section) => (
                <Card
+                  key={`${section.crn}-${section.instruction_method}-${section.instruction_type}`}
                   section={section}
                />
             )}
@@ -166,10 +168,10 @@ export const Card = ({ section }: { section: Section }) => {
                                     : null}
                               </VStack>
                            </Tag>
-                           <CardButtons course_id={section?.course_id} />
+                           <CardButtons crn={section?.crn} />
                         </HStack>
                      )
-                     : <CardButtons course_id={section?.course_id} noSection />}
+                     : <CardButtons crn={section?.crn} noSection />}
                </Flex>
             </Stack>
          </CCard.Header>
@@ -215,9 +217,10 @@ export const Card = ({ section }: { section: Section }) => {
                {section?.instructors?.length > 0
                   ? (
                      <VStack align='start' gap={3}>
-                        <For each={section.instructors} key={(instructor) => `${section.crn}-${instructor.id}`}>
+                        <For each={section.instructors} >
                            {(instructor) => (
                               <Flex
+                                 key={`${section.crn}-${instructor.id}`}
                                  borderRadius='lg'
                                  borderWidth={isMobile ? 1 : 0}
                                  direction={{ base: 'column', md: 'row' }}
@@ -307,7 +310,7 @@ export const Card = ({ section }: { section: Section }) => {
 };
 
 const CardButtons = (
-   { course_id, noSection = false }: { course_id: string; noSection?: boolean },
+   { crn, noSection = false }: { crn: number; noSection?: boolean },
 ) => {
    // const [isLiked, setIsLiked] = useState(false);
 
@@ -324,11 +327,9 @@ const CardButtons = (
    // };
 
    const isMobile = useMobile();
-   const actions = useFavoritesStore((selector) => selector.actions);
-   const isLiked = useFavoritesStore((selector) => selector.actions.isFavorite(course_id));
-   const toggleHeart = () => {
-      isLiked ? actions.removeFavorite(course_id) : actions.addFavorite(course_id);
-   };
+
+   const actions = useFavoriteStore();
+   const isLiked = actions.isFavorite(crn)
 
    return (
       <Stack
@@ -360,7 +361,7 @@ const CardButtons = (
          <IconButton
             variant='surface'
             size='sm'
-            onClick={toggleHeart}
+            onClick={async () => await actions.toggleFavorite(crn)}
             color={isLiked ? 'pink.500' : 'gray.500'}
             _hover={{
                color: isLiked ? 'pink.600' : 'pink.400',
@@ -371,7 +372,7 @@ const CardButtons = (
          </IconButton>
          <Clipboard.Root
             value={globalThis.location.origin + globalThis.location.pathname +
-               `/${course_id!}` + globalThis.location.search}
+               `/${crn!}` + globalThis.location.search}
          >
             <Clipboard.Trigger asChild>
                <IconButton variant='surface' size='sm'>

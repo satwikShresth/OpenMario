@@ -95,3 +95,6 @@ package-lock.json
 
 # IDE
 .idea
+
+# Auto-generated migrations (compiled at build time)
+apps/client/src/db/migrations.json

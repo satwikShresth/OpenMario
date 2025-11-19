@@ -15,6 +15,8 @@
       "dependencies": {
         "@babel/plugin-transform-react-display-name": "^7.28.0",
         "@chakra-ui/react": "^3.29.0",
+        "@electric-sql/pglite": "^0.3.14",
+        "@electric-sql/pglite-react": "^0.2.32",
         "@emotion/react": "^11.14.0",
         "@faker-js/faker": "^10.0.0",
         "@hey-api/openapi-ts": "^0.87.5",
@@ -37,6 +39,7 @@
         "@tanstack/router-plugin": "^1.132.0",
         "@types/logrocket-react": "^3.0.3",
         "chakra-react-select": "^6.1.1",
+        "drizzle-orm": "^0.44.7",
         "immer": "^10.2.0",
         "instantsearch.js": "^4.83.0",
         "jsurl2": "^2.2.0",
@@ -63,6 +66,7 @@
         "@types/react-dom": "^19.2.0",
         "@vitejs/plugin-react": "^5.0.4",
         "babel-plugin-react-compiler": "^1.0.0",
+        "drizzle-kit": "^0.31.7",
         "jsdom": "^27.0.0",
         "typescript": "^5.7.2",
         "vite": "npm:rolldown-vite@^7.1.7",
@@ -250,6 +254,10 @@
     "@csstools/css-tokenizer": ["@csstools/css-tokenizer@3.0.4", "", {}, "sha512-Vd/9EVDiu6PPJt9yAh6roZP6El1xHrdvIVGjyBsHR0RYwNHgL7FJPyIIW4fANJNG6FtyZfvlRPpFI4ZM/lubvw=="],
 
     "@drizzle-team/brocli": ["@drizzle-team/brocli@0.10.2", "", {}, "sha512-z33Il7l5dKjUgGULTqBsQBQwckHh5AbIuxhdsIxDDiZAzBOrZO6q9ogcWC65kU382AfynTfgNumVcNIjuIua6w=="],
+
+    "@electric-sql/pglite": ["@electric-sql/pglite@0.3.14", "", {}, "sha512-3DB258dhqdsArOI1fIt7cb9RpUOgcDg5hXWVgVHAeqVQ/qxtFy605QKs4gx6mFq3jWsSPqDN8TgSEsqC3OfV9Q=="],
+
+    "@electric-sql/pglite-react": ["@electric-sql/pglite-react@0.2.32", "", { "peerDependencies": { "@electric-sql/pglite": "0.3.14", "react": "^18.0.0 || ^19.0.0 || ^19.0.0-rc" } }, "sha512-bLEzY0RV/MncQGiEOiqHmME6lcvZ4vcp47gYrFvqAgesS6pK8XTZxxRi+91eAElgcMtYlES2F2sVbOW+Rhye/g=="],
 
     "@emnapi/core": ["@emnapi/core@1.7.1", "", { "dependencies": { "@emnapi/wasi-threads": "1.1.0", "tslib": "^2.4.0" } }, "sha512-o1uhUASyo921r2XtHYOHy7gdkGLge8ghBEQHMWmyJFoXlpU58kIrhhN3w26lpQb6dspetweapMn2CSNwQ8I4wg=="],
 

@@ -12,7 +12,7 @@ export type FormProps = {
 export const Form = ({ defaultValues, onSubmit }: FormProps) => {
    const form = Fields
       .useAppForm({
-         defaultValues: defaultValues || overrideOption,
+         defaultValues: { ...overrideOption, ...defaultValues },
          //@ts-ignore: shuutp
          validators: { onSubmit: submissionSchema },
          onSubmit,

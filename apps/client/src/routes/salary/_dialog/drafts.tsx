@@ -10,12 +10,12 @@ import {
    Text,
    VStack,
 } from '@chakra-ui/react';
-import { useSalaryStore } from '@/components/Salary/Store.ts';
+import { useSalaryStore } from '@/hooks';
 
 export const Route = createFileRoute('/salary/_dialog/drafts')({
    component: () => {
       const navigate = Route.useNavigate();
-      const drafts = useSalaryStore(({ draftSubmissions }) => draftSubmissions);
+      const { draftSubmissions: drafts } = useSalaryStore();
 
       return (
          <Box>

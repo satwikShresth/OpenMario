@@ -10,9 +10,8 @@ import ReactDOM from 'react-dom/client';
 import { parse, stringify } from 'jsurl2';
 import { enableMapSet } from 'immer';
 import { StrictMode } from 'react';
-import { withLDProvider } from 'launchdarkly-react-client-sdk';
-import Observability, { LDObserve } from '@launchdarkly/observability'
-import SessionReplay, { LDRecord } from '@launchdarkly/session-replay'
+import { client } from './db';
+import { PGliteProvider } from "@electric-sql/pglite-react"
 import './styles.css';
 
 const router = createRouter({
@@ -43,12 +42,14 @@ if (rootElement && !rootElement.innerHTML) {
    const root = ReactDOM.createRoot(rootElement);
    root.render(
       <StrictMode>
-         <Provider>
-            <Toaster />
-            <TanStackQueryProvider.Provider>
-               <RouterProvider router={router} />
-            </TanStackQueryProvider.Provider>
-         </Provider>
+         <PGliteProvider db={client}>
+            <Provider>
+               <Toaster />
+               <TanStackQueryProvider.Provider>
+                  <RouterProvider router={router} />
+               </TanStackQueryProvider.Provider>
+            </Provider>
+         </PGliteProvider>
       </StrictMode>,
    );
 }

@@ -88,12 +88,18 @@ export const submissionSchema = z.object({
    compensation: z
       .number()
       .check(z.nonnegative({ message: 'Amount cannot be negative' })),
-   other_compensation: z
-      .string()
-      .check(z.maxLength(255, 'Cannot be more than 255 characters')),
-   details: z
-      .string()
-      .check(z.maxLength(255, 'Cannot be more than 255 characters')),
+   other_compensation: z.catch(
+      z.optional(
+         z.string().check(z.maxLength(255, 'Cannot be more than 255 characters'))
+      ),
+      ''
+   ),
+   details: z.catch(
+      z.optional(
+         z.string().check(z.maxLength(255, 'Cannot be more than 255 characters'))
+      ),
+      ''
+   ),
    year,
 
    coop_year: z.enum(coopYear),

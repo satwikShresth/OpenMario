@@ -19,6 +19,7 @@ import { Route as SalaryDialogDraftsRouteImport } from './routes/salary/_dialog/
 import { Route as SalaryDialogAutoFillRouteImport } from './routes/salary/_dialog/auto-fill'
 import { Route as SalaryDialogFormRouteImport } from './routes/salary/_dialog/_form'
 import { Route as SearchCoursesCourse_idRouteImport } from './routes/_search/courses/$course_id'
+import { Route as SalaryDialogFormReportRouteImport } from './routes/salary/_dialog/_form/report'
 import { Route as SalaryDialogFormReportedKeyRouteImport } from './routes/salary/_dialog/_form/reported.$key'
 import { Route as SalaryDialogFormReportChar123IdxChar125RouteImport } from './routes/salary/_dialog/_form/report.{-$idx}'
 
@@ -69,6 +70,11 @@ const SearchCoursesCourse_idRoute = SearchCoursesCourse_idRouteImport.update({
   path: '/$course_id',
   getParentRoute: () => SearchCoursesRoute,
 } as any)
+const SalaryDialogFormReportRoute = SalaryDialogFormReportRouteImport.update({
+  id: '/report',
+  path: '/report',
+  getParentRoute: () => SalaryDialogFormRoute,
+} as any)
 const SalaryDialogFormReportedKeyRoute =
   SalaryDialogFormReportedKeyRouteImport.update({
     id: '/reported/$key',
@@ -77,9 +83,9 @@ const SalaryDialogFormReportedKeyRoute =
   } as any)
 const SalaryDialogFormReportChar123IdxChar125Route =
   SalaryDialogFormReportChar123IdxChar125RouteImport.update({
-    id: '/report/{-$idx}',
-    path: '/report/{-$idx}',
-    getParentRoute: () => SalaryDialogFormRoute,
+    id: '/{-$idx}',
+    path: '/{-$idx}',
+    getParentRoute: () => SalaryDialogFormReportRoute,
   } as any)
 
 export interface FileRoutesByFullPath {
@@ -90,6 +96,7 @@ export interface FileRoutesByFullPath {
   '/salary/auto-fill': typeof SalaryDialogAutoFillRoute
   '/salary/drafts': typeof SalaryDialogDraftsRoute
   '/salary/submissions': typeof SalaryDialogSubmissionsRoute
+  '/salary/report': typeof SalaryDialogFormReportRouteWithChildren
   '/salary/report/{-$idx}': typeof SalaryDialogFormReportChar123IdxChar125Route
   '/salary/reported/$key': typeof SalaryDialogFormReportedKeyRoute
 }
@@ -101,6 +108,7 @@ export interface FileRoutesByTo {
   '/salary/auto-fill': typeof SalaryDialogAutoFillRoute
   '/salary/drafts': typeof SalaryDialogDraftsRoute
   '/salary/submissions': typeof SalaryDialogSubmissionsRoute
+  '/salary/report': typeof SalaryDialogFormReportRouteWithChildren
   '/salary/report/{-$idx}': typeof SalaryDialogFormReportChar123IdxChar125Route
   '/salary/reported/$key': typeof SalaryDialogFormReportedKeyRoute
 }
@@ -116,6 +124,7 @@ export interface FileRoutesById {
   '/salary/_dialog/auto-fill': typeof SalaryDialogAutoFillRoute
   '/salary/_dialog/drafts': typeof SalaryDialogDraftsRoute
   '/salary/_dialog/submissions': typeof SalaryDialogSubmissionsRoute
+  '/salary/_dialog/_form/report': typeof SalaryDialogFormReportRouteWithChildren
   '/salary/_dialog/_form/report/{-$idx}': typeof SalaryDialogFormReportChar123IdxChar125Route
   '/salary/_dialog/_form/reported/$key': typeof SalaryDialogFormReportedKeyRoute
 }
@@ -129,6 +138,7 @@ export interface FileRouteTypes {
     | '/salary/auto-fill'
     | '/salary/drafts'
     | '/salary/submissions'
+    | '/salary/report'
     | '/salary/report/{-$idx}'
     | '/salary/reported/$key'
   fileRoutesByTo: FileRoutesByTo
@@ -140,6 +150,7 @@ export interface FileRouteTypes {
     | '/salary/auto-fill'
     | '/salary/drafts'
     | '/salary/submissions'
+    | '/salary/report'
     | '/salary/report/{-$idx}'
     | '/salary/reported/$key'
   id:
@@ -154,6 +165,7 @@ export interface FileRouteTypes {
     | '/salary/_dialog/auto-fill'
     | '/salary/_dialog/drafts'
     | '/salary/_dialog/submissions'
+    | '/salary/_dialog/_form/report'
     | '/salary/_dialog/_form/report/{-$idx}'
     | '/salary/_dialog/_form/reported/$key'
   fileRoutesById: FileRoutesById
@@ -236,6 +248,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SearchCoursesCourse_idRouteImport
       parentRoute: typeof SearchCoursesRoute
     }
+    '/salary/_dialog/_form/report': {
+      id: '/salary/_dialog/_form/report'
+      path: '/report'
+      fullPath: '/salary/report'
+      preLoaderRoute: typeof SalaryDialogFormReportRouteImport
+      parentRoute: typeof SalaryDialogFormRoute
+    }
     '/salary/_dialog/_form/reported/$key': {
       id: '/salary/_dialog/_form/reported/$key'
       path: '/reported/$key'
@@ -245,10 +264,10 @@ declare module '@tanstack/react-router' {
     }
     '/salary/_dialog/_form/report/{-$idx}': {
       id: '/salary/_dialog/_form/report/{-$idx}'
-      path: '/report/{-$idx}'
+      path: '/{-$idx}'
       fullPath: '/salary/report/{-$idx}'
       preLoaderRoute: typeof SalaryDialogFormReportChar123IdxChar125RouteImport
-      parentRoute: typeof SalaryDialogFormRoute
+      parentRoute: typeof SalaryDialogFormReportRoute
     }
   }
 }
@@ -276,14 +295,28 @@ const SearchRouteChildren: SearchRouteChildren = {
 const SearchRouteWithChildren =
   SearchRoute._addFileChildren(SearchRouteChildren)
 
-interface SalaryDialogFormRouteChildren {
+interface SalaryDialogFormReportRouteChildren {
   SalaryDialogFormReportChar123IdxChar125Route: typeof SalaryDialogFormReportChar123IdxChar125Route
+}
+
+const SalaryDialogFormReportRouteChildren: SalaryDialogFormReportRouteChildren =
+  {
+    SalaryDialogFormReportChar123IdxChar125Route:
+      SalaryDialogFormReportChar123IdxChar125Route,
+  }
+
+const SalaryDialogFormReportRouteWithChildren =
+  SalaryDialogFormReportRoute._addFileChildren(
+    SalaryDialogFormReportRouteChildren,
+  )
+
+interface SalaryDialogFormRouteChildren {
+  SalaryDialogFormReportRoute: typeof SalaryDialogFormReportRouteWithChildren
   SalaryDialogFormReportedKeyRoute: typeof SalaryDialogFormReportedKeyRoute
 }
 
 const SalaryDialogFormRouteChildren: SalaryDialogFormRouteChildren = {
-  SalaryDialogFormReportChar123IdxChar125Route:
-    SalaryDialogFormReportChar123IdxChar125Route,
+  SalaryDialogFormReportRoute: SalaryDialogFormReportRouteWithChildren,
   SalaryDialogFormReportedKeyRoute: SalaryDialogFormReportedKeyRoute,
 }
 
