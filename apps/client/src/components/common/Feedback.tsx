@@ -181,7 +181,7 @@ export function FeedbackDialog() {
                                           value={field.state.value}
                                           onBlur={field.handleBlur}
                                           onChange={(e) => field.handleChange(e.target.value)}
-                                          placeholder='Tell us what you think...'
+                                          placeholder='Tell me what you think about openmario...'
                                           rows={5}
                                           required
                                        />
