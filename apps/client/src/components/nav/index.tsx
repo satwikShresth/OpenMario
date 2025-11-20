@@ -15,6 +15,7 @@ import { Link, linkOptions } from '@tanstack/react-router';
 import DesktopNav from './Desktop';
 import MobileNav from './Mobile';
 import { useColorMode, useColorModeValue } from '@/components/ui/color-mode';
+import { FeedbackDialog } from '@/components/common/Feedback';
 
 export default function Navbar() {
    const { open, onToggle, onClose } = useDisclosure();
@@ -97,6 +98,8 @@ export default function Navbar() {
                direction='row'
                gap={1}
             >
+               <FeedbackDialog />
+
                <IconButton
                   as={Link}
                   variant='ghost'
