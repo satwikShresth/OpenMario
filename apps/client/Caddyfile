@@ -37,8 +37,8 @@
 		file_server
 	}
 
-	handle_path /api/v1/* {
-		rewrite * /v1{uri}
+	handle_path /api/* {
+		rewrite * /api{uri}
 		reverse_proxy {$BACKEND_URL} {
 			header_up Host {host}
 			header_up X-Real-IP {remote}

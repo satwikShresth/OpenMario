@@ -1,23 +1,54 @@
 services:
-  memgraph:
-    image: memgraph/memgraph-mage:latest
-    container_name: memgraph-mage
-    pull_policy: always
-    ports:
-      - "7687:7687"
-      - "7444:7444"
-    command: ["--log-level=TRACE", "--schema-info-enabled=true"]
-    volumes:
-      - ./memgraph_data:/var/lib/memgraph  # Persists your graph data here—create this dir on host first!
+  server:
+    build:
+      dockerfile: Dockerfile
+      target: production-server
+    restart: unless-stopped
+    # ports:
+    #   - "${PORT:-3000}:${PORT:-3000}"
+    healthcheck:
+      test: bun run /app/healthcheck.ts
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 5s
+    env_file:
+     - .env
+    environment:
+      NODE_ENV: production
+      PORT: ${PORT:-3000}
+      DATABASE_URL: ${DATABASE_URL?Variable not set}
+      MEILI_HOST: ${MEILI_HOST?Variable not set}
+      MEILI_MASTER_KEY: ${MEILI_MASTER_KEY?Variable not set}
+      NEO4J_URI: ${NEO4J_URI?Variable not set}
+      NEO4J_USERNAME: ${NEO4J_USERNAME?Variable not set}
+      NEO4J_PASSWORD: ${NEO4J_PASSWORD?Variable not set}
+    networks:
+      - openmario
 
-  lab:
-    image: memgraph/lab:latest
-    container_name: memgraph-lab
-    pull_policy: always
+  client:
+    build:
+      dockerfile: Dockerfile
+      target: production-client
+      args:
+        - VITE_APP_TITLE=${VITE_APP_TITLE}
+        - VITE_LR_APP_ID=${VITE_LR_APP_ID}
+        - VITE_MEILI_HOST=${VITE_MEILI_HOST}
+        - VITE_DISCORD_WEBHOOK=${VITE_DISCORD_WEBHOOK}
+    restart: unless-stopped
+    env_file:
+     - .env
+    environment:
+      PORT: 3000
+      BACKEND_URL: http://server:3000
     ports:
       - "3000:3000"
     depends_on:
-      - memgraph
-    environment:
-      - QUICK_CONNECT_MG_HOST=memgraph
-      - QUICK_CONNECT_MG_PORT=7687
+      server:
+        condition: service_healthy
+    networks:
+      - openmario
+
+networks:
+  openmario:
+

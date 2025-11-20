@@ -41,9 +41,7 @@ const app = new Hono({
       })
    )
    .use('*', logger())
-   .get('/api/health', c =>
-      c.json({ status: 'ok', application: 'MDS-Banking' })
-   )
+   .get('/api/health', c => c.json({ status: 'ok', application: 'openmario' }))
    .use(
       '/api/*',
       async (c, next) =>

@@ -21,20 +21,26 @@ export const Form = ({ defaultValues, onSubmit }: FormProps) => {
    return (
       <Box mt={2}>
          <Dialog.Body>
+            {/*@ts-expect-error*/}
             <Fields.PositionFields form={form} />
             <Box mt={2} />
+            {/*@ts-expect-error*/}
             <Fields.LocationProgramFields form={form} />
             <Text fontWeight='semibold' fontSize='lg' mt={8}>Coop Details</Text>
             <Separator mt={2} mb={5} />
+            {/*@ts-expect-error*/}
             <Fields.CoopDetailsFields form={form} />
             <Text fontWeight='semibold' fontSize='lg' mt={10}>Compensation Details</Text>
             <Separator mt={2} />
+            {/*@ts-expect-error*/}
             <Fields.CompensationFields form={form} />
             <Text fontWeight='semibold' fontSize='lg' mt={7}>Other Details</Text>
             <Separator mt={2} mb={5} />
+            {/*@ts-expect-error*/}
             <Fields.OtherDetailFields form={form} />
          </Dialog.Body>
          <Dialog.Footer>
+            {/*@ts-expect-error*/}
             <Fields.Footer form={form} />
          </Dialog.Footer>
       </Box>
