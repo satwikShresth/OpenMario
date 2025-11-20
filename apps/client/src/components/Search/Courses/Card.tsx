@@ -24,7 +24,8 @@ import Req from './Req.tsx';
 import { useQuery } from '@tanstack/react-query';
 import Availabilites from './Availabilites.tsx';
 import { RiHeartFill, RiHeartLine } from 'react-icons/ri';
-import { useFavoriteStore } from '@/hooks';
+import { favoritesCollection } from '@/helpers';
+import { eq, useLiveQuery } from '@tanstack/react-db';
 
 export const Cards = () => {
    const infiniteHits = useHits<Section>();
@@ -328,8 +329,23 @@ const CardButtons = (
 
    const isMobile = useMobile();
 
-   const actions = useFavoriteStore();
-   const isLiked = actions.isFavorite(crn)
+
+
+   const { data: isLiked } = useLiveQuery(
+      (q) => q
+         .from({ fav: favoritesCollection })
+         .select(({ fav }) => ({ id: fav.id, crn: fav.crn }))
+         .where(({ fav }) => eq(fav.crn, crn.toString()))
+         .findOne(),
+      [crn]
+   )
+
+   const toggleFavorite = () => {
+      (isLiked)
+         ? favoritesCollection.delete(isLiked?.id!)
+         : favoritesCollection.insert({ id: crypto.randomUUID(), crn: crn.toString(), 'createdAt': new Date(), updatedAt: new Date() })
+
+   }
 
    return (
       <Stack
@@ -361,7 +377,7 @@ const CardButtons = (
          <IconButton
             variant='surface'
             size='sm'
-            onClick={async () => await actions.toggleFavorite(crn)}
+            onClick={toggleFavorite}
             color={isLiked ? 'pink.500' : 'gray.500'}
             _hover={{
                color: isLiked ? 'pink.600' : 'pink.400',

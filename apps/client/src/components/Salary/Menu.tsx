@@ -4,14 +4,31 @@ import { RiSurveyFill } from 'react-icons/ri';
 import { MdDrafts, MdMarkEmailRead } from 'react-icons/md';
 import { HiPlus } from 'react-icons/hi';
 import { useMobile } from '@/hooks';
-import { useSalaryStore } from '@/hooks';
 import { useNavigate } from '@tanstack/react-router';
+import { useLiveQuery, eq } from '@tanstack/react-db';
+import { submissionsCollection } from '@/helpers';
 
 export const ReportSalaryMenu = () => {
    const navigate = useNavigate();
-   const { draftSubmissions, submissions } = useSalaryStore();
+
+   // Query for drafts
+   const { data: draftSubmissions = [] } = useLiveQuery(
+      (q) => q
+         .from({ sub: submissionsCollection })
+         .select(({ sub }) => sub)
+         .where(({ sub }) => eq(sub.isDraft, true))
+   );
+
+   // Query for submissions
+   const { data: submissionsData = [] } = useLiveQuery(
+      (q) => q
+         .from({ sub: submissionsCollection })
+         .select(({ sub }) => sub)
+         .where(({ sub }) => eq(sub.isDraft, false))
+   );
+
    const drafts = draftSubmissions.length;
-   const submissionsCount = submissions.size;
+   const submissionsCount = submissionsData.length;
    const isMobile = useMobile();
    return (
       <Menu.Root

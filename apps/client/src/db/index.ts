@@ -21,16 +21,17 @@ export const client = await PGliteWorker.create(
 
 export const db = drizzle({ client: client as any, schema });
 
-// @ts-expect-error - dialect and session exist but aren't in public types
-await db.dialect
+export const migrate = async () =>
    // @ts-expect-error - dialect and session exist but aren't in public types
-   .migrate(migrations, db.session, {
-      migrationsTable: '__drizzle_migrations'
-   } satisfies Omit<MigrationConfig, 'migrationsFolder'>)
-   .then(() =>
-      console.log('[PGlite] ✓ Database migrations applied successfully')
-   )
-   .catch((error: any) => {
-      console.error('[PGlite] ✗ Migration failed:', error);
-      throw error;
-   });
+   await db.dialect
+      // @ts-expect-error - dialect and session exist but aren't in public types
+      .migrate(migrations, db.session, {
+         migrationsTable: '__drizzle_migrations'
+      } satisfies Omit<MigrationConfig, 'migrationsFolder'>)
+      .then(() =>
+         console.log('[PGlite] ✓ Database migrations applied successfully')
+      )
+      .catch((error: any) => {
+         console.error('[PGlite] ✗ Migration failed:', error);
+         throw error;
+      });

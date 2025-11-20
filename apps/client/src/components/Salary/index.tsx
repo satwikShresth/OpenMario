@@ -12,6 +12,5 @@ export const Salary = {
    AutoFill,
 };
 
-export { useSalaryStore } from '@/hooks';
 export * from './Form';
 export * from './AutoFill';

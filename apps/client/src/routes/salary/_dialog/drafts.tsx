@@ -10,12 +10,19 @@ import {
    Text,
    VStack,
 } from '@chakra-ui/react';
-import { useSalaryStore } from '@/hooks';
+import { useLiveQuery, eq } from '@tanstack/react-db';
+import { submissionsCollection } from '@/helpers';
 
 export const Route = createFileRoute('/salary/_dialog/drafts')({
    component: () => {
       const navigate = Route.useNavigate();
-      const { draftSubmissions: drafts } = useSalaryStore();
+
+      const { data: drafts = [] } = useLiveQuery(
+         (q) => q
+            .from({ sub: submissionsCollection })
+            .select(({ sub }) => ({ ...sub }))
+            .where(({ sub }) => eq(sub.isDraft, true))
+      );
 
       return (
          <Box>
@@ -36,14 +43,14 @@ export const Route = createFileRoute('/salary/_dialog/drafts')({
                   )
                   : (
                      <SimpleGrid columns={{ base: 1, md: 2 }} gap={4}>
-                        {drafts.map((draft, index) => (
+                        {drafts.map((draft) => (
                            <Card.Root
-                              key={index}
+                              key={draft.id}
                               cursor='pointer'
                               onClick={() =>
                                  navigate({
                                     to: '/salary/report/{-$idx}',
-                                    params: { idx: String(index) },
+                                    params: { idx: draft.id },
                                  })}
                               _hover={{ bg: 'bg.muted' }}
                            >
@@ -65,7 +72,7 @@ export const Route = createFileRoute('/salary/_dialog/drafts')({
                                           {draft.location}
                                        </Text>
                                        <Text fontSize='sm'>
-                                          {draft.work_hours}h/week
+                                          {draft.workHours}h/week
                                        </Text>
                                     </HStack>
 
@@ -74,9 +81,9 @@ export const Route = createFileRoute('/salary/_dialog/drafts')({
                                        <Text fontWeight='medium'>
                                           ${draft.compensation.toLocaleString()}
                                        </Text>
-                                       {draft.other_compensation && (
+                                       {draft.otherCompensation && (
                                           <Text fontSize='sm' color='fg.muted'>
-                                             +{draft.other_compensation}
+                                             +{draft.otherCompensation}
                                           </Text>
                                        )}
                                     </HStack>
@@ -84,13 +91,13 @@ export const Route = createFileRoute('/salary/_dialog/drafts')({
                                     {/* Badges */}
                                     <HStack wrap='wrap' gap={2}>
                                        <Badge size='sm' variant='outline'>
-                                          {draft.coop_year} Year
+                                          {draft.coopYear} Year
                                        </Badge>
                                        <Badge size='sm' variant='outline'>
-                                          {draft.coop_cycle}
+                                          {draft.coopCycle}
                                        </Badge>
                                        <Badge size='sm' variant='outline'>
-                                          {draft.program_level}
+                                          {draft.programLevel}
                                        </Badge>
                                        <Badge size='sm' variant='outline'>
                                           {draft.year}

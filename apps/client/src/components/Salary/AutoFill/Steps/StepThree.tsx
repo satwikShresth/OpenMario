@@ -11,7 +11,7 @@ import {
    useFileUpload,
 } from '@chakra-ui/react';
 import { useJobParser, useTesseract } from '@/hooks';
-import { useSalaryStore } from '@/hooks';
+import { submissionsCollection } from '@/helpers';
 import { useStore } from '@tanstack/react-form';
 import { useCallback, useState } from 'react';
 import { FaUpload } from 'react-icons/fa';
@@ -23,7 +23,6 @@ export default ({ form }: any) => {
    const [fileLog, setFileLog] = useState('');
    const { recognizeText } = useTesseract();
    const { processText } = useJobParser();
-   const { actions } = useSalaryStore();
    const commonData = useStore(
       form.store,
       //@ts-ignore: shutup
@@ -46,24 +45,35 @@ export default ({ form }: any) => {
             const processedJobs = processText(text, common);
 
             processedJobs.forEach((job) => {
-               actions.addDraftSubmission({
+               submissionsCollection.insert({
+                  id: crypto.randomUUID(),
+                  serverId: null,
+                  ownerId: null,
+                  status: 'draft',
+                  isDraft: true,
                   company: job.company || '',
+                  companyId: job.company || '',
                   position: job.position || '',
+                  positionId: job.position || '',
                   location: job.location || '',
-                  program_level: job.program_level || 'Undergraduate',
-                  work_hours: job.work_hours! || 40,
-                  coop_cycle: job.coop_cycle || 'Fall/Winter',
-                  coop_year: job.coop_year || '1st',
+                  locationCity: null,
+                  locationState: null,
+                  locationStateCode: null,
                   year: job.year || new Date().getFullYear(),
+                  coopYear: job.coop_year || '1st',
+                  coopCycle: job.coop_cycle || 'Fall/Winter',
+                  programLevel: job.program_level || 'Undergraduate',
+                  workHours: job.work_hours || 40,
                   compensation: job.compensation
                      ? parseFloat(String(job.compensation).replace('$', ''))
                      : 10,
-                  other_compensation: job.other_compensation || '',
-                  details: `Employer ID: ${job.employer_id || 'N/A'}, Position ID: ${
-                     job.position_id || 'N/A'
-                  }, Job Length: ${job.job_length || 'N/A'}, Coop Round: ${
-                     job.coop_round || 'N/A'
-                  }`,
+                  otherCompensation: job.other_compensation || '',
+                  details: `Employer ID: ${job.employer_id || 'N/A'}, Position ID: ${job.position_id || 'N/A'
+                     }, Job Length: ${job.job_length || 'N/A'}, Coop Round: ${job.coop_round || 'N/A'
+                     }`,
+                  createdAt: new Date(),
+                  updatedAt: new Date(),
+                  syncedAt: null
                });
             });
 
@@ -79,7 +89,7 @@ export default ({ form }: any) => {
             console.error(`Error: ${error.message}`);
          }
       },
-      [actions, recognizeText, processText, setFileLog, setProgress],
+      [recognizeText, processText],
    );
 
    const fileUpload = useFileUpload({

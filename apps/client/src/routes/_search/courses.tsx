@@ -22,7 +22,8 @@ import { Outlet } from '@tanstack/react-router';
 import { RiHeartFill, RiHeartLine } from 'react-icons/ri';
 import { Configure } from 'react-instantsearch';
 import z from 'zod';
-import { useFavoriteStore } from '@/hooks/useFavoriteStore';
+import { favoritesCollection } from '@/helpers';
+import { useLiveQuery } from '@tanstack/react-db';
 
 const sortBy = createListCollection({
    items: [
@@ -176,11 +177,12 @@ const ToggleFav = () => {
    const navigate = Route.useNavigate();
    const showFavorites = Route.useSearch({ select: (s) => s?.showFavorites! === true });
 
-   const actions = useFavoriteStore();
-   const favorites = actions.getAllFavorites()
-   const favoritesLength = favorites?.length
-   const favoritesFilter = favorites?.map((fav) => `crn = "${fav}"`).join(' OR ');
+   const { data: favorites } = useLiveQuery((q) =>
+      q.from({ favorites: favoritesCollection })
+         .select(({ favorites }) => ({ crn: favorites.crn }))
+   )
 
+   const favoritesFilter = favorites?.map(({ crn }) => `crn = "${crn}"`).join(' OR ');
    const handleToggle = (checked: boolean) => {
       navigate({
          search: (prev) => ({
@@ -192,16 +194,17 @@ const ToggleFav = () => {
 
    return (
       <>
-         {showFavorites && favoritesLength > 0 && <Configure filters={favoritesFilter} />}
+         {showFavorites && favorites?.length > 0 && <Configure filters={favoritesFilter} />}
          <Switch.Root
             colorPalette='pink'
             size='md'
+            disabled={favorites?.length < 1}
             checked={showFavorites}
             onCheckedChange={({ checked }) => {
                handleToggle(checked);
             }}
          >
-            <Switch.Label>Show liked courses ({favoritesLength})</Switch.Label>
+            <Switch.Label>Show liked courses ({favorites?.length})</Switch.Label>
             <Switch.HiddenInput />
             <Switch.Control>
                <Switch.Thumb>

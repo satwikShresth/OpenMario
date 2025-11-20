@@ -10,25 +10,33 @@ import {
    Text,
    VStack,
 } from '@chakra-ui/react';
-import { useSalaryStore } from '@/hooks';
+import { useLiveQuery, eq } from '@tanstack/react-db';
+import { submissionsCollection } from '@/helpers';
 
 export const Route = createFileRoute('/salary/_dialog/submissions')({
    component: () => {
       const navigate = Route.useNavigate();
-      const { submissions } = useSalaryStore();
+
+      const { data: submissions } = useLiveQuery(
+         (q) => q
+            .from({ sub: submissionsCollection })
+            .select(({ sub }) => ({ ...sub }))
+            .where(({ sub }) => eq(sub.isDraft, false))
+      );
+
 
       return (
          <Box>
             <Dialog.Header>
                <Dialog.Title fontWeight='bold' fontSize='2xl'>
-                  Submissions ({submissions.size})
+                  Submissions ({submissions.length})
                </Dialog.Title>
                <Dialog.CloseTrigger m={2} asChild>
                   <CloseButton size='sm' variant='surface' />
                </Dialog.CloseTrigger>
             </Dialog.Header>
             <Dialog.Body>
-               {submissions.size === 0
+               {submissions.length === 0
                   ? (
                      <Text color='fg.muted' textAlign='center' py={8}>
                         No submissions yet
@@ -36,14 +44,14 @@ export const Route = createFileRoute('/salary/_dialog/submissions')({
                   )
                   : (
                      <SimpleGrid columns={{ base: 1, md: 2 }} gap={4}>
-                        {Array.from(submissions.entries()).map(([id, submission], index) => (
+                        {submissions.map((submission) => (
                            <Card.Root
-                              key={index}
+                              key={submission.id}
                               cursor='pointer'
                               onClick={() =>
                                  navigate({
                                     to: '/salary/reported/$key',
-                                    params: { key: String(id!) },
+                                    params: { key: submission.id },
                                  })}
                               _hover={{ bg: 'bg.muted' }}
                            >
@@ -65,18 +73,18 @@ export const Route = createFileRoute('/salary/_dialog/submissions')({
                                           {submission.location}
                                        </Text>
                                        <Text fontSize='sm'>
-                                          {submission.work_hours}h/week
+                                          {submission.workHours}h/week
                                        </Text>
                                     </HStack>
 
                                     {/* Compensation */}
                                     <HStack justify='space-between' width='full'>
                                        <Text fontWeight='medium'>
-                                          ${submission.compensation.toLocaleString()}
+                                          ${submission.compensation}
                                        </Text>
-                                       {submission.other_compensation && (
+                                       {submission.otherCompensation && (
                                           <Text fontSize='sm' color='fg.muted'>
-                                             +{submission.other_compensation}
+                                             +{submission.otherCompensation}
                                           </Text>
                                        )}
                                     </HStack>
@@ -84,13 +92,13 @@ export const Route = createFileRoute('/salary/_dialog/submissions')({
                                     {/* Badges */}
                                     <HStack wrap='wrap' gap={2}>
                                        <Badge size='sm' variant='outline'>
-                                          {submission.coop_year} Year
+                                          {submission.coopYear} Year
                                        </Badge>
                                        <Badge size='sm' variant='outline'>
-                                          {submission.coop_cycle}
+                                          {submission.coopCycle}
                                        </Badge>
                                        <Badge size='sm' variant='outline'>
-                                          {submission.program_level}
+                                          {submission.programLevel}
                                        </Badge>
                                        <Badge size='sm' variant='outline'>
                                           {submission.year}
