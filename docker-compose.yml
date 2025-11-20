@@ -1,62 +1,54 @@
-version: "3.8"
 services:
-  memgraph:
-    image: memgraph/memgraph-mage
-    container_name: memgraph
+  server:
+    build:
+      dockerfile: Dockerfile
+      target: production-server
     restart: unless-stopped
-    networks:
-      - app_network
-    ports:
-      - "7687:7687"
-      - "7444:7444"
-    volumes:
-      - memgraph_data:/var/lib/memgraph
-
-  lab:
-    image: memgraph/lab
-    container_name: memgraph_lab
-    restart: unless-stopped
-    networks:
-      - app_network
-    ports:
-      - "3000:3000"
-    environment:
-      - QUICK_CONNECT_MG_HOST=memgraph
-    depends_on:
-      - memgraph
-
-  meilisearch:
-    image: getmeili/meilisearch:v1.13.3
-    container_name: meilisearch
-    restart: unless-stopped
-    networks:
-      - app_network
-    env_file:
-      - ./.env
-    ports:
-      - "7700:7700"
-    volumes:
-      - meilisearch_data:/meili_data
-    environment:
-      - MEILI_NO_ANALYTICS=${MEILI_NO_ANALYTICS:-true}
-      - MEILI_ENV=${MEILI_ENV?MEILI_ENV variable not set}
-      - MEILI_MASTER_KEY=${MEILI_MASTER_KEY?MEILI_MASTER_KEY variable not set}
-      - MEILI_HOST=${MEILI_HOST?MEILI_HOST variable not set}
+    # ports:
+    #   - "${PORT:-3000}:${PORT:-3000}"
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:7700/health"]
+      test: bun run /app/healthcheck.ts
       interval: 30s
       timeout: 10s
       retries: 3
-      start_period: 40s
+      start_period: 5s
+    env_file:
+     - .env
+    environment:
+      NODE_ENV: production
+      PORT: ${PORT:-3000}
+      DATABASE_URL: ${DATABASE_URL?Variable not set}
+      MEILI_HOST: ${MEILI_HOST?Variable not set}
+      MEILI_MASTER_KEY: ${MEILI_MASTER_KEY?Variable not set}
+      NEO4J_URI: ${NEO4J_URI?Variable not set}
+      NEO4J_USERNAME: ${NEO4J_USERNAME?Variable not set}
+      NEO4J_PASSWORD: ${NEO4J_PASSWORD?Variable not set}
+    networks:
+      - openmario
 
-volumes:
-  meilisearch_data:
-    driver: local
-  memgraph_data:
-    driver: local
+  client:
+    build:
+      dockerfile: Dockerfile
+      target: production-client
+      args:
+        - VITE_APP_TITLE=${VITE_APP_TITLE}
+        - VITE_LR_APP_ID=${VITE_LR_APP_ID}
+        - VITE_MEILI_HOST=${VITE_MEILI_HOST}
+        - VITE_DISCORD_WEBHOOK=${VITE_DISCORD_WEBHOOK}
+    restart: unless-stopped
+    env_file:
+     - .env
+    environment:
+      PORT: 3000
+      BACKEND_URL: http://server:3000
+    ports:
+      - "3000:3000"
+    depends_on:
+      server:
+        condition: service_healthy
+    networks:
+      - openmario
 
 networks:
-  app_network:
-    driver: bridge
-
+  openmario:
 
