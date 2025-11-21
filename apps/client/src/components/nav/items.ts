@@ -2,11 +2,16 @@ export const NAV_ITEMS = [
    {
       label: 'Salary',
       href: '/salary',
-      section: '',
+      section: ''
    },
    {
       label: 'Courses',
       href: '/courses',
-      section: '',
+      section: ''
    },
+   {
+      label: 'Plan',
+      href: '/plan',
+      section: ''
+   }
 ];

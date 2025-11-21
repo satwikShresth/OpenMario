@@ -16,6 +16,10 @@
     "@electric-sql/pglite-react": "^0.2.32",
     "@emotion/react": "^11.14.0",
     "@faker-js/faker": "^10.0.0",
+    "@fullcalendar/core": "^6.1.19",
+    "@fullcalendar/daygrid": "^6.1.19",
+    "@fullcalendar/react": "^6.1.19",
+    "@fullcalendar/timegrid": "^6.1.19",
     "@hey-api/openapi-ts": "^0.87.5",
     "@meilisearch/instant-meilisearch": "^0.29.0",
     "@openmario/server": "workspace:*",
@@ -52,9 +56,7 @@
     "tailwindcss": "^4.0.6",
     "tanstack-db-pglite": "^1.0.5",
     "tesseract.js": "^6.0.1",
-    "zod": "^4.1.11",
-    "zustand": "^5.0.8",
-    "zustand-context": "^1.0.0"
+    "zod": "^4.1.11"
   },
   "devDependencies": {
     "@tanstack/devtools-vite": "^0.3.11",

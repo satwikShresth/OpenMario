@@ -13,6 +13,7 @@ import { Route as SalaryRouteImport } from './routes/salary'
 import { Route as SearchRouteImport } from './routes/_search'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as SalaryDialogRouteImport } from './routes/salary/_dialog'
+import { Route as SearchPlanRouteImport } from './routes/_search/plan'
 import { Route as SearchCoursesRouteImport } from './routes/_search/courses'
 import { Route as SalaryDialogSubmissionsRouteImport } from './routes/salary/_dialog/submissions'
 import { Route as SalaryDialogDraftsRouteImport } from './routes/salary/_dialog/drafts'
@@ -40,6 +41,11 @@ const IndexRoute = IndexRouteImport.update({
 const SalaryDialogRoute = SalaryDialogRouteImport.update({
   id: '/_dialog',
   getParentRoute: () => SalaryRoute,
+} as any)
+const SearchPlanRoute = SearchPlanRouteImport.update({
+  id: '/plan',
+  path: '/plan',
+  getParentRoute: () => SearchRoute,
 } as any)
 const SearchCoursesRoute = SearchCoursesRouteImport.update({
   id: '/courses',
@@ -92,6 +98,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/salary': typeof SalaryDialogFormRouteWithChildren
   '/courses': typeof SearchCoursesRouteWithChildren
+  '/plan': typeof SearchPlanRoute
   '/courses/$course_id': typeof SearchCoursesCourse_idRoute
   '/salary/auto-fill': typeof SalaryDialogAutoFillRoute
   '/salary/drafts': typeof SalaryDialogDraftsRoute
@@ -104,6 +111,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/salary': typeof SalaryDialogFormRouteWithChildren
   '/courses': typeof SearchCoursesRouteWithChildren
+  '/plan': typeof SearchPlanRoute
   '/courses/$course_id': typeof SearchCoursesCourse_idRoute
   '/salary/auto-fill': typeof SalaryDialogAutoFillRoute
   '/salary/drafts': typeof SalaryDialogDraftsRoute
@@ -118,6 +126,7 @@ export interface FileRoutesById {
   '/_search': typeof SearchRouteWithChildren
   '/salary': typeof SalaryRouteWithChildren
   '/_search/courses': typeof SearchCoursesRouteWithChildren
+  '/_search/plan': typeof SearchPlanRoute
   '/salary/_dialog': typeof SalaryDialogRouteWithChildren
   '/_search/courses/$course_id': typeof SearchCoursesCourse_idRoute
   '/salary/_dialog/_form': typeof SalaryDialogFormRouteWithChildren
@@ -134,6 +143,7 @@ export interface FileRouteTypes {
     | '/'
     | '/salary'
     | '/courses'
+    | '/plan'
     | '/courses/$course_id'
     | '/salary/auto-fill'
     | '/salary/drafts'
@@ -146,6 +156,7 @@ export interface FileRouteTypes {
     | '/'
     | '/salary'
     | '/courses'
+    | '/plan'
     | '/courses/$course_id'
     | '/salary/auto-fill'
     | '/salary/drafts'
@@ -159,6 +170,7 @@ export interface FileRouteTypes {
     | '/_search'
     | '/salary'
     | '/_search/courses'
+    | '/_search/plan'
     | '/salary/_dialog'
     | '/_search/courses/$course_id'
     | '/salary/_dialog/_form'
@@ -205,6 +217,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/salary'
       preLoaderRoute: typeof SalaryDialogRouteImport
       parentRoute: typeof SalaryRoute
+    }
+    '/_search/plan': {
+      id: '/_search/plan'
+      path: '/plan'
+      fullPath: '/plan'
+      preLoaderRoute: typeof SearchPlanRouteImport
+      parentRoute: typeof SearchRoute
     }
     '/_search/courses': {
       id: '/_search/courses'
@@ -286,10 +305,12 @@ const SearchCoursesRouteWithChildren = SearchCoursesRoute._addFileChildren(
 
 interface SearchRouteChildren {
   SearchCoursesRoute: typeof SearchCoursesRouteWithChildren
+  SearchPlanRoute: typeof SearchPlanRoute
 }
 
 const SearchRouteChildren: SearchRouteChildren = {
   SearchCoursesRoute: SearchCoursesRouteWithChildren,
+  SearchPlanRoute: SearchPlanRoute,
 }
 
 const SearchRouteWithChildren =
