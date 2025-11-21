@@ -1,0 +1,78 @@
+{
+   "$schema": "https://biomejs.dev/schemas/2.3.2/schema.json",
+   "vcs": { "enabled": true, "clientKind": "git", "useIgnoreFile": true },
+   "files": {
+      "includes": [
+         "**/*.ts",
+         "**/*.tsx",
+         "**/*.js",
+         "**/*.jsx",
+         "**/*.html",
+         "!**/*.json",
+         "!**/build/**",
+         "!**/dist/**",
+         "!.*"
+      ]
+   },
+   "formatter": {
+      "enabled": true,
+      "formatWithErrors": false,
+      "indentStyle": "space",
+      "indentWidth": 3,
+      "lineEnding": "lf",
+      "lineWidth": 80,
+      "attributePosition": "auto",
+      "bracketSameLine": false,
+      "bracketSpacing": true,
+      "expand": "auto",
+      "useEditorconfig": true
+   },
+   "linter": {
+      "enabled": true,
+      "rules": {
+         "recommended": true,
+         "correctness": {
+            "useExhaustiveDependencies": "off",
+            "noUnusedImports": { "level": "error", "fix": "safe" },
+            "noUndeclaredVariables": "error"
+         },
+         "nursery": {},
+         "style": {
+            "noParameterAssign": "error",
+            "useAsConstAssertion": "error",
+            "useDefaultParameterLast": "error",
+            "useEnumInitializers": "error",
+            "useSelfClosingElements": "error",
+            "useSingleVarDeclarator": "error",
+            "noUnusedTemplateLiteral": "off",
+            "useNumberNamespace": "error",
+            "noInferrableTypes": "error",
+            "noUselessElse": "error",
+            "noNonNullAssertion": "off"
+         },
+         "suspicious": {
+            "noArrayIndexKey": "off",
+            "noExplicitAny": "off",
+            "noShadowRestrictedNames": "off"
+         }
+      }
+   },
+   "javascript": {
+      "formatter": {
+         "jsxQuoteStyle": "double",
+         "quoteProperties": "asNeeded",
+         "trailingCommas": "none",
+         "semicolons": "always",
+         "arrowParentheses": "asNeeded",
+         "bracketSameLine": false,
+         "quoteStyle": "single",
+         "attributePosition": "auto",
+         "bracketSpacing": true
+      }
+   },
+   "html": { "formatter": { "selfCloseVoidElements": "always" } },
+   "assist": {
+      "enabled": true,
+      "actions": { "source": { "organizeImports": "on" } }
+   }
+}

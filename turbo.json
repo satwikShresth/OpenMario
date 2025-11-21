@@ -1,0 +1,20 @@
+{
+   "ui": "tui",
+  "globalDependencies": [".env"],
+   "tasks": {
+      "dev": {
+         "cache": false,
+         "persistent": true
+      },
+      "build": {
+         "cache": false,
+         "persistent": false
+      },
+      "lint": {
+         "dependsOn": ["^compile","^build"],
+         "cache": false,
+         "persistent": true
+      }
+   }
+}
+

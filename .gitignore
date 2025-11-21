@@ -1,29 +1,100 @@
-sendgrid.env
-volumes
-.env
-bin
-
-# Logs
-logs
-*.log
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-pnpm-debug.log*
-lerna-debug.log*
-
+# dependencies (bun install)
 node_modules
-dist
-dist-ssr
-*.local
 
-# Editor directories and files
-.vscode/*
-!.vscode/extensions.json
+# output
+out
+dist
+*.tgz
+
+# code coverage
+coverage
+*.lcov
+
+# logs
+logs
+_.log
+report.[0-9]_.[0-9]_.[0-9]_.[0-9]_.json
+
+.env
+
+# dotenv environment variable files
+.env
+.env.development.local
+.env.test.local
+.env.production.local
+.env.local
+
+# caches
+.eslintcache
+.cache
+*.tsbuildinfo
+
+# IntelliJ based IDEs
 .idea
+
+# Finder (MacOS) folder config
 .DS_Store
-*.suo
-*.ntvs*
-*.njsproj
-*.sln
-*.sw?
+
+
+# Dependencies
+node_modules
+**/node_modules
+
+# Turbo
+.turbo
+
+# Build
+build
+**/build
+
+# Dist
+**/dist
+**/dist.zip
+
+# Version.json
+**/version.json
+apps/client/public/version.json
+
+# Environments
+.env
+***/environments
+**/environments.zip
+
+**/tmp
+
+# Config files
+**/environments
+
+# System files
+.DS_Store
+**/.DS_Store
+
+# Finder (MacOS) folder config
+.DS_Store
+
+# DB Seed files
+**/db/seeds/*
+
+# Sentry Config File
+.sentryclirc
+
+# Vercel
+.vercel
+**/.vercel
+
+# Logs and caches
+*.log
+*.eslintcache
+
+# Package manager files
+package-lock.json
+
+# Credentials
+*credentials
+**serviceAccount*
+
+# IDE
+.idea
+
+# Auto-generated migrations (compiled at build time)
+apps/client/src/db/migrations.json

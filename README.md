@@ -1,177 +1,252 @@
-# OpenMario - Co-op Salary Board
+# OpenMario
 
-OpenMario is a platform for anonymously collecting and sharing cooperative
-education (co-op) salary information. This project helps students make informed
-decisions about co-op opportunities by providing transparent salary data.
+A modern platform for students to share and discover co-op salary information and course reviews.
 
-## Features
+![OpenMario Banner](./apps/client/public/openmario.png)
 
-- Anonymous submission of co-op salary information
-- Search and filter salary data by company, position, location, and more
-- User authentication via magic links
-- Detailed data visualization of compensation trends
-- Company and position autocomplete to ensure data consistency
+## 🚀 Features
 
-## Tech Stack
+- **Salary Database**: Browse and contribute co-op salary information
+- **Course Search**: Search and explore course offerings with detailed information
+- **Interactive Feedback**: Built-in feedback system with Discord integration
+- **Advanced Filtering**: Filter by year, program level, location, and more
+- **Real-time Search**: Powered by MeiliSearch for instant results
+- **Graph Analytics**: Neo4j-powered data relationships and insights
 
-- **Backend**: Deno with REST API
-- **Frontend**: React with Vite
-- **Database**: PostgreSQL for data storage
-- **Search Engine**: Meilisearch for fast and relevant search results
-- **Deployment**: Docker and Docker Compose for containerization
-- **Web Server**: Caddy for reverse proxy and SSL termination
+## 🛠️ Tech Stack
 
-## Getting Started
+### Frontend
+- **React 19** with TypeScript
+- **TanStack Router** for routing
+- **TanStack Query** for data fetching
+- **TanStack Form** for form management
+- **Chakra UI v3** for components
+- **Vite** for blazing-fast builds
 
-### Prerequisites
+### Backend
+- **Bun** runtime
+- **Hono** web framework
+- **oRPC** for type-safe APIs
+- **Drizzle ORM** for database management
+- **PostgreSQL** for primary data storage
+- **MeiliSearch** for search functionality
+- **Neo4j** for graph data
 
-- Docker and Docker Compose (only requirement)
-- Git (for cloning the repository)
+### DevOps
+- **Docker** & **Docker Compose** for containerization
+- **Caddy** as reverse proxy
+- **Turborepo** for monorepo management
 
-### Environment Setup
+## 📋 Prerequisites
 
-1. Clone the repository:
-   ```
+- **Bun** >= 1.3.0
+- **Docker** & **Docker Compose** (for production deployment)
+- **Node.js** >= 18 (if using npm/yarn)
+
+## 🚦 Quick Start
+
+### Development Setup
+
+1. **Clone the repository**
+   ```bash
    git clone https://github.com/yourusername/openmario.git
    cd openmario
    ```
 
-2. Configure environment variables:
-   - Copy `.dev.env` to `.env` if running locally
-   - Update the following variables in your `.env` file:
-     - `MEILI_MASTER_KEY`: Set a secure key for Meilisearch
-     - `EMAIL_API_KEY`: API key for your email provider
-     - `SENDER_EMAIL`: Email address for sending magic links
-     - `DOMAIN` or `APP_URL`: Your application domain
-     - `JWT_SECRET_MAGIC_LINK`: Secret key for magic link tokens
-     - `JWT_SECRET_CLIENT`: Secret key for client authentication
-     - Update image names in `PRESTART_IMAGE`, `BACKEND_IMAGE`, and
-       `REVERSE_PROXY_IMAGE`
-
-### Running Locally
-
-The application setup requires just two main steps:
-
-1. **Seed the database** (required on first run):
+2. **Install dependencies**
    ```bash
-   docker compose --profile seed up
+   bun install
    ```
-   This initializes the PostgreSQL database with the necessary tables and
-   initial data.
 
-2. **Start all services**:
+3. **Set up environment variables**
+   
+   Create a `.env` file in the root directory:
+   ```env
+   # Server
+   PORT=3000
+   DATABASE_URL=postgresql://postgres:postgres@localhost:5432/openmario
+   
+   # MeiliSearch
+   MEILI_HOST=http://localhost:7700
+   MEILI_MASTER_KEY=your_master_key_here
+   
+   # Neo4j
+   NEO4J_URI=bolt://localhost:7687
+   NEO4J_USERNAME=neo4j
+   NEO4J_PASSWORD=your_password_here
+   
+   # Client
+   VITE_APP_TITLE=OpenMario
+   VITE_LR_APP_ID=your_logrocket_id
+   VITE_MEILI_HOST=http://localhost:7700
+   VITE_DISCORD_WEBHOOK=https://discord.com/api/webhooks/YOUR_WEBHOOK_URL
+   ```
+
+4. **Start development servers**
    ```bash
-   docker compose --profile deploy up
+   # Start all services (requires Docker)
+   docker compose up postgres meilisearch neo4j -d
+   
+   # Start development
+   bun run dev
    ```
-   This command launches all the required services:
-   - PostgreSQL database
-   - Meilisearch server
-   - Backend API server (Deno)
-   - Frontend server with reverse proxy
 
-The application should now be accessible at http://localhost (or the domain you
-configured).
+5. **Access the application**
+   - Frontend: http://localhost:5173
+   - Backend API: http://localhost:3000/api
+   - MeiliSearch: http://localhost:7700
 
-To stop all services, press `Ctrl+C` or run:
+## 🐳 Docker Deployment
+
+### Production Build
+
+1. **Build the images**
+   ```bash
+   docker compose build
+   ```
+
+2. **Start all services**
+   ```bash
+   docker compose up -d
+   ```
+
+3. **Access the application**
+   - Application: http://localhost:3000
+
+### Services
+
+The Docker setup includes:
+- **server**: Backend API server (Bun)
+- **client**: Frontend with Caddy reverse proxy
+- **postgres**: PostgreSQL database
+- **meilisearch**: Search engine
+- **neo4j**: Graph database
+
+## 📁 Project Structure
+
+```
+openmario/
+├── apps/
+│   ├── client/          # React frontend
+│   │   ├── src/
+│   │   │   ├── components/
+│   │   │   ├── routes/
+│   │   │   ├── hooks/
+│   │   │   └── db/
+│   │   └── Caddyfile
+│   └── server/          # Bun backend
+│       ├── src/
+│       │   ├── contracts/
+│       │   ├── router/
+│       │   └── services/
+│       └── drizzle/
+├── packages/
+│   ├── email/           # Email templates
+│   └── meilisearch/     # Search index definitions
+├── scripts/
+├── docker-compose.yml
+├── Dockerfile
+└── turbo.json
+```
+
+## 🔧 Development Scripts
 
 ```bash
-docker compose --profile deploy down
+# Start development server
+bun run dev
+
+# Build for production
+bun run build
+
+# Format code
+bun run format
+
+# Type checking
+bun run type-check
+
+# Clean build artifacts
+bun run clean
 ```
 
-### Development Environment
+## 🗄️ Database
 
-For development with hot reloading:
+### Migrations
 
 ```bash
-docker compose --profile deploy up
+# Generate migrations
+cd apps/server
+bun run drizzle-kit generate
+
+# Run migrations (development)
+bun run drizzle-kit push
 ```
 
-This configuration enables:
-
-- File watching and automatic reloading
-- Exposed ports for direct access to services
-- Development-specific settings
-
-### Production Deployment
-
-For production deployment:
+### Seeding
 
 ```bash
-docker compose --profile deploy -f docker-compose.yml up -d
+cd apps/server/drizzle/openmario/seeds
+bun run index.ts
 ```
 
-This will:
+## 🔍 Search Setup
 
-- Start all services in detached mode with production configurations
-- Use production-optimized Docker images
-- Apply memory limits as defined in the docker-compose.yml file
+MeiliSearch indexes need to be configured for optimal search:
 
-## API Documentation
-
-The API follows OpenAPI 3.0 standards. The full API documentation is available
-in the `openapi.json` file.
-
-### Authentication
-
-The application uses magic link authentication:
-
-1. Users request a login by providing their email
-2. A magic link is sent to their email
-3. Clicking the link validates the token and authenticates the user
-
-### Key Endpoints
-
-- **Authentication**
-  - `POST /auth/login`: Request a magic link
-  - `GET /auth/login/{token}`: Verify magic link token
-
-- **Search Autocomplete**
-  - `GET /autocomplete/company`: Search for companies
-  - `GET /autocomplete/position`: Search for positions within a company
-  - `GET /autocomplete/location`: Search for locations
-
-- **Companies and Positions**
-  - `GET /company-position`: Get user's companies and positions
-  - `POST /company-position`: Create a new company-position pair
-
-- **Submissions**
-  - `GET /submissions`: Retrieve salary submissions with filtering
-  - `POST /submissions`: Create new salary submission(s)
-  - `PATCH /submissions`: Update existing submission
-  - `GET /submissions/me`: Get authenticated user's submissions
-
-## Folder Structure
-
-```
-.
-├── back/                  # Backend code (Deno)
-├── front/                 # Frontend code (React + Vite)
-├── caddy/                 # Caddy server configuration
-├── docker-compose.yml     # Production Docker Compose configuration
-├── docker-compose.override.yml # Development overrides
-└── .env                   # Environment variables
+```bash
+cd packages/meilisearch/search_index
+bun run index.ts
 ```
 
-## Memory Usage
+## 🤝 Contributing
 
-The application is optimized for low memory usage:
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
 
-- Backend: 250MB limit, 150MB reservation
-- Frontend: 200MB limit, 100MB reservation
-- Database: 200MB limit, 100MB reservation
-- Meilisearch: 500MB limit, 150MB reservation
+## 📝 Environment Variables
 
-## Search Implementation
+### Server Variables
 
-The application uses Meilisearch for:
+| Variable | Description | Required |
+|----------|-------------|----------|
+| `PORT` | Server port | No (default: 3000) |
+| `DATABASE_URL` | PostgreSQL connection string | Yes |
+| `MEILI_HOST` | MeiliSearch host URL | Yes |
+| `MEILI_MASTER_KEY` | MeiliSearch API key | Yes |
+| `NEO4J_URI` | Neo4j connection URI | Yes |
+| `NEO4J_USERNAME` | Neo4j username | Yes |
+| `NEO4J_PASSWORD` | Neo4j password | Yes |
 
-- Fast full-text search
-- Typo-tolerant autocomplete
-- Filtering and faceting of salary data
+### Client Variables
 
-A search token is generated for users to perform searches securely.
+| Variable | Description | Required |
+|----------|-------------|----------|
+| `VITE_APP_TITLE` | Application title | No |
+| `VITE_LR_APP_ID` | LogRocket app ID | Yes |
+| `VITE_MEILI_HOST` | Public MeiliSearch URL | Yes |
+| `VITE_DISCORD_WEBHOOK` | Discord webhook for feedback | Yes |
 
-## Contributing
+## 📄 License
 
-Contributions are welcome! Please refer to our contribution guidelines for more
-information.
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+## 🙏 Acknowledgments
+
+- Built with [Bun](https://bun.sh)
+- UI components from [Chakra UI](https://chakra-ui.com)
+- Routing powered by [TanStack Router](https://tanstack.com/router)
+- Search powered by [MeiliSearch](https://www.meilisearch.com)
+
+## 📞 Support
+
+For support, feedback, or questions:
+- Open an issue on GitHub
+- Use the in-app feedback button
+- Contact the maintainers
+
+---
+
+Made with ❤️ for students
+

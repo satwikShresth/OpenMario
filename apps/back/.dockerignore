@@ -1,8 +1,0 @@
-.git
-.gitignore
-Dockerfile
-README.md
-*.log
-_build/
-node_modules/
-tests/
