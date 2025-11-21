@@ -1,8 +1,10 @@
-import { Container, VStack, Box, HStack, Button, Text } from '@chakra-ui/react'
+import { Container, VStack, Box, HStack, Button, Text, Dialog, Portal, CloseButton } from '@chakra-ui/react'
 import { createFileRoute } from '@tanstack/react-router'
 import FullCalendar from '@fullcalendar/react'
 import timeGridPlugin from '@fullcalendar/timegrid'
-import { useState } from 'react'
+import interactionPlugin from '@fullcalendar/interaction'
+import { useState, useRef } from 'react'
+import type { EventInput, DateSelectArg, EventClickArg } from '@fullcalendar/core'
 
 export const Route = createFileRoute('/_search/plan')({
   component: RouteComponent,
@@ -10,12 +12,22 @@ export const Route = createFileRoute('/_search/plan')({
 
 type Term = 'Fall' | 'Winter' | 'Spring' | 'Summer'
 
+type EventType = 'unavailable' | 'course'
+
+interface CustomEvent extends EventInput {
+  type: EventType
+}
+
 const TERMS: Term[] = ['Fall', 'Winter', 'Spring', 'Summer']
 const AVAILABLE_YEARS = [2025]
 
 function RouteComponent() {
   const [currentTermIndex, setCurrentTermIndex] = useState(0)
   const [currentYear, setCurrentYear] = useState(2025)
+  const [events, setEvents] = useState<CustomEvent[]>([])
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
+  const [eventToDelete, setEventToDelete] = useState<string | null>(null)
+  const calendarRef = useRef<FullCalendar>(null)
 
   const currentTerm = TERMS[currentTermIndex]
 
@@ -47,6 +59,63 @@ function RouteComponent() {
 
   const canGoPrev = currentTermIndex > 0 || AVAILABLE_YEARS.indexOf(currentYear) > 0
   const canGoNext = currentTermIndex < TERMS.length - 1 || AVAILABLE_YEARS.indexOf(currentYear) < AVAILABLE_YEARS.length - 1
+
+  // Handle creating unavailable events by dragging
+  const handleDateSelect = (selectInfo: DateSelectArg) => {
+    const calendarApi = selectInfo.view.calendar
+    calendarApi.unselect() // clear date selection
+
+    const newEvent: CustomEvent = {
+      id: `unavailable-${Date.now()}`,
+      title: 'Unavailable',
+      start: selectInfo.startStr,
+      end: selectInfo.endStr,
+      type: 'unavailable',
+      backgroundColor: '#ef4444',
+      borderColor: '#dc2626',
+      textColor: '#ffffff',
+    }
+
+    setEvents([...events, newEvent])
+  }
+
+  // Handle clicking on events (for deletion or editing)
+  const handleEventClick = (clickInfo: EventClickArg) => {
+    const event = clickInfo.event
+    const eventData = events.find(e => e.id === event.id)
+
+    // Only allow deletion of unavailable events
+    if (eventData?.type === 'unavailable') {
+      setEventToDelete(event.id)
+      setDeleteDialogOpen(true)
+    }
+  }
+
+  const handleConfirmDelete = () => {
+    if (eventToDelete) {
+      setEvents(events.filter(e => e.id !== eventToDelete))
+      setEventToDelete(null)
+      setDeleteDialogOpen(false)
+    }
+  }
+
+  const handleCancelDelete = () => {
+    setEventToDelete(null)
+    setDeleteDialogOpen(false)
+  }
+
+  // Function to add course events (will be used later)
+  const addCourseEvent = (courseData: Omit<CustomEvent, 'id' | 'type'>) => {
+    const newEvent: CustomEvent = {
+      ...courseData,
+      id: `course-${Date.now()}`,
+      type: 'course',
+      backgroundColor: '#3b82f6',
+      borderColor: '#2563eb',
+      textColor: '#ffffff',
+    }
+    setEvents([...events, newEvent])
+  }
 
   return (
     <Container maxW="container.xl" py={2}>
@@ -93,6 +162,16 @@ function RouteComponent() {
             },
             '& .fc-scrollgrid-liquid': {
               border: 'none !important',
+            },
+            // Remove today's highlight
+            '& .fc-day-today': {
+              backgroundColor: 'transparent !important',
+            },
+            '& .fc-timegrid-col.fc-day-today': {
+              backgroundColor: 'transparent !important',
+            },
+            '& .fc-col-header-cell.fc-day-today': {
+              backgroundColor: 'var(--chakra-colors-bg-subtle) !important',
             },
             // Reduce slot height for more compact view
             '& .fc-timegrid-slot': {
@@ -151,10 +230,26 @@ function RouteComponent() {
               opacity: '1 !important',
               backgroundColor: 'var(--chakra-colors-bg-subtle)',
             },
+            // Style events
+            '& .fc-event': {
+              cursor: 'pointer',
+              fontSize: '12px',
+              padding: '2px 4px',
+              borderRadius: '4px',
+            },
+            '& .fc-event:hover': {
+              opacity: '0.9',
+            },
+            // Style selection area
+            '& .fc-highlight': {
+              backgroundColor: 'var(--chakra-colors-blue-100)',
+              opacity: '0.3',
+            },
           }}
         >
           <FullCalendar
-            plugins={[timeGridPlugin]}
+            ref={calendarRef}
+            plugins={[timeGridPlugin, interactionPlugin]}
             timeZone='EST'
             initialView="timeGridWeek"
             headerToolbar={false}
@@ -178,8 +273,52 @@ function RouteComponent() {
               omitZeroMinute: true,
               meridiem: 'short'
             }}
+            selectable={true}
+            selectMirror={true}
+            select={handleDateSelect}
+            eventClick={handleEventClick}
+            events={events}
+            editable={true}
+            eventResizableFromStart={true}
+            eventDurationEditable={true}
           />
         </Box>
+
+        {/* Delete Confirmation Dialog */}
+        <Dialog.Root
+          role="alertdialog"
+          open={deleteDialogOpen}
+          onOpenChange={(e) => setDeleteDialogOpen(e.open)}
+        >
+          <Portal>
+            <Dialog.Backdrop />
+            <Dialog.Positioner>
+              <Dialog.Content>
+                <Dialog.Header>
+                  <Dialog.Title>Delete Unavailable Slot?</Dialog.Title>
+                </Dialog.Header>
+                <Dialog.Body>
+                  <Text>
+                    Are you sure you want to delete this unavailable time slot?
+                  </Text>
+                </Dialog.Body>
+                <Dialog.Footer>
+                  <Dialog.ActionTrigger asChild>
+                    <Button variant="outline" onClick={handleCancelDelete}>
+                      Cancel
+                    </Button>
+                  </Dialog.ActionTrigger>
+                  <Button colorPalette="red" onClick={handleConfirmDelete}>
+                    Delete
+                  </Button>
+                </Dialog.Footer>
+                <Dialog.CloseTrigger asChild>
+                  <CloseButton size="sm" />
+                </Dialog.CloseTrigger>
+              </Dialog.Content>
+            </Dialog.Positioner>
+          </Portal>
+        </Dialog.Root>
       </VStack>
     </Container>
   )
