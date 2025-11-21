@@ -124,3 +124,45 @@ export type NewSubmission = typeof submissions.$inferInsert;
 // Type exports for company positions
 export type CompanyPosition = typeof companyPositions.$inferSelect;
 export type NewCompanyPosition = typeof companyPositions.$inferInsert;
+
+/**
+ * Enums for plan events
+ */
+export const eventTypeEnum = pgEnum('event_type', ['unavailable', 'course']);
+export const termEnum = pgEnum('term', ['Fall', 'Winter', 'Spring', 'Summer']);
+
+/**
+ * Plan events table - stores calendar events (unavailable times and courses)
+ * For course events: ONE record stores schedule info (days, times), rendered as multiple events
+ * For unavailable events: ONE record = one time block
+ */
+export const planEvents = pgTable(
+   'plan_events',
+   {
+      id: uuid('id').primaryKey().defaultRandom(),
+      type: eventTypeEnum('type').notNull(),
+      title: varchar('title', { length: 255 }).notNull(),
+      // For unavailable events only
+      start: timestamp('start'),
+      end: timestamp('end'),
+      // For course events only - schedule information
+      days: varchar('days', { length: 255 }), // JSON array of day names
+      startTime: varchar('start_time', { length: 10 }), // e.g., "09:00:00"
+      endTime: varchar('end_time', { length: 10 }), // e.g., "10:15:00"
+      // Common fields
+      term: termEnum('term').notNull(),
+      year: integer('year').notNull(),
+      courseId: varchar('course_id', { length: 255 }),
+      crn: varchar('crn', { length: 10 }),
+      createdAt: timestamp('created_at').notNull().defaultNow(),
+      updatedAt: timestamp('updated_at').notNull().defaultNow()
+   },
+   table => [
+      index('plan_events_term_year_idx').on(table.term, table.year),
+      index('plan_events_type_idx').on(table.type)
+   ]
+);
+
+// Type exports for plan events
+export type PlanEvent = typeof planEvents.$inferSelect;
+export type NewPlanEvent = typeof planEvents.$inferInsert;

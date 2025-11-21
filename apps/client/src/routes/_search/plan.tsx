@@ -1,325 +1,84 @@
-import { Container, VStack, Box, HStack, Button, Text, Dialog, Portal, CloseButton } from '@chakra-ui/react'
-import { createFileRoute } from '@tanstack/react-router'
-import FullCalendar from '@fullcalendar/react'
-import timeGridPlugin from '@fullcalendar/timegrid'
-import interactionPlugin from '@fullcalendar/interaction'
-import { useState, useRef } from 'react'
-import type { EventInput, DateSelectArg, EventClickArg } from '@fullcalendar/core'
+import { Container, Flex, HStack, Text, VStack, Button, Icon } from '@chakra-ui/react'
+import { createFileRoute, Outlet, useNavigate } from '@tanstack/react-router'
+import { Plan } from '@/components/Search/Plan'
+import { ConflictsIndicator } from '@/components/Search/Plan/ConflictsIndicator'
+import { Toaster } from '@/components/ui/toaster'
+import { MdChevronLeft, MdChevronRight } from 'react-icons/md'
+import { z } from 'zod'
+
+const TERMS = ['Fall', 'Winter', 'Spring', 'Summer'] as const
+const CURRENT_YEAR = 2025
+
+const planSearchSchema = z.object({
+  term: z.enum(['Fall', 'Winter', 'Spring', 'Summer']).default('Fall'),
+  year: z.number().default(CURRENT_YEAR),
+  search: z.string().optional(),
+})
 
 export const Route = createFileRoute('/_search/plan')({
+  validateSearch: planSearchSchema,
   component: RouteComponent,
 })
 
-type Term = 'Fall' | 'Winter' | 'Spring' | 'Summer'
-
-type EventType = 'unavailable' | 'course'
-
-interface CustomEvent extends EventInput {
-  type: EventType
-}
-
-const TERMS: Term[] = ['Fall', 'Winter', 'Spring', 'Summer']
-const AVAILABLE_YEARS = [2025]
-
 function RouteComponent() {
-  const [currentTermIndex, setCurrentTermIndex] = useState(0)
-  const [currentYear, setCurrentYear] = useState(2025)
-  const [events, setEvents] = useState<CustomEvent[]>([])
-  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
-  const [eventToDelete, setEventToDelete] = useState<string | null>(null)
-  const calendarRef = useRef<FullCalendar>(null)
-
-  const currentTerm = TERMS[currentTermIndex]
+  const navigate = useNavigate({ from: Route.fullPath })
+  const { term: currentTerm, year: currentYear, search: searchQuery } = Route.useSearch()
 
   const handlePrevTerm = () => {
-    if (currentTermIndex === 0) {
-      // Go to previous year if available
-      const currentYearIndex = AVAILABLE_YEARS.indexOf(currentYear)
-      if (currentYearIndex > 0) {
-        setCurrentYear(AVAILABLE_YEARS[currentYearIndex - 1]!)
-        setCurrentTermIndex(TERMS.length - 1)
-      }
-    } else {
-      setCurrentTermIndex(currentTermIndex - 1)
-    }
+    const currentIndex = TERMS.indexOf(currentTerm)
+    const newIndex = (currentIndex - 1 + TERMS.length) % TERMS.length
+    navigate({ search: { term: TERMS[newIndex], year: currentYear, search: searchQuery } })
   }
 
   const handleNextTerm = () => {
-    if (currentTermIndex === TERMS.length - 1) {
-      // Go to next year if available
-      const currentYearIndex = AVAILABLE_YEARS.indexOf(currentYear)
-      if (currentYearIndex < AVAILABLE_YEARS.length - 1) {
-        setCurrentYear(AVAILABLE_YEARS[currentYearIndex + 1]!)
-        setCurrentTermIndex(0)
-      }
-    } else {
-      setCurrentTermIndex(currentTermIndex + 1)
-    }
-  }
-
-  const canGoPrev = currentTermIndex > 0 || AVAILABLE_YEARS.indexOf(currentYear) > 0
-  const canGoNext = currentTermIndex < TERMS.length - 1 || AVAILABLE_YEARS.indexOf(currentYear) < AVAILABLE_YEARS.length - 1
-
-  // Handle creating unavailable events by dragging
-  const handleDateSelect = (selectInfo: DateSelectArg) => {
-    const calendarApi = selectInfo.view.calendar
-    calendarApi.unselect() // clear date selection
-
-    const newEvent: CustomEvent = {
-      id: `unavailable-${Date.now()}`,
-      title: 'Unavailable',
-      start: selectInfo.startStr,
-      end: selectInfo.endStr,
-      type: 'unavailable',
-      backgroundColor: '#ef4444',
-      borderColor: '#dc2626',
-      textColor: '#ffffff',
-    }
-
-    setEvents([...events, newEvent])
-  }
-
-  // Handle clicking on events (for deletion or editing)
-  const handleEventClick = (clickInfo: EventClickArg) => {
-    const event = clickInfo.event
-    const eventData = events.find(e => e.id === event.id)
-
-    // Only allow deletion of unavailable events
-    if (eventData?.type === 'unavailable') {
-      setEventToDelete(event.id)
-      setDeleteDialogOpen(true)
-    }
-  }
-
-  const handleConfirmDelete = () => {
-    if (eventToDelete) {
-      setEvents(events.filter(e => e.id !== eventToDelete))
-      setEventToDelete(null)
-      setDeleteDialogOpen(false)
-    }
-  }
-
-  const handleCancelDelete = () => {
-    setEventToDelete(null)
-    setDeleteDialogOpen(false)
-  }
-
-  // Function to add course events (will be used later)
-  const addCourseEvent = (courseData: Omit<CustomEvent, 'id' | 'type'>) => {
-    const newEvent: CustomEvent = {
-      ...courseData,
-      id: `course-${Date.now()}`,
-      type: 'course',
-      backgroundColor: '#3b82f6',
-      borderColor: '#2563eb',
-      textColor: '#ffffff',
-    }
-    setEvents([...events, newEvent])
+    const currentIndex = TERMS.indexOf(currentTerm)
+    const newIndex = (currentIndex + 1) % TERMS.length
+    navigate({ search: { term: TERMS[newIndex], year: currentYear, search: searchQuery } })
   }
 
   return (
-    <Container maxW="container.xl" py={2}>
-      <VStack align='stretch' gap={2}>
-        {/* Custom Navigation Header */}
-        <HStack justify="space-between" px={2}>
-          <Button
-            onClick={handlePrevTerm}
-            disabled={!canGoPrev}
-            size="sm"
-            variant="outline"
-            borderRadius="md"
-          >
-            Previous
-          </Button>
+    <Plan.Root index='sections'>
+      <Container maxW="container.xl" py={4} h="calc(100vh - 80px)">
+        <VStack gap={4} h="full" align="stretch">
+          {/* Term Switcher with Conflict Indicator */}
+          <HStack justify="center" gap={2}>
+            <Button
+              size="sm"
+              variant="ghost"
+              onClick={handlePrevTerm}
+            >
+              <Icon as={MdChevronLeft} />
+            </Button>
+            <HStack gap={2}>
+              <Text fontSize="lg" fontWeight="bold" color="fg.emphasized" minW="180px" textAlign="center">
+                {currentTerm} {currentYear}
+              </Text>
+            </HStack>
+            <Button
+              size="sm"
+              variant="ghost"
+              onClick={handleNextTerm}
+            >
+              <Icon as={MdChevronRight} />
+            </Button>
+            <ConflictsIndicator />
+          </HStack>
 
-          <Text fontSize="lg" fontWeight="bold" color="fg.emphasized">
-            {currentTerm} {currentYear}
-          </Text>
+          <Flex direction={{ base: 'column', lg: 'row' }} gap={4} flex="1" minH="0">
+            {/* Courses Search Box */}
+            <Flex flex="1" minW={{ base: 'full', lg: '400px' }} h="full">
+              <Plan.Courses />
+            </Flex>
 
-          <Button
-            onClick={handleNextTerm}
-            disabled={!canGoNext}
-            size="sm"
-            variant="outline"
-            borderRadius="md"
-          >
-            Next
-          </Button>
-        </HStack>
-
-        <Box
-          w="full"
-          minH="400px"
-          bg="bg"
-          borderRadius="lg"
-          borderWidth="1px"
-          borderColor="border"
-          css={{
-            // Remove ugly borders on scrollgrid table
-            '& .fc-scrollgrid': {
-              border: 'none !important',
-              borderWidth: '0 !important',
-            },
-            '& .fc-scrollgrid-liquid': {
-              border: 'none !important',
-            },
-            // Remove today's highlight
-            '& .fc-day-today': {
-              backgroundColor: 'transparent !important',
-            },
-            '& .fc-timegrid-col.fc-day-today': {
-              backgroundColor: 'transparent !important',
-            },
-            '& .fc-col-header-cell.fc-day-today': {
-              backgroundColor: 'var(--chakra-colors-bg-subtle) !important',
-            },
-            // Reduce slot height for more compact view
-            '& .fc-timegrid-slot': {
-              height: '30px !important',
-              minHeight: '30px !important',
-            },
-            // Add padding to the calendar body
-            '& .fc-timegrid-body': {
-              minHeight: '400px',
-            },
-            // Header toolbar spacing
-            '& .fc-header-toolbar': {
-              marginBottom: '10px !important',
-              padding: '5px 0',
-              display: 'none !important', // Hide default toolbar
-            },
-            // Make scrollable area more spacious
-            '& .fc-scroller': {
-              overflowY: 'auto !important',
-            },
-            // Ensure proper table layout
-            '& .fc-timegrid-axis-frame': {
-              justifyContent: 'center',
-              alignItems: 'center',
-              display: 'flex',
-            },
-            // Use Chakra color mode compatible colors
-            '& .fc-theme-standard td': {
-              borderColor: 'var(--chakra-colors-border)',
-            },
-            '& .fc-theme-standard th': {
-              borderColor: 'var(--chakra-colors-border)',
-            },
-            '& .fc-col-header-cell': {
-              backgroundColor: 'var(--chakra-colors-bg-subtle)',
-              color: 'var(--chakra-colors-fg)',
-              padding: '8px 4px !important',
-              fontSize: '13px',
-              fontWeight: '600',
-            },
-            '& .fc-timegrid-slot-label': {
-              color: 'var(--chakra-colors-fg)',
-              padding: '4px 8px !important',
-              fontSize: '12px',
-              fontWeight: '500',
-              verticalAlign: 'middle',
-            },
-            '& .fc-toolbar-title': {
-              color: 'var(--chakra-colors-fg-emphasized)',
-              display: 'none',
-            },
-            '& .fc-timegrid-axis': {
-              width: '60px !important',
-              minWidth: '60px !important',
-              visibility: 'visible !important',
-              opacity: '1 !important',
-              backgroundColor: 'var(--chakra-colors-bg-subtle)',
-            },
-            // Style events
-            '& .fc-event': {
-              cursor: 'pointer',
-              fontSize: '12px',
-              padding: '2px 4px',
-              borderRadius: '4px',
-            },
-            '& .fc-event:hover': {
-              opacity: '0.9',
-            },
-            // Style selection area
-            '& .fc-highlight': {
-              backgroundColor: 'var(--chakra-colors-blue-100)',
-              opacity: '0.3',
-            },
-          }}
-        >
-          <FullCalendar
-            ref={calendarRef}
-            plugins={[timeGridPlugin, interactionPlugin]}
-            timeZone='EST'
-            initialView="timeGridWeek"
-            headerToolbar={false}
-            dayHeaderFormat={{ weekday: 'short' }}
-            dayHeaderContent={(args) => {
-              const dayNames = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
-              return dayNames[args.dow === 0 ? 6 : args.dow - 1]
-            }}
-            slotMinTime="07:00:00"
-            slotMaxTime="24:00:00"
-            hiddenDays={[0]}
-            allDaySlot={false}
-            expandRows={false}
-            height="auto"
-            contentHeight="auto"
-            slotDuration="00:30:00"
-            slotLabelInterval="01:00:00"
-            slotLabelFormat={{
-              hour: 'numeric',
-              minute: '2-digit',
-              omitZeroMinute: true,
-              meridiem: 'short'
-            }}
-            selectable={true}
-            selectMirror={true}
-            select={handleDateSelect}
-            eventClick={handleEventClick}
-            events={events}
-            editable={true}
-            eventResizableFromStart={true}
-            eventDurationEditable={true}
-          />
-        </Box>
-
-        {/* Delete Confirmation Dialog */}
-        <Dialog.Root
-          role="alertdialog"
-          open={deleteDialogOpen}
-          onOpenChange={(e) => setDeleteDialogOpen(e.open)}
-        >
-          <Portal>
-            <Dialog.Backdrop />
-            <Dialog.Positioner>
-              <Dialog.Content>
-                <Dialog.Header>
-                  <Dialog.Title>Delete Unavailable Slot?</Dialog.Title>
-                </Dialog.Header>
-                <Dialog.Body>
-                  <Text>
-                    Are you sure you want to delete this unavailable time slot?
-                  </Text>
-                </Dialog.Body>
-                <Dialog.Footer>
-                  <Dialog.ActionTrigger asChild>
-                    <Button variant="outline" onClick={handleCancelDelete}>
-                      Cancel
-                    </Button>
-                  </Dialog.ActionTrigger>
-                  <Button colorPalette="red" onClick={handleConfirmDelete}>
-                    Delete
-                  </Button>
-                </Dialog.Footer>
-                <Dialog.CloseTrigger asChild>
-                  <CloseButton size="sm" />
-                </Dialog.CloseTrigger>
-              </Dialog.Content>
-            </Dialog.Positioner>
-          </Portal>
-        </Dialog.Root>
-      </VStack>
-    </Container>
+            {/* Calendar */}
+            <Flex flex="1" minW={{ base: 'full', lg: '600px' }} h="full">
+              <Plan.Calendar />
+            </Flex>
+          </Flex>
+        </VStack>
+      </Container>
+      <Toaster />
+      <Outlet />
+    </Plan.Root>
   )
 }

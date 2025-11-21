@@ -16,8 +16,10 @@ export const Search = {
             //@ts-ignore: shupp
             searchClient={searchClient}
             future={{ preserveSharedStateOnUnmount: true }}
+
             routing={{
                router: history({
+                  writeDelay: 500,
                   createURL: ({ routeState, location }) =>
                      location.origin +
                      location.pathname +

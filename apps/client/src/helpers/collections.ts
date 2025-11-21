@@ -1,6 +1,11 @@
-import { db, migrate } from '@/db';
-import { favorites, submissions, companyPositions } from '@/db/schema';
-import { createCollection } from '@tanstack/react-db';
+import { db } from '@/db';
+import {
+   favorites,
+   submissions,
+   companyPositions,
+   planEvents
+} from '@/db/schema';
+import { createCollection, eq, and } from '@tanstack/react-db';
 import { drizzleCollectionOptions } from 'tanstack-db-pglite';
 
 export const favoritesCollection = createCollection(
@@ -8,7 +13,6 @@ export const favoritesCollection = createCollection(
       db,
       table: favorites,
       primaryColumn: favorites.id,
-      prepare: async () => await migrate(),
       sync: async () => {}
    })
 );
@@ -18,7 +22,6 @@ export const submissionsCollection = createCollection(
       db,
       table: submissions,
       primaryColumn: submissions.id,
-      prepare: async () => await migrate(),
       sync: async () => {}
    })
 );
@@ -28,7 +31,30 @@ export const companyPositionsCollection = createCollection(
       db,
       table: companyPositions,
       primaryColumn: companyPositions.id,
-      prepare: async () => await migrate(),
       sync: async () => {}
    })
 );
+
+export const planEventsCollection = createCollection(
+   drizzleCollectionOptions({
+      db,
+      table: planEvents,
+      primaryColumn: planEvents.id,
+      sync: async () => {}
+   })
+);
+
+// Helper function to get scheduled courses for a specific term/year
+export const getScheduledCoursesQuery = (term: string, year: number) => {
+   return (q: any) =>
+      q
+         .from({ events: planEventsCollection })
+         .where(({ events }: any) =>
+            and(
+               eq(events.type, 'course'),
+               eq(events.term, term),
+               eq(events.year, year)
+            )
+         )
+         .select(({ events }: any) => ({ ...events }));
+};

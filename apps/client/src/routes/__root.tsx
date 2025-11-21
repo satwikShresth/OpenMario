@@ -7,6 +7,7 @@ import { Footer } from '@/components/common';
 import Navbar from '@/components/nav';
 import { useMobile } from '@/hooks';
 import type { ReactNode } from 'react';
+import { migrate } from '@/db';
 
 interface MyRouterContext {
    queryClient: QueryClient;
@@ -39,6 +40,7 @@ const MobileLayout = ({ children }: { children: ReactNode }) => {
 };
 
 export const Route = createRootRouteWithContext<MyRouterContext>()({
+   loader: async () => await migrate(),
    component: () => (
       <VStack align='normal'>
          <Box width='100%' position='relative'>

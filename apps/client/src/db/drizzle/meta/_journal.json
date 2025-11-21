@@ -8,6 +8,13 @@
       "when": 1763584373500,
       "tag": "0000_broken_rumiko_fujikawa",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1763756413879,
+      "tag": "0001_messy_wallop",
+      "breakpoints": true
     }
   ]
 }

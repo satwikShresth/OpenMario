@@ -8,7 +8,6 @@ import { Toaster } from '@/components/ui/toaster';
 import { routeTree } from '@/routeTree.gen';
 import ReactDOM from 'react-dom/client';
 import { parse, stringify } from 'jsurl2';
-import { enableMapSet } from 'immer';
 import { StrictMode } from 'react';
 import { client } from './db';
 import { PGliteProvider } from "@electric-sql/pglite-react"
@@ -34,7 +33,6 @@ declare module '@tanstack/react-router' {
       router: typeof router;
    }
 }
-enableMapSet();
 
 // Render the app
 const rootElement = document.getElementById('app');

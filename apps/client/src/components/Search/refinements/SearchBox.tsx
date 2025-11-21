@@ -1,8 +1,33 @@
 import { useSearchBox } from 'react-instantsearch';
 import { CloseButton, Field, Input, InputGroup } from '@chakra-ui/react';
+import { useEffect } from 'react';
 
-export const SearchBox = () => {
+type SearchBoxProps = {
+   value?: string;
+   onChange?: (value: string) => void;
+}
+
+export const SearchBox = ({ value: controlledValue, onChange }: SearchBoxProps = {}) => {
    const search = useSearchBox();
+   
+   // Sync controlled value with InstantSearch
+   useEffect(() => {
+      if (controlledValue !== undefined && controlledValue !== search.query) {
+         search.refine(controlledValue);
+      }
+   }, [controlledValue, search]);
+
+   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+      const newValue = e.target.value;
+      search.refine(newValue);
+      onChange?.(newValue);
+   };
+
+   const handleClear = () => {
+      search.clear();
+      onChange?.('');
+   };
+
    return (
       <Field.Root
          fontSize={{ base: 'lg', md: 'xl' }}
@@ -13,7 +38,7 @@ export const SearchBox = () => {
                ? (
                   <CloseButton
                      size='xs'
-                     onClick={() => search.clear()}
+                     onClick={handleClear}
                   />
                )
                : undefined}
@@ -22,7 +47,7 @@ export const SearchBox = () => {
                size={{ base: 'lg', md: 'xl' }}
                placeholder='Start typing to search...'
                value={search.query}
-               onChange={(e) => search.refine(e.target.value)}
+               onChange={handleChange}
             />
          </InputGroup>
       </Field.Root>
