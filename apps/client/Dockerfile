@@ -28,20 +28,6 @@ ENV VITE_DISCORD_WEBHOOK=${VITE_DISCORD_WEBHOOK}
 # Build the application
 RUN bun run build
 
-# ===== PRODUCTION STAGE - SERVER =====
-FROM oven/bun:1.3.0-slim AS production-server
-
-WORKDIR /app
-
-COPY --from=build-stage  /usr/src/app/scripts/healthcheck.ts ./
-COPY --from=build-stage  /usr/src/app/apps/server/dist ./
-
-# Expose port
-EXPOSE 3000
-
-# Start server
-CMD ["bun", "run", "index.js"]
-
 # ===== PRODUCTION STAGE - CLIENT =====
 FROM caddy:latest  AS production-client
 
