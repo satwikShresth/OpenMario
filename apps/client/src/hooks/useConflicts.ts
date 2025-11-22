@@ -39,7 +39,7 @@ export function useConflicts(currentTerm: string, currentYear: number) {
     []
   )
 
-  // Filter events for current term/year
+  // Filter events for current term/year (excluding EXAM courses for conflict checking)
   const scheduledEvents = useMemo(() => {
     if (!allEvents) return []
     return allEvents.filter(
@@ -51,7 +51,19 @@ export function useConflicts(currentTerm: string, currentYear: number) {
     )
   }, [allEvents, currentTerm, currentYear])
 
-  // Get unique course IDs
+  // Get ALL course IDs (including EXAM courses) for corequisite checking
+  const allScheduledCourseIds = useMemo(() => {
+    if (!allEvents) return []
+    const allCourses = allEvents.filter(
+      (e: any) =>
+        e.type === 'course' &&
+        e.term === currentTerm &&
+        e.year === currentYear
+    )
+    return [...new Set(allCourses.map((e: any) => e.courseId).filter(Boolean))]
+  }, [allEvents, currentTerm, currentYear])
+
+  // Get unique course IDs (excluding EXAM) for fetching requisites
   const scheduledCourseIds = useMemo(() => {
     return [...new Set(scheduledEvents.map((e: any) => e.courseId).filter(Boolean))]
   }, [scheduledEvents])
@@ -66,12 +78,22 @@ export function useConflicts(currentTerm: string, currentYear: number) {
     )
   })
 
+  // Extract requisites data for dependency tracking
+  const requisitesData = useMemo(() => {
+    return requisitesQueries.map(q => q.data)
+  }, [requisitesQueries.map(q => q.data).join(',')])
+
   // Calculate all conflicts
   const conflicts = useMemo((): Conflict[] => {
     if (!scheduledEvents || scheduledEvents.length === 0) return []
 
+    // Check if any requisites queries are still loading
+    const anyLoading = requisitesQueries.some(q => q.isLoading)
+    if (anyLoading) return []
+
     const issues: Conflict[] = []
-    const scheduledCourseIdSet = new Set(scheduledCourseIds)
+    // Use ALL scheduled course IDs (including EXAM) for corequisite checking
+    const scheduledCourseIdSet = new Set(allScheduledCourseIds)
 
     // 1. Detect duplicates
     const courseTitleMap = new Map<string, Array<{ crn: string; courseId: string }>>()
@@ -209,7 +231,7 @@ export function useConflicts(currentTerm: string, currentYear: number) {
     })
 
     return issues
-  }, [scheduledEvents, scheduledCourseIds, requisitesQueries, currentTerm, currentYear, allEvents])
+  }, [scheduledEvents, scheduledCourseIds, allScheduledCourseIds, requisitesData, currentTerm, currentYear, allEvents])
 
   // Helper function to check if a courseId has conflicts
   const hasConflict = (courseId: string): boolean => {

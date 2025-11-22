@@ -40,7 +40,7 @@ const MobileLayout = ({ children }: { children: ReactNode }) => {
 };
 
 export const Route = createRootRouteWithContext<MyRouterContext>()({
-   loader: async () => await migrate(),
+   beforeLoad: () => migrate(),
    component: () => (
       <VStack align='normal'>
          <Box width='100%' position='relative'>

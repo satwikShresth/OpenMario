@@ -182,7 +182,7 @@ const ToggleFav = () => {
          .select(({ favorites }) => ({ crn: favorites.crn }))
    )
 
-   const favoritesFilter = favorites?.map(({ crn }) => `crn = "${crn}"`).join(' OR ');
+   const favoritesFilter = favorites?.map(({ crn }) => `crn = ${crn}`).join(' OR ');
    const handleToggle = (checked: boolean) => {
       navigate({
          search: (prev) => ({
@@ -194,7 +194,7 @@ const ToggleFav = () => {
 
    return (
       <>
-         {showFavorites && favorites?.length > 0 && <Configure filters={favoritesFilter} />}
+         {showFavorites && favorites?.length > 0 && <Configure filters={favoritesFilter} page={0} />}
          <Switch.Root
             colorPalette='pink'
             size='md'

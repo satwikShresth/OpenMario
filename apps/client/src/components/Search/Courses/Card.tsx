@@ -29,6 +29,7 @@ import { eq, useLiveQuery } from '@tanstack/react-db';
 
 export const Cards = () => {
    const infiniteHits = useHits<Section>();
+   console.log(infiniteHits)
    return (
       <Flex
          direction='column'

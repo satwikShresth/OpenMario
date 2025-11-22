@@ -1,8 +1,8 @@
-import { Box, Flex, Text, ScrollArea, HStack, Icon, Button, Dialog, VStack } from '@chakra-ui/react'
+import { Box, Flex, Text, ScrollArea, HStack, Icon, Button, Dialog, VStack, Switch as ChakraSwitch } from '@chakra-ui/react'
 import { SearchBox, RefinementSelectInDialog as RefinementSelect } from '@/components/Search'
 import { Configure, useInfiniteHits, useCurrentRefinements } from 'react-instantsearch'
-import { planEventsCollection } from '@/helpers/collections'
-import { eq, useLiveQuery } from '@tanstack/react-db'
+import { planEventsCollection, favoritesCollection } from '@/helpers/collections'
+import { eq, useLiveQuery, and } from '@tanstack/react-db'
 import { PlanCard } from './PlanCard'
 import { useMobile } from '@/hooks'
 import { Stats } from '@/components/Search/Stats'
@@ -10,6 +10,7 @@ import { useEffect, useRef, useState } from 'react'
 import type { Section } from '@/types'
 import { Switch, Tooltip } from '@/components/ui'
 import { MdWarning, MdFilterList } from 'react-icons/md'
+import { RiHeartFill, RiHeartLine } from 'react-icons/ri'
 import { Tag } from '@/components/ui'
 import { useSearch, useNavigate } from '@tanstack/react-router'
 
@@ -114,13 +115,14 @@ export const PlanCourses = () => {
   const isMobile = useMobile()
   const [hideCoursesOverlap, setHideCoursesOverlap] = useState(false)
   const [hideUnavailableOverlap, setHideUnavailableOverlap] = useState(false)
+  const [showOnlyLiked, setShowOnlyLiked] = useState(false)
   const [filtersOpen, setFiltersOpen] = useState(false)
 
   const handleSearchChange = (query: string) => {
     navigate({ search: { term: currentTerm, year: currentYear, search: query } })
   }
 
-  // Fetch events to get CRNs of already added courses
+  // Fetch events to get CRNs of already added courses (for current term/year only)
   const { data: dbEvents } = useLiveQuery(
     // @ts-ignore
     (q) => q.from({ events: planEventsCollection })
@@ -128,20 +130,45 @@ export const PlanCourses = () => {
       .where(({ events }) => eq(events.type, 'course'))
   )
 
-  // Fetch ALL events (including unavailable) for overlap checking
+  // Fetch ALL events (including unavailable) for overlap checking (for current term/year only)
   const { data: allEvents } = useLiveQuery(
     // @ts-ignore
     (q) => q.from({ events: planEventsCollection })
       .select(({ events }) => ({ ...events }))
+      .where(({ events }) => and(
+        eq(events.term, currentTerm),
+        eq(events.year, currentYear)
+      )),
+    [currentTerm, currentYear]
+  )
+
+  // Fetch liked courses
+  const { data: likedCourses } = useLiveQuery(
+    // @ts-ignore
+    (q) => q.from({ favorites: favoritesCollection })
+      .select(({ favorites }) => ({ ...favorites }))
   )
 
   // Get CRNs of courses already in schedule
   const addedCRNs = dbEvents?.map((e: any) => e.crn).filter(Boolean) ?? []
 
+  // Get CRNs of liked courses
+  const likedCRNs = likedCourses?.map((f: any) => f.crn).filter(Boolean) ?? []
+
+  // Create filter string for liked courses if enabled
+  const favoritesFilter = likedCRNs.length > 0 
+    ? likedCRNs.map((crn: string) => `crn = "${crn}"`).join(' OR ')
+    : null
+
   // Create filter string for term, year, and exclude added courses
   let filters = `term = "${currentTerm} ${currentYear}"`
-  if (addedCRNs.length > 0) {
-    const crnFilter = addedCRNs.map((crn: any) => `crn != ${crn}`).join(' AND ')
+  
+  // If showing only liked courses, use favorites filter
+  if (showOnlyLiked && favoritesFilter) {
+    filters = `${filters} AND (${favoritesFilter})`
+  } else if (addedCRNs.length > 0) {
+    // Only exclude added courses when NOT showing liked courses
+    const crnFilter = addedCRNs.map((crn: any) => `crn != "${crn}"`).join(' AND ')
     filters = `${filters} AND ${crnFilter}`
   }
 
@@ -173,19 +200,40 @@ export const PlanCourses = () => {
             </Text>
           </VStack>
 
-          <Button
-            size="sm"
-            variant="outline"
-            onClick={() => setFiltersOpen(true)}
-          >
-            <Icon as={MdFilterList} />
-            Filters
-          </Button>
+          <HStack gap={3}>
+            {/* Liked Courses Toggle */}
+            <ChakraSwitch.Root
+              colorPalette="pink"
+              size="sm"
+              disabled={likedCRNs.length < 1}
+              checked={showOnlyLiked}
+              onCheckedChange={(e: any) => setShowOnlyLiked(e.checked)}
+            >
+              <ChakraSwitch.Label>Show liked ({likedCRNs.length})</ChakraSwitch.Label>
+              <ChakraSwitch.HiddenInput />
+              <ChakraSwitch.Control>
+                <ChakraSwitch.Thumb>
+                  <ChakraSwitch.ThumbIndicator fallback={<Icon as={RiHeartLine} />}>
+                    <Icon as={RiHeartFill} />
+                  </ChakraSwitch.ThumbIndicator>
+                </ChakraSwitch.Thumb>
+              </ChakraSwitch.Control>
+            </ChakraSwitch.Root>
+
+            {/* Filters Button */}
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={() => setFiltersOpen(true)}
+            >
+              <Icon as={MdFilterList} />
+              Filters
+            </Button>
+          </HStack>
         </Flex>
 
         {/* Search Box */}
         <Box>
-          {/*@ts-expect-error*/}
           <SearchBox value={searchQuery} onChange={handleSearchChange} />
         </Box>
 
@@ -260,7 +308,7 @@ export const PlanCourses = () => {
                       <Switch
                         size="sm"
                         checked={hideCoursesOverlap}
-                        onCheckedChange={(e) => setHideCoursesOverlap(e.checked)}
+                        onCheckedChange={(e: any) => setHideCoursesOverlap(e.checked)}
                       />
                     </HStack>
                     <HStack justify="space-between">
@@ -270,7 +318,7 @@ export const PlanCourses = () => {
                       <Switch
                         size="sm"
                         checked={hideUnavailableOverlap}
-                        onCheckedChange={(e) => setHideUnavailableOverlap(e.checked)}
+                        onCheckedChange={(e: any) => setHideUnavailableOverlap(e.checked)}
                       />
                     </HStack>
                   </VStack>

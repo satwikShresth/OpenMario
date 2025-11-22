@@ -9,7 +9,7 @@ import { routeTree } from '@/routeTree.gen';
 import ReactDOM from 'react-dom/client';
 import { parse, stringify } from 'jsurl2';
 import { StrictMode } from 'react';
-import { client } from './db';
+import { client, migrate } from './db';
 import { PGliteProvider } from "@electric-sql/pglite-react"
 import './styles.css';
 
@@ -34,7 +34,6 @@ declare module '@tanstack/react-router' {
    }
 }
 
-// Render the app
 const rootElement = document.getElementById('app');
 if (rootElement && !rootElement.innerHTML) {
    const root = ReactDOM.createRoot(rootElement);

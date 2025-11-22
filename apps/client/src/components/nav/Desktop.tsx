@@ -1,11 +1,11 @@
-import { Box, Link as ChakraLink, Stack } from '@chakra-ui/react';
+import { Box, Link as ChakraLink, Stack, Badge, Float } from '@chakra-ui/react';
 import { Link, linkOptions } from '@tanstack/react-router';
 import { NAV_ITEMS } from './items';
 
 const DesktopNav = () => (
    <Stack direction='row' justify='center'>
       {NAV_ITEMS.map((navItem) => (
-         <Box key={navItem.label}>
+         <Box key={navItem.label} position='relative'>
             <ChakraLink
                p={2}
                m={2}
@@ -43,6 +43,17 @@ const DesktopNav = () => (
             >
                {navItem.label}
             </ChakraLink>
+            {navItem.badge && (
+               <Float placement='top-end' offsetX='-2' offsetY='2'>
+                  <Badge
+                     colorPalette={navItem.badge.colorPalette || 'gray'}
+                     variant={navItem.badge.variant || 'subtle'}
+                     size='xs'
+                  >
+                     {navItem.badge.text}
+                  </Badge>
+               </Float>
+            )}
          </Box>
       ))}
    </Stack>
