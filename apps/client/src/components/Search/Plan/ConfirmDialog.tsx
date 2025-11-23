@@ -25,13 +25,7 @@ const formatTime = (time: string) => {
   return `${displayHours}:${minutes?.toString().padStart(2, '0')} ${period}`
 }
 
-export function ConfirmDialog(props: ConfirmDialogProps) {
-  const $props = props
-  console.log('ConfirmDialog props:', { 
-    isCourseEvent: $props.isCourseEvent, 
-    courseInfo: $props.courseInfo,
-    dialogOpen: $props.deleteDialogOpen
-  })
+export function ConfirmDialog($props: ConfirmDialogProps) {
   return (
     <Dialog.Root
       role="alertdialog"

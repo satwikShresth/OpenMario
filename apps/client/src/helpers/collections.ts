@@ -3,7 +3,8 @@ import {
    favorites,
    submissions,
    companyPositions,
-   planEvents
+   planEvents,
+   coursesTaken
 } from '@/db/schema';
 import { createCollection, eq, and } from '@tanstack/react-db';
 import { drizzleCollectionOptions } from 'tanstack-db-pglite';
@@ -40,6 +41,15 @@ export const planEventsCollection = createCollection(
       db,
       table: planEvents,
       primaryColumn: planEvents.id,
+      sync: async () => {}
+   })
+);
+
+export const coursesTakenCollection = createCollection(
+   drizzleCollectionOptions({
+      db,
+      table: coursesTaken,
+      primaryColumn: coursesTaken.id,
       sync: async () => {}
    })
 );

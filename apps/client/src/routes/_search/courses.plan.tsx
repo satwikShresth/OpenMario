@@ -1,5 +1,5 @@
 import { Container, Flex, HStack, Text, VStack, Button, Icon } from '@chakra-ui/react'
-import { createFileRoute, Outlet, useNavigate } from '@tanstack/react-router'
+import { createFileRoute, Outlet } from '@tanstack/react-router'
 import { Plan } from '@/components/Search/Plan'
 import { ConflictsIndicator } from '@/components/Search/Plan/ConflictsIndicator'
 import { Toaster } from '@/components/ui/toaster'
@@ -15,13 +15,13 @@ const planSearchSchema = z.object({
   search: z.string().optional(),
 })
 
-export const Route = createFileRoute('/_search/plan')({
+export const Route = createFileRoute('/_search/courses/plan')({
   validateSearch: planSearchSchema,
   component: RouteComponent,
 })
 
 function RouteComponent() {
-  const navigate = useNavigate({ from: Route.fullPath })
+  const navigate = Route.useNavigate()
   const { term: currentTerm, year: currentYear, search: searchQuery } = Route.useSearch()
 
   const handlePrevTerm = () => {
@@ -37,7 +37,7 @@ function RouteComponent() {
   }
 
   return (
-    <Plan.Root index='sections'>
+    <>
       <Container maxW="container.xl" py={4} h="calc(100vh - 80px)">
         <VStack gap={4} h="full" align="stretch">
           {/* Term Switcher with Conflict Indicator */}
@@ -76,9 +76,9 @@ function RouteComponent() {
             </Flex>
           </Flex>
         </VStack>
+        <Toaster />
+        <Outlet />
       </Container>
-      <Toaster />
-      <Outlet />
-    </Plan.Root>
+    </>
   )
 }

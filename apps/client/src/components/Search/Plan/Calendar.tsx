@@ -51,7 +51,7 @@ const createDateTimeForDay = (dayOfWeek: number, timeString: string): Date => {
   return targetDate
 }
 export const PlanCalendar = () => {
-  const { term: currentTerm, year: currentYear } = useSearch({ from: '/_search/plan' })
+  const { term: currentTerm, year: currentYear } = useSearch({ strict: false })
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
   const [eventToDelete, setEventToDelete] = useState<string | null>(null)
   const calendarRef = useRef<FullCalendar>(null)
@@ -81,11 +81,11 @@ export const PlanCalendar = () => {
 
     // Standardized colors based on event type
     const colors = event.type === 'course'
-      ? { 
-          backgroundColor: '#3b82f6', 
-          borderColor: hasCourseConflict ? '#ef4444' : '#2563eb', 
-          textColor: '#ffffff' 
-        }
+      ? {
+        backgroundColor: '#3b82f6',
+        borderColor: hasCourseConflict ? '#ef4444' : '#2563eb',
+        textColor: '#ffffff'
+      }
       : { backgroundColor: '#ef4444', borderColor: '#dc2626', textColor: '#ffffff' }
 
     if (event.type === 'course' && event.days && event.startTime && event.endTime) {
@@ -242,7 +242,7 @@ export const PlanCalendar = () => {
           if (!eventToDelete) return undefined
           const event = dbEvents?.find((e: any) => e.id === eventToDelete)
           if (event?.type !== 'course') return undefined
-          
+
           // Parse days from JSON string
           let daysString = event.days
           try {
@@ -253,7 +253,7 @@ export const PlanCalendar = () => {
           } catch {
             // If parsing fails, use as-is
           }
-          
+
           return {
             title: event.title || undefined,
             crn: event.crn || undefined,

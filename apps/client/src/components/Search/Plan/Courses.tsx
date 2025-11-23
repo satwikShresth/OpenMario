@@ -110,7 +110,7 @@ export const checkCourseOverlap = (section: Section, dbEvents: any[]): boolean =
 }
 
 export const PlanCourses = () => {
-  const { term: currentTerm, year: currentYear, search: searchQuery } = useSearch({ from: '/_search/plan' })
+  const { term: currentTerm, year: currentYear, search: searchQuery } = useSearch({ strict: false })
   const navigate = useNavigate({ from: '/plan' })
   const isMobile = useMobile()
   const [hideCoursesOverlap, setHideCoursesOverlap] = useState(false)
@@ -156,13 +156,13 @@ export const PlanCourses = () => {
   const likedCRNs = likedCourses?.map((f: any) => f.crn).filter(Boolean) ?? []
 
   // Create filter string for liked courses if enabled
-  const favoritesFilter = likedCRNs.length > 0 
+  const favoritesFilter = likedCRNs.length > 0
     ? likedCRNs.map((crn: string) => `crn = "${crn}"`).join(' OR ')
     : null
 
   // Create filter string for term, year, and exclude added courses
   let filters = `term = "${currentTerm} ${currentYear}"`
-  
+
   // If showing only liked courses, use favorites filter
   if (showOnlyLiked && favoritesFilter) {
     filters = `${filters} AND (${favoritesFilter})`

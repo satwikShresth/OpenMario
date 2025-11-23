@@ -15,7 +15,7 @@ import {
 import type { Section } from '@/types';
 import { Tag, Tooltip } from '@/components/ui';
 import { BiLinkExternal } from 'react-icons/bi';
-import { Link, linkOptions } from '@tanstack/react-router';
+import { Link, linkOptions, useMatch } from '@tanstack/react-router';
 import { getDifficultyColor, getRatingColor, weekItems } from './helpers';
 import { formatTime, orpc } from '@/helpers';
 import { useHits } from 'react-instantsearch';
@@ -29,7 +29,6 @@ import { eq, useLiveQuery } from '@tanstack/react-db';
 
 export const Cards = () => {
    const infiniteHits = useHits<Section>();
-   console.log(infiniteHits)
    return (
       <Flex
          direction='column'
@@ -51,6 +50,7 @@ export const Cards = () => {
 
 export const Card = ({ section }: { section: Section }) => {
    const isMobile = useMobile();
+   const match = useMatch({ strict: false });
    const { data: courseRaw } = useQuery(
       orpc.graph.course.queryOptions({ input: { course_id: section.course_id } })
    );
@@ -87,7 +87,7 @@ export const Card = ({ section }: { section: Section }) => {
                            as={Link}
                            {...linkOptions({
                               //@ts-ignore: hsupp
-                              to: `/courses/${section?.course_id!}`,
+                              to: `${match.fullPath}/${section?.course_id!}`,
                               reloadDocument: false,
                               resetScroll: false,
                               replace: true,

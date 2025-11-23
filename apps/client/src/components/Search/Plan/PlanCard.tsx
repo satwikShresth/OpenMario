@@ -10,7 +10,7 @@ import {
 import type { Section } from '@/types'
 import { Tag, Tooltip } from '@/components/ui'
 import { toaster } from '@/components/ui/toaster'
-import { Link } from '@tanstack/react-router'
+import { Link, useMatch } from '@tanstack/react-router'
 import { formatTime } from '@/helpers'
 import { getDifficultyColor, getRatingColor, weekItems } from '@/components/Search/Courses/helpers'
 import { BiLinkExternal } from 'react-icons/bi'
@@ -24,6 +24,7 @@ type PlanCardProps = {
 }
 
 export const PlanCard = ({ section, currentTerm, currentYear }: PlanCardProps) => {
+  const match = useMatch({ strict: false });
 
   // Fetch existing events to check if course is already added
   const { data: dbEvents } = useLiveQuery(
@@ -101,10 +102,11 @@ export const PlanCard = ({ section, currentTerm, currentYear }: PlanCardProps) =
         <Flex wrap="wrap" gap={2} align="center">
 
           <Link
-            to={`/plan/${section?.course_id!}`}
+            to={`${match.fullPath}/${section?.course_id!}`}
             reloadDocument={false}
             resetScroll={false}
             replace={true}
+            onClick={(e) => e.stopPropagation()}
           >
 
             <Text
@@ -199,6 +201,7 @@ export const PlanCard = ({ section, currentTerm, currentYear }: PlanCardProps) =
                       <Link
                         //@ts-ignore: shuuup
                         to={`https://www.ratemyprofessors.com/professor/${instructor.rmp_id}`}
+                        onClick={(e) => e.stopPropagation()}
                       >
 
                         <Tag

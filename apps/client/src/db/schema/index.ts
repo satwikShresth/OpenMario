@@ -166,3 +166,34 @@ export const planEvents = pgTable(
 // Type exports for plan events
 export type PlanEvent = typeof planEvents.$inferSelect;
 export type NewPlanEvent = typeof planEvents.$inferInsert;
+
+/**
+ * Courses taken table - stores completed courses for degree audit and planning
+ * Used to track prerequisites, show completed courses, and calculate progress
+ */
+export const coursesTaken = pgTable(
+   'courses_taken',
+   {
+      id: uuid('id').primaryKey().defaultRandom(),
+      courseId: varchar('course_id', { length: 255 }).notNull(), // e.g., "CS-111"
+      courseName: varchar('course_name', { length: 255 }).notNull(), // e.g., "Introduction to Computer Science"
+      subjectId: varchar('subject_id', { length: 50 }).notNull(), // e.g., "CS"
+      courseNumber: varchar('course_number', { length: 10 }).notNull(), // e.g., "111"
+      term: termEnum('term').notNull(),
+      year: integer('year').notNull(),
+      grade: varchar('grade', { length: 5 }), // e.g., "A", "B+", "P", etc.
+      credits: integer('credits'), // Number of credits
+      crn: varchar('crn', { length: 10 }), // Optional CRN if known
+      createdAt: timestamp('created_at').notNull().defaultNow(),
+      updatedAt: timestamp('updated_at').notNull().defaultNow()
+   },
+   table => [
+      index('courses_taken_course_id_idx').on(table.courseId),
+      index('courses_taken_term_year_idx').on(table.term, table.year),
+      index('courses_taken_subject_idx').on(table.subjectId)
+   ]
+);
+
+// Type exports for courses taken
+export type CourseTaken = typeof coursesTaken.$inferSelect;
+export type NewCourseTaken = typeof coursesTaken.$inferInsert;

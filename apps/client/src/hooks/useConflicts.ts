@@ -1,7 +1,7 @@
 import { useMemo } from 'react'
 import { useLiveQuery } from '@tanstack/react-db'
 import { useQueries } from '@tanstack/react-query'
-import { planEventsCollection, orpc } from '@/helpers'
+import { planEventsCollection, coursesTakenCollection, orpc } from '@/helpers'
 import type { Conflict } from '@/stores/conflictsStore'
 
 // Helper functions
@@ -36,6 +36,12 @@ export function useConflicts(currentTerm: string, currentYear: number) {
   // Watch all events from the collection
   const { data: allEvents } = useLiveQuery(
     (q) => q.from({ events: planEventsCollection }),
+    []
+  )
+
+  // Watch all courses taken from the collection
+  const { data: coursesTaken } = useLiveQuery(
+    (q) => q.from({ courses: coursesTakenCollection }),
     []
   )
 
@@ -221,9 +227,58 @@ export function useConflicts(currentTerm: string, currentYear: number) {
             type: 'missing-corequisite',
             term: currentTerm,
             year: currentYear,
-            details: missingCoreqs.map((c: any) => ({
-              id: c.id,
-              name: `${c.subjectId} ${c.courseNumber}`
+            details: missingCoreqs.map((coreq: any) => ({
+              id: coreq.id,
+              name: `${coreq.subjectId} ${coreq.courseNumber}`,
+              fullData: coreq
+            }))
+          })
+        }
+      }
+    })
+
+    // 4. Detect missing prerequisites (courses that should have been taken before)
+    const takenCourseIds = new Set(coursesTaken?.map((c: any) => c.courseId) || [])
+    
+    requisitesQueries.forEach((query, index) => {
+      const event = scheduledEvents.find((e: any) => e.courseId === scheduledCourseIds[index])
+      if (!event) return
+
+      const data = query.data as any
+      // Prerequisites is an array of arrays (groups with OR logic)
+      if (data?.prerequisites && data.prerequisites.length > 0) {
+        // Find unsatisfied groups (where NO course in the group is taken)
+        const unsatisfiedGroups: any[] = []
+        
+        data.prerequisites.forEach((group: any[]) => {
+          // For each OR group, check if at least one is satisfied
+          const groupSatisfied = group.some((prereq: any) => takenCourseIds.has(prereq.id))
+          
+          // If this OR group is not satisfied, keep the group structure
+          if (!groupSatisfied) {
+            unsatisfiedGroups.push(group)
+          }
+        })
+        
+        if (unsatisfiedGroups.length > 0) {
+          // Store groups in details with special structure
+          issues.push({
+            id: `missing-prereq-${event.courseId}`,
+            courseId: event.courseId || '',
+            courseName: event.title,
+            type: 'missing-prerequisite',
+            term: currentTerm,
+            year: currentYear,
+            // Store as groups to preserve OR/AND logic
+            details: unsatisfiedGroups.map((group, groupIdx) => ({
+              id: `group-${groupIdx}`,
+              name: 'prerequisite-group',
+              isGroup: true,
+              courses: group.map((prereq: any) => ({
+                id: prereq.id,
+                name: `${prereq.subjectId} ${prereq.courseNumber}`,
+                fullData: prereq
+              }))
             }))
           })
         }
@@ -231,7 +286,7 @@ export function useConflicts(currentTerm: string, currentYear: number) {
     })
 
     return issues
-  }, [scheduledEvents, scheduledCourseIds, allScheduledCourseIds, requisitesData, currentTerm, currentYear, allEvents])
+  }, [scheduledEvents, scheduledCourseIds, allScheduledCourseIds, requisitesData, coursesTaken, currentTerm, currentYear, allEvents])
 
   // Helper function to check if a courseId has conflicts
   const hasConflict = (courseId: string): boolean => {
