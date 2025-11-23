@@ -110,8 +110,8 @@ export const checkCourseOverlap = (section: Section, dbEvents: any[]): boolean =
 }
 
 export const PlanCourses = () => {
-  const { term: currentTerm, year: currentYear, search: searchQuery } = useSearch({ strict: false })
-  const navigate = useNavigate({ from: '/plan' })
+  const { term: currentTerm, year: currentYear, search: searchQuery } = useSearch({ from: '/_search/courses/plan' })
+  const navigate = useNavigate({ from: '/courses/plan' })
   const isMobile = useMobile()
   const [hideCoursesOverlap, setHideCoursesOverlap] = useState(false)
   const [hideUnavailableOverlap, setHideUnavailableOverlap] = useState(false)

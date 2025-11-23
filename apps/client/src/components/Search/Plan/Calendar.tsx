@@ -51,7 +51,7 @@ const createDateTimeForDay = (dayOfWeek: number, timeString: string): Date => {
   return targetDate
 }
 export const PlanCalendar = () => {
-  const { term: currentTerm, year: currentYear } = useSearch({ strict: false })
+  const { term: currentTerm, year: currentYear } = useSearch({ from: '/_search/courses/plan' })
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
   const [eventToDelete, setEventToDelete] = useState<string | null>(null)
   const calendarRef = useRef<FullCalendar>(null)

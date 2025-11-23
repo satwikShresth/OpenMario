@@ -47,7 +47,7 @@ const getConflictLabel = (type: ConflictType) => {
 }
 
 export const ConflictsIndicator = () => {
-  const { term: currentTerm, year: currentYear } = useSearch({ strict: false })
+  const { term: currentTerm, year: currentYear } = useSearch({ from: '/_search/courses/plan' })
   const courseRefinement = useRefinementList({ attribute: 'course' })
   const [dialogOpen, setDialogOpen] = useState(false)
 

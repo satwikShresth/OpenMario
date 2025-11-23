@@ -24,7 +24,7 @@ type PlanCardProps = {
 }
 
 export const PlanCard = ({ section, currentTerm, currentYear }: PlanCardProps) => {
-  const match = useMatch({ strict: false });
+  const match = useMatch({ from: '/_search/courses/plan' });
 
   // Fetch existing events to check if course is already added
   const { data: dbEvents } = useLiveQuery(
@@ -102,7 +102,8 @@ export const PlanCard = ({ section, currentTerm, currentYear }: PlanCardProps) =
         <Flex wrap="wrap" gap={2} align="center">
 
           <Link
-            to={`${match.fullPath}/${section?.course_id!}`}
+            to={`${match.fullPath}/$course_id`}
+            params={{ course_id: section?.course_id! }}
             reloadDocument={false}
             resetScroll={false}
             replace={true}
