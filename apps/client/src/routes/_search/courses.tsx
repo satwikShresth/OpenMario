@@ -8,7 +8,7 @@ export const Route = createFileRoute('/_search/courses')({
 })
 
 function RouteComponent() {
-  const match = useMatches({ select: (s) => s.at(-1).fullPath.split('/').at(2) })
+  const match = useMatches({ select: (s) => s!.at(-1)!.fullPath.split('/').at(2) })
   return (
     <Index indexName='sections'>
       <SegmentGroup.Root

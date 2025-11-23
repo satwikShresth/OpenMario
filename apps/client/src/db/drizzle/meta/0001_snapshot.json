@@ -1,5 +1,5 @@
 {
-  "id": "68cd4ee2-8fe8-42e1-afb5-b287effaee5c",
+  "id": "61321f74-6a75-48eb-8547-7dc6a7e45211",
   "prevId": "e6ebb8aa-d891-4457-936f-1a3b4f3b5fbe",
   "version": "7",
   "dialect": "postgresql",
@@ -84,8 +84,8 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "public.courses_taken": {
-      "name": "courses_taken",
+    "public.courses": {
+      "name": "courses",
       "schema": "",
       "columns": {
         "id": {
@@ -119,18 +119,26 @@
           "primaryKey": false,
           "notNull": true
         },
+        "status": {
+          "name": "status",
+          "type": "course_status",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'considering'"
+        },
         "term": {
           "name": "term",
           "type": "term",
           "typeSchema": "public",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false
         },
         "year": {
           "name": "year",
           "type": "integer",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false
         },
         "grade": {
           "name": "grade",
@@ -166,8 +174,8 @@
         }
       },
       "indexes": {
-        "courses_taken_course_id_idx": {
-          "name": "courses_taken_course_id_idx",
+        "courses_course_id_idx": {
+          "name": "courses_course_id_idx",
           "columns": [
             {
               "expression": "course_id",
@@ -181,8 +189,23 @@
           "method": "btree",
           "with": {}
         },
-        "courses_taken_term_year_idx": {
-          "name": "courses_taken_term_year_idx",
+        "courses_status_idx": {
+          "name": "courses_status_idx",
+          "columns": [
+            {
+              "expression": "status",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "courses_term_year_idx": {
+          "name": "courses_term_year_idx",
           "columns": [
             {
               "expression": "term",
@@ -202,8 +225,8 @@
           "method": "btree",
           "with": {}
         },
-        "courses_taken_subject_idx": {
-          "name": "courses_taken_subject_idx",
+        "courses_subject_idx": {
+          "name": "courses_subject_idx",
           "columns": [
             {
               "expression": "subject_id",
@@ -220,7 +243,15 @@
       },
       "foreignKeys": {},
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
+      "uniqueConstraints": {
+        "courses_course_id_unique": {
+          "name": "courses_course_id_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "course_id"
+          ]
+        }
+      },
       "policies": {},
       "checkConstraints": {},
       "isRLSEnabled": false
@@ -241,6 +272,12 @@
           "type": "varchar(10)",
           "primaryKey": false,
           "notNull": true
+        },
+        "course_id": {
+          "name": "course_id",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": false
         },
         "created_at": {
           "name": "created_at",
@@ -666,6 +703,15 @@
         "1st",
         "2nd",
         "3rd"
+      ]
+    },
+    "public.course_status": {
+      "name": "course_status",
+      "schema": "public",
+      "values": [
+        "taken",
+        "planned",
+        "considering"
       ]
     },
     "public.event_type": {

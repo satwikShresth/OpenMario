@@ -344,7 +344,12 @@ const CardButtons = (
    const toggleFavorite = () => {
       (isLiked)
          ? favoritesCollection.delete(isLiked?.id!)
-         : favoritesCollection.insert({ id: crypto.randomUUID(), crn: crn.toString(), 'createdAt': new Date(), updatedAt: new Date() })
+         : favoritesCollection.insert({
+            id: crypto.randomUUID(),
+            crn: crn.toString(),
+            createdAt: new Date(),
+            updatedAt: new Date()
+         })
 
    }
 

@@ -106,7 +106,7 @@ export const PlanCard = ({ section, currentTerm, currentYear }: PlanCardProps) =
             reloadDocument={false}
             resetScroll={false}
             replace={true}
-            onClick={(e) => e.stopPropagation()}
+            onClick={(e: any) => e.stopPropagation()}
           >
 
             <Text

@@ -98,6 +98,5 @@ export function ConfirmDialog($props: ConfirmDialogProps) {
         </Dialog.Positioner>
       </Portal>
     </Dialog.Root>
-
   )
 }
