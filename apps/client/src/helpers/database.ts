@@ -1,5 +1,6 @@
 import { db } from '@/db';
 import * as schema from '@/db/schema';
+import JSZip from 'jszip';
 
 /**
  * Convert array of objects to CSV string
@@ -11,7 +12,11 @@ function arrayToCSV(data: any[], headers: string[]): string {
       if (value === null || value === undefined) return '';
       const stringValue = String(value);
       // Escape quotes and wrap in quotes if contains comma, quote, or newline
-      if (stringValue.includes(',') || stringValue.includes('"') || stringValue.includes('\n')) {
+      if (
+         stringValue.includes(',') ||
+         stringValue.includes('"') ||
+         stringValue.includes('\n')
+      ) {
          return `"${stringValue.replace(/"/g, '""')}"`;
       }
       return stringValue;
@@ -25,26 +30,25 @@ function arrayToCSV(data: any[], headers: string[]): string {
 }
 
 /**
- * Download a CSV file
+ * Download a ZIP file
  */
-function downloadCSV(filename: string, csvContent: string): void {
-   const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+function downloadZip(filename: string, blob: Blob): void {
    const link = document.createElement('a');
    const url = URL.createObjectURL(blob);
-   
+
    link.setAttribute('href', url);
    link.setAttribute('download', filename);
    link.style.visibility = 'hidden';
-   
+
    document.body.appendChild(link);
    link.click();
    document.body.removeChild(link);
-   
+
    URL.revokeObjectURL(url);
 }
 
 /**
- * Export all database tables as CSV files
+ * Export all database tables as CSV files in a ZIP archive
  */
 export async function exportDatabaseAsCSV(): Promise<{
    success: boolean;
@@ -52,75 +56,87 @@ export async function exportDatabaseAsCSV(): Promise<{
    filesExported: number;
 }> {
    try {
-      const timestamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, -5);
+      const timestamp = new Date()
+         .toISOString()
+         .replace(/[:.]/g, '-')
+         .slice(0, -5);
       let filesExported = 0;
 
+      // Create a new JSZip instance
+      const zip = new JSZip();
+
       // Export submissions
-      const submissions = await db.select().from(schema.submissions);
+      const submissions = await db.select().from(schema.submissions)!;
       if (submissions.length > 0) {
-         const headers = Object.keys(submissions[0]);
+         const headers = Object.keys(submissions[0]!);
          const csv = arrayToCSV(submissions, headers);
-         downloadCSV(`openmario-submissions-${timestamp}.csv`, csv);
+         zip.file('submissions.csv', csv);
          filesExported++;
       }
 
       // Export company positions
       const companyPositions = await db.select().from(schema.companyPositions);
       if (companyPositions.length > 0) {
-         const headers = Object.keys(companyPositions[0]);
+         const headers = Object.keys(companyPositions[0]!);
          const csv = arrayToCSV(companyPositions, headers);
-         downloadCSV(`openmario-company-positions-${timestamp}.csv`, csv);
+         zip.file('company-positions.csv', csv);
          filesExported++;
       }
 
       // Export terms
       const terms = await db.select().from(schema.terms);
       if (terms.length > 0) {
-         const headers = Object.keys(terms[0]);
+         const headers = Object.keys(terms[0]!);
          const csv = arrayToCSV(terms, headers);
-         downloadCSV(`openmario-terms-${timestamp}.csv`, csv);
+         zip.file('terms.csv', csv);
          filesExported++;
       }
 
       // Export courses
       const courses = await db.select().from(schema.courses);
       if (courses.length > 0) {
-         const headers = Object.keys(courses[0]);
+         const headers = Object.keys(courses[0]!);
          const csv = arrayToCSV(courses, headers);
-         downloadCSV(`openmario-courses-${timestamp}.csv`, csv);
+         zip.file('courses.csv', csv);
          filesExported++;
       }
 
       // Export sections
       const sections = await db.select().from(schema.sections);
       if (sections.length > 0) {
-         const headers = Object.keys(sections[0]);
+         const headers = Object.keys(sections[0]!);
          const csv = arrayToCSV(sections, headers);
-         downloadCSV(`openmario-sections-${timestamp}.csv`, csv);
+         zip.file('sections.csv', csv);
          filesExported++;
       }
 
       // Export favorites
       const favorites = await db.select().from(schema.favorites);
       if (favorites.length > 0) {
-         const headers = Object.keys(favorites[0]);
+         const headers = Object.keys(favorites[0]!);
          const csv = arrayToCSV(favorites, headers);
-         downloadCSV(`openmario-favorites-${timestamp}.csv`, csv);
+         zip.file('favorites.csv', csv);
          filesExported++;
       }
 
       // Export plan events
       const planEvents = await db.select().from(schema.planEvents);
       if (planEvents.length > 0) {
-         const headers = Object.keys(planEvents[0]);
+         const headers = Object.keys(planEvents[0]!);
          const csv = arrayToCSV(planEvents, headers);
-         downloadCSV(`openmario-plan-events-${timestamp}.csv`, csv);
+         zip.file('plan-events.csv', csv);
          filesExported++;
       }
 
+      // Generate the zip file
+      const blob = await zip.generateAsync({ type: 'blob' });
+      
+      // Download the zip file
+      downloadZip(`openmario-database-export-${timestamp}.zip`, blob);
+
       return {
          success: true,
-         message: `Successfully exported ${filesExported} file${filesExported !== 1 ? 's' : ''}`,
+         message: `Successfully exported ${filesExported} file${filesExported !== 1 ? 's' : ''} in a ZIP archive`,
          filesExported
       };
    } catch (error) {
@@ -150,7 +166,9 @@ export async function clearDatabaseAndReload(): Promise<void> {
             reject(new Error('Failed to clear database'));
          };
          deleteRequest.onblocked = () => {
-            console.warn('[Database] Database deletion blocked, forcing reload...');
+            console.warn(
+               '[Database] Database deletion blocked, forcing reload...'
+            );
             window.location.reload();
          };
       });
@@ -162,4 +180,3 @@ export async function clearDatabaseAndReload(): Promise<void> {
       throw error;
    }
 }
-

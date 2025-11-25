@@ -49,6 +49,7 @@
     "immer": "^11.0.0",
     "instantsearch.js": "^4.84.0",
     "jsurl2": "^2.2.0",
+    "jszip": "^3.10.1",
     "logrocket": "^10.1.1",
     "logrocket-react": "^6.0.3",
     "lucide-react": "^0.554.0",
