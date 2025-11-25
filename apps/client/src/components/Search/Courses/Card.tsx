@@ -15,7 +15,7 @@ import {
 import type { Section } from '@/types';
 import { Tag, Tooltip } from '@/components/ui';
 import { BiLinkExternal } from 'react-icons/bi';
-import { Link, linkOptions } from '@tanstack/react-router';
+import { Link, linkOptions, useMatch } from '@tanstack/react-router';
 import { getDifficultyColor, getRatingColor, weekItems } from './helpers';
 import { formatTime, orpc } from '@/helpers';
 import { useHits } from 'react-instantsearch';
@@ -24,8 +24,9 @@ import Req from './Req.tsx';
 import { useQuery } from '@tanstack/react-query';
 import Availabilites from './Availabilites.tsx';
 import { RiHeartFill, RiHeartLine } from 'react-icons/ri';
-import { favoritesCollection } from '@/helpers';
-import { eq, useLiveQuery } from '@tanstack/react-db';
+import { sectionsCollection, termsCollection, coursesCollection } from '@/helpers/collections';
+import { eq, and, useLiveQuery } from '@tanstack/react-db';
+import { toaster } from '@/components/ui/toaster';
 
 export const Cards = () => {
    const infiniteHits = useHits<Section>();
@@ -50,6 +51,7 @@ export const Cards = () => {
 
 export const Card = ({ section }: { section: Section }) => {
    const isMobile = useMobile();
+   const match = useMatch({ strict: false });
    const { data: courseRaw } = useQuery(
       orpc.graph.course.queryOptions({ input: { course_id: section.course_id } })
    );
@@ -86,7 +88,7 @@ export const Card = ({ section }: { section: Section }) => {
                            as={Link}
                            {...linkOptions({
                               //@ts-ignore: hsupp
-                              to: `/courses/${section?.course_id!}`,
+                              to: `${match.fullPath}/${section?.course_id!}`,
                               reloadDocument: false,
                               resetScroll: false,
                               replace: true,
@@ -169,10 +171,10 @@ export const Card = ({ section }: { section: Section }) => {
                                     : null}
                               </VStack>
                            </Tag>
-                           <CardButtons crn={section?.crn} />
+                           <CardButtons section={section} />
                         </HStack>
                      )
-                     : <CardButtons crn={section?.crn} noSection />}
+                     : <CardButtons section={section} noSection />}
                </Flex>
             </Stack>
          </CCard.Header>
@@ -311,40 +313,118 @@ export const Card = ({ section }: { section: Section }) => {
 };
 
 const CardButtons = (
-   { crn, noSection = false }: { crn: number; noSection?: boolean },
+   { section, noSection = false }: { section: Section; noSection?: boolean },
 ) => {
-   // const [isLiked, setIsLiked] = useState(false);
-
-   // const handleMenuSelect = ({ value }) => {
-   //    // Handle menu item selection
-   //    switch (value) {
-   //       case 'share':
-   //          // Handle share action
-   //          console.log('Share clicked');
-   //          break;
-   //       default:
-   //          break;
-   //    }
-   // };
-
    const isMobile = useMobile();
 
+   // Parse term and year from section.term (e.g., "Fall 2024")
+   const [termName = '', yearStr = ''] = section.term.split(' ');
+   const year = Number.parseInt(yearStr);
 
-
-   const { data: isLiked } = useLiveQuery(
+   // Query for the term
+   const { data: termData } = useLiveQuery(
       (q) => q
-         .from({ fav: favoritesCollection })
-         .select(({ fav }) => ({ id: fav.id, crn: fav.crn }))
-         .where(({ fav }) => eq(fav.crn, crn.toString()))
+         .from({ term: termsCollection })
+         .select(({ term }) => ({ ...term }))
+         .where(({ term }) =>
+            and(
+               eq(term.term, termName),
+               eq(term.year, year)
+            )
+         )
          .findOne(),
-      [crn]
+      [termName, year]
+   )
+
+   // Query for the section with a join to terms to filter by term/year
+   const { data: likedSection } = useLiveQuery(
+      (q) => q
+         .from({ sec: sectionsCollection })
+         .innerJoin({ term: termsCollection }, ({ sec, term }) => eq(sec.termId, term.id))
+         .select(({ sec }) => ({ ...sec }))
+         .where(({ sec, term }) =>
+            and(
+               eq(sec.crn, section.crn.toString()),
+               eq(term.term, termName),
+               eq(term.year, year)
+            )
+         )
+         .findOne(),
+      [section.crn, termName, year]
    )
 
    const toggleFavorite = () => {
-      (isLiked)
-         ? favoritesCollection.delete(isLiked?.id!)
-         : favoritesCollection.insert({ id: crypto.randomUUID(), crn: crn.toString(), 'createdAt': new Date(), updatedAt: new Date() })
+      try {
+         // Get or create term
+         let termId = termData?.id
+         if (!termId) {
+            termId = crypto.randomUUID()
+            termsCollection.insert({
+               id: termId,
+               term: termName,
+               year: year,
+               isActive: false,
+               createdAt: new Date(),
+               updatedAt: new Date()
+            })
+         }
 
+      // Get or create course
+      const existingCourse = coursesCollection.get(section.course_id)
+      if (!existingCourse) {
+         coursesCollection.insert({
+            id: section.course_id,
+            course: section.course,
+            title: section.title,
+            completed: false,
+            credits: section.credits || null,
+            createdAt: new Date(),
+            updatedAt: new Date()
+         })
+      }
+
+         // Toggle section like
+         const existingSection = sectionsCollection.get(section.crn.toString())
+         if (existingSection) {
+            // Section exists, toggle the liked status
+            sectionsCollection.update(section.crn.toString(), (draft) => {
+               draft.liked = !draft.liked
+               draft.updatedAt = new Date()
+            })
+            
+            toaster.create({
+               title: existingSection.liked ? 'Removed from favorites' : 'Added to favorites',
+               type: 'success',
+               duration: 2000,
+            })
+         } else {
+            // Section doesn't exist, create it with liked = true
+            sectionsCollection.insert({
+         crn: section.crn.toString(),
+               termId,
+               courseId: section.course_id,
+               status: null,
+               liked: true,
+               grade: null,
+               createdAt: new Date(),
+               updatedAt: new Date()
+            })
+            
+            toaster.create({
+               title: 'Added to favorites',
+               type: 'success',
+               duration: 2000,
+            })
+         }
+      } catch (error) {
+         console.error('Error toggling favorite:', error)
+         toaster.create({
+            title: 'Error',
+            description: 'Failed to toggle favorite',
+            type: 'error',
+            duration: 3000,
+         })
+      }
    }
 
    return (
@@ -378,17 +458,17 @@ const CardButtons = (
             variant='surface'
             size='sm'
             onClick={toggleFavorite}
-            color={isLiked ? 'pink.500' : 'gray.500'}
+            color={likedSection?.liked ? 'pink.500' : 'gray.500'}
             _hover={{
-               color: isLiked ? 'pink.600' : 'pink.400',
-               borderColor: isLiked ? 'pink.600' : 'pink.400',
+               color: likedSection?.liked ? 'pink.600' : 'pink.400',
+               borderColor: likedSection?.liked ? 'pink.600' : 'pink.400',
             }}
          >
-            <Icon as={isLiked ? RiHeartFill : RiHeartLine} size='lg' />
+            <Icon as={likedSection?.liked ? RiHeartFill : RiHeartLine} size='lg' />
          </IconButton>
          <Clipboard.Root
             value={globalThis.location.origin + globalThis.location.pathname +
-               `/${crn!}` + globalThis.location.search}
+               `/${section.crn}` + globalThis.location.search}
          >
             <Clipboard.Trigger asChild>
                <IconButton variant='surface' size='sm'>
