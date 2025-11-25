@@ -2,11 +2,19 @@ import { Button, Icon, HoverCard as ChakraHoverCard, Dialog as ChakraDialog, Por
 import { MdWarning, MdOpenInNew, MdCheckCircle } from 'react-icons/md'
 import { useRefinementList } from 'react-instantsearch'
 import { useSearch } from '@tanstack/react-router'
-import type { ConflictType } from '@/stores/conflictsStore'
 import { useConflicts } from '@/hooks/useConflicts'
 import { coursesCollection } from '@/helpers/collections'
 import { useState } from 'react'
 import { toaster } from '@/components/ui/toaster'
+
+export type ConflictType =
+  | 'duplicate'
+  | 'overlap'
+  | 'course-overlap'
+  | 'duplicate-course'
+  | 'missing-corequisite'
+  | 'missing-prerequisite'
+  | 'unavailable-overlap';
 
 // Create aliases for easier use
 const HoverCard = {
@@ -67,14 +75,50 @@ export const ConflictsIndicator = () => {
   const handleMarkAsTaken = async (detail: any) => {
     const courseData = detail.fullData || {}
 
-    // Extract course information from the detail
-    const courseId = detail.id || courseData.id || courseData.courseId
-    const courseName = courseData.name || detail.name
+    // Extract course information - no fallbacks, explicit validation
+    const courseId = detail.id
+    const courseNumber = detail.name
+    const courseTitle = courseData.name  // title is in courseData.name
+    const courseCredits = courseData.credits
+
+    // Validate all required fields
+    if (!courseId) {
+      console.error('Missing courseId:', { detail, courseData })
+      toaster.create({
+        title: 'Error',
+        description: 'Missing course ID',
+        type: 'error',
+        duration: 3000,
+      })
+      return
+    }
+
+    if (!courseNumber) {
+      console.error('Missing courseNumber:', { detail, courseData })
+      toaster.create({
+        title: 'Error',
+        description: 'Missing course number',
+        type: 'error',
+        duration: 3000,
+      })
+      return
+    }
+
+    if (!courseTitle) {
+      console.error('Missing courseTitle:', { detail, courseData })
+      toaster.create({
+        title: 'Error',
+        description: 'Missing course title',
+        type: 'error',
+        duration: 3000,
+      })
+      return
+    }
 
     try {
       // Get or create course, then mark as completed
       const existingCourse = coursesCollection.get(courseId)
-      
+
       if (existingCourse) {
         // Course exists, just mark as completed
         coursesCollection.update(courseId, (draft) => {
@@ -85,9 +129,9 @@ export const ConflictsIndicator = () => {
         // Create course and mark as completed
         coursesCollection.insert({
           id: courseId,
-          course: courseId,
-          title: courseName || courseId,
-          credits: null,
+          course: courseNumber,
+          title: courseTitle,
+          credits: courseCredits || null,
           completed: true,
           createdAt: new Date(),
           updatedAt: new Date()
@@ -96,7 +140,7 @@ export const ConflictsIndicator = () => {
 
       toaster.create({
         title: 'Course marked as taken',
-        description: `${courseName} has been added to your completed courses`,
+        description: `${courseNumber} has been added to your completed courses`,
         type: 'success',
         duration: 3000,
       })
@@ -230,8 +274,8 @@ export const ConflictsIndicator = () => {
                                         <VStack key={detail.id} align="stretch" gap={3} pl={2}>
                                           {detailIdx > 0 && (
                                             <HStack justify="center" py={2}>
-                                              <Badge 
-                                                colorPalette="red" 
+                                              <Badge
+                                                colorPalette="red"
                                                 size="sm"
                                                 px={3}
                                                 py={1}
@@ -241,8 +285,8 @@ export const ConflictsIndicator = () => {
                                               </Badge>
                                             </HStack>
                                           )}
-                                          <VStack 
-                                            align="stretch" 
+                                          <VStack
+                                            align="stretch"
                                             gap={2}
                                             p={3}
                                             borderWidth="2px"
@@ -251,9 +295,9 @@ export const ConflictsIndicator = () => {
                                             bg="bg"
                                           >
                                             {detail.courses.length > 1 && (
-                                              <Text 
-                                                fontSize="xs" 
-                                                fontWeight="semibold" 
+                                              <Text
+                                                fontSize="xs"
+                                                fontWeight="semibold"
                                                 color="fg.muted"
                                                 textTransform="uppercase"
                                                 letterSpacing="wider"
@@ -266,9 +310,9 @@ export const ConflictsIndicator = () => {
                                                 <VStack key={course.id} align="stretch" gap={1}>
                                                   {courseIdx > 0 && (
                                                     <HStack justify="center" py={1}>
-                                                      <Text 
-                                                        fontSize="xs" 
-                                                        fontWeight="medium" 
+                                                      <Text
+                                                        fontSize="xs"
+                                                        fontWeight="medium"
                                                         color="orange.500"
                                                         textTransform="uppercase"
                                                       >

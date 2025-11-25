@@ -6,6 +6,7 @@ import {
   VStack,
   For,
   Icon,
+  Button,
 } from '@chakra-ui/react'
 import type { Section } from '@/types'
 import { Tag, Tooltip } from '@/components/ui'
@@ -14,6 +15,7 @@ import { Link, useMatch } from '@tanstack/react-router'
 import { formatTime } from '@/helpers'
 import { getDifficultyColor, getRatingColor, weekItems } from '@/components/Search/Courses/helpers'
 import { BiLinkExternal } from 'react-icons/bi'
+import { MdAddCircleOutline, MdCheckCircle } from 'react-icons/md'
 import { sectionsCollection, termsCollection, coursesCollection, planEventsCollection } from '@/helpers/collections'
 import { useLiveQuery, eq, and } from '@tanstack/react-db'
 
@@ -52,19 +54,58 @@ export const PlanCard = ({ section, currentTerm, currentYear }: PlanCardProps) =
     [currentTerm, currentYear]
   )
 
-  const isAlreadyAdded = !!plannedSection
+  // Check if course is marked as taken
+  const { data: courseData } = useLiveQuery(
+    (q) => q
+      .from({ course: coursesCollection })
+      .select(({ course }) => ({ ...course }))
+      .where(({ course }) => eq(course.id, section.course_id))
+      .findOne(),
+    [section.course_id]
+  )
 
-  const handleAddCourse = () => {
-    // Check if course has meeting times
-    if (!section.days || !section.start_time || !section.end_time) {
+  const isAlreadyAdded = !!plannedSection
+  const isTaken = !!courseData?.completed
+  const hasSchedule = !!(section.days && section.start_time && section.end_time)
+  const isOnlineAsync = section.instruction_method === 'Online' && section.instruction_type === 'Asynchronous'
+
+  const handleMarkAsTaken = () => {
+    try {
+      // Create or update course with completed flag
+      const course = coursesCollection.get(section.course_id);
+      if (!course) {
+        coursesCollection.insert({
+          id: section.course_id,
+          course: section.course,
+          title: section.title,
+          completed: true,
+          credits: section.credits || null,
+          createdAt: new Date(),
+          updatedAt: new Date()
+        })
+      } else {
+        coursesCollection.update(section.course_id, (draft) => {
+          draft.completed = true
+          draft.updatedAt = new Date()
+        })
+      }
+
       toaster.create({
-        title: 'Cannot Add Course',
-        description: 'This course does not have scheduled meeting times',
+        title: 'Course Marked as Taken',
+        description: `${section.course}: ${section.title} has been marked as completed`,
+        type: 'success',
+      })
+    } catch (error) {
+      console.error('Error marking course as taken:', error)
+      toaster.create({
+        title: 'Error',
+        description: 'Failed to mark course as taken',
         type: 'error',
       })
-      return
     }
+  }
 
+  const handleAddCourse = () => {
     // Check if already added
     if (isAlreadyAdded) {
       toaster.create({
@@ -138,6 +179,16 @@ export const PlanCard = ({ section, currentTerm, currentYear }: PlanCardProps) =
 
       // No events exist, create them!
       console.debug('✅ No events found, creating new events for CRN:', section.crn.toString())
+
+      // For Online-Asynchronous courses without schedule, just create section
+      if (isOnlineAsync || !hasSchedule) {
+        toaster.create({
+          title: 'Course Added',
+          description: `${section.course}: ${section.title} has been added (no calendar events)`,
+          type: 'success',
+        })
+        return
+      }
 
       const dayMap: Record<string, number> = {
         Sunday: 0,
@@ -225,14 +276,18 @@ export const PlanCard = ({ section, currentTerm, currentYear }: PlanCardProps) =
       p={3}
       _hover={{
         borderColor: 'border.emphasized',
-        bg: isAlreadyAdded ? 'bg' : 'bg.muted'
+        bg: (isAlreadyAdded || isTaken) ? 'bg' : 'bg.muted'
       }}
       transition="all 0.2s"
-      cursor={isAlreadyAdded ? 'not-allowed' : 'pointer'}
-      opacity={isAlreadyAdded ? 0.6 : 1}
-      onClick={isAlreadyAdded ? undefined : handleAddCourse}
+      opacity={(isAlreadyAdded || isTaken) ? 0.6 : 1}
     >
       <CCard.Body p={0} gap={3}>
+        {isTaken && (
+          <Tag size="sm" colorPalette="teal" width="fit-content">
+            ✓ Completed
+          </Tag>
+        )}
+
         {/* Course Title with Credits and Tags */}
         <Flex wrap="wrap" gap={2} align="center">
 
@@ -358,6 +413,38 @@ export const PlanCard = ({ section, currentTerm, currentYear }: PlanCardProps) =
               )}
             </For>
           </VStack>
+        )}
+        {/* Action Buttons */}
+        {!isTaken && (
+          <HStack gap={2}>
+            {!isAlreadyAdded && (
+              <Button
+                size="sm"
+                colorPalette="blue"
+                variant="solid"
+                onClick={handleAddCourse}
+                flex={1}
+              >
+                <Icon as={MdAddCircleOutline} />
+                {isOnlineAsync || !hasSchedule ? 'Add Course' : 'Add to Schedule'}
+              </Button>
+            )}
+            {isAlreadyAdded && (
+              <Tag size="sm" colorPalette="green" width="fit-content">
+                {isOnlineAsync || !hasSchedule ? 'Added' : 'Added to Schedule'}
+              </Tag>
+            )}
+            <Button
+              size="sm"
+              colorPalette="green"
+              variant="outline"
+              onClick={handleMarkAsTaken}
+              width="fit-content"
+            >
+              <Icon as={MdCheckCircle} />
+              Mark as Taken
+            </Button>
+          </HStack>
         )}
       </CCard.Body>
     </CCard.Root >

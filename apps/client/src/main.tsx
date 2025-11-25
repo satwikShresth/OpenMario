@@ -9,9 +9,11 @@ import { routeTree } from '@/routeTree.gen';
 import ReactDOM from 'react-dom/client';
 import { parse, stringify } from 'jsurl2';
 import { StrictMode } from 'react';
-import { client } from './db';
+import { client, db, migrate } from './db';
 import { PGliteProvider } from "@electric-sql/pglite-react"
 import './styles.css';
+import { termsCollection } from './helpers';
+import { terms } from './db/schema';
 
 const router = createRouter({
    routeTree,
@@ -34,6 +36,17 @@ declare module '@tanstack/react-router' {
    }
 }
 
+await migrate().then(async () => {
+   await db
+      .insert(terms)
+      .values([
+         { term: 'Spring', year: 2025, isActive: false, },
+         { term: 'Summer', year: 2025, isActive: false, },
+         { term: 'Fall', year: 2025, isActive: false, },
+         { term: 'Winter', year: 2025, isActive: false }
+      ]).onConflictDoNothing()
+   termsCollection.preload()
+})
 const rootElement = document.getElementById('app');
 if (rootElement && !rootElement.innerHTML) {
    const root = ReactDOM.createRoot(rootElement);

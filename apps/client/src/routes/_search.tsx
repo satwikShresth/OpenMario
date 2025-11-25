@@ -19,16 +19,15 @@ export const Route = createFileRoute('/_search')({
 
       }));
 
-      const { searchClient } = instantMeiliSearch(
-         env.VITE_MEILI_HOST,
-         () => data.token,
+      const { searchClient, setMeiliSearchParams } = instantMeiliSearch(env.VITE_MEILI_HOST,
+         () => (data as { token: string }).token
       );
 
       return (
          <Suspense>
             <Container>
                {/*@ts-ignore: shupp*/}
-               <Search.Root searchClient={searchClient}>
+               <Search.Root setMeiliSearchParams={setMeiliSearchParams} searchClient={searchClient}>
                   <Outlet />
                </Search.Root>
             </Container>

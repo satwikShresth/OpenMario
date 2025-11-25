@@ -189,11 +189,11 @@ export const PlanCalendar = () => {
     })
 
     // Update in database using collection
-    planEventsCollection.update(dbEventId, (draft) => {
-      draft.start = newStart
-      draft.end = newEnd
-      draft.updatedAt = new Date()
-    })
+      planEventsCollection.update(dbEventId, (draft) => {
+        draft.start = newStart
+        draft.end = newEnd
+        draft.updatedAt = new Date()
+      })
   }
 
   // Handle clicking on events (for deletion or editing)
@@ -232,7 +232,7 @@ export const PlanCalendar = () => {
         if (sectionToUpdate) {
           console.debug('🗑️ Deleting section:', crn)
           sectionsCollection.delete(crn)
-        } else {
+          } else {
           console.debug('🗑️ No section found for CRN:', crn)
         }
       } else {

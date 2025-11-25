@@ -117,7 +117,7 @@ export type NewTerm = typeof terms.$inferInsert;
 export const courses = pgTable('courses', {
    id: varchar('id', { length: 255 }).primaryKey(), // e.g., "CS-111"
    course: varchar('course', { length: 255 }).notNull(), // e.g., "CS-1800"
-   title: varchar('title', { length: 50 }).notNull(), // e.g., "Introduction to Computer Science"
+   title: varchar('title', { length: 255 }).notNull(), // e.g., "Introduction to Computer Science"
    credits: integer('credits'), // Number of credits
    completed: boolean('completed').notNull().default(false), // Track if course has been taken
    createdAt: timestamp('created_at').notNull().defaultNow(),

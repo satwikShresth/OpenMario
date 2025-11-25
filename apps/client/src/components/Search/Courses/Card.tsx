@@ -369,18 +369,19 @@ const CardButtons = (
             })
          }
 
-         // Get or create course
-         const existingCourse = coursesCollection.get(section.course_id)
-         if (!existingCourse) {
-            coursesCollection.insert({
-               id: section.course_id,
-               course: section.course,
-               title: section.title,
-               credits: section.credits || null,
-               createdAt: new Date(),
-               updatedAt: new Date()
-            })
-         }
+      // Get or create course
+      const existingCourse = coursesCollection.get(section.course_id)
+      if (!existingCourse) {
+         coursesCollection.insert({
+            id: section.course_id,
+            course: section.course,
+            title: section.title,
+            completed: false,
+            credits: section.credits || null,
+            createdAt: new Date(),
+            updatedAt: new Date()
+         })
+      }
 
          // Toggle section like
          const existingSection = sectionsCollection.get(section.crn.toString())
@@ -399,7 +400,7 @@ const CardButtons = (
          } else {
             // Section doesn't exist, create it with liked = true
             sectionsCollection.insert({
-               crn: section.crn.toString(),
+         crn: section.crn.toString(),
                termId,
                courseId: section.course_id,
                status: null,

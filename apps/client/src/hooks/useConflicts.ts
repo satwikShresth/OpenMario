@@ -6,9 +6,33 @@ import {
    sectionsCollection,
    termsCollection
 } from '@/helpers';
-import type { Conflict } from '@/stores/conflictsStore';
 import { getContext } from '@/integrations/tanstack-query/root-provider';
 import { orpc } from '@/helpers/rpc';
+
+export type ConflictType =
+   | 'duplicate'
+   | 'overlap'
+   | 'course-overlap'
+   | 'duplicate-course'
+   | 'missing-corequisite'
+   | 'missing-prerequisite'
+   | 'unavailable-overlap';
+
+export type Conflict = {
+   id: string;
+   courseId: string;
+   courseName: string;
+   type: ConflictType;
+   term: string;
+   year: number;
+   details: Array<{
+      id: string;
+      name: string;
+      fullData?: any;
+      isGroup?: boolean;
+      courses?: Array<{ id: string; name: string; fullData?: any }>;
+   }>;
+};
 
 const { queryClient } = getContext();
 
@@ -128,8 +152,9 @@ export function useConflicts(currentTerm: string, currentYear: number) {
                termName: term.term,
                termYear: term.year
             }))
-            .where(({ term }) => 
-               eq(term.term, currentTerm) && eq(term.year, currentYear)
+            .where(
+               ({ term }) =>
+                  eq(term.term, currentTerm) && eq(term.year, currentYear)
             ),
       [currentTerm, currentYear]
    );
@@ -218,8 +243,11 @@ export function useConflicts(currentTerm: string, currentYear: number) {
          const uniqueSections = Array.from(uniqueSectionsMap.values());
 
          // Group sections by courseId
-         const courseIdMap = new Map<string, Array<{ crn: string; courseName: string }>>();
-         
+         const courseIdMap = new Map<
+            string,
+            Array<{ crn: string; courseName: string }>
+         >();
+
          uniqueSections.forEach((section: any) => {
             if (!courseIdMap.has(section.courseId)) {
                courseIdMap.set(section.courseId, []);
@@ -396,7 +424,13 @@ export function useConflicts(currentTerm: string, currentYear: number) {
 
       console.debug('📊 Total conflicts found:', issues.length);
       return issues;
-   }, [courseEvents, unavailableBlocks, plannedSections, currentTerm, currentYear]);
+   }, [
+      courseEvents,
+      unavailableBlocks,
+      plannedSections,
+      currentTerm,
+      currentYear
+   ]);
 
    // Fetch requisites and check for missing prerequisites/corequisites
    useEffect(() => {
@@ -407,24 +441,43 @@ export function useConflicts(currentTerm: string, currentYear: number) {
 
       const fetchRequisites = async () => {
          const newConflicts: Conflict[] = [];
+         // Include both completed courses (taken) and scheduled courses
          const takenCourseIds = new Set(completedCourses?.map(c => c.id) || []);
          const scheduledCourseIds = new Set(
             courseEvents.map(e => e.courseId).filter(Boolean)
          );
+
+         console.debug('🔍 Taken courses:', Array.from(takenCourseIds));
+         console.debug('🔍 Scheduled courses:', Array.from(scheduledCourseIds));
 
          // Get unique courses (not events) to avoid duplicate prerequisite checks
          // Also exclude exam courses since they don't have prerequisites
          const uniqueCourses = Array.from(
             new Map(
                courseEvents
-                  .filter(e => e.courseId && !e.title?.toUpperCase().includes('EXAM'))
-                  .map(e => [e.courseId, { courseId: e.courseId, title: e.title }])
+                  .filter(
+                     e => e.courseId && !e.title?.toUpperCase().includes('EXAM')
+                  )
+                  .map(e => [
+                     e.courseId,
+                     { courseId: e.courseId, title: e.title }
+                  ])
             ).values()
          );
 
-         console.debug(`🔍 Checking prerequisites for ${uniqueCourses.length} unique courses (excluding exams)`);
+         console.debug(
+            `🔍 Checking prerequisites for ${uniqueCourses.length} unique courses (excluding exams)`
+         );
 
          for (const course of uniqueCourses) {
+            // Skip if this course is already marked as taken
+            if (takenCourseIds.has(course.courseId)) {
+               console.debug(
+                  `⏭ Skipping ${course.courseId} - already marked as taken`
+               );
+               continue;
+            }
+
             const { data } =
                (await queryClient
                   .fetchQuery(
@@ -461,7 +514,12 @@ export function useConflicts(currentTerm: string, currentYear: number) {
                      details: missingCoreqs.map((c: any) => ({
                         id: c.id,
                         name: `${c.subjectId} ${c.courseNumber}`,
-                        fullData: c
+                        fullData: {
+                           ...c,
+                           credits: c.credits,
+                           name: c.name,
+                           title: c.name
+                        }
                      }))
                   });
                }
@@ -492,7 +550,12 @@ export function useConflicts(currentTerm: string, currentYear: number) {
                         courses: group.map((p: any) => ({
                            id: p.id,
                            name: `${p.subjectId} ${p.courseNumber}`,
-                           fullData: p
+                           fullData: {
+                              ...p,
+                              credits: p.credits,
+                              name: p.name,
+                              title: p.name
+                           }
                         }))
                      });
                   }

@@ -1,7 +1,7 @@
 CREATE TABLE "courses" (
 	"id" varchar(255) PRIMARY KEY NOT NULL,
 	"course" varchar(255) NOT NULL,
-	"title" varchar(50) NOT NULL,
+	"title" varchar(255) NOT NULL,
 	"credits" integer,
 	"completed" boolean DEFAULT false NOT NULL,
 	"created_at" timestamp DEFAULT now() NOT NULL,

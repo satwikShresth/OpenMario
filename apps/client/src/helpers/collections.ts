@@ -10,32 +10,13 @@ import {
 import { createCollection } from '@tanstack/react-db';
 import { drizzleCollectionOptions } from 'tanstack-db-pglite';
 
-// Singleton pattern for migrations - ensures migrate() runs only once
-let migrationPromise: Promise<void> | null = null;
-
-const ensureMigrations = (): Promise<void> => {
-   if (!migrationPromise) {
-      migrationPromise = migrate();
-   }
-   return migrationPromise;
-};
-
 export const termsCollection = createCollection(
    drizzleCollectionOptions({
       db,
       table: terms,
       primaryColumn: terms.id,
       sync: async () => {
-         await ensureMigrations();
-         await db
-            .insert(terms)
-            .values([
-               { term: 'Spring', year: 2025, isActive: false },
-               { term: 'Summer', year: 2025, isActive: false },
-               { term: 'Fall', year: 2025, isActive: false },
-               { term: 'Winter', year: 2025, isActive: false }
-            ])
-            .onConflictDoNothing();
+         await migrate();
       }
    })
 );
@@ -45,7 +26,7 @@ export const coursesCollection = createCollection(
       db,
       table: courses,
       primaryColumn: courses.id,
-      sync: async () => await ensureMigrations()
+      sync: async () => await migrate()
    })
 );
 
@@ -55,7 +36,7 @@ export const sectionsCollection = createCollection(
 
       table: sections,
       primaryColumn: sections.crn,
-      sync: async () => await ensureMigrations()
+      sync: async () => await migrate()
    })
 );
 
@@ -64,7 +45,7 @@ export const submissionsCollection = createCollection(
       db,
       table: submissions,
       primaryColumn: submissions.id,
-      sync: async () => await ensureMigrations()
+      sync: async () => await migrate()
    })
 );
 
@@ -73,7 +54,7 @@ export const companyPositionsCollection = createCollection(
       db,
       table: companyPositions,
       primaryColumn: companyPositions.id,
-      sync: async () => await ensureMigrations()
+      sync: async () => await migrate()
    })
 );
 
@@ -82,6 +63,6 @@ export const planEventsCollection = createCollection(
       db,
       table: planEvents,
       primaryColumn: planEvents.id,
-      sync: async () => await ensureMigrations()
+      sync: async () => await migrate()
    })
 );

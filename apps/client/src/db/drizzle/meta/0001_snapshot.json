@@ -102,7 +102,7 @@
         },
         "title": {
           "name": "title",
-          "type": "varchar(50)",
+          "type": "varchar(255)",
           "primaryKey": false,
           "notNull": true
         },

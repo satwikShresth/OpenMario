@@ -2,6 +2,7 @@ import { Container, Flex, HStack, Text, VStack, Button, Icon } from '@chakra-ui/
 import { createFileRoute, Outlet } from '@tanstack/react-router'
 import { Plan } from '@/components/Search/Plan'
 import { ConflictsIndicator } from '@/components/Search/Plan/ConflictsIndicator'
+import { CreditsIndicator } from '@/components/Search/Plan/CreditsIndicator'
 import { Toaster } from '@/components/ui/toaster'
 import { MdChevronLeft, MdChevronRight } from 'react-icons/md'
 import { z } from 'zod'
@@ -40,8 +41,10 @@ function RouteComponent() {
     <>
       <Container maxW="container.xl" py={4} h="calc(100vh - 80px)">
         <VStack gap={4} h="full" align="stretch">
-          {/* Term Switcher with Conflict Indicator */}
-          <HStack justify="center" gap={2}>
+          {/* Header with Term Switcher and Credits */}
+          <HStack justify="space-between" align="center">
+            {/* Term Switcher */}
+            <HStack gap={2}>
             <Button
               size="sm"
               variant="ghost"
@@ -49,11 +52,9 @@ function RouteComponent() {
             >
               <Icon as={MdChevronLeft} />
             </Button>
-            <HStack gap={2}>
               <Text fontSize="lg" fontWeight="bold" color="fg.emphasized" minW="180px" textAlign="center">
                 {currentTerm} {currentYear}
               </Text>
-            </HStack>
             <Button
               size="sm"
               variant="ghost"
@@ -61,7 +62,13 @@ function RouteComponent() {
             >
               <Icon as={MdChevronRight} />
             </Button>
+            </HStack>
+
+            {/* Conflicts and Credits Counter */}
+            <HStack gap={2}>
             <ConflictsIndicator />
+              <CreditsIndicator currentTerm={currentTerm} currentYear={currentYear} />
+            </HStack>
           </HStack>
 
           <Flex direction={{ base: 'column', lg: 'row' }} gap={4} flex="1" minH="0">

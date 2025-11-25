@@ -116,7 +116,7 @@ export const Route = createFileRoute('/salary/_dialog/_form/report/{-$idx}')({
 
       return (
          <Salary.Form
-            defaultValues={draft}
+            defaultValues={draft as any}
             onSubmit={onSubmit}
          />
       );
