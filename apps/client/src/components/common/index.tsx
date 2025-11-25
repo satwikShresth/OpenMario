@@ -5,3 +5,4 @@ export * from './Autocomplete';
 export * from './asyncComponents';
 export * from './404';
 export * from './Error';
+export * from './DatabaseManager';

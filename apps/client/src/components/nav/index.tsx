@@ -16,6 +16,7 @@ import DesktopNav from './Desktop';
 import MobileNav from './Mobile';
 import { useColorMode, useColorModeValue } from '@/components/ui/color-mode';
 import { FeedbackDialog } from '@/components/common/Feedback';
+import { DatabaseManagerDialog } from '@/components/common/DatabaseManager';
 
 export default function Navbar() {
    const { open, onToggle, onClose } = useDisclosure();
@@ -98,6 +99,7 @@ export default function Navbar() {
                direction='row'
                gap={1}
             >
+               <DatabaseManagerDialog />
                <FeedbackDialog />
 
                <IconButton
