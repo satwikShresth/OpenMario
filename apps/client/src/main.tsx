@@ -9,7 +9,7 @@ import { routeTree } from '@/routeTree.gen';
 import ReactDOM from 'react-dom/client';
 import { parse, stringify } from 'jsurl2';
 import { StrictMode } from 'react';
-import { client, migrate } from './db';
+import { client } from './db';
 import { PGliteProvider } from "@electric-sql/pglite-react"
 import './styles.css';
 

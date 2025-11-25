@@ -5,46 +5,10 @@ import {
    uuid,
    integer,
    text,
-   pgEnum,
    boolean,
-   index
+   index,
+   unique
 } from 'drizzle-orm/pg-core';
-
-/**
- * Favorites table to store liked sections (by CRN)
- * Replaces the localStorage-based favorites system with persistent database storage
- */
-export const favorites = pgTable('favorite_sections', {
-   id: uuid('id').primaryKey().defaultRandom(),
-   crn: varchar('crn', { length: 10 }).notNull().unique(),
-   createdAt: timestamp('created_at').notNull().defaultNow(),
-   updatedAt: timestamp('updated_at').notNull().defaultNow()
-});
-
-// Type exports for favorites
-export type Favorite = typeof favorites.$inferSelect;
-export type NewFavorite = typeof favorites.$inferInsert;
-
-/**
- * Enums for salary submissions
- */
-export const coopYearEnum = pgEnum('coop_year', ['1st', '2nd', '3rd']);
-export const coopCycleEnum = pgEnum('coop_cycle', [
-   'Fall/Winter',
-   'Winter/Spring',
-   'Spring/Summer',
-   'Summer/Fall'
-]);
-export const programLevelEnum = pgEnum('program_level', [
-   'Undergraduate',
-   'Graduate'
-]);
-export const submissionStatusEnum = pgEnum('submission_status', [
-   'draft',
-   'pending',
-   'synced',
-   'failed'
-]);
 
 /**
  * Submissions table - stores both draft and synced salary submissions
@@ -58,7 +22,7 @@ export const submissions = pgTable(
       ownerId: varchar('owner_id', { length: 255 }),
 
       // Status tracking
-      status: submissionStatusEnum('status').notNull().default('draft'),
+      status: varchar('status', { length: 20 }).notNull().default('draft'),
       isDraft: boolean('is_draft').notNull().default(true),
 
       // Company & Position
@@ -75,9 +39,9 @@ export const submissions = pgTable(
 
       // Co-op details
       year: integer('year').notNull(),
-      coopYear: coopYearEnum('coop_year').notNull(),
-      coopCycle: coopCycleEnum('coop_cycle').notNull(),
-      programLevel: programLevelEnum('program_level').notNull(),
+      coopYear: varchar('coop_year', { length: 10 }).notNull(),
+      coopCycle: varchar('coop_cycle', { length: 20 }).notNull(),
+      programLevel: varchar('program_level', { length: 20 }).notNull(),
 
       // Compensation details
       workHours: integer('work_hours').notNull(),
@@ -126,74 +90,101 @@ export type CompanyPosition = typeof companyPositions.$inferSelect;
 export type NewCompanyPosition = typeof companyPositions.$inferInsert;
 
 /**
- * Enums for plan events
+ * Terms table - centralized term/year reference with metadata
+ * Normalized to avoid repetition and enable term-level queries
  */
-export const eventTypeEnum = pgEnum('event_type', ['unavailable', 'course']);
-export const termEnum = pgEnum('term', ['Fall', 'Winter', 'Spring', 'Summer']);
-
-/**
- * Plan events table - stores calendar events (unavailable times and courses)
- * For course events: ONE record stores schedule info (days, times), rendered as multiple events
- * For unavailable events: ONE record = one time block
- */
-export const planEvents = pgTable(
-   'plan_events',
+export const terms = pgTable(
+   'terms',
    {
       id: uuid('id').primaryKey().defaultRandom(),
-      type: eventTypeEnum('type').notNull(),
-      title: varchar('title', { length: 255 }).notNull(),
-      // For unavailable events only
-      start: timestamp('start'),
-      end: timestamp('end'),
-      // For course events only - schedule information
-      days: varchar('days', { length: 255 }), // JSON array of day names
-      startTime: varchar('start_time', { length: 10 }), // e.g., "09:00:00"
-      endTime: varchar('end_time', { length: 10 }), // e.g., "10:15:00"
-      // Common fields
-      term: termEnum('term').notNull(),
+      term: varchar('term', { length: 20 }).notNull(),
       year: integer('year').notNull(),
-      courseId: varchar('course_id', { length: 255 }),
-      crn: varchar('crn', { length: 10 }),
+      isActive: boolean('is_active').notNull().default(false),
       createdAt: timestamp('created_at').notNull().defaultNow(),
       updatedAt: timestamp('updated_at').notNull().defaultNow()
    },
-   table => [
-      index('plan_events_term_year_idx').on(table.term, table.year),
-      index('plan_events_type_idx').on(table.type)
-   ]
+   table => [unique().on(table.term, table.year)]
 );
+
+// Type exports for terms
+export type Term = typeof terms.$inferSelect;
+export type NewTerm = typeof terms.$inferInsert;
+
+/**
+ * Courses table - stores course-level interest (no specific section)
+ * Used for tracking courses user is considering
+ */
+export const courses = pgTable('courses', {
+   id: varchar('id', { length: 255 }).primaryKey(), // e.g., "CS-111"
+   course: varchar('course', { length: 255 }).notNull(), // e.g., "CS-1800"
+   title: varchar('title', { length: 50 }).notNull(), // e.g., "Introduction to Computer Science"
+   credits: integer('credits'), // Number of credits
+   completed: boolean('completed').notNull().default(false), // Track if course has been taken
+   createdAt: timestamp('created_at').notNull().defaultNow(),
+   updatedAt: timestamp('updated_at').notNull().defaultNow()
+});
+
+// Type exports for courses
+export type Course = typeof courses.$inferSelect;
+export type NewCourse = typeof courses.$inferInsert;
+
+/**
+ * Sections table - tracks section-specific status and likes
+ * Links to terms table and optionally to plan events
+ */
+export const sections = pgTable('sections', {
+   crn: varchar('crn', { length: 10 }).primaryKey(),
+   termId: uuid('term_id')
+      .notNull()
+      .references(() => terms.id, { onDelete: 'restrict' }),
+   courseId: varchar('course_id', { length: 255 })
+      .notNull()
+      .references(() => courses.id, { onDelete: 'restrict' }),
+   status: varchar('status', { length: 20 }), // nullable - null means just liked, no status (values: 'taken', 'planned')
+   liked: boolean('liked').notNull().default(false),
+   grade: varchar('grade', { length: 5 }), // e.g., "A", "B+", "P", etc. - for "taken" status
+   createdAt: timestamp('created_at').notNull().defaultNow(),
+   updatedAt: timestamp('updated_at').notNull().defaultNow()
+});
+
+// Type exports for sections
+export type Section = typeof sections.$inferSelect;
+export type NewSection = typeof sections.$inferInsert;
+
+export const favorites = pgTable('favorite_sections', {
+   id: uuid('id').primaryKey().defaultRandom(),
+   crn: varchar('crn', { length: 10 }).references(() => sections.crn, {
+      onDelete: 'cascade'
+   }),
+   createdAt: timestamp('created_at').notNull().defaultNow(),
+   updatedAt: timestamp('updated_at').notNull().defaultNow()
+});
+
+// Type exports for favorites
+export type Favorite = typeof favorites.$inferSelect;
+export type NewFavorite = typeof favorites.$inferInsert;
+
+/**
+ * Plan events table - stores individual calendar event occurrences
+ * Each row represents one event instance (not compressed schedules)
+ * Links to sections for course events, standalone for unavailable events
+ */
+export const planEvents = pgTable('plan_events', {
+   id: uuid('id').primaryKey().defaultRandom(),
+   type: varchar('type', { length: 20 }).notNull(), // 'unavailable' or 'course'
+   title: varchar('title', { length: 255 }), // nullable - only for unavailable events, course events fetch via join
+   start: timestamp('start').notNull(),
+   end: timestamp('end').notNull(),
+   termId: uuid('term_id')
+      .notNull()
+      .references(() => terms.id, { onDelete: 'cascade' }),
+   crn: varchar('crn', { length: 10 }).references(() => sections.crn, {
+      onDelete: 'cascade'
+   }),
+   createdAt: timestamp('created_at').notNull().defaultNow(),
+   updatedAt: timestamp('updated_at').notNull().defaultNow()
+});
 
 // Type exports for plan events
 export type PlanEvent = typeof planEvents.$inferSelect;
 export type NewPlanEvent = typeof planEvents.$inferInsert;
-
-/**
- * Courses taken table - stores completed courses for degree audit and planning
- * Used to track prerequisites, show completed courses, and calculate progress
- */
-export const coursesTaken = pgTable(
-   'courses_taken',
-   {
-      id: uuid('id').primaryKey().defaultRandom(),
-      courseId: varchar('course_id', { length: 255 }).notNull(), // e.g., "CS-111"
-      courseName: varchar('course_name', { length: 255 }).notNull(), // e.g., "Introduction to Computer Science"
-      subjectId: varchar('subject_id', { length: 50 }).notNull(), // e.g., "CS"
-      courseNumber: varchar('course_number', { length: 10 }).notNull(), // e.g., "111"
-      term: termEnum('term').notNull(),
-      year: integer('year').notNull(),
-      grade: varchar('grade', { length: 5 }), // e.g., "A", "B+", "P", etc.
-      credits: integer('credits'), // Number of credits
-      crn: varchar('crn', { length: 10 }), // Optional CRN if known
-      createdAt: timestamp('created_at').notNull().defaultNow(),
-      updatedAt: timestamp('updated_at').notNull().defaultNow()
-   },
-   table => [
-      index('courses_taken_course_id_idx').on(table.courseId),
-      index('courses_taken_term_year_idx').on(table.term, table.year),
-      index('courses_taken_subject_idx').on(table.subjectId)
-   ]
-);
-
-// Type exports for courses taken
-export type CourseTaken = typeof coursesTaken.$inferSelect;
-export type NewCourseTaken = typeof coursesTaken.$inferInsert;

@@ -22,8 +22,9 @@ import { Outlet } from '@tanstack/react-router';
 import { RiHeartFill, RiHeartLine } from 'react-icons/ri';
 import { Configure } from 'react-instantsearch';
 import z from 'zod';
-import { favoritesCollection } from '@/helpers';
+import { sectionsCollection } from '@/helpers';
 import { useLiveQuery } from '@tanstack/react-db';
+import { eq } from '@tanstack/react-db';
 
 const sortBy = createListCollection({
   items: [
@@ -175,12 +176,13 @@ const ToggleFav = () => {
   const navigate = Route.useNavigate();
   const showFavorites = Route.useSearch({ select: (s) => s?.showFavorites! === true });
 
-  const { data: favorites } = useLiveQuery((q) =>
-    q.from({ favorites: favoritesCollection })
-      .select(({ favorites }) => ({ crn: favorites.crn }))
+  const { data: likedSections } = useLiveQuery((q) =>
+    q.from({ sections: sectionsCollection })
+      .select(({ sections }) => ({ crn: sections.crn }))
+      .where(({ sections }) => eq(sections.liked, true))
   )
 
-  const favoritesFilter = favorites?.map(({ crn }) => `crn = ${crn}`).join(' OR ');
+  const favoritesFilter = likedSections?.map(({ crn }) => `crn = ${crn}`).join(' OR ');
   const handleToggle = (checked: boolean) => {
     navigate({
       search: (prev) => ({
@@ -192,17 +194,17 @@ const ToggleFav = () => {
 
   return (
     <>
-      {showFavorites && favorites?.length > 0 && <Configure filters={favoritesFilter} page={0} />}
+      {showFavorites && likedSections?.length > 0 && <Configure filters={favoritesFilter} page={0} />}
       <Switch.Root
         colorPalette='pink'
         size='md'
-        disabled={favorites?.length < 1}
+        disabled={likedSections?.length < 1}
         checked={showFavorites}
         onCheckedChange={({ checked }) => {
           handleToggle(checked);
         }}
       >
-        <Switch.Label>Show liked courses ({favorites?.length})</Switch.Label>
+        <Switch.Label>Show liked courses ({likedSections?.length})</Switch.Label>
         <Switch.HiddenInput />
         <Switch.Control>
           <Switch.Thumb>

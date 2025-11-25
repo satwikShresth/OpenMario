@@ -14,8 +14,8 @@ import { Link, useMatch } from '@tanstack/react-router'
 import { formatTime } from '@/helpers'
 import { getDifficultyColor, getRatingColor, weekItems } from '@/components/Search/Courses/helpers'
 import { BiLinkExternal } from 'react-icons/bi'
-import { planEventsCollection } from '@/helpers/collections'
-import { useLiveQuery } from '@tanstack/react-db'
+import { sectionsCollection, termsCollection, coursesCollection, planEventsCollection } from '@/helpers/collections'
+import { useLiveQuery, eq, and } from '@tanstack/react-db'
 
 type PlanCardProps = {
   section: Section,
@@ -26,16 +26,33 @@ type PlanCardProps = {
 export const PlanCard = ({ section, currentTerm, currentYear }: PlanCardProps) => {
   const match = useMatch({ from: '/_search/courses/plan' });
 
-  // Fetch existing events to check if course is already added
-  const { data: dbEvents } = useLiveQuery(
-    // @ts-ignore
-    (q) => q.from({ events: planEventsCollection })
+  // Check if course section is already planned by checking if plan events exist
+  // Check across ALL terms, not just current term
+  const { data: plannedSection } = useLiveQuery(
+    (q) => q
+      .from({ events: planEventsCollection })
       .select(({ events }) => ({ ...events }))
+      .where(({ events }) => eq(events.crn, section.crn.toString()),)
+      .findOne(),
+    [section.crn]
   )
 
-  const isAlreadyAdded = dbEvents?.some((e: any) =>
-    e.type === 'course' && e.crn === section.crn.toString()
+  // Query for term
+  const { data: existingTerm } = useLiveQuery(
+    (q) => q
+      .from({ term: termsCollection })
+      .select(({ term }) => ({ ...term }))
+      .where(({ term }) =>
+        and(
+          eq(term.term, currentTerm),
+          eq(term.year, currentYear)
+        )
+      )
+      .findOne(),
+    [currentTerm, currentYear]
   )
+
+  const isAlreadyAdded = !!plannedSection
 
   const handleAddCourse = () => {
     // Check if course has meeting times
@@ -58,30 +75,148 @@ export const PlanCard = ({ section, currentTerm, currentYear }: PlanCardProps) =
       return
     }
 
-    // Add the course to the schedule
-    planEventsCollection.insert({
-      id: crypto.randomUUID(),
-      title: `${section.course}`,
-      start: null,
-      end: null,
-      type: 'course',
-      term: currentTerm,
-      year: currentYear,
-      courseId: section.course_id,
-      crn: section.crn.toString(),
-      days: JSON.stringify(section.days),
-      startTime: section.start_time,
-      endTime: section.end_time,
-      createdAt: new Date(),
-      updatedAt: new Date()
-    })
+    try {
+      // Ensure term exists before proceeding
+      if (!existingTerm?.id) {
+        toaster.create({
+          title: 'Error',
+          description: 'Term not found. Please refresh the page.',
+          type: 'error',
+        })
+        return
+      }
 
-    // Show success toast
-    toaster.create({
-      title: 'Course Added',
-      description: `${section.course}: ${section.title} has been added to your schedule`,
-      type: 'success',
-    })
+      const termId = existingTerm.id
+
+      const course = coursesCollection.get(section.course_id);
+
+      if (!course) {
+        coursesCollection.insert({
+          id: section.course_id,
+          course: section.course,
+          title: section.title,
+          completed: false,
+          credits: section.credits || null,
+          createdAt: new Date(),
+          updatedAt: new Date()
+        })
+      }
+
+      const existingSection = sectionsCollection.get(section.crn.toString())
+      if (!existingSection) {
+        console.debug('Creating new section for CRN:', section.crn.toString())
+        sectionsCollection.insert({
+          crn: section.crn.toString(),
+          termId,
+          courseId: section.course_id,
+          status: 'planned',
+          liked: false, // Liked sections are handled separately
+          grade: null,
+          createdAt: new Date(),
+          updatedAt: new Date()
+        })
+        console.debug('✅ Section created successfully')
+      } else {
+        console.debug('Updating existing section for CRN:', section.crn.toString())
+        sectionsCollection.update(section.crn.toString(), (draft) => {
+          draft.status = 'planned'
+          draft.updatedAt = new Date()
+        })
+      }
+
+
+      // Check if events already exist - if so, skip creation
+      if (plannedSection) {
+        console.debug('⚠️ Events already exist for this CRN, skipping creation')
+        toaster.create({
+          title: 'Already Added',
+          description: 'This course is already in your schedule',
+          type: 'warning',
+        })
+        return
+      }
+
+      // No events exist, create them!
+      console.debug('✅ No events found, creating new events for CRN:', section.crn.toString())
+
+      const dayMap: Record<string, number> = {
+        Sunday: 0,
+        Monday: 1,
+        Tuesday: 2,
+        Wednesday: 3,
+        Thursday: 4,
+        Friday: 5,
+        Saturday: 6
+      }
+
+      // Parse time
+      const [startHours, startMinutes] = section.start_time!.split(':').map(Number)
+      const [endHours, endMinutes] = section.end_time!.split(':').map(Number)
+
+      // Use a reference week to get valid dates for each day
+      const getTermMonth = (term: string): number => {
+        switch (term) {
+          case 'Spring': return 0 // January
+          case 'Summer': return 4 // May
+          case 'Fall': return 8 // September
+          case 'Winter': return 11 // December
+          default: return 0
+        }
+      }
+
+      const referenceWeekStart = new Date(currentYear, getTermMonth(currentTerm), 1)
+
+      // Create MULTIPLE events - one for each day the class meets
+      console.debug('Creating events for days:', section.days)
+      const events = section.days!.map(dayName => {
+        const targetDayOfWeek = dayMap[dayName]
+
+        // Find the first occurrence of this day in the term
+        const eventDate = new Date(referenceWeekStart)
+        while (eventDate.getDay() !== targetDayOfWeek) {
+          eventDate.setDate(eventDate.getDate() + 1)
+        }
+
+        // Create start and end timestamps
+        const eventStart = new Date(eventDate)
+        eventStart.setHours(startHours!, startMinutes!, 0, 0)
+
+        const eventEnd = new Date(eventDate)
+        eventEnd.setHours(endHours!, endMinutes!, 0, 0)
+
+        return {
+          id: crypto.randomUUID(),
+          type: 'course' as const,
+          title: `${section.course}: ${section.title}`,
+          start: eventStart,
+          end: eventEnd,
+          termId,
+          crn: section.crn.toString(),
+          createdAt: new Date(),
+          updatedAt: new Date()
+        }
+      })
+
+      console.debug(`✅ Inserting ${events.length} events`)
+      // Insert all events
+      events.forEach((event, index) => {
+        console.debug(`Inserting event ${index + 1}/${events.length}`, event)
+        planEventsCollection.insert(event)
+      })
+
+      toaster.create({
+        title: 'Course Added',
+        description: `${section.course}: ${section.title} has been added to your schedule`,
+        type: 'success',
+      })
+    } catch (error) {
+      console.error('Error adding course to schedule:', error)
+      toaster.create({
+        title: 'Error',
+        description: 'Failed to add course to schedule',
+        type: 'error',
+      })
+    }
   }
 
   return (
@@ -103,7 +238,7 @@ export const PlanCard = ({ section, currentTerm, currentYear }: PlanCardProps) =
 
           <Link
             to={`${match.fullPath}/$course_id`}
-            params={{ course_id: section?.course_id! }}
+            params={{ course_id: section.course_id }}
             reloadDocument={false}
             resetScroll={false}
             replace={true}

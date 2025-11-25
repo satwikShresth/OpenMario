@@ -1,20 +1,61 @@
-import { db } from '@/db';
+import { db, migrate } from '@/db';
 import {
-   favorites,
+   terms,
+   courses,
+   sections,
    submissions,
    companyPositions,
-   planEvents,
-   coursesTaken
+   planEvents
 } from '@/db/schema';
-import { createCollection, eq, and } from '@tanstack/react-db';
+import { createCollection } from '@tanstack/react-db';
 import { drizzleCollectionOptions } from 'tanstack-db-pglite';
 
-export const favoritesCollection = createCollection(
+// Singleton pattern for migrations - ensures migrate() runs only once
+let migrationPromise: Promise<void> | null = null;
+
+const ensureMigrations = (): Promise<void> => {
+   if (!migrationPromise) {
+      migrationPromise = migrate();
+   }
+   return migrationPromise;
+};
+
+export const termsCollection = createCollection(
    drizzleCollectionOptions({
       db,
-      table: favorites,
-      primaryColumn: favorites.id,
-      sync: async () => {}
+      table: terms,
+      primaryColumn: terms.id,
+      sync: async () => {
+         await ensureMigrations();
+         await db
+            .insert(terms)
+            .values([
+               { term: 'Spring', year: 2025, isActive: false },
+               { term: 'Summer', year: 2025, isActive: false },
+               { term: 'Fall', year: 2025, isActive: false },
+               { term: 'Winter', year: 2025, isActive: false }
+            ])
+            .onConflictDoNothing();
+      }
+   })
+);
+
+export const coursesCollection = createCollection(
+   drizzleCollectionOptions({
+      db,
+      table: courses,
+      primaryColumn: courses.id,
+      sync: async () => await ensureMigrations()
+   })
+);
+
+export const sectionsCollection = createCollection(
+   drizzleCollectionOptions({
+      db,
+
+      table: sections,
+      primaryColumn: sections.crn,
+      sync: async () => await ensureMigrations()
    })
 );
 
@@ -23,7 +64,7 @@ export const submissionsCollection = createCollection(
       db,
       table: submissions,
       primaryColumn: submissions.id,
-      sync: async () => {}
+      sync: async () => await ensureMigrations()
    })
 );
 
@@ -32,7 +73,7 @@ export const companyPositionsCollection = createCollection(
       db,
       table: companyPositions,
       primaryColumn: companyPositions.id,
-      sync: async () => {}
+      sync: async () => await ensureMigrations()
    })
 );
 
@@ -41,30 +82,6 @@ export const planEventsCollection = createCollection(
       db,
       table: planEvents,
       primaryColumn: planEvents.id,
-      sync: async () => {}
+      sync: async () => await ensureMigrations()
    })
 );
-
-export const coursesTakenCollection = createCollection(
-   drizzleCollectionOptions({
-      db,
-      table: coursesTaken,
-      primaryColumn: coursesTaken.id,
-      sync: async () => {}
-   })
-);
-
-// Helper function to get scheduled courses for a specific term/year
-export const getScheduledCoursesQuery = (term: string, year: number) => {
-   return (q: any) =>
-      q
-         .from({ events: planEventsCollection })
-         .where(({ events }: any) =>
-            and(
-               eq(events.type, 'course'),
-               eq(events.term, term),
-               eq(events.year, year)
-            )
-         )
-         .select(({ events }: any) => ({ ...events }));
-};

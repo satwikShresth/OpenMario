@@ -4,7 +4,7 @@ import { useRefinementList } from 'react-instantsearch'
 import { useSearch } from '@tanstack/react-router'
 import type { ConflictType } from '@/stores/conflictsStore'
 import { useConflicts } from '@/hooks/useConflicts'
-import { coursesTakenCollection } from '@/helpers'
+import { coursesCollection } from '@/helpers/collections'
 import { useState } from 'react'
 import { toaster } from '@/components/ui/toaster'
 
@@ -37,6 +37,10 @@ const getConflictLabel = (type: ConflictType) => {
       return { text: 'Duplicate Sections', color: 'orange.500' }
     case 'overlap':
       return { text: 'Time Overlap', color: 'red.500' }
+    case 'course-overlap':
+      return { text: 'Course Time Conflict', color: 'red.500' }
+    case 'duplicate-course':
+      return { text: 'Duplicate Course', color: 'purple.500' }
     case 'missing-corequisite':
       return { text: 'Missing Corequisites', color: 'red.500' }
     case 'missing-prerequisite':
@@ -60,37 +64,51 @@ export const ConflictsIndicator = () => {
   }
 
   // Handle marking a prerequisite as taken
-  const handleMarkAsTaken = (detail: any) => {
+  const handleMarkAsTaken = async (detail: any) => {
     const courseData = detail.fullData || {}
 
     // Extract course information from the detail
     const courseId = detail.id || courseData.id || courseData.courseId
     const courseName = courseData.name || detail.name
-    const subjectId = courseData.subjectId || courseId?.split('-')[0] || ''
-    const courseNumber = courseData.courseNumber || courseId?.split('-')[1] || ''
 
-    // Add to courses taken collection
-    coursesTakenCollection.insert({
-      id: crypto.randomUUID(),
-      courseId: courseId,
-      courseName: courseName,
-      subjectId: subjectId,
-      courseNumber: courseNumber,
-      term: 'Fall', // Default term
-      year: new Date().getFullYear() - 1, // Default to last year
-      grade: 'P', // Pass grade by default
-      credits: 4, // Default credits
-      crn: null,
-      createdAt: new Date(),
-      updatedAt: new Date()
-    })
+    try {
+      // Get or create course, then mark as completed
+      const existingCourse = coursesCollection.get(courseId)
+      
+      if (existingCourse) {
+        // Course exists, just mark as completed
+        coursesCollection.update(courseId, (draft) => {
+          draft.completed = true
+          draft.updatedAt = new Date()
+        })
+      } else {
+        // Create course and mark as completed
+        coursesCollection.insert({
+          id: courseId,
+          course: courseId,
+          title: courseName || courseId,
+          credits: null,
+          completed: true,
+          createdAt: new Date(),
+          updatedAt: new Date()
+        })
+      }
 
-    toaster.create({
-      title: 'Course marked as taken',
-      description: `${courseName} has been added to your completed courses`,
-      type: 'success',
-      duration: 3000,
-    })
+      toaster.create({
+        title: 'Course marked as taken',
+        description: `${courseName} has been added to your completed courses`,
+        type: 'success',
+        duration: 3000,
+      })
+    } catch (error) {
+      console.error('Error marking course as taken:', error)
+      toaster.create({
+        title: 'Error',
+        description: 'Failed to mark course as taken',
+        type: 'error',
+        duration: 3000,
+      })
+    }
   }
 
   if (conflicts.length === 0) return null
@@ -199,6 +217,8 @@ export const ConflictsIndicator = () => {
                                   <Text fontSize="sm" fontWeight="medium" color="fg.muted">
                                     {conflict.type === 'duplicate' && 'Duplicate sections:'}
                                     {conflict.type === 'overlap' && 'Conflicts with:'}
+                                    {conflict.type === 'course-overlap' && 'Conflicts with:'}
+                                    {conflict.type === 'duplicate-course' && 'You are enrolled in multiple sections:'}
                                     {conflict.type === 'missing-corequisite' && 'Missing corequisites:'}
                                     {conflict.type === 'missing-prerequisite' && 'Prerequisites not taken:'}
                                     {conflict.type === 'unavailable-overlap' && 'Time conflicts:'}
@@ -207,64 +227,99 @@ export const ConflictsIndicator = () => {
                                     // Missing prerequisites with OR/AND logic
                                     if (conflict.type === 'missing-prerequisite' && detail.isGroup && detail.courses) {
                                       return (
-                                        <VStack key={detail.id} align="stretch" gap={2} pl={2}>
+                                        <VStack key={detail.id} align="stretch" gap={3} pl={2}>
                                           {detailIdx > 0 && (
-                                            <Text fontSize="sm" fontWeight="bold" color="fg.emphasized" py={1}>
-                                              AND
-                                            </Text>
+                                            <HStack justify="center" py={2}>
+                                              <Badge 
+                                                colorPalette="red" 
+                                                size="sm"
+                                                px={3}
+                                                py={1}
+                                                fontWeight="bold"
+                                              >
+                                                AND
+                                              </Badge>
+                                            </HStack>
                                           )}
-                                          <HStack flexWrap="wrap" gap={2} align="start">
+                                          <VStack 
+                                            align="stretch" 
+                                            gap={2}
+                                            p={3}
+                                            borderWidth="2px"
+                                            borderColor="border.emphasized"
+                                            borderRadius="md"
+                                            bg="bg"
+                                          >
                                             {detail.courses.length > 1 && (
-                                              <Text fontSize="sm" color="fg.muted">(</Text>
+                                              <Text 
+                                                fontSize="xs" 
+                                                fontWeight="semibold" 
+                                                color="fg.muted"
+                                                textTransform="uppercase"
+                                                letterSpacing="wider"
+                                              >
+                                                Choose one of:
+                                              </Text>
                                             )}
-                                            {detail.courses.map((course, courseIdx) => (
-                                              <VStack key={course.id} align="stretch" gap={1}>
-                                                {courseIdx > 0 && (
-                                                  <Text fontSize="sm" fontWeight="medium" color="fg.muted" textAlign="center">
-                                                    or
-                                                  </Text>
-                                                )}
-                                                <HStack
-                                                  justify="space-between"
-                                                  p={2}
-                                                  borderWidth="1px"
-                                                  borderRadius="md"
-                                                  bg="bg"
-                                                  gap={2}
-                                                >
-                                                  <Text fontSize="sm" fontWeight="medium">
-                                                    {course.name}
-                                                  </Text>
-                                                  <HStack gap={1}>
-                                                    <Button
-                                                      variant="ghost"
-                                                      size="xs"
-                                                      colorPalette="green"
-                                                      onClick={() => handleMarkAsTaken(course)}
-                                                    >
-                                                      <Icon as={MdCheckCircle} />
-                                                      Taken
-                                                    </Button>
-                                                    <Button
-                                                      variant="ghost"
-                                                      size="xs"
-                                                      colorPalette="blue"
-                                                      onClick={() => {
-                                                        handleCoreqClick(course.name)
-                                                        setDialogOpen(false)
-                                                      }}
-                                                    >
-                                                      <Icon as={MdOpenInNew} />
-                                                      Add
-                                                    </Button>
+                                            <VStack align="stretch" gap={2}>
+                                              {detail.courses.map((course, courseIdx) => (
+                                                <VStack key={course.id} align="stretch" gap={1}>
+                                                  {courseIdx > 0 && (
+                                                    <HStack justify="center" py={1}>
+                                                      <Text 
+                                                        fontSize="xs" 
+                                                        fontWeight="medium" 
+                                                        color="orange.500"
+                                                        textTransform="uppercase"
+                                                      >
+                                                        or
+                                                      </Text>
+                                                    </HStack>
+                                                  )}
+                                                  <HStack
+                                                    justify="space-between"
+                                                    p={3}
+                                                    borderWidth="1px"
+                                                    borderRadius="md"
+                                                    bg="bg.subtle"
+                                                    gap={3}
+                                                    _hover={{
+                                                      bg: "bg.muted",
+                                                      borderColor: "border.emphasized"
+                                                    }}
+                                                    transition="all 0.2s"
+                                                  >
+                                                    <Text fontSize="sm" fontWeight="semibold">
+                                                      {course.name}
+                                                    </Text>
+                                                    <HStack gap={2}>
+                                                      <Button
+                                                        variant="solid"
+                                                        size="xs"
+                                                        colorPalette="green"
+                                                        onClick={() => handleMarkAsTaken(course)}
+                                                      >
+                                                        <Icon as={MdCheckCircle} />
+                                                        Taken
+                                                      </Button>
+                                                      <Button
+                                                        variant="solid"
+                                                        size="xs"
+                                                        colorPalette="blue"
+                                                        onClick={() => {
+                                                          handleCoreqClick(course.name)
+                                                          setDialogOpen(false)
+                                                        }}
+                                                      >
+                                                        <Icon as={MdOpenInNew} />
+                                                        Add
+                                                      </Button>
+                                                    </HStack>
                                                   </HStack>
-                                                </HStack>
-                                              </VStack>
-                                            ))}
-                                            {detail.courses.length > 1 && (
-                                              <Text fontSize="sm" color="fg.muted">)</Text>
-                                            )}
-                                          </HStack>
+                                                </VStack>
+                                              ))}
+                                            </VStack>
+                                          </VStack>
                                         </VStack>
                                       )
                                     }
@@ -272,27 +327,35 @@ export const ConflictsIndicator = () => {
                                     // Missing corequisites can be added to schedule
                                     if (conflict.type === 'missing-corequisite') {
                                       return (
-                                        <Button
+                                        <HStack
                                           key={detail.id}
-                                          variant="ghost"
-                                          size="sm"
-                                          justifyContent="start"
-                                          fontSize="sm"
-                                          color="fg.muted"
+                                          justify="space-between"
+                                          p={3}
+                                          borderWidth="1px"
+                                          borderRadius="md"
+                                          bg="bg.subtle"
                                           _hover={{
-                                            color: "blue.500",
-                                            textDecoration: "underline",
-                                            bg: "bg.muted"
+                                            bg: "bg.muted",
+                                            borderColor: "border.emphasized"
                                           }}
-                                          onClick={() => {
-                                            handleCoreqClick(detail.name)
-                                            setDialogOpen(false)
-                                          }}
-                                          px={2}
+                                          transition="all 0.2s"
                                         >
-                                          <Icon as={MdOpenInNew} />
-                                          {detail.name}
-                                        </Button>
+                                          <Text fontSize="sm" fontWeight="semibold">
+                                            {detail.name}
+                                          </Text>
+                                          <Button
+                                            variant="solid"
+                                            size="xs"
+                                            colorPalette="blue"
+                                            onClick={() => {
+                                              handleCoreqClick(detail.name)
+                                              setDialogOpen(false)
+                                            }}
+                                          >
+                                            <Icon as={MdOpenInNew} />
+                                            Add to Schedule
+                                          </Button>
+                                        </HStack>
                                       )
                                     }
 

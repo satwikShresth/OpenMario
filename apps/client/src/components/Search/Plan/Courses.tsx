@@ -1,7 +1,7 @@
 import { Box, Flex, Text, ScrollArea, HStack, Icon, Button, Dialog, VStack, Switch as ChakraSwitch } from '@chakra-ui/react'
 import { SearchBox, RefinementSelectInDialog as RefinementSelect } from '@/components/Search'
 import { Configure, useInfiniteHits, useCurrentRefinements } from 'react-instantsearch'
-import { planEventsCollection, favoritesCollection } from '@/helpers/collections'
+import { planEventsCollection, sectionsCollection, termsCollection } from '@/helpers/collections'
 import { eq, useLiveQuery, and } from '@tanstack/react-db'
 import { PlanCard } from './PlanCard'
 import { useMobile } from '@/hooks'
@@ -86,22 +86,40 @@ export const checkCourseOverlap = (section: Section, dbEvents: any[]): boolean =
     return false
   }
 
+  // Map section days to day numbers
+  const dayMap: Record<string, number> = {
+    Sunday: 0,
+    Monday: 1,
+    Tuesday: 2,
+    Wednesday: 3,
+    Thursday: 4,
+    Friday: 5,
+    Saturday: 6,
+  }
+
+  const sectionDayNumbers = section.days.map((day: string) => dayMap[day])
+
   return dbEvents.some((event: any) => {
     // Only check course events
-    if (event.type === 'course' && event.days && event.startTime && event.endTime) {
-      const eventDays = JSON.parse(event.days) as string[]
+    if (event.type === 'course' && event.start && event.end) {
+      const eventStart = new Date(event.start)
+      const eventEnd = new Date(event.end)
+      const eventDayOfWeek = eventStart.getDay()
 
-      // Check if there's any day overlap
-      const hasCommonDay = section.days.some((day: string) => eventDays.includes(day))
-      if (!hasCommonDay) {
+      // Check if the section meets on the same day as this event
+      if (!sectionDayNumbers.includes(eventDayOfWeek)) {
         return false
       }
+
+      // Extract time from event dates
+      const eventStartTime = `${eventStart.getHours().toString().padStart(2, '0')}:${eventStart.getMinutes().toString().padStart(2, '0')}:00`
+      const eventEndTime = `${eventEnd.getHours().toString().padStart(2, '0')}:${eventEnd.getMinutes().toString().padStart(2, '0')}:00`
 
       return timeRangesOverlap(
         section.start_time,
         section.end_time,
-        event.startTime,
-        event.endTime
+        eventStartTime,
+        eventEndTime
       )
     }
 
@@ -122,38 +140,48 @@ export const PlanCourses = () => {
     navigate({ search: { term: currentTerm, year: currentYear, search: query } })
   }
 
-  // Fetch events to get CRNs of already added courses (for current term/year only)
-  const { data: dbEvents } = useLiveQuery(
+  // Fetch sections that are planned for current term/year (to get CRNs)
+  const { data: plannedSections } = useLiveQuery(
     // @ts-ignore
-    (q) => q.from({ events: planEventsCollection })
-      .select(({ events }) => ({ ...events }))
-      .where(({ events }) => eq(events.type, 'course'))
+    (q) => q
+      .from({ sec: sectionsCollection })
+      .innerJoin({ term: termsCollection }, ({ sec, term }) => eq(sec.termId, term.id))
+      .select(({ sec }) => ({ ...sec }))
+      .where(({ sec, term }) => and(
+        eq(sec.status, 'planned'),
+        eq(term.term, currentTerm),
+        eq(term.year, currentYear)
+      )),
+    [currentTerm, currentYear]
   )
 
   // Fetch ALL events (including unavailable) for overlap checking (for current term/year only)
   const { data: allEvents } = useLiveQuery(
     // @ts-ignore
-    (q) => q.from({ events: planEventsCollection })
+    (q) => q
+      .from({ events: planEventsCollection })
+      .innerJoin({ term: termsCollection }, ({ events, term }) => eq(events.termId, term.id))
       .select(({ events }) => ({ ...events }))
-      .where(({ events }) => and(
-        eq(events.term, currentTerm),
-        eq(events.year, currentYear)
+      .where(({ term }) => and(
+        eq(term.term, currentTerm),
+        eq(term.year, currentYear)
       )),
     [currentTerm, currentYear]
   )
 
-  // Fetch liked courses
-  const { data: likedCourses } = useLiveQuery(
+  // Fetch liked sections (all terms)
+  const { data: likedSections } = useLiveQuery(
     // @ts-ignore
-    (q) => q.from({ favorites: favoritesCollection })
-      .select(({ favorites }) => ({ ...favorites }))
+    (q) => q.from({ sections: sectionsCollection })
+      .select(({ sections }) => ({ ...sections }))
+      .where(({ sections }) => eq(sections.liked, true))
   )
 
-  // Get CRNs of courses already in schedule
-  const addedCRNs = dbEvents?.map((e: any) => e.crn).filter(Boolean) ?? []
+  // Get CRNs of courses already in schedule (planned for current term)
+  const addedCRNs = plannedSections?.map((s: any) => s.crn).filter(Boolean) ?? []
 
-  // Get CRNs of liked courses
-  const likedCRNs = likedCourses?.map((f: any) => f.crn).filter(Boolean) ?? []
+  // Get CRNs of liked sections
+  const likedCRNs = likedSections?.map((s: any) => s.crn).filter(Boolean) ?? []
 
   // Create filter string for liked courses if enabled
   const favoritesFilter = likedCRNs.length > 0

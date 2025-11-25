@@ -8,6 +8,8 @@ const { queryClient } = getContext();
 export type ConflictType =
    | 'duplicate'
    | 'overlap'
+   | 'course-overlap'
+   | 'duplicate-course'
    | 'missing-corequisite'
    | 'missing-prerequisite'
    | 'unavailable-overlap';
