@@ -137,7 +137,7 @@ export const PlanCourses = () => {
   const [filtersOpen, setFiltersOpen] = useState(false)
 
   const handleSearchChange = (query: string) => {
-    navigate({ search: { term: currentTerm, year: currentYear, search: query } })
+    navigate({ search: { term: currentTerm, year: currentYear, search: query || undefined } })
   }
 
   // Fetch sections that are planned for current term/year (to get CRNs)
