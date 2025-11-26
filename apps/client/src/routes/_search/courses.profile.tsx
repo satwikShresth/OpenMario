@@ -242,7 +242,9 @@ function RouteComponent() {
       const hasLikedSection = courseSections.some((s: any) => s.liked);
 
       // Find all planned terms for this course's CRNs (deduplicated)
-      const plannedTerm = termsCollection.get(courseSections![0]!.term!);
+      const plannedTerm = courseSections.length > 0 && courseSections[0]!.term
+        ? termsCollection.get(courseSections[0]!.term)
+        : null;
 
       // Determine status
       let status: 'considering' | 'planned' | 'liked' | 'taken';
@@ -263,7 +265,7 @@ function RouteComponent() {
         credits: course.credits,
         status,
         crns,
-        plannedTerm: `${plannedTerm?.term} ${plannedTerm?.year}`
+        plannedTerm: plannedTerm ? `${plannedTerm.term} ${plannedTerm.year}` : '-'
       });
     });
   }
