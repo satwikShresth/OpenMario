@@ -56,7 +56,7 @@ export default ({ course_id }: PreReqProps) => {
                                                       ? preReqGroup.length > 1 ? '(' : null
                                                       : 'or'}
                                                    <Link
-                                                      to={`/courses/plan/$course_id`}
+                                                      to={`/courses/explore/$course_id`}
                                                       params={{
                                                          course_id: preReq?.id!
                                                       }}
@@ -145,7 +145,7 @@ export default ({ course_id }: PreReqProps) => {
                         {(coreq) => (
                            <Flex>
                               <Link
-                                 to={`/courses/plan/$course_id`}
+                                 to={`/courses/explore/$course_id`}
                                  params={{
                                     course_id: coreq?.id!
                                  }}
