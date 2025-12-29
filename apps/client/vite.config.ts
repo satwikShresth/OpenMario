@@ -5,7 +5,7 @@ import tsconfigPaths from 'vite-tsconfig-paths';
 
 import { tanstackRouter } from '@tanstack/router-plugin/vite';
 import { fileURLToPath, URL } from 'node:url';
-import { compileMigrations } from './plugins/compile-migrations.ts';
+import { compileMigrations, fastRefreshPolyfill } from './plugins';
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -16,6 +16,7 @@ export default defineConfig({
       format: 'es'
    },
    plugins: [
+      fastRefreshPolyfill(),
       compileMigrations(),
       // devtools(),
       tanstackRouter({
@@ -23,9 +24,10 @@ export default defineConfig({
          autoCodeSplitting: true
       }),
       viteReact({
+         jsxRuntime: 'automatic',
          babel: {
             plugins: [
-               'babel-plugin-react-compiler',
+               ['babel-plugin-react-compiler', {}],
                '@babel/plugin-transform-react-display-name'
             ]
          }

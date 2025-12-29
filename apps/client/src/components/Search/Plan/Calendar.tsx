@@ -72,6 +72,14 @@ export const PlanCalendar = () => {
   })
 
   const events = (dbEvents ?? []).map((event) => {
+    console.debug('🔄 Processing event:', {
+      id: event.id,
+      type: event.type,
+      title: event.title,
+      start: event.start,
+      end: event.end,
+      crn: event.crn
+    })
     // Check if this course has conflicts
     const courseHasConflict = event.type === 'course' && event.courseId && hasConflict(event.courseId)
     
@@ -111,21 +119,59 @@ export const PlanCalendar = () => {
       const endHours = eventEnd.getHours().toString().padStart(2, '0');
       const endMinutes = eventEnd.getMinutes().toString().padStart(2, '0');
 
-      return {
+      // Calculate day of week (FullCalendar uses 0=Sunday, 1=Monday, etc.)
+      const dayOfWeek = eventStart.getDay();
+      
+      // Create start and end recurrence dates (set to start of day in local timezone)
+      const startRecurDate = new Date(currentYear, getTermMonth(currentTerm), 1);
+      startRecurDate.setHours(0, 0, 0, 0);
+      
+      const endRecurDate = new Date(currentYear, getTermMonth(currentTerm) + 3, 0);
+      endRecurDate.setHours(23, 59, 59, 999);
+
+      const recurringEvent = {
         ...baseEvent,
-        startTime: `${startHours}:${startMinutes}`, // HH:MM in local time
-        endTime: `${endHours}:${endMinutes}`, // HH:MM in local time
-        daysOfWeek: [eventStart.getDay()], // Day of week in local time (0=Sunday, 1=Monday, etc.)
-        startRecur: new Date(currentYear, getTermMonth(currentTerm), 1),
-        endRecur: new Date(currentYear, getTermMonth(currentTerm) + 3, 0)
+        startTime: `${startHours}:${startMinutes}`, // HH:MM format
+        endTime: `${endHours}:${endMinutes}`, // HH:MM format
+        daysOfWeek: [dayOfWeek], // Day of week (0=Sunday, 1=Monday, etc.)
+        startRecur: startRecurDate, // Date object
+        endRecur: endRecurDate // Date object
       };
+      
+      console.debug('✅ Created recurring event:', {
+        id: recurringEvent.id,
+        title: recurringEvent.title,
+        daysOfWeek: recurringEvent.daysOfWeek,
+        startTime: recurringEvent.startTime,
+        endTime: recurringEvent.endTime,
+        startRecur: recurringEvent.startRecur,
+        endRecur: recurringEvent.endRecur
+      });
+      
+      return recurringEvent;
     }
     // Unavailable events are one-time occurrences
-    return {
+    const unavailableEvent = {
       ...baseEvent,
       start: event.start! as DateInput,
       end: event.end! as DateInput
     };
+    
+    console.debug('✅ Created unavailable event:', {
+      id: unavailableEvent.id,
+      title: unavailableEvent.title,
+      start: unavailableEvent.start,
+      end: unavailableEvent.end
+    });
+    
+    return unavailableEvent;
+  })
+  
+  console.debug('📊 Final events array:', {
+    totalEvents: events.length,
+    courseEvents: events.filter(e => e.type === 'course').length,
+    unavailableEvents: events.filter(e => e.type === 'unavailable').length,
+    events: events
   })
 
   // Handle creating unavailable events by dragging
@@ -251,6 +297,17 @@ export const PlanCalendar = () => {
     setDeleteDialogOpen(false)
   }
 
+  // Calculate initial date for the term (show the week containing the term start)
+  const termStartDate = new Date(currentYear, getTermMonth(currentTerm), 1)
+  
+  // Set initial date to the Monday of the week containing the term start
+  // FullCalendar week view starts on Monday (day 1), but getDay() returns 0 for Sunday
+  const initialDate = new Date(termStartDate)
+  const dayOfWeek = initialDate.getDay()
+  // Convert to Monday-based: 0=Sunday -> 6, 1=Monday -> 0, etc.
+  const mondayOffset = dayOfWeek === 0 ? -6 : 1 - dayOfWeek
+  initialDate.setDate(initialDate.getDate() + mondayOffset)
+
   return (
     <VStack align='stretch' gap={2}>
 
@@ -268,6 +325,7 @@ export const PlanCalendar = () => {
           plugins={[timeGridPlugin, interactionPlugin]}
           timeZone='local'
           initialView="timeGridWeek"
+          initialDate={initialDate}
           headerToolbar={false}
           dayHeaderFormat={{ weekday: 'short' }}
           dayHeaderContent={(args) => {
