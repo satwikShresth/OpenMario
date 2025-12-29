@@ -3,7 +3,6 @@ import { IoIosInformationCircleOutline } from 'react-icons/io';
 import { useQuery } from '@tanstack/react-query';
 import { Tag } from '@/components/ui';
 import { Link } from '@tanstack/react-router';
-import { linkOptions } from '@tanstack/react-router';
 import { useMobile } from '@/hooks';
 import { orpc } from '@/helpers';
 
@@ -56,23 +55,26 @@ export default ({ course_id }: PreReqProps) => {
                                                    {courseIdx === 0
                                                       ? preReqGroup.length > 1 ? '(' : null
                                                       : 'or'}
-                                                   <Tag
-                                                      as={Link}
-                                                      {...linkOptions({
-                                                         //@ts-ignore: hsupp
-                                                         to: `/courses/${preReq?.id!}`,
-                                                         reloadDocument: false,
-                                                         resetScroll: false,
-                                                         replace: true,
-                                                      })}
-                                                      minHeight='7'
-                                                      size='lg'
-                                                      colorScheme='blue'
-                                                      cursor='pointer'
-                                                      endElement={<IoIosInformationCircleOutline />}
+                                                   <Link
+                                                      to={`/courses/plan/$course_id`}
+                                                      params={{
+                                                         course_id: preReq?.id!
+                                                      }}
+                                                      reloadDocument={false}
+                                                      resetScroll={false}
+                                                      replace={true}
                                                    >
-                                                      {`${preReq.subjectId} ${preReq.courseNumber}`}
-                                                   </Tag>
+
+                                                      <Tag
+                                                         minHeight='7'
+                                                         size='lg'
+                                                         colorScheme='blue'
+                                                         cursor='pointer'
+                                                         endElement={<IoIosInformationCircleOutline />}
+                                                      >
+                                                         {`${preReq.subjectId} ${preReq.courseNumber}`}
+                                                      </Tag>
+                                                   </Link>
                                                    {preReqGroup.length > 1 &&
                                                       preReqGroup.length - 1 === courseIdx
                                                       ? ')'
@@ -142,23 +144,26 @@ export default ({ course_id }: PreReqProps) => {
                      <For each={reqInfo?.corequisites}>
                         {(coreq) => (
                            <Flex>
-                              <Tag
-                                 as={Link}
-                                 {...linkOptions({
-                                    //@ts-ignore: hsupp
-                                    to: `/courses/${coreq?.id!}`,
-                                    reloadDocument: false,
-                                    resetScroll: false,
-                                    replace: true,
-                                 })}
-                                 minHeight='7'
-                                 size='lg'
-                                 colorScheme='green'
-                                 cursor='pointer'
-                                 _hover={{ bg: 'green.100' }}
+                              <Link
+                                 to={`/courses/plan/$course_id`}
+                                 params={{
+                                    course_id: coreq?.id!
+                                 }}
+                                 reloadDocument={false}
+                                 resetScroll={false}
+                                 replace={true}
                               >
-                                 {`${coreq?.subjectId} ${coreq?.courseNumber}`}
-                              </Tag>
+
+                                 <Tag
+                                    minHeight='7'
+                                    size='lg'
+                                    colorScheme='green'
+                                    cursor='pointer'
+                                    _hover={{ bg: 'green.100' }}
+                                 >
+                                    {`${coreq?.subjectId} ${coreq?.courseNumber}`}
+                                 </Tag>
+                              </Link>
                            </Flex>
                         )}
                      </For>
