@@ -4,6 +4,14 @@ A modern platform for students to share and discover co-op salary information an
 
 ![OpenMario Banner](./apps/client/public/openmario.png)
 
+[![Join our Discord](https://img.shields.io/badge/Discord-Join%20Us-7289DA?style=for-the-badge&logo=discord&logoColor=white)](https://discord.gg/ENRP6mtcwU)
+[![License](https://img.shields.io/badge/license-MIT-blue.svg?style=for-the-badge)](LICENSE)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.9-blue?style=for-the-badge&logo=typescript)](https://www.typescriptlang.org/)
+[![React](https://img.shields.io/badge/React-19-61DAFB?style=for-the-badge&logo=react)](https://reactjs.org/)
+[![Bun](https://img.shields.io/badge/Bun-1.3-000000?style=for-the-badge&logo=bun)](https://bun.sh)
+
+> 💬 **Join our community!** Have questions or want to contribute? [Join our Discord server](https://discord.gg/ENRP6mtcwU)
+
 ## 🚀 Features
 
 - **Salary Database**: Browse and contribute co-op salary information
@@ -244,9 +252,18 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 For support, feedback, or questions:
 - Open an issue on GitHub
 - Use the in-app feedback button
-- Contact the maintainers
+- Contact me on discord
 
 ---
 
+## Community & Development
+
+Join our Discord community to collaborate, ask questions, and contribute to the development of OpenMario:
+
+[![Join our Discord](https://img.shields.io/badge/Discord-Join%20Us-7289DA?style=for-the-badge&logo=discord&logoColor=white)](https://discord.gg/ENRP6mtcwU)
+
+**[Join Discord Server](https://discord.gg/ENRP6mtcwU)**
+
 Made with ❤️ for students
+
 
