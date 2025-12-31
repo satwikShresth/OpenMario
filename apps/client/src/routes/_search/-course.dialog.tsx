@@ -23,7 +23,12 @@ export function CourseDialogPage() {
    return (
       <Dialog.Root
          open
-         onOpenChange={() => navigate({ to: `..` })}
+         onOpenChange={() => navigate({
+            to: `..`,
+            reloadDocument: false,
+            resetScroll: false,
+            replace: true,
+         })}
          size='xl'
          placement='top'
          motionPreset='slide-in-bottom'
