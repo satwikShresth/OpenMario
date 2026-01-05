@@ -83,22 +83,22 @@ export const Card = ({ section }: { section: Section }) => {
                         gap={{ base: 1, sm: 2 }}
                         width='full'
                      >
-                        <Text
-                           _hover={{ textDecoration: 'underline' }}
-                           as={Link}
-                           {...linkOptions({
-                              //@ts-ignore: hsupp
-                              to: `${match.fullPath}/${section?.course_id!}`,
-                              reloadDocument: false,
-                              resetScroll: false,
-                              replace: true,
-                           })}
-                           fontSize={{ base: 'lg', md: 'xl' }}
-                           fontWeight='semibold'
-                           lineHeight='1.2'
+                        <Link
+                           to={`${(match.fullPath) as '/courses/plan' | '/courses/profile' | '/courses/explore'}/$course_id`}
+                           params={{ course_id: section?.course_id! }}
+                           reloadDocument={false}
+                           resetScroll={false}
+                           replace={true}
                         >
-                           {section.course}: {section.title}
-                        </Text>
+                           <Text
+                              _hover={{ textDecoration: 'underline' }}
+                              fontSize={{ base: 'lg', md: 'xl' }}
+                              fontWeight='semibold'
+                              lineHeight='1.2'
+                           >
+                              {section.course}: {section.title}
+                           </Text>
+                        </Link>
                      </Flex>
                   </VStack>
                   <Flex
@@ -369,19 +369,19 @@ const CardButtons = (
             })
          }
 
-      // Get or create course
-      const existingCourse = coursesCollection.get(section.course_id)
-      if (!existingCourse) {
-         coursesCollection.insert({
-            id: section.course_id,
-            course: section.course,
-            title: section.title,
-            completed: false,
-            credits: section.credits || null,
-            createdAt: new Date(),
-            updatedAt: new Date()
-         })
-      }
+         // Get or create course
+         const existingCourse = coursesCollection.get(section.course_id)
+         if (!existingCourse) {
+            coursesCollection.insert({
+               id: section.course_id,
+               course: section.course,
+               title: section.title,
+               completed: false,
+               credits: section.credits || null,
+               createdAt: new Date(),
+               updatedAt: new Date()
+            })
+         }
 
          // Toggle section like
          const existingSection = sectionsCollection.get(section.crn.toString())
@@ -391,7 +391,7 @@ const CardButtons = (
                draft.liked = !draft.liked
                draft.updatedAt = new Date()
             })
-            
+
             toaster.create({
                title: existingSection.liked ? 'Removed from favorites' : 'Added to favorites',
                type: 'success',
@@ -400,7 +400,7 @@ const CardButtons = (
          } else {
             // Section doesn't exist, create it with liked = true
             sectionsCollection.insert({
-         crn: section.crn.toString(),
+               crn: section.crn.toString(),
                termId,
                courseId: section.course_id,
                status: null,
@@ -409,7 +409,7 @@ const CardButtons = (
                createdAt: new Date(),
                updatedAt: new Date()
             })
-            
+
             toaster.create({
                title: 'Added to favorites',
                type: 'success',
