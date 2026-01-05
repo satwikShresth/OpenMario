@@ -21,13 +21,16 @@ import {
   Input,
   Text,
   Spinner,
-  Icon
+  Icon,
+  Container
 } from '@chakra-ui/react';
 import { useState, useMemo, useEffectEvent, useEffect } from 'react';
 import { MdAdd, MdCheckCircle, MdLightbulb } from 'react-icons/md';
 import { useInstantSearch, Configure } from 'react-instantsearch';
 import { toaster } from '@/components/ui/toaster';
 import { useSearchContext } from '@/components/Search';
+import { LoadingComponent } from '@/components/common';
+import { useMigration } from '@/contexts/MigrationContext';
 
 export const Route = createFileRoute('/_search/courses/profile')({
   component: RouteComponent
@@ -188,6 +191,27 @@ function CourseSearchPopover({
 function RouteComponent() {
   const [selection, setSelection] = useState<string[]>([]);
   const navigate = useNavigate();
+  const { status } = useMigration();
+
+  // Show loading if database is still initializing
+  if (status === 'pending' || status === 'initializing') {
+    return (
+      <LoadingComponent
+        title="Initializing Database"
+        message="Setting up your local database and running migrations. This may take a moment..."
+        variant="processing"
+      />
+    )
+  }
+
+  // Show error if migration failed
+  if (status === 'error') {
+    return (
+      <Container maxW="container.xl" py={4}>
+        <Text color="red.500">Failed to initialize database. Please refresh the page.</Text>
+      </Container>
+    )
+  }
 
   // Fetch all courses
   const { data: allCourses } = useLiveQuery(
