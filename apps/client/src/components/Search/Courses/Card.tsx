@@ -15,7 +15,7 @@ import {
 import type { Section } from '@/types';
 import { Tag, Tooltip } from '@/components/ui';
 import { BiLinkExternal } from 'react-icons/bi';
-import { Link, linkOptions } from '@tanstack/react-router';
+import { Link, linkOptions, useMatch } from '@tanstack/react-router';
 import { getDifficultyColor, getRatingColor, weekItems } from './helpers';
 import { formatTime, orpc } from '@/helpers';
 import { useHits } from 'react-instantsearch';
@@ -51,6 +51,7 @@ export const Cards = () => {
 
 export const Card = ({ section }: { section: Section }) => {
    const isMobile = useMobile();
+   const match = useMatch({ strict: false });
    const { data: courseRaw } = useQuery(
       orpc.graph.course.queryOptions({ input: { course_id: section.course_id } })
    );
@@ -83,7 +84,7 @@ export const Card = ({ section }: { section: Section }) => {
                         width='full'
                      >
                         <Link
-                           to='/courses/explore/$course_id'
+                           to={`${(match.fullPath) as '/courses/plan' | '/courses/profile' | '/courses/explore'}/$course_id`}
                            params={{ course_id: section?.course_id! }}
                            reloadDocument={false}
                            resetScroll={false}
