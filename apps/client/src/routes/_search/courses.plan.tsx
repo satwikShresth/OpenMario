@@ -4,6 +4,8 @@ import { Plan } from '@/components/Search/Plan'
 import { ConflictsIndicator } from '@/components/Search/Plan/ConflictsIndicator'
 import { CreditsIndicator } from '@/components/Search/Plan/CreditsIndicator'
 import { Toaster } from '@/components/ui/toaster'
+import { LoadingComponent } from '@/components/common'
+import { useMigration } from '@/contexts/MigrationContext'
 import { MdChevronLeft, MdChevronRight } from 'react-icons/md'
 import { z } from 'zod'
 
@@ -24,6 +26,7 @@ export const Route = createFileRoute('/_search/courses/plan')({
 function RouteComponent() {
   const navigate = Route.useNavigate()
   const { term: currentTerm, year: currentYear, search: searchQuery } = Route.useSearch()
+  const { status } = useMigration()
 
   const handlePrevTerm = () => {
     const currentIndex = TERMS.indexOf(currentTerm)
@@ -35,6 +38,26 @@ function RouteComponent() {
     const currentIndex = TERMS.indexOf(currentTerm)
     const newIndex = (currentIndex + 1) % TERMS.length
     navigate({ search: { term: TERMS[newIndex], year: currentYear, search: searchQuery } })
+  }
+
+  // Show loading if database is still initializing
+  if (status === 'pending' || status === 'initializing') {
+    return (
+      <LoadingComponent
+        title="Initializing Database"
+        message="Setting up your local database and running migrations. This may take a moment..."
+        variant="processing"
+      />
+    )
+  }
+
+  // Show error if migration failed
+  if (status === 'error') {
+    return (
+      <Container maxW="container.xl" py={4}>
+        <Text color="red.500">Failed to initialize database. Please refresh the page.</Text>
+      </Container>
+    )
   }
 
   return (
