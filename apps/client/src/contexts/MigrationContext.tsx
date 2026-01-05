@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { createContext, useContext, useState, useEffect, type ReactNode } from 'react';
 import { migrate, db } from '@/db';
 import { termsCollection } from '@/helpers';
 import { terms } from '@/db/schema';
@@ -34,9 +34,9 @@ export function MigrationProvider({ children }: MigrationProviderProps) {
       try {
         setStatus('initializing');
         await migrate();
-        
+
         if (!isMounted) return;
-        
+
         await db
           .insert(terms)
           .values([
@@ -46,11 +46,11 @@ export function MigrationProvider({ children }: MigrationProviderProps) {
             { term: 'Winter', year: 2025, isActive: false }
           ])
           .onConflictDoNothing();
-        
+
         if (!isMounted) return;
-        
+
         await termsCollection.preload();
-        
+
         if (isMounted) {
           setStatus('completed');
         }
