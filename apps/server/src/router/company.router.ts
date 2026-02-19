@@ -16,6 +16,12 @@ export const createCompany = os.company.create.handler(
                      id: company.id,
                      name: company.name
                   })
+                  .catch(error => {
+                     tx.rollback();
+                     throw new Error(
+                        error.message || 'Company creation failed'
+                     );
+                  })
          )
          .then(([company]) => ({
             company: company!,

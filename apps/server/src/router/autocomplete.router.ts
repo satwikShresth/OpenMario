@@ -10,14 +10,13 @@ const LIMIT = 100;
  */
 export const searchCompany = os.autocomplete.company.handler(
    async ({ input: { comp } }) => {
-      const query = querySQL(company.name, comp);
-      const order = orderSQL(company.name, comp);
+      const query = querySQL(company.name, comp)!;
+      const order = orderSQL(company.name, comp)!;
 
       return await db
          .select({ id: company.id, name: company.name })
          .from(company)
          .where(query)
-         //@ts-expect-error orderBy type issue with sql template
          .orderBy(order)
          .limit(LIMIT)
          .then(results => results)
@@ -37,7 +36,7 @@ export const searchPosition = os.autocomplete.position.handler(
          comp !== '*' ? eq(company.name, comp.trim()) : undefined,
          querySQL(position.name, pos)
       ];
-      const order = orderSQL(position.name, pos);
+      const order = orderSQL(position.name, pos)!;
 
       return await db
          .select({
@@ -47,7 +46,6 @@ export const searchPosition = os.autocomplete.position.handler(
          .from(position)
          .innerJoin(company, eq(position.company_id, company.id))
          .where(and(...queries))
-         //@ts-expect-error orderBy type issue with sql template
          .orderBy(order)
          .limit(LIMIT)
          .then(results => {
