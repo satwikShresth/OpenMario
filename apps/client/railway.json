@@ -8,7 +8,8 @@
       "providers": ["bun"],
       "phases": {
         "setup": {
-          "nixPkgs": ["bun", "caddy"]
+          "nixPkgs": ["bun", "caddy", "nodejs_20", "python3", "gnumake", "gcc", "postgresql"],
+          "cmds": ["npm install -g node-gyp"]
         },
         "install": {
           "cmds": ["bun install"]
