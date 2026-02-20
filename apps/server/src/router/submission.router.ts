@@ -1,9 +1,25 @@
 import { os } from './context';
-import { db, company, position, location, submission } from '@/db';
-import { and, eq, or, sql, asc, desc, isNull, type SQL } from 'drizzle-orm';
-import { querySQL } from './helpers';
+import {
+   db,
+   company,
+   position,
+   location,
+   submission,
+   submissionMView
+} from '@/db';
+import {
+   and,
+   eq,
+   or,
+   sql,
+   asc,
+   desc,
+   isNull,
+   type SQL,
+   type SelectedFields
+} from 'drizzle-orm';
 import { maybe } from '@/utils';
-import { SubmissionQuerySchema } from '@/contracts/submission.contract';
+import type { SubmissionQuerySchema } from '@/contracts/submission.contract';
 import type { z } from 'zod';
 
 // Type definitions
@@ -12,101 +28,87 @@ type SubmissionQueryParams = z.infer<typeof SubmissionQuerySchema>;
 /**
  * Helper function to get position ID by company and position name
  */
-const getPositionId = async (companyName: string, positionName: string) => {
-   const [result] = await db
-      .select({ position_id: position.id })
-      .from(position)
-      .innerJoin(company, eq(position.company_id, company.id))
-      .where(
-         and(eq(company.name, companyName), eq(position.name, positionName))
-      )
-      .limit(1);
-
-   if (!result?.position_id) {
-      throw new Error('Company or Position does not exist');
-   }
-
-   return result.position_id;
-};
+const getPositionCTE = (companyName: string, positionName: string) =>
+   db.$with('position_cte').as(
+      db
+         .select({ position_id: position.id })
+         .from(position)
+         .innerJoin(company, eq(position.company_id, company.id))
+         .where(
+            and(eq(company.name, companyName), eq(position.name, positionName))
+         )
+         .limit(1)
+   );
 
 /**
  * Helper function to get location ID by city and state code
  */
-const getLocationId = async (locationStr: string) => {
+const getLocationCTE = (locationStr: string) => {
    const [city, state_code] = locationStr.split(',').map(s => s.trim());
 
-   const [result] = await db
-      .select({ location_id: location.id })
-      .from(location)
-      .where(
-         and(eq(location.city, city!), eq(location.state_code, state_code!))
-      )
-      .limit(1);
-
-   if (!result?.location_id) {
-      throw new Error('Location does not exist');
-   }
-
-   return result.location_id;
+   return db.$with('location_cte').as(
+      db
+         .select({ location_id: location.id })
+         .from(location)
+         .where(
+            and(eq(location.city, city!), eq(location.state_code, state_code!))
+         )
+         .limit(1)
+   );
 };
 
 /**
- * Helper function to build where clause from query parameters
+ * Helper function to build where clause from query parameters.
+ * All filters target the flat materialized view — no runtime joins needed.
  */
 const buildWhereClause = (params: SubmissionQueryParams) =>
    and(
-      // Company filter - if multiple companies provided, match any of them
-      maybe(params?.company, (companies: string[]) =>
-         or(...companies.map((name: string) => eq(company.name, name)))
+      // BETWEEN is a single range check vs 22 OR equality conditions
+      maybe(
+         params?.year,
+         ([start_year, end_year]: number[]) =>
+            sql`${submissionMView.year} between ${start_year} and ${end_year}`
       ),
-      // Position filter - if multiple positions provided, match any of them using fuzzy search
-      maybe(params?.position, (positions: string[]) =>
-         or(...positions.map((pos: string) => querySQL(position.name, pos)))
-      ),
-      //
-      // // Location filter - match city and state code
-      maybe(params?.location, (locations: string[]) =>
-         or(
-            ...locations.map((loc: string) =>
-               and(
-                  eq(location.city, loc.split(', ')[0]!),
-                  eq(location.state_code, loc.split(', ')[1]!)
-               )
-            )
-         )
-      ),
-      //
-      // // Year filter - match any of the provided years
-      maybe(params?.year, ([start_year, end_year]: number[]) =>
-         or(
-            ...Array.from({ length: end_year! - start_year! + 1 }, (_, i) =>
-               eq(submission.year, start_year! + i)
-            )
-         )
-      ),
-
-      // Coop year filter
       maybe(params?.coop_year, (coop_years: string[]) =>
          or(
             ...coop_years.map((coop_year: string) =>
-               eq(submission.coop_year, coop_year as any)
+               eq(submissionMView.coop_year, coop_year as any)
             )
          )
       ),
-
-      // Coop cycle filter
       maybe(params?.coop_cycle, (coop_cycles: string[]) =>
          or(
             ...coop_cycles.map((cycle: string) =>
-               eq(submission.coop_cycle, cycle as any)
+               eq(submissionMView.coop_cycle, cycle as any)
             )
          )
       ),
-
-      // Program level filter - single value
       maybe(params?.program_level, (level: string) =>
-         eq(submission.program_level, level as any)
-      )
+         eq(submissionMView.program_level, level as any)
+      ),
+      maybe(params?.search, (search: string) => {
+         const terms = search.trim().split(/\s+/);
+
+         const termClauses = terms.map(
+            term => sql`paradedb.boolean(
+            should => ARRAY[
+               -- fuzzy fallback on the concat field catches typos/partials
+               paradedb.fuzzy_term('search_text', ${term}, distance => 2),
+
+               -- prefix match per field with boosts for ranking
+               paradedb.boost(4.0, paradedb.fuzzy_term('company_name',  ${term}, distance => 2, prefix => true)),
+               paradedb.boost(3.0, paradedb.fuzzy_term('position_name', ${term}, distance => 2, prefix => true)),
+               paradedb.boost(2.0, paradedb.fuzzy_term('city',          ${term}, distance => 2, prefix => true)),
+               paradedb.boost(1.5, paradedb.fuzzy_term('state',         ${term}, distance => 2, prefix => true)),
+               paradedb.boost(1.0, paradedb.fuzzy_term('details',       ${term}, distance => 2, prefix => true))
+            ]
+         )`
+         );
+
+         return sql`${submissionMView.id} @@@ paradedb.boolean(
+         must => ARRAY[${sql.join(termClauses, sql`, `)}]
+      )`;
+      })
    );
 
 /**
@@ -115,22 +117,16 @@ const buildWhereClause = (params: SubmissionQueryParams) =>
 const getSortColumn = (
    field: SubmissionQueryParams['sortField']
 ): SQL<unknown> => {
-   switch (field) {
-      case 'company':
-         return sql`company_name`;
-      case 'position':
-         return sql`position_name`;
-      case 'compensation':
-         return sql`compensation`;
-      case 'year':
-         return sql`year`;
-      case 'coop':
-         return sql`coop_year`;
-      case 'location':
-         return sql`city`;
-      default:
-         return sql`compensation`;
-   }
+   const map = {
+      company: sql`company_name`,
+      position: sql`position_name`,
+      compensation: sql`compensation`,
+      year: sql`year`,
+      coop: sql`coop_year`,
+      location: sql`city`
+   };
+   const value = map[field]!;
+   return map[field] ? value : sql`compensation`;
 };
 
 /**
@@ -143,61 +139,62 @@ export const listSubmissions = os.submission.list.handler(async ({ input }) => {
 
    const whereClause = buildWhereClause(input);
 
-   try {
-      //@ts-ignore: selectDistinctOn type issue
-      const subQuerySelect = (distinct: boolean, schema: any) =>
-         distinct
-            ? db.selectDistinctOn(
-                 [
-                    company.name,
-                    position.name,
-                    submission.compensation,
-                    submission.program_level
-                 ],
-                 schema
-              )
-            : db.select(schema);
+   const subQuerySelect = <TSelection extends SelectedFields<any, any>>(
+      distinct: boolean,
+      fields: TSelection
+   ) =>
+      distinct
+         ? db.selectDistinctOn(
+              [
+                 submissionMView.company_name,
+                 submissionMView.position_name,
+                 submissionMView.compensation,
+                 submissionMView.program_level
+              ],
+              fields
+           )
+         : db.select(fields);
 
-      const subQuery = subQuerySelect(!!distinct, {
-         year: submission.year,
-         coop_year: submission.coop_year,
-         coop_cycle: submission.coop_cycle,
-         program_level: submission.program_level,
-         work_hours: submission.work_hours,
-         compensation: submission.compensation,
-         other_compensation: submission.other_compensation,
-         details: submission.details,
-         company: sql`${company.name}`.as('company_name'),
-         position: sql`${position.name}`.as('position_name'),
-         location_city: location.city,
-         location_state: location.state,
-         location_state_code: location.state_code
-      })
-         .from(submission)
-         .leftJoin(position, eq(submission.position_id, position.id))
-         .leftJoin(location, eq(submission.location_id, location.id))
-         .leftJoin(company, eq(position.company_id, company.id))
-         .where(whereClause)
-         .as('subQuery');
+   const subQuery = subQuerySelect(!!distinct, {
+      id: submissionMView.id,
+      year: submissionMView.year,
+      coop_year: submissionMView.coop_year,
+      coop_cycle: submissionMView.coop_cycle,
+      program_level: submissionMView.program_level,
+      work_hours: submissionMView.work_hours,
+      compensation: submissionMView.compensation,
+      other_compensation: submissionMView.other_compensation,
+      details: submissionMView.details,
+      company: submissionMView.company_name,
+      position: submissionMView.position_name,
+      location_city: submissionMView.city,
+      location_state: submissionMView.state,
+      location_state_code: submissionMView.state_code,
+      rank: sql`paradedb.score(id)`.as('rank')
+   })
+      .from(submissionMView)
+      .where(whereClause)
+      .as('sub_query');
 
-      const count = await db.$count(subQuery);
-      const data = await db
+   return await Promise.all([
+      db.$count(subQuery),
+      db
          .select()
          .from(subQuery)
-         .orderBy(order)
+         .orderBy(desc(sql`rank`), order)
          .offset((pageIndex - 1) * pageSize)
-         .limit(pageSize);
-
-      return {
+         .limit(pageSize)
+   ])
+      .then(([count, data]) => ({
          pageIndex,
          pageSize,
          count,
          data: data as any
-      };
-   } catch (error: any) {
-      console.error('Error listing submissions:', error);
-      throw new Error(error.message || 'Failed to list submissions');
-   }
+      }))
+      .catch(error => {
+         console.error('Error listing submissions:', error);
+         throw new Error(error.message || 'Failed to list submissions');
+      });
 });
 
 /**
@@ -205,13 +202,15 @@ export const listSubmissions = os.submission.list.handler(async ({ input }) => {
  */
 export const createSubmission = os.submission.create.handler(
    async ({ input }) => {
-      try {
-         const position_id = await getPositionId(input.company, input.position);
-         const location_id = await getLocationId(input.location);
+      const positionCTE = getPositionCTE(input.company, input.position);
+      const locationCTE = getLocationCTE(input.location);
 
-         const toBeInserted = {
-            position_id,
-            location_id,
+      return await db
+         .with(positionCTE, locationCTE)
+         .insert(submission)
+         .values({
+            position_id: sql`(select ${positionCTE.position_id} from ${positionCTE})`,
+            location_id: sql`(select ${locationCTE.location_id} from ${locationCTE})`,
             coop_cycle: input.coop_cycle,
             coop_year: input.coop_year,
             year: input.year,
@@ -221,23 +220,17 @@ export const createSubmission = os.submission.create.handler(
             other_compensation: input.other_compensation,
             details: input.details,
             owner_id: null
-         };
-
-         const [result] = await db
-            .insert(submission)
-            //@ts-ignore: type issue with enum
-            .values(toBeInserted)
-            .returning({ id: submission.id, owner_id: submission.owner_id });
-
-         return {
+         })
+         .returning({ id: submission.id, owner_id: submission.owner_id })
+         .then(([result]) => ({
             id: result!.id,
             owner_id: result!.owner_id,
             message: 'Added position successfully'
-         };
-      } catch (error: any) {
-         console.error('Error creating submission:', error);
-         throw new Error(error.message || 'Failed to create submission');
-      }
+         }))
+         .catch(error => {
+            console.error('Error creating submission:', error);
+            throw new Error(error.message || 'Failed to create submission');
+         });
    }
 );
 
@@ -250,31 +243,31 @@ export const updateSubmission = os.submission.update.handler(
          throw new Error('Submission ID is required for update');
       }
 
-      const position_id = await getPositionId(input.company, input.position);
-      const location_id = await getLocationId(input.location);
-
-      const toBeUpdated = {
-         position_id,
-         location_id,
-         coop_cycle: input.coop_cycle,
-         coop_year: input.coop_year,
-         year: input.year,
-         program_level: input.program_level,
-         work_hours: input.work_hours,
-         compensation: input.compensation,
-         other_compensation: input.other_compensation,
-         details: input.details
-      };
+      const positionCTE = getPositionCTE(input.company, input.position);
+      const locationCTE = getLocationCTE(input.location);
 
       return await db
+         .with(positionCTE, locationCTE)
          .update(submission)
-         .set(toBeUpdated)
-         //@ts-ignore: type issue with enum
+         .set({
+            position_id: sql`(select ${positionCTE.position_id} from ${positionCTE})`,
+            location_id: sql`(select ${locationCTE.location_id} from ${locationCTE})`,
+            coop_cycle: input.coop_cycle,
+            coop_year: input.coop_year,
+            year: input.year,
+            program_level: input.program_level,
+            work_hours: input.work_hours,
+            compensation: input.compensation,
+            other_compensation: input.other_compensation,
+            details: input.details
+         })
          .where(and(eq(submission.id, input.id), isNull(submission.owner_id)))
          .returning()
          .then(([value]) => {
             if (!value) {
-               throw new Error('Submission not found or you do not have permission to update it');
+               throw new Error(
+                  'Submission not found or you do not have permission to update it'
+               );
             }
             return {
                id: value.id,

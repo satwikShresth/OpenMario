@@ -1,6 +1,7 @@
 import {
    createListCollection,
    Field,
+   Input,
    Portal,
    Select,
    Slider,
@@ -8,46 +9,50 @@ import {
    Switch,
    VStack,
 } from '@chakra-ui/react';
-import { AsyncSelect } from 'chakra-react-select';
-import { useQueryClient } from '@tanstack/react-query';
 import { useForm } from '@tanstack/react-form';
+import { useEffect, useRef, useState } from 'react';
 import { HiCheck, HiX } from 'react-icons/hi';
-import { asyncComponents } from '@/components/common';
 import { useMobile } from '@/hooks';
-import { capitalizeWords, coopCycle, coopYear, marksMaker, orpc, programLevel } from '@/helpers';
+import { capitalizeWords, coopCycle, coopYear, marksMaker, programLevel } from '@/helpers';
 import { useSearch } from '@tanstack/react-router';
 import { useNavigate } from '@tanstack/react-router';
-
-type AutocompleteOptions = {
-   value: string;
-   label: string;
-   variant: string;
-};
-
-const ConvertMapFunc = (
-   value: string | { name: string } | undefined,
-): AutocompleteOptions => ({
-   value: typeof value === 'string' ? value : value?.name || '',
-   label: typeof value === 'string' ? value : value?.name || '',
-   variant: 'subtle',
-});
 
 export default () => {
    const query = useSearch({ from: '/salary' });
    const navigate = useNavigate({ from: '/salary' });
-   const queryClient = useQueryClient();
    const min = 2016;
    const max = new Date().getFullYear();
    const marks = marksMaker(min, max, 3);
 
+   // Local state for the search input — decoupled from URL so every keystroke
+   // doesn't re-trigger the route loader (which blanks the screen).
+   const [searchInput, setSearchInput] = useState(query?.search ?? '');
+   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+   useEffect(() => {
+      if (debounceRef.current) clearTimeout(debounceRef.current);
+      debounceRef.current = setTimeout(() => {
+         navigate({
+            search: (prev) => ({
+               ...prev,
+               search: searchInput.trim() || undefined,
+               pageIndex: 1,
+            }),
+            reloadDocument: false,
+            resetScroll: false,
+            replace: true,
+         });
+      }, 450);
+      return () => {
+         if (debounceRef.current) clearTimeout(debounceRef.current);
+      };
+   }, [searchInput]);
+
    const defaultValues = {
-      company: query?.company ?? [],
-      position: query?.position ?? [],
-      location: query?.location ?? [],
       year: query?.year ?? [],
       coop_cycle: query?.coop_cycle ?? [],
       coop_year: query?.coop_year ?? [],
-      program_level: query?.program_level ?? '', // or whatever default you want
+      program_level: query?.program_level ?? '',
       distinct: true,
    };
 
@@ -56,10 +61,11 @@ export default () => {
       defaultValues,
       listeners: {
          onChange: ({ formApi }) => {
+            const values = formApi.state.values;
             navigate({
                search: (prev) => ({
                   ...prev,
-                  ...formApi.state.values,
+                  ...values,
                   pageIndex: 1,
                }),
                reloadDocument: false,
@@ -70,22 +76,8 @@ export default () => {
       },
    });
 
-   //@ts-ignore: shut up
-   const selectProps = ({ state, name, handleChange, handleBlur }) => ({
-      name,
-      isMulti: true,
-      value: state.value?.map(ConvertMapFunc),
-      loadingMessage: () => 'Loading...',
-      placeholder: `Select a ${name}`,
-      components: asyncComponents,
-      onBlur: handleBlur,
-      //@ts-ignore: shut up
-      onChange: (values) => handleChange(values.map(({ value }) => value)),
-      noOptionsMessage: () => 'Keeping typing for autocomplete',
-   });
-
    return (
-      <form>
+      <form onSubmit={(e) => e.preventDefault()}>
          <VStack width='full'>
             <Stack
                direction={isMobile ? 'column' : 'row'}
@@ -93,76 +85,14 @@ export default () => {
                mb={2}
                gap={5}
             >
-               <form.Field name='company'>
-                  {(form) => (
-                     <Field.Root>
-                        <Field.Label>{capitalizeWords(form.name)}</Field.Label>
-                        <AsyncSelect
-                           {...selectProps(form)}
-                           loadOptions={(inputValue, callback) => {
-                              const query = { comp: inputValue };
-                              if (inputValue?.length >= 3) {
-                                 queryClient
-                                    .ensureQueryData(
-                                       orpc.autocomplete.company.queryOptions({
-                                          input: query,
-                                       })
-                                    )
-                                    .then((data) => callback(data?.map(ConvertMapFunc) || []))
-                                    .catch(() => callback([]));
-                              }
-                           }}
-                        />
-                     </Field.Root>
-                  )}
-               </form.Field>
-               <form.Field name='position'>
-                  {(form) => (
-                     <Field.Root>
-                        <Field.Label>{capitalizeWords(form.name)}</Field.Label>
-                        <AsyncSelect
-                           {...selectProps(form)}
-                           loadOptions={(inputValue, callback) => {
-                              const query = { comp: '*', pos: inputValue };
-                              if (inputValue?.length >= 3) {
-                                 queryClient
-                                    .ensureQueryData(
-                                       orpc.autocomplete.position.queryOptions({
-                                          input: query,
-                                       })
-                                    )
-                                    .then((data) => callback(data?.map(ConvertMapFunc) || []))
-                                    .catch(() => callback([]));
-                              }
-                           }}
-                        />
-                     </Field.Root>
-                  )}
-               </form.Field>
-
-               <form.Field name='location'>
-                  {(form) => (
-                     <Field.Root>
-                        <Field.Label>{capitalizeWords(form.name)}</Field.Label>
-                        <AsyncSelect
-                           {...selectProps(form)}
-                           loadOptions={(inputValue, callback) => {
-                              const query = { loc: inputValue };
-                              if (inputValue?.length >= 3) {
-                                 queryClient
-                                    .ensureQueryData(
-                                       orpc.autocomplete.location.queryOptions({
-                                          input: query,
-                                       })
-                                    )
-                                    .then((data) => callback(data?.map(ConvertMapFunc) || []))
-                                    .catch(() => callback([]));
-                              }
-                           }}
-                        />
-                     </Field.Root>
-                  )}
-               </form.Field>
+               <Field.Root flexGrow={1}>
+                  <Field.Label>Search</Field.Label>
+                  <Input
+                     value={searchInput}
+                     onChange={(e) => setSearchInput(e.target.value)}
+                     placeholder='Search by company, position, location...'
+                  />
+               </Field.Root>
                <form.Field name='distinct'>
                   {({ state, handleChange, name }) => (
                      <Switch.Root

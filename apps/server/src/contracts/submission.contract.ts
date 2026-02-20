@@ -22,15 +22,11 @@ const ensureArray = <T extends z.ZodTypeAny>(schema: T) =>
 
 // Common schemas
 export const SubmissionQuerySchema = z.object({
-   company: ensureArray(z.string().min(3).max(100)).optional(),
-   position: ensureArray(z.string().min(3).max(100)).optional(),
-   location: ensureArray(
-      z.string().regex(/^[A-Za-z\s.-]+,\s*[A-Z]{2}$/)
-   ).optional(),
    year: ensureArray(z.coerce.number()).optional(),
    coop_year: ensureArray(z.enum(coop_year)).optional(),
    coop_cycle: ensureArray(z.enum(coop_cycle)).optional(),
    program_level: z.enum(program_level).optional(),
+   search: z.string().min(1).max(200).optional(),
    sort: z.enum(['ASC', 'DESC']).optional().default('DESC'),
    sortField: z
       .enum(['company', 'position', 'location', 'year', 'coop', 'compensation'])

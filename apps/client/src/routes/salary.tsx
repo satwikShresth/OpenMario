@@ -14,7 +14,7 @@ import {
 } from '@chakra-ui/react';
 import { HiFilter } from 'react-icons/hi';
 import { Salary } from '@/components/Salary';
-import { useQuery } from '@tanstack/react-query';
+import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import { createFileRoute, Outlet } from '@tanstack/react-router';
 import { salarySearchSchema } from './-validator.ts';
 import { useMobile } from '@/hooks';
@@ -23,9 +23,6 @@ import z from 'zod';
 
 export const Route = createFileRoute('/salary')({
    validateSearch: z.optional(salarySearchSchema),
-   loaderDeps: ({ search }) => search!,
-   loader: ({ deps: query, context: { queryClient } }) =>
-      queryClient.ensureQueryData(orpc.submission.list.queryOptions({ input: query })),
    component: () => {
       const query = Route.useSearch();
       const isMobile = useMobile();
@@ -35,8 +32,13 @@ export const Route = createFileRoute('/salary')({
             input: query!,
             staleTime: 3000,
             refetchOnWindowFocus: true,
+            placeholderData: keepPreviousData,
          })
       );
+
+      const rows = data?.data ?? [];
+      const count = data?.count ?? 0;
+
       return (
          <Container>
             <VStack align='center'>
@@ -75,12 +77,12 @@ export const Route = createFileRoute('/salary')({
                         onClose={closeFilter}
                      />
                      <Box m={2} />
-                     {isMobile ? null : <Salary.DataTable.Pagination count={data?.count!} />}
+                     {isMobile ? null : <Salary.DataTable.Pagination count={count} />}
                      <Salary.DataTable.Body
-                        data={data?.data!}
-                        count={data?.data.length!}
+                        data={rows}
+                        count={rows.length}
                      />
-                     <Salary.DataTable.Pagination count={data?.count!} />
+                     <Salary.DataTable.Pagination count={count} />
                      <Salary.DataTable.Footer />
                      <Outlet />
                   </Box>
