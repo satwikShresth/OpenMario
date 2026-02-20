@@ -1,0 +1,15 @@
+$schema = "https://railway.com/railway.schema.json"
+
+[build]
+builder = "NIXPACKS"
+buildCommand = "bun install && bunx turbo run build --filter=@openmario/client"
+watchPatterns = ["apps/client/**", "packages/**", "package.json", "bun.lock"]
+
+[build.nixpacksPlan.phases.setup]
+nixPkgs = ["caddy"]
+
+[deploy]
+startCommand = "caddy run --config apps/client/Caddyfile --adapter caddyfile"
+healthcheckPath = "/health"
+healthcheckTimeout = 30
+restartPolicyType = "ON_FAILURE"
