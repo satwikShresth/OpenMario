@@ -1,6 +1,6 @@
 import { Flex, For, HoverCard, HStack, Portal, Text, VStack } from '@chakra-ui/react';
 import { IoIosInformationCircleOutline } from 'react-icons/io';
-import { useQuery } from '@tanstack/react-query';
+import { useQueries } from '@tanstack/react-query';
 import { Tag } from '@/components/ui';
 import { Link } from '@tanstack/react-router';
 import { useMobile } from '@/hooks';
@@ -12,19 +12,26 @@ type PreReqProps = {
 
 export default ({ course_id }: PreReqProps) => {
    const isMobile = useMobile();
-   const { data: reqInfo, isPending } = useQuery(
-      orpc.graph.requisites.queryOptions({
-         input: { course_id },
-         select: (s) => s.data!
-      })
-   );
 
-   if (isPending) return null;
+   const [{ data: prereqData, isPending: prereqPending }, { data: coreqData, isPending: coreqPending }] = useQueries({
+      queries: [
+         orpc.course.prerequisites.queryOptions({
+            input: { course_id },
+            select: (s) => s.data!
+         }),
+         orpc.course.corequisites.queryOptions({
+            input: { course_id },
+            select: (s) => s.data!
+         })
+      ]
+   })
+
+   if (prereqPending || coreqPending) return null;
 
    return (
       <VStack width='full' gap={4} align='stretch'>
          {/* Prerequisites Section */}
-         {(reqInfo?.prerequisites?.length! > 0)
+         {(prereqData?.prerequisites?.length! > 0)
             ? (
                <Flex
                   width='full'
@@ -41,7 +48,7 @@ export default ({ course_id }: PreReqProps) => {
                      Prerequisite:
                   </Text>
                   <HStack align='start' gap={3} wrap='wrap'>
-                     <For each={reqInfo?.prerequisites}>
+                     <For each={prereqData?.prerequisites}>
                         {(preReqGroup, idx) => (
                            <>
                               {idx === 0 ? null : <Text>and</Text>}
@@ -124,7 +131,7 @@ export default ({ course_id }: PreReqProps) => {
             : null}
 
          {/* Corequisites Section */}
-         {(reqInfo?.corequisites?.length! > 0)
+         {(coreqData?.corequisites?.length! > 0)
             ? (
                <Flex
                   width='full'
@@ -141,7 +148,7 @@ export default ({ course_id }: PreReqProps) => {
                      Corequisite:
                   </Text>
                   <HStack align='start' gap={3} wrap='wrap'>
-                     <For each={reqInfo?.corequisites}>
+                     <For each={coreqData?.corequisites}>
                         {(coreq) => (
                            <Flex>
                               <Link

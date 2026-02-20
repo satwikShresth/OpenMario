@@ -30,6 +30,7 @@
       "turbo": "^2.7.2"
    },
    "dependencies": {
-      "@dotenvx/dotenvx": "^1.52.0"
+      "@dotenvx/dotenvx": "^1.52.0",
+      "csv-parse": "^6.1.0"
    }
 }
