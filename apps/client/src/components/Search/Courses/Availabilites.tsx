@@ -10,7 +10,7 @@ type AvailabilitesProps = {
 
 export default ({ course_id }: AvailabilitesProps) => {
    const { data: availabilityTableData, isLoading } = useQuery(
-      orpc.graph.availabilities.queryOptions({
+      orpc.course.availabilities.queryOptions({
          input: {
             course_id
          },

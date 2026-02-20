@@ -478,10 +478,10 @@ export function useConflicts(currentTerm: string, currentYear: number) {
                continue;
             }
 
-            const { data } =
-               (await queryClient
+            const [prereqResult, coreqResult] = await Promise.all([
+               queryClient
                   .fetchQuery(
-                     orpc.graph.requisites.queryOptions({
+                     orpc.course.prerequisites.queryOptions({
                         input: { course_id: course.courseId },
                         staleTime: 5 * 60 * 1000,
                         gcTime: 10 * 60 * 1000,
@@ -490,10 +490,31 @@ export function useConflicts(currentTerm: string, currentYear: number) {
                   )
                   .catch(error => {
                      console.error(
-                        `Error fetching requisites for ${course.courseId}:`,
+                        `Error fetching prerequisites for ${course.courseId}:`,
                         error
                      );
-                  })) ?? {};
+                  }),
+               queryClient
+                  .fetchQuery(
+                     orpc.course.corequisites.queryOptions({
+                        input: { course_id: course.courseId },
+                        staleTime: 5 * 60 * 1000,
+                        gcTime: 10 * 60 * 1000,
+                        select: s => s.data! ?? {}
+                     })
+                  )
+                  .catch(error => {
+                     console.error(
+                        `Error fetching corequisites for ${course.courseId}:`,
+                        error
+                     );
+                  }),
+            ]);
+
+            const data = {
+               prerequisites: prereqResult?.prerequisites ?? [],
+               corequisites: coreqResult?.corequisites ?? [],
+            };
 
             // Check for missing corequisites
             if (data?.corequisites && data.corequisites.length > 0) {
