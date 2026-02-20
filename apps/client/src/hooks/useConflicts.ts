@@ -485,7 +485,6 @@ export function useConflicts(currentTerm: string, currentYear: number) {
                         input: { course_id: course.courseId },
                         staleTime: 5 * 60 * 1000,
                         gcTime: 10 * 60 * 1000,
-                        select: s => s.data! ?? {}
                      })
                   )
                   .catch(error => {
@@ -500,7 +499,6 @@ export function useConflicts(currentTerm: string, currentYear: number) {
                         input: { course_id: course.courseId },
                         staleTime: 5 * 60 * 1000,
                         gcTime: 10 * 60 * 1000,
-                        select: s => s.data! ?? {}
                      })
                   )
                   .catch(error => {
@@ -512,8 +510,8 @@ export function useConflicts(currentTerm: string, currentYear: number) {
             ]);
 
             const data = {
-               prerequisites: prereqResult?.prerequisites ?? [],
-               corequisites: coreqResult?.corequisites ?? [],
+               prerequisites: prereqResult?.data?.prerequisites ?? [],
+               corequisites: coreqResult?.data?.corequisites ?? [],
             };
 
             // Check for missing corequisites
