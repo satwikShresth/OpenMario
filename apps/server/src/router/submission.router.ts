@@ -86,18 +86,28 @@ const buildWhereClause = (params: SubmissionQueryParams) =>
       maybe(params?.program_level, (level: string) =>
          eq(submissionMView.program_level, level as any)
       ),
-      // Three-layer search:
-      //   FTS            — exact stems, "phrases", OR, -negation  (GIN tsvector index)
-      //   ILIKE          — prefix / substring typing              (GIN trigram index)
-      //   word_similarity — typo fallback; only evaluated on rows that missed
-      //                     the two indexed conditions above (bitmap OR short-circuit)
-      maybe(params?.search, (term: string) => {
-         const ilikeTerm = `%${term}%`;
-         return sql`(
-            ${submissionMView.search_vector} @@ websearch_to_tsquery('english', ${term})
-            OR ${submissionMView.search_text} ILIKE ${ilikeTerm}
-            OR word_similarity(${term}, ${submissionMView.search_text}) > 0.3
-         )`;
+      maybe(params?.search, (search: string) => {
+         const terms = search.trim().split(/\s+/);
+
+         const termClauses = terms.map(
+            term => sql`paradedb.boolean(
+            should => ARRAY[
+               -- fuzzy fallback on the concat field catches typos/partials
+               paradedb.fuzzy_term('search_text', ${term}, distance => 2),
+
+               -- prefix match per field with boosts for ranking
+               paradedb.boost(4.0, paradedb.fuzzy_term('company_name',  ${term}, distance => 2, prefix => true)),
+               paradedb.boost(3.0, paradedb.fuzzy_term('position_name', ${term}, distance => 2, prefix => true)),
+               paradedb.boost(2.0, paradedb.fuzzy_term('city',          ${term}, distance => 2, prefix => true)),
+               paradedb.boost(1.5, paradedb.fuzzy_term('state',         ${term}, distance => 2, prefix => true)),
+               paradedb.boost(1.0, paradedb.fuzzy_term('details',       ${term}, distance => 2, prefix => true))
+            ]
+         )`
+         );
+
+         return sql`${submissionMView.id} @@@ paradedb.boolean(
+         must => ARRAY[${sql.join(termClauses, sql`, `)}]
+      )`;
       })
    );
 
@@ -107,116 +117,84 @@ const buildWhereClause = (params: SubmissionQueryParams) =>
 const getSortColumn = (
    field: SubmissionQueryParams['sortField']
 ): SQL<unknown> => {
-   switch (field) {
-      case 'company':
-         return sql`company_name`;
-      case 'position':
-         return sql`position_name`;
-      case 'compensation':
-         return sql`compensation`;
-      case 'year':
-         return sql`year`;
-      case 'coop':
-         return sql`coop_year`;
-      case 'location':
-         return sql`city`;
-      default:
-         return sql`compensation`;
-   }
+   const map = {
+      company: sql`company_name`,
+      position: sql`position_name`,
+      compensation: sql`compensation`,
+      year: sql`year`,
+      coop: sql`coop_year`,
+      location: sql`city`
+   };
+   const value = map[field]!;
+   return map[field] ? value : sql`compensation`;
 };
 
 /**
  * Retrieve co-op submission records with pagination and filtering
  */
 export const listSubmissions = os.submission.list.handler(async ({ input }) => {
-   const { pageIndex, pageSize, distinct, sort, sortField, search } = input;
+   const { pageIndex, pageSize, distinct, sort, sortField } = input;
    const sortColumn = getSortColumn(sortField);
    const order = sort === 'ASC' ? asc(sortColumn) : desc(sortColumn);
 
    const whereClause = buildWhereClause(input);
 
-   // Three-tier rank (all naturally compose):
-   //   ts_rank   — 0.001–1.0 for FTS hits, 0 otherwise            (dominant)
-   //   word_similarity — 0–1.0 fuzzy score, scaled down            (tiebreaker)
-   // FTS matches always float above pure fuzzy/substring matches.
-   const rankExpr = search
-      ? sql<number>`(
-           coalesce(
-              ts_rank(
-                 '{0.1, 0.2, 0.4, 1.0}',
-                 ${submissionMView.search_vector},
-                 websearch_to_tsquery('english', ${search})
-              ),
-              0.0
+   const subQuerySelect = <TSelection extends SelectedFields<any, any>>(
+      distinct: boolean,
+      fields: TSelection
+   ) =>
+      distinct
+         ? db.selectDistinctOn(
+              [
+                 submissionMView.company_name,
+                 submissionMView.position_name,
+                 submissionMView.compensation,
+                 submissionMView.program_level
+              ],
+              fields
            )
-           + word_similarity(${search}, ${submissionMView.search_text}) * 0.2
-        )`.as('rank')
-      : null;
+         : db.select(fields);
 
-   try {
-      const subQuerySelect = <TSelection extends SelectedFields<any, any>>(
-         distinct: boolean,
-         fields: TSelection
-      ) =>
-         distinct
-            ? db.selectDistinctOn(
-                 [
-                    submissionMView.company,
-                    submissionMView.position,
-                    submissionMView.compensation,
-                    submissionMView.program_level
-                 ],
-                 fields
-              )
-            : db.select(fields);
+   const subQuery = subQuerySelect(!!distinct, {
+      id: submissionMView.id,
+      year: submissionMView.year,
+      coop_year: submissionMView.coop_year,
+      coop_cycle: submissionMView.coop_cycle,
+      program_level: submissionMView.program_level,
+      work_hours: submissionMView.work_hours,
+      compensation: submissionMView.compensation,
+      other_compensation: submissionMView.other_compensation,
+      details: submissionMView.details,
+      company: submissionMView.company_name,
+      position: submissionMView.position_name,
+      location_city: submissionMView.city,
+      location_state: submissionMView.state,
+      location_state_code: submissionMView.state_code,
+      rank: sql`paradedb.score(id)`.as('rank')
+   })
+      .from(submissionMView)
+      .where(whereClause)
+      .as('sub_query');
 
-      const baseFields = {
-         year: submissionMView.year,
-         coop_year: submissionMView.coop_year,
-         coop_cycle: submissionMView.coop_cycle,
-         program_level: submissionMView.program_level,
-         work_hours: submissionMView.work_hours,
-         compensation: submissionMView.compensation,
-         other_compensation: submissionMView.other_compensation,
-         details: submissionMView.details,
-         company: submissionMView.company,
-         position: submissionMView.position,
-         location_city: submissionMView.city,
-         location_state: submissionMView.state,
-         location_state_code: submissionMView.state_code
-      };
-
-      const subQuery = subQuerySelect(!!distinct, {
-         ...baseFields,
-         ...(rankExpr ? { rank: rankExpr } : {})
-      })
-         .from(submissionMView)
-         .where(whereClause)
-         .as('sub_query');
-
-      // Primary sort by relevance rank when searching; user sort is secondary.
-      const orderClauses = rankExpr ? [desc(sql`rank`), order] : [order];
-
-      const [count, data] = await Promise.all([
-         db.$count(subQuery),
-         db
-            .select()
-            .from(subQuery)
-            .orderBy(...orderClauses)
-            .offset((pageIndex - 1) * pageSize)
-            .limit(pageSize)
-      ]);
-
-      return {
+   return await Promise.all([
+      db.$count(subQuery),
+      db
+         .select()
+         .from(subQuery)
+         .orderBy(desc(sql`rank`), order)
+         .offset((pageIndex - 1) * pageSize)
+         .limit(pageSize)
+   ])
+      .then(([count, data]) => ({
          pageIndex,
          pageSize,
          count,
          data: data as any
-      };
-   } catch (error: any) {
-      console.error('Error listing submissions:', error);
-      throw new Error(error.message || 'Failed to list submissions');
-   }
+      }))
+      .catch(error => {
+         console.error('Error listing submissions:', error);
+         throw new Error(error.message || 'Failed to list submissions');
+      });
 });
 
 /**

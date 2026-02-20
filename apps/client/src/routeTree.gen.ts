@@ -251,7 +251,7 @@ declare module '@tanstack/react-router' {
     '/_search': {
       id: '/_search'
       path: ''
-      fullPath: ''
+      fullPath: '/'
       preLoaderRoute: typeof SearchRouteImport
       parentRoute: typeof rootRouteImport
     }
