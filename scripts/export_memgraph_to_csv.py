@@ -8,9 +8,6 @@ import os
 
 from neo4j import GraphDatabase
 
-NEO4J_URI = "bolt://neo4j.openmario.com:7687"
-NEO4J_USERNAME = "neo4j"
-NEO4J_PASSWORD = "ThisShitKillingMe"
 
 OUTPUT_DIR = os.path.join(os.path.dirname(__file__), "memgraph_csv_export")
 
