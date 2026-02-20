@@ -4,6 +4,10 @@ WORKDIR /usr/src/app
 
 # ===== INSTALL STAGE =====
 FROM base AS install
+# Build tools needed for libpq native addon
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    python3 make g++ libpq-dev \
+    && rm -rf /var/lib/apt/lists/*
 # Copy entire project for dependency installation
 COPY . .
 # Install all dependencies - let Bun set up workspace properly
