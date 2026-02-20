@@ -1,0 +1,12 @@
+$schema = "https://railway.com/railway.schema.json"
+
+[build]
+builder = "RAILPACK"
+buildCommand = "bun install && bunx turbo run build --filter=@openmario/server"
+watchPatterns = ["apps/server/**", "packages/**", "package.json", "bun.lock"]
+
+[deploy]
+startCommand = "bun run apps/server/dist/index.js"
+healthcheckPath = "/health"
+healthcheckTimeout = 30
+restartPolicyType = "ON_FAILURE"
