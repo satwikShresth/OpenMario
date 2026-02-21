@@ -17,9 +17,10 @@ import { createPosition } from './position.router';
 import { getSearchToken } from './auth.router';
 import {
    getCourse,
-   getCourseRequisites,
+   getCoursePrerequisites,
+   getCourseCorequistes,
    getCourseAvailabilities
-} from './graph.router';
+} from './course.router';
 import {
    listSubmissions,
    createSubmission,
@@ -47,9 +48,10 @@ const router = os.router({
    position: {
       create: createPosition
    },
-   graph: {
+   course: {
       course: getCourse,
-      requisites: getCourseRequisites,
+      prerequisites: getCoursePrerequisites,
+      corequisites: getCourseCorequistes,
       availabilities: getCourseAvailabilities
    },
    submission: {

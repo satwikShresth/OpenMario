@@ -53,7 +53,7 @@ export const Card = ({ section }: { section: Section }) => {
    const isMobile = useMobile();
    const match = useMatch({ strict: false });
    const { data: courseRaw } = useQuery(
-      orpc.graph.course.queryOptions({ input: { course_id: section.course_id } })
+      orpc.course.course.queryOptions({ input: { course_id: section.course_id } })
    );
    const { data: courseInfo } = courseRaw ?? {};
 

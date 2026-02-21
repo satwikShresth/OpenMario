@@ -1,5 +1,9 @@
 import { createEnv } from '@t3-oss/env-core';
+import { config } from '@dotenvx/dotenvx';
+import { join, dirname } from 'node:path';
 import { z } from 'zod';
+
+config({ path: join(dirname(dirname(__dirname)), '.env') });
 
 export const env = createEnv({
    server: {

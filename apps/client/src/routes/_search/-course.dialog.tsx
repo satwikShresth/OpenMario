@@ -11,7 +11,7 @@ export function CourseDialogPage() {
    const navigate = useNavigate();
 
    const { data: courseInfo } = useQuery(
-      orpc.graph.course.queryOptions({
+      orpc.course.course.queryOptions({
          input: {
             course_id
          },

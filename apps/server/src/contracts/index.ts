@@ -7,7 +7,7 @@ import { authContract } from './auth.contract';
 import { autocompleteContract } from './autocomplete.contract';
 import { companyContract } from './company.contract';
 import { positionContract } from './position.contract';
-import { graphContract } from './graph.contract';
+import { courseContract } from './course.contract';
 import { submissionContract } from './submission.contract';
 
 /**
@@ -19,7 +19,7 @@ export const contract = {
    autocomplete: autocompleteContract,
    company: companyContract,
    position: positionContract,
-   graph: graphContract,
+   course: courseContract,
    submission: submissionContract
 };
 
@@ -39,8 +39,8 @@ export * from './company.contract';
 // Position contracts & schemas
 export * from './position.contract';
 
-// Graph contracts & schemas
-export * from './graph.contract';
+// Course contracts & schemas
+export * from './course.contract';
 
 // Submission contracts & schemas
 export * from './submission.contract';
@@ -84,19 +84,20 @@ import type {
    PositionCreateResponseSchema
 } from './position.contract';
 
-// Graph types
+// Course types
 import type {
    CourseIdParamSchema,
    CourseSchema,
    GetCourseResponseSchema,
    CourseInfoSchema,
    PrerequisiteSchema,
+   GetPrerequisitesResponseSchema,
    CorequisiteSchema,
-   GetReqResponseSchema,
+   GetCorequisitesResponseSchema,
    InstructorSchema,
    CourseAvailabilitySchema,
    GetCourseAvailabilitiesResponseSchema
-} from './graph.contract';
+} from './course.contract';
 
 // Submission types
 import type {
@@ -131,8 +132,9 @@ export type Course = z.infer<typeof CourseSchema>;
 export type GetCourseResponse = z.infer<typeof GetCourseResponseSchema>;
 export type CourseInfo = z.infer<typeof CourseInfoSchema>;
 export type Prerequisite = z.infer<typeof PrerequisiteSchema>;
+export type GetPrerequisitesResponse = z.infer<typeof GetPrerequisitesResponseSchema>;
 export type Corequisite = z.infer<typeof CorequisiteSchema>;
-export type GetReqResponse = z.infer<typeof GetReqResponseSchema>;
+export type GetCorequisitesResponse = z.infer<typeof GetCorequisitesResponseSchema>;
 export type Instructor = z.infer<typeof InstructorSchema>;
 export type CourseAvailability = z.infer<typeof CourseAvailabilitySchema>;
 export type GetCourseAvailabilitiesResponse = z.infer<

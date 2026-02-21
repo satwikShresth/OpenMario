@@ -38,4 +38,3 @@ export const orderSQL = (
         + similarity(${column}, ${matchValue.trim()})
       ) DESC`
       : undefined;
-
