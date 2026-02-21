@@ -10,7 +10,8 @@
   },
   "scripts": {
     "dev": "bun run --env-file=../../.env --watch src/index.ts",
-    "build": "bun run build.ts"
+    "build": "bun run build.ts",
+    "start": "bun run ./dist/index.js"
   },
   "dependencies": {
     "@highlight-run/hono": "^1.0.25",
