@@ -18,6 +18,7 @@ ARG VITE_LR_APP_ID
 ARG VITE_MEILI_HOST
 ARG VITE_DISCORD_WEBHOOK
 
+
 # Set environment variables for Vite build
 ENV NODE_ENV=production
 ENV VITE_APP_TITLE=${VITE_APP_TITLE}
