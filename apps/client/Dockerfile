@@ -4,6 +4,7 @@ WORKDIR /usr/src/app
 
 # ===== INSTALL STAGE =====
 FROM base AS install
+RUN apt-get update && apt-get install -y python3 make g++ && rm -rf /var/lib/apt/lists/*
 # Copy entire project for dependency installation
 COPY . .
 # Install all dependencies - let Bun set up workspace properly
