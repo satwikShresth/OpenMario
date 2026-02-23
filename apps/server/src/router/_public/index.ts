@@ -45,7 +45,8 @@ const router = os.router({
    },
    esap: {
       listCompanies: esap.listCompanies,
-      getCompany: esap.getCompany
+      getCompany: esap.getCompany,
+      getCompanyReviews: esap.getCompanyReviews
    },
    professor: {
       list: professor.listProfessors,

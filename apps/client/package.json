@@ -58,6 +58,7 @@
     "react-dom": "^19.2.3",
     "react-icons": "^5.5.0",
     "react-instantsearch": "^7.21.0",
+    "recharts": "^3.7.0",
     "tailwindcss": "^4.1.18",
     "tanstack-db-pglite": "^1.0.5",
     "tesseract.js": "^7.0.0",

@@ -58,7 +58,7 @@ export const Route = createFileRoute('/salary')({
          if (!el) return;
          const observer = new IntersectionObserver(
             entries => {
-               if (entries[0].isIntersecting && hasNextPage && !isFetchingNextPage)
+               if (entries[0]?.isIntersecting && hasNextPage && !isFetchingNextPage)
                   fetchNextPage();
             },
             { threshold: 0.1 }

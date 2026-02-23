@@ -1,6 +1,6 @@
 import { os } from '@/router/helpers';
-import { db, instructorProfileMView, instructorSectionsMView } from '@/db';
-import { and, desc, eq, ilike, or, asc, sql } from 'drizzle-orm';
+import { db, instructorProfileMView } from '@/db';
+import { and, eq, ilike, or, asc, sql } from 'drizzle-orm';
 import { maybe } from '@/utils';
 
 const profileFields = {
@@ -94,12 +94,27 @@ export const getProfessor = os.professor.get.handler(
 
 export const getProfessorSections = os.professor.sections.handler(
    async ({ input: { professor_id } }) => {
-      const rows = await db
-         .select()
-         .from(instructorSectionsMView)
-         .where(eq(instructorSectionsMView.instructor_id, professor_id))
-         .orderBy(desc(instructorSectionsMView.term_id));
+      // instructor_sections_m_view was created without .as() aliases, so the
+      // actual DB column names follow the underlying table column names:
+      //   instructor.id   → "id"      (not "instructor_id")
+      //   section.crn     → "crn"     (not "section_crn")
+      //   course.title    → "title"   (not "course_title")
+      //   section.section → "section" (not "section_code")
+      const result = await db.execute(sql`
+         SELECT
+            crn               AS section_crn,
+            term_id,
+            subject_code,
+            course_number,
+            title             AS course_title,
+            section           AS section_code,
+            instruction_method,
+            instruction_type
+         FROM instructor_sections_m_view
+         WHERE id = ${professor_id}
+         ORDER BY term_id DESC
+      `);
 
-      return rows as any;
+      return result.rows as any;
    }
 );

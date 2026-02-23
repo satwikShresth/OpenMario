@@ -14,6 +14,7 @@ const handler = new OpenAPIHandler(router, {
    plugins: [new ZodSmartCoercionPlugin()],
    interceptors: [
       onError(error => {
+         console.log(error);
          if (
             error instanceof ORPCError &&
             error.code === 'BAD_REQUEST' &&

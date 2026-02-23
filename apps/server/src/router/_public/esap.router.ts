@@ -4,9 +4,12 @@ import {
    companyOmegaMView,
    companyReviewAggregateMView,
    positionOmegaMView,
-   positionInformationMView
+   positionInformationMView,
+   company,
+   position,
+   position_review
 } from '@/db';
-import { eq, ilike, asc, sql, type SQL } from 'drizzle-orm';
+import { and, eq, ilike, asc, sql, count, type SQL } from 'drizzle-orm';
 
 // ============================================================================
 // GET /esap/companies
@@ -175,6 +178,73 @@ export const getCompany = os.esap.getCompany.handler(
       return {
          company: companyRow as any,
          positions: positions as any
+      };
+   }
+);
+
+// ============================================================================
+// GET /esap/companies/:company_id/reviews
+// ============================================================================
+
+export const getCompanyReviews = os.esap.getCompanyReviews.handler(
+   async ({ input: { company_id, position_id, sort, pageIndex, pageSize } }) => {
+      const reviewFields = {
+         id: position_review.id,
+         position_id: position_review.position_id,
+         position_name: position.name,
+         year: position_review.year,
+         coop_cycle: position_review.coop_cycle,
+         department: position_review.department,
+         days_per_week: position_review.days_per_week,
+         overtime_required: position_review.overtime_required,
+         public_transit_available: position_review.public_transit_available,
+         would_recommend: position_review.would_recommend,
+         description_accurate: position_review.description_accurate,
+         rating_overall: position_review.rating_overall,
+         rating_collaboration: position_review.rating_collaboration,
+         rating_work_variety: position_review.rating_work_variety,
+         rating_relationships: position_review.rating_relationships,
+         rating_supervisor_access: position_review.rating_supervisor_access,
+         rating_training: position_review.rating_training,
+         best_features: position_review.best_features,
+         challenges: position_review.challenges
+      };
+
+      const whereClause = position_id
+         ? and(eq(company.id, company_id), eq(position.id, position_id))
+         : eq(company.id, company_id);
+
+      const sortExpr =
+         sort === 'rating_desc'
+            ? sql`${position_review.rating_overall} DESC NULLS LAST, ${position_review.year} DESC`
+            : sort === 'rating_asc'
+              ? sql`${position_review.rating_overall} ASC NULLS LAST, ${position_review.year} DESC`
+              : sql`${position_review.year} DESC, ${position_review.coop_cycle} ASC`;
+
+      const [totalResult, data] = await Promise.all([
+         db
+            .select({ count: count() })
+            .from(position_review)
+            .innerJoin(position, eq(position_review.position_id, position.id))
+            .innerJoin(company, eq(position.company_id, company.id))
+            .where(whereClause)
+            .then(r => Number(r[0]?.count ?? 0)),
+         db
+            .select(reviewFields)
+            .from(position_review)
+            .innerJoin(position, eq(position_review.position_id, position.id))
+            .innerJoin(company, eq(position.company_id, company.id))
+            .where(whereClause)
+            .orderBy(sortExpr)
+            .offset((pageIndex - 1) * pageSize)
+            .limit(pageSize)
+      ]);
+
+      return {
+         pageIndex,
+         pageSize,
+         count: totalResult,
+         data: data as any
       };
    }
 );
