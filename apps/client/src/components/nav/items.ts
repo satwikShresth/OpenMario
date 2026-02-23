@@ -26,8 +26,8 @@ export const NAV_ITEMS: NavItem[] = [
       section: ''
    },
    {
-      label: 'ESAP',
-      href: '/esap',
+      label: 'Companies',
+      href: '/companies',
       section: ''
    },
    {

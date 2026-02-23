@@ -10,23 +10,21 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SalaryRouteImport } from './routes/salary'
-import { Route as ProfessorsRouteImport } from './routes/professors'
-import { Route as EsapRouteImport } from './routes/esap'
 import { Route as SearchRouteImport } from './routes/_search'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ProfessorsIndexRouteImport } from './routes/professors/index'
-import { Route as EsapIndexRouteImport } from './routes/esap/index'
+import { Route as CompaniesIndexRouteImport } from './routes/companies/index'
 import { Route as SalaryDialogRouteImport } from './routes/salary/_dialog'
 import { Route as ProfessorsProfessor_idRouteImport } from './routes/professors/$professor_id'
 import { Route as SearchCoursesRouteImport } from './routes/_search/courses'
-import { Route as EsapCompany_idIndexRouteImport } from './routes/esap/$company_id/index'
+import { Route as CompaniesCompany_idIndexRouteImport } from './routes/companies/$company_id/index'
 import { Route as SalaryDialogSubmissionsRouteImport } from './routes/salary/_dialog/submissions'
 import { Route as SalaryDialogDraftsRouteImport } from './routes/salary/_dialog/drafts'
 import { Route as SalaryDialogAutoFillRouteImport } from './routes/salary/_dialog/auto-fill'
 import { Route as SalaryDialogFormRouteImport } from './routes/salary/_dialog/_form'
-import { Route as EsapCompany_idReviewsRouteImport } from './routes/esap/$company_id/reviews'
-import { Route as EsapCompany_idPositionsRouteImport } from './routes/esap/$company_id/positions'
-import { Route as EsapCompany_idPosition_idRouteImport } from './routes/esap/$company_id/$position_id'
+import { Route as CompaniesCompany_idReviewsRouteImport } from './routes/companies/$company_id/reviews'
+import { Route as CompaniesCompany_idPositionsRouteImport } from './routes/companies/$company_id/positions'
+import { Route as CompaniesCompany_idPosition_idRouteImport } from './routes/companies/$company_id/$position_id'
 import { Route as SearchCoursesProfileRouteImport } from './routes/_search/courses.profile'
 import { Route as SearchCoursesPlanRouteImport } from './routes/_search/courses.plan'
 import { Route as SearchCoursesExploreRouteImport } from './routes/_search/courses.explore'
@@ -42,16 +40,6 @@ const SalaryRoute = SalaryRouteImport.update({
   path: '/salary',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ProfessorsRoute = ProfessorsRouteImport.update({
-  id: '/professors',
-  path: '/professors',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const EsapRoute = EsapRouteImport.update({
-  id: '/esap',
-  path: '/esap',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const SearchRoute = SearchRouteImport.update({
   id: '/_search',
   getParentRoute: () => rootRouteImport,
@@ -62,34 +50,35 @@ const IndexRoute = IndexRouteImport.update({
   getParentRoute: () => rootRouteImport,
 } as any)
 const ProfessorsIndexRoute = ProfessorsIndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => ProfessorsRoute,
+  id: '/professors/',
+  path: '/professors/',
+  getParentRoute: () => rootRouteImport,
 } as any)
-const EsapIndexRoute = EsapIndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => EsapRoute,
+const CompaniesIndexRoute = CompaniesIndexRouteImport.update({
+  id: '/companies/',
+  path: '/companies/',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const SalaryDialogRoute = SalaryDialogRouteImport.update({
   id: '/_dialog',
   getParentRoute: () => SalaryRoute,
 } as any)
 const ProfessorsProfessor_idRoute = ProfessorsProfessor_idRouteImport.update({
-  id: '/$professor_id',
-  path: '/$professor_id',
-  getParentRoute: () => ProfessorsRoute,
+  id: '/professors/$professor_id',
+  path: '/professors/$professor_id',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const SearchCoursesRoute = SearchCoursesRouteImport.update({
   id: '/courses',
   path: '/courses',
   getParentRoute: () => SearchRoute,
 } as any)
-const EsapCompany_idIndexRoute = EsapCompany_idIndexRouteImport.update({
-  id: '/$company_id/',
-  path: '/$company_id/',
-  getParentRoute: () => EsapRoute,
-} as any)
+const CompaniesCompany_idIndexRoute =
+  CompaniesCompany_idIndexRouteImport.update({
+    id: '/companies/$company_id/',
+    path: '/companies/$company_id/',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const SalaryDialogSubmissionsRoute = SalaryDialogSubmissionsRouteImport.update({
   id: '/submissions',
   path: '/submissions',
@@ -109,21 +98,23 @@ const SalaryDialogFormRoute = SalaryDialogFormRouteImport.update({
   id: '/_form',
   getParentRoute: () => SalaryDialogRoute,
 } as any)
-const EsapCompany_idReviewsRoute = EsapCompany_idReviewsRouteImport.update({
-  id: '/$company_id/reviews',
-  path: '/$company_id/reviews',
-  getParentRoute: () => EsapRoute,
-} as any)
-const EsapCompany_idPositionsRoute = EsapCompany_idPositionsRouteImport.update({
-  id: '/$company_id/positions',
-  path: '/$company_id/positions',
-  getParentRoute: () => EsapRoute,
-} as any)
-const EsapCompany_idPosition_idRoute =
-  EsapCompany_idPosition_idRouteImport.update({
-    id: '/$company_id/$position_id',
-    path: '/$company_id/$position_id',
-    getParentRoute: () => EsapRoute,
+const CompaniesCompany_idReviewsRoute =
+  CompaniesCompany_idReviewsRouteImport.update({
+    id: '/companies/$company_id/reviews',
+    path: '/companies/$company_id/reviews',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const CompaniesCompany_idPositionsRoute =
+  CompaniesCompany_idPositionsRouteImport.update({
+    id: '/companies/$company_id/positions',
+    path: '/companies/$company_id/positions',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const CompaniesCompany_idPosition_idRoute =
+  CompaniesCompany_idPosition_idRouteImport.update({
+    id: '/companies/$company_id/$position_id',
+    path: '/companies/$company_id/$position_id',
+    getParentRoute: () => rootRouteImport,
   } as any)
 const SearchCoursesProfileRoute = SearchCoursesProfileRouteImport.update({
   id: '/profile',
@@ -178,23 +169,21 @@ const SalaryDialogFormReportChar123IdxChar125Route =
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/esap': typeof EsapRouteWithChildren
-  '/professors': typeof ProfessorsRouteWithChildren
   '/salary': typeof SalaryDialogFormRouteWithChildren
   '/courses': typeof SearchCoursesRouteWithChildren
   '/professors/$professor_id': typeof ProfessorsProfessor_idRoute
-  '/esap/': typeof EsapIndexRoute
+  '/companies/': typeof CompaniesIndexRoute
   '/professors/': typeof ProfessorsIndexRoute
   '/courses/explore': typeof SearchCoursesExploreRouteWithChildren
   '/courses/plan': typeof SearchCoursesPlanRouteWithChildren
   '/courses/profile': typeof SearchCoursesProfileRouteWithChildren
-  '/esap/$company_id/$position_id': typeof EsapCompany_idPosition_idRoute
-  '/esap/$company_id/positions': typeof EsapCompany_idPositionsRoute
-  '/esap/$company_id/reviews': typeof EsapCompany_idReviewsRoute
+  '/companies/$company_id/$position_id': typeof CompaniesCompany_idPosition_idRoute
+  '/companies/$company_id/positions': typeof CompaniesCompany_idPositionsRoute
+  '/companies/$company_id/reviews': typeof CompaniesCompany_idReviewsRoute
   '/salary/auto-fill': typeof SalaryDialogAutoFillRoute
   '/salary/drafts': typeof SalaryDialogDraftsRoute
   '/salary/submissions': typeof SalaryDialogSubmissionsRoute
-  '/esap/$company_id/': typeof EsapCompany_idIndexRoute
+  '/companies/$company_id/': typeof CompaniesCompany_idIndexRoute
   '/courses/explore/$course_id': typeof SearchCoursesExploreCourse_idRoute
   '/courses/plan/$course_id': typeof SearchCoursesPlanCourse_idRoute
   '/courses/profile/$course_id': typeof SearchCoursesProfileCourse_idRoute
@@ -207,18 +196,18 @@ export interface FileRoutesByTo {
   '/salary': typeof SalaryDialogFormRouteWithChildren
   '/courses': typeof SearchCoursesRouteWithChildren
   '/professors/$professor_id': typeof ProfessorsProfessor_idRoute
-  '/esap': typeof EsapIndexRoute
+  '/companies': typeof CompaniesIndexRoute
   '/professors': typeof ProfessorsIndexRoute
   '/courses/explore': typeof SearchCoursesExploreRouteWithChildren
   '/courses/plan': typeof SearchCoursesPlanRouteWithChildren
   '/courses/profile': typeof SearchCoursesProfileRouteWithChildren
-  '/esap/$company_id/$position_id': typeof EsapCompany_idPosition_idRoute
-  '/esap/$company_id/positions': typeof EsapCompany_idPositionsRoute
-  '/esap/$company_id/reviews': typeof EsapCompany_idReviewsRoute
+  '/companies/$company_id/$position_id': typeof CompaniesCompany_idPosition_idRoute
+  '/companies/$company_id/positions': typeof CompaniesCompany_idPositionsRoute
+  '/companies/$company_id/reviews': typeof CompaniesCompany_idReviewsRoute
   '/salary/auto-fill': typeof SalaryDialogAutoFillRoute
   '/salary/drafts': typeof SalaryDialogDraftsRoute
   '/salary/submissions': typeof SalaryDialogSubmissionsRoute
-  '/esap/$company_id': typeof EsapCompany_idIndexRoute
+  '/companies/$company_id': typeof CompaniesCompany_idIndexRoute
   '/courses/explore/$course_id': typeof SearchCoursesExploreCourse_idRoute
   '/courses/plan/$course_id': typeof SearchCoursesPlanCourse_idRoute
   '/courses/profile/$course_id': typeof SearchCoursesProfileCourse_idRoute
@@ -230,25 +219,23 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/_search': typeof SearchRouteWithChildren
-  '/esap': typeof EsapRouteWithChildren
-  '/professors': typeof ProfessorsRouteWithChildren
   '/salary': typeof SalaryRouteWithChildren
   '/_search/courses': typeof SearchCoursesRouteWithChildren
   '/professors/$professor_id': typeof ProfessorsProfessor_idRoute
   '/salary/_dialog': typeof SalaryDialogRouteWithChildren
-  '/esap/': typeof EsapIndexRoute
+  '/companies/': typeof CompaniesIndexRoute
   '/professors/': typeof ProfessorsIndexRoute
   '/_search/courses/explore': typeof SearchCoursesExploreRouteWithChildren
   '/_search/courses/plan': typeof SearchCoursesPlanRouteWithChildren
   '/_search/courses/profile': typeof SearchCoursesProfileRouteWithChildren
-  '/esap/$company_id/$position_id': typeof EsapCompany_idPosition_idRoute
-  '/esap/$company_id/positions': typeof EsapCompany_idPositionsRoute
-  '/esap/$company_id/reviews': typeof EsapCompany_idReviewsRoute
+  '/companies/$company_id/$position_id': typeof CompaniesCompany_idPosition_idRoute
+  '/companies/$company_id/positions': typeof CompaniesCompany_idPositionsRoute
+  '/companies/$company_id/reviews': typeof CompaniesCompany_idReviewsRoute
   '/salary/_dialog/_form': typeof SalaryDialogFormRouteWithChildren
   '/salary/_dialog/auto-fill': typeof SalaryDialogAutoFillRoute
   '/salary/_dialog/drafts': typeof SalaryDialogDraftsRoute
   '/salary/_dialog/submissions': typeof SalaryDialogSubmissionsRoute
-  '/esap/$company_id/': typeof EsapCompany_idIndexRoute
+  '/companies/$company_id/': typeof CompaniesCompany_idIndexRoute
   '/_search/courses/explore/$course_id': typeof SearchCoursesExploreCourse_idRoute
   '/_search/courses/plan/$course_id': typeof SearchCoursesPlanCourse_idRoute
   '/_search/courses/profile/$course_id': typeof SearchCoursesProfileCourse_idRoute
@@ -260,23 +247,21 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
-    | '/esap'
-    | '/professors'
     | '/salary'
     | '/courses'
     | '/professors/$professor_id'
-    | '/esap/'
+    | '/companies/'
     | '/professors/'
     | '/courses/explore'
     | '/courses/plan'
     | '/courses/profile'
-    | '/esap/$company_id/$position_id'
-    | '/esap/$company_id/positions'
-    | '/esap/$company_id/reviews'
+    | '/companies/$company_id/$position_id'
+    | '/companies/$company_id/positions'
+    | '/companies/$company_id/reviews'
     | '/salary/auto-fill'
     | '/salary/drafts'
     | '/salary/submissions'
-    | '/esap/$company_id/'
+    | '/companies/$company_id/'
     | '/courses/explore/$course_id'
     | '/courses/plan/$course_id'
     | '/courses/profile/$course_id'
@@ -289,18 +274,18 @@ export interface FileRouteTypes {
     | '/salary'
     | '/courses'
     | '/professors/$professor_id'
-    | '/esap'
+    | '/companies'
     | '/professors'
     | '/courses/explore'
     | '/courses/plan'
     | '/courses/profile'
-    | '/esap/$company_id/$position_id'
-    | '/esap/$company_id/positions'
-    | '/esap/$company_id/reviews'
+    | '/companies/$company_id/$position_id'
+    | '/companies/$company_id/positions'
+    | '/companies/$company_id/reviews'
     | '/salary/auto-fill'
     | '/salary/drafts'
     | '/salary/submissions'
-    | '/esap/$company_id'
+    | '/companies/$company_id'
     | '/courses/explore/$course_id'
     | '/courses/plan/$course_id'
     | '/courses/profile/$course_id'
@@ -311,25 +296,23 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/_search'
-    | '/esap'
-    | '/professors'
     | '/salary'
     | '/_search/courses'
     | '/professors/$professor_id'
     | '/salary/_dialog'
-    | '/esap/'
+    | '/companies/'
     | '/professors/'
     | '/_search/courses/explore'
     | '/_search/courses/plan'
     | '/_search/courses/profile'
-    | '/esap/$company_id/$position_id'
-    | '/esap/$company_id/positions'
-    | '/esap/$company_id/reviews'
+    | '/companies/$company_id/$position_id'
+    | '/companies/$company_id/positions'
+    | '/companies/$company_id/reviews'
     | '/salary/_dialog/_form'
     | '/salary/_dialog/auto-fill'
     | '/salary/_dialog/drafts'
     | '/salary/_dialog/submissions'
-    | '/esap/$company_id/'
+    | '/companies/$company_id/'
     | '/_search/courses/explore/$course_id'
     | '/_search/courses/plan/$course_id'
     | '/_search/courses/profile/$course_id'
@@ -341,9 +324,14 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   SearchRoute: typeof SearchRouteWithChildren
-  EsapRoute: typeof EsapRouteWithChildren
-  ProfessorsRoute: typeof ProfessorsRouteWithChildren
   SalaryRoute: typeof SalaryRouteWithChildren
+  ProfessorsProfessor_idRoute: typeof ProfessorsProfessor_idRoute
+  CompaniesIndexRoute: typeof CompaniesIndexRoute
+  ProfessorsIndexRoute: typeof ProfessorsIndexRoute
+  CompaniesCompany_idPosition_idRoute: typeof CompaniesCompany_idPosition_idRoute
+  CompaniesCompany_idPositionsRoute: typeof CompaniesCompany_idPositionsRoute
+  CompaniesCompany_idReviewsRoute: typeof CompaniesCompany_idReviewsRoute
+  CompaniesCompany_idIndexRoute: typeof CompaniesCompany_idIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -353,20 +341,6 @@ declare module '@tanstack/react-router' {
       path: '/salary'
       fullPath: '/salary'
       preLoaderRoute: typeof SalaryRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/professors': {
-      id: '/professors'
-      path: '/professors'
-      fullPath: '/professors'
-      preLoaderRoute: typeof ProfessorsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/esap': {
-      id: '/esap'
-      path: '/esap'
-      fullPath: '/esap'
-      preLoaderRoute: typeof EsapRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_search': {
@@ -385,17 +359,17 @@ declare module '@tanstack/react-router' {
     }
     '/professors/': {
       id: '/professors/'
-      path: '/'
+      path: '/professors'
       fullPath: '/professors/'
       preLoaderRoute: typeof ProfessorsIndexRouteImport
-      parentRoute: typeof ProfessorsRoute
+      parentRoute: typeof rootRouteImport
     }
-    '/esap/': {
-      id: '/esap/'
-      path: '/'
-      fullPath: '/esap/'
-      preLoaderRoute: typeof EsapIndexRouteImport
-      parentRoute: typeof EsapRoute
+    '/companies/': {
+      id: '/companies/'
+      path: '/companies'
+      fullPath: '/companies/'
+      preLoaderRoute: typeof CompaniesIndexRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/salary/_dialog': {
       id: '/salary/_dialog'
@@ -406,10 +380,10 @@ declare module '@tanstack/react-router' {
     }
     '/professors/$professor_id': {
       id: '/professors/$professor_id'
-      path: '/$professor_id'
+      path: '/professors/$professor_id'
       fullPath: '/professors/$professor_id'
       preLoaderRoute: typeof ProfessorsProfessor_idRouteImport
-      parentRoute: typeof ProfessorsRoute
+      parentRoute: typeof rootRouteImport
     }
     '/_search/courses': {
       id: '/_search/courses'
@@ -418,12 +392,12 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SearchCoursesRouteImport
       parentRoute: typeof SearchRoute
     }
-    '/esap/$company_id/': {
-      id: '/esap/$company_id/'
-      path: '/$company_id'
-      fullPath: '/esap/$company_id/'
-      preLoaderRoute: typeof EsapCompany_idIndexRouteImport
-      parentRoute: typeof EsapRoute
+    '/companies/$company_id/': {
+      id: '/companies/$company_id/'
+      path: '/companies/$company_id'
+      fullPath: '/companies/$company_id/'
+      preLoaderRoute: typeof CompaniesCompany_idIndexRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/salary/_dialog/submissions': {
       id: '/salary/_dialog/submissions'
@@ -453,26 +427,26 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SalaryDialogFormRouteImport
       parentRoute: typeof SalaryDialogRoute
     }
-    '/esap/$company_id/reviews': {
-      id: '/esap/$company_id/reviews'
-      path: '/$company_id/reviews'
-      fullPath: '/esap/$company_id/reviews'
-      preLoaderRoute: typeof EsapCompany_idReviewsRouteImport
-      parentRoute: typeof EsapRoute
+    '/companies/$company_id/reviews': {
+      id: '/companies/$company_id/reviews'
+      path: '/companies/$company_id/reviews'
+      fullPath: '/companies/$company_id/reviews'
+      preLoaderRoute: typeof CompaniesCompany_idReviewsRouteImport
+      parentRoute: typeof rootRouteImport
     }
-    '/esap/$company_id/positions': {
-      id: '/esap/$company_id/positions'
-      path: '/$company_id/positions'
-      fullPath: '/esap/$company_id/positions'
-      preLoaderRoute: typeof EsapCompany_idPositionsRouteImport
-      parentRoute: typeof EsapRoute
+    '/companies/$company_id/positions': {
+      id: '/companies/$company_id/positions'
+      path: '/companies/$company_id/positions'
+      fullPath: '/companies/$company_id/positions'
+      preLoaderRoute: typeof CompaniesCompany_idPositionsRouteImport
+      parentRoute: typeof rootRouteImport
     }
-    '/esap/$company_id/$position_id': {
-      id: '/esap/$company_id/$position_id'
-      path: '/$company_id/$position_id'
-      fullPath: '/esap/$company_id/$position_id'
-      preLoaderRoute: typeof EsapCompany_idPosition_idRouteImport
-      parentRoute: typeof EsapRoute
+    '/companies/$company_id/$position_id': {
+      id: '/companies/$company_id/$position_id'
+      path: '/companies/$company_id/$position_id'
+      fullPath: '/companies/$company_id/$position_id'
+      preLoaderRoute: typeof CompaniesCompany_idPosition_idRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/_search/courses/profile': {
       id: '/_search/courses/profile'
@@ -600,38 +574,6 @@ const SearchRouteChildren: SearchRouteChildren = {
 const SearchRouteWithChildren =
   SearchRoute._addFileChildren(SearchRouteChildren)
 
-interface EsapRouteChildren {
-  EsapIndexRoute: typeof EsapIndexRoute
-  EsapCompany_idPosition_idRoute: typeof EsapCompany_idPosition_idRoute
-  EsapCompany_idPositionsRoute: typeof EsapCompany_idPositionsRoute
-  EsapCompany_idReviewsRoute: typeof EsapCompany_idReviewsRoute
-  EsapCompany_idIndexRoute: typeof EsapCompany_idIndexRoute
-}
-
-const EsapRouteChildren: EsapRouteChildren = {
-  EsapIndexRoute: EsapIndexRoute,
-  EsapCompany_idPosition_idRoute: EsapCompany_idPosition_idRoute,
-  EsapCompany_idPositionsRoute: EsapCompany_idPositionsRoute,
-  EsapCompany_idReviewsRoute: EsapCompany_idReviewsRoute,
-  EsapCompany_idIndexRoute: EsapCompany_idIndexRoute,
-}
-
-const EsapRouteWithChildren = EsapRoute._addFileChildren(EsapRouteChildren)
-
-interface ProfessorsRouteChildren {
-  ProfessorsProfessor_idRoute: typeof ProfessorsProfessor_idRoute
-  ProfessorsIndexRoute: typeof ProfessorsIndexRoute
-}
-
-const ProfessorsRouteChildren: ProfessorsRouteChildren = {
-  ProfessorsProfessor_idRoute: ProfessorsProfessor_idRoute,
-  ProfessorsIndexRoute: ProfessorsIndexRoute,
-}
-
-const ProfessorsRouteWithChildren = ProfessorsRoute._addFileChildren(
-  ProfessorsRouteChildren,
-)
-
 interface SalaryDialogFormReportRouteChildren {
   SalaryDialogFormReportChar123IdxChar125Route: typeof SalaryDialogFormReportChar123IdxChar125Route
 }
@@ -692,9 +634,14 @@ const SalaryRouteWithChildren =
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   SearchRoute: SearchRouteWithChildren,
-  EsapRoute: EsapRouteWithChildren,
-  ProfessorsRoute: ProfessorsRouteWithChildren,
   SalaryRoute: SalaryRouteWithChildren,
+  ProfessorsProfessor_idRoute: ProfessorsProfessor_idRoute,
+  CompaniesIndexRoute: CompaniesIndexRoute,
+  ProfessorsIndexRoute: ProfessorsIndexRoute,
+  CompaniesCompany_idPosition_idRoute: CompaniesCompany_idPosition_idRoute,
+  CompaniesCompany_idPositionsRoute: CompaniesCompany_idPositionsRoute,
+  CompaniesCompany_idReviewsRoute: CompaniesCompany_idReviewsRoute,
+  CompaniesCompany_idIndexRoute: CompaniesCompany_idIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

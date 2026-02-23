@@ -13,11 +13,11 @@ import { useQuery } from '@tanstack/react-query';
 import { createFileRoute, useNavigate } from '@tanstack/react-router';
 import { orpc } from '@/helpers/rpc.ts';
 import { Breadcrumb } from '@/components/ui/breadcrumb';
-import { omegaColorPalette } from '../-helpers';
+import { omegaColorPalette } from '@/components/Company/helpers';
 import { useMemo, useState } from 'react';
 import { FiArrowDown, FiArrowUp, FiChevronRight } from 'react-icons/fi';
 
-export const Route = createFileRoute('/esap/$company_id/positions')({
+export const Route = createFileRoute('/companies/$company_id/positions')({
    component: AllPositionsPage,
 });
 
@@ -32,7 +32,7 @@ function AllPositionsPage() {
    const [sortDir, setSortDir] = useState<'asc' | 'desc'>('desc');
 
    const { data: companyData, isLoading } = useQuery(
-      orpc.esap.getCompany.queryOptions({ input: { company_id }, staleTime: 30_000 })
+      orpc.companies.getCompany.queryOptions({ input: { company_id }, staleTime: 30_000 })
    );
 
    const companyName = companyData?.company?.company_name;
@@ -41,8 +41,8 @@ function AllPositionsPage() {
    const sorted = useMemo(() => {
       const filtered = search.trim()
          ? allPositions.filter(p =>
-              p.position_name.toLowerCase().includes(search.toLowerCase())
-           )
+            p.position_name.toLowerCase().includes(search.toLowerCase())
+         )
          : allPositions;
 
       return [...filtered].sort((a, b) => {
@@ -91,9 +91,9 @@ function AllPositionsPage() {
          <VStack align='stretch' gap={8}>
             <Breadcrumb
                items={[
-                  { type: 'link', label: 'ESAP', to: '/esap' },
+                  { type: 'link', label: 'Companies', to: '/companies' },
                   companyName
-                     ? { type: 'link', label: companyName, to: '/esap/$company_id', params: { company_id } }
+                     ? { type: 'link', label: companyName, to: '/companies/$company_id', params: { company_id } }
                      : { type: 'loading' },
                   { type: 'current', label: 'Positions' },
                ]}
@@ -151,7 +151,7 @@ function AllPositionsPage() {
                               transition='background 0.1s'
                               onClick={() =>
                                  navigate({
-                                    to: '/esap/$company_id/$position_id',
+                                    to: '/companies/$company_id/$position_id',
                                     params: { company_id, position_id: pos.position_id },
                                  })
                               }

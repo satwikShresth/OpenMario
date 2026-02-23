@@ -16,7 +16,7 @@ import { maybe } from '@/utils';
 // GET /esap/companies
 // ============================================================================
 
-export const listCompanies = os.esap.listCompanies.handler(
+export const listCompanies = os.companies.listCompanies.handler(
    async ({ input }) => {
       const { search, sort_by, order, pageIndex, pageSize } = input;
 
@@ -93,7 +93,7 @@ export const listCompanies = os.esap.listCompanies.handler(
 // GET /esap/companies/:company_id
 // ============================================================================
 
-export const getCompany = os.esap.getCompany.handler(
+export const getCompany = os.companies.getCompany.handler(
    async ({ input: { company_id } }) => {
       const omegaFields = {
          company_id: companyOmegaMView.company_id,
@@ -200,7 +200,7 @@ export const getCompany = os.esap.getCompany.handler(
 // GET /esap/companies/:company_id/reviews
 // ============================================================================
 
-export const getCompanyReviews = os.esap.getCompanyReviews.handler(
+export const getCompanyReviews = os.companies.getCompanyReviews.handler(
    async ({ input: { company_id, position_id, sort, pageIndex, pageSize } }) => {
       const reviewFields = {
          id: position_review.id,

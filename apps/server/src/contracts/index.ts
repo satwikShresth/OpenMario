@@ -23,7 +23,7 @@ export const contracts = {
    position: positionContract,
    course: courseContract,
    submission: submissionContract,
-   esap: esapContract,
+   companies: esapContract,
    professor: professorContract
 };
 

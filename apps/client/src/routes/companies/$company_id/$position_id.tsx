@@ -16,10 +16,10 @@ import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 import { createFileRoute } from '@tanstack/react-router';
 import { orpc } from '@/helpers/rpc.ts';
 import { Breadcrumb } from '@/components/ui/breadcrumb';
-import { omegaHex, ReviewCard } from '../-helpers';
+import { omegaHex, ReviewCard } from '@/components/Company/helpers';
 import { useEffect, useRef } from 'react';
 
-export const Route = createFileRoute('/esap/$company_id/$position_id')({
+export const Route = createFileRoute('/companies/$company_id/$position_id')({
    component: PositionReviewsPage,
 });
 
@@ -30,12 +30,12 @@ function PositionReviewsPage() {
    const sentinelRef = useRef<HTMLDivElement>(null);
 
    const { data: companyData, isLoading: companyLoading } = useQuery(
-      orpc.esap.getCompany.queryOptions({ input: { company_id }, staleTime: 30_000 })
+      orpc.companies.getCompany.queryOptions({ input: { company_id }, staleTime: 30_000 })
    );
 
    const { data, isLoading: reviewsLoading, isFetchingNextPage, fetchNextPage, hasNextPage } =
       useInfiniteQuery(
-         orpc.esap.getCompanyReviews.infiniteOptions({
+         orpc.companies.getCompanyReviews.infiniteOptions({
             input: (p: number) => ({
                company_id,
                position_id,
@@ -85,12 +85,12 @@ function PositionReviewsPage() {
          <VStack align='stretch' gap={8}>
             <Breadcrumb
                items={[
-                  { type: 'link', label: 'ESAP', to: '/esap' },
+                  { type: 'link', label: 'Companies', to: '/companies' },
                   companyName
                      ? {
                         type: 'link',
                         label: companyName,
-                        to: '/esap/$company_id',
+                        to: '/companies/$company_id',
                         params: { company_id },
                      }
                      : { type: 'loading' },

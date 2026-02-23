@@ -4,36 +4,34 @@ import { createFileRoute } from '@tanstack/react-router';
 import { useLayoutEffect } from 'react';
 import { z } from 'zod';
 import { orpc } from '@/helpers/rpc.ts';
-import { Professor, professorListStore, type ProfessorListItem } from '@/components/Professor';
+import { Company, companyListStore, type CompanyListItem } from '@/components/Company';
 
-const professorsSearchSchema = z.object({
+const companiesSearchSchema = z.object({
    search: z.string().optional().catch(undefined),
-   department: z.string().optional().catch(undefined),
    sort_by: z
-      .enum(['avg_rating', 'avg_difficulty', 'num_ratings', 'total_sections_taught', 'instructor_name'])
+      .enum(['omega_score', 'total_reviews', 'avg_rating_overall', 'company_name'])
       .optional()
-      .catch('num_ratings'),
+      .catch('total_reviews'),
    order: z.enum(['asc', 'desc']).optional().catch('desc'),
 });
 
-export const Route = createFileRoute('/professors/')({
-   validateSearch: professorsSearchSchema,
-   component: ProfessorsPage,
+export const Route = createFileRoute('/companies/')({
+   validateSearch: companiesSearchSchema,
+   component: CompaniesPage,
 });
 
 const PAGE_SIZE = 20;
 
-function ProfessorsPage() {
-   const { search, department, sort_by, order } = Route.useSearch();
-   const sortBy = sort_by ?? 'num_ratings';
+function CompaniesPage() {
+   const { search, sort_by, order } = Route.useSearch();
+   const sortBy = sort_by ?? 'total_reviews';
    const sortOrder = order ?? 'desc';
 
    const { data, isLoading, isFetchingNextPage, fetchNextPage, hasNextPage } =
       useInfiniteQuery(
-         orpc.professor.list.infiniteOptions({
+         orpc.companies.listCompanies.infiniteOptions({
             input: (pageParam: number) => ({
                search,
-               department,
                sort_by: sortBy,
                order: sortOrder,
                pageIndex: pageParam,
@@ -49,9 +47,9 @@ function ProfessorsPage() {
       );
 
    useLayoutEffect(() => {
-      professorListStore.setState(() => ({
-         professors: (data?.pages.flatMap(p => (p as any).data) ?? []) as ProfessorListItem[],
-         totalCount: (data?.pages[0] as any)?.count ?? 0,
+      companyListStore.setState(() => ({
+         companies: (data?.pages.flatMap(p => p.data) ?? []) as CompanyListItem[],
+         totalCount: data?.pages[0]?.count ?? 0,
          isLoading,
          isFetchingNextPage,
          hasNextPage: !!hasNextPage,
@@ -60,12 +58,12 @@ function ProfessorsPage() {
    }, [data, isLoading, isFetchingNextPage, hasNextPage, fetchNextPage]);
 
    return (
-      <Professor.Root maxW='4xl' py={10}>
-         <Professor.PageHeader />
+      <Company.Root maxW='4xl' py={10}>
+         <Company.PageHeader />
          <Separator />
-         <Professor.Toolbar />
-         <Professor.List />
-         <Professor.InfiniteScrollSentinel />
-      </Professor.Root>
+         <Company.Toolbar />
+         <Company.List />
+         <Company.InfiniteScrollSentinel />
+      </Company.Root>
    );
 }

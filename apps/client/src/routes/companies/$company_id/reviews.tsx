@@ -13,11 +13,11 @@ import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 import { createFileRoute } from '@tanstack/react-router';
 import { orpc } from '@/helpers/rpc.ts';
 import { Breadcrumb } from '@/components/ui/breadcrumb';
-import { ReviewCard } from '../-helpers';
+import { ReviewCard } from '@/components/Company/helpers';
 import { useEffect, useRef, useState } from 'react';
 import { z } from 'zod';
 
-export const Route = createFileRoute('/esap/$company_id/reviews')({
+export const Route = createFileRoute('/companies/$company_id/reviews')({
    validateSearch: z.object({
       sort: z.enum(['year_desc', 'rating_desc', 'rating_asc']).optional().catch('year_desc'),
    }),
@@ -43,13 +43,13 @@ function CompanyReviewsPage() {
    const sentinelRef = useRef<HTMLDivElement>(null);
 
    const { data: companyData } = useQuery(
-      orpc.esap.getCompany.queryOptions({ input: { company_id }, staleTime: 30_000 })
+      orpc.companies.getCompany.queryOptions({ input: { company_id }, staleTime: 30_000 })
    );
    const companyName = companyData?.company?.company_name;
 
    const { data, isLoading, isFetchingNextPage, fetchNextPage, hasNextPage } =
       useInfiniteQuery(
-         orpc.esap.getCompanyReviews.infiniteOptions({
+         orpc.companies.getCompanyReviews.infiniteOptions({
             input: (p: number) => ({
                company_id,
                sort,
@@ -86,9 +86,9 @@ function CompanyReviewsPage() {
          <VStack align='stretch' gap={8}>
             <Breadcrumb
                items={[
-                  { type: 'link', label: 'ESAP', to: '/esap' },
+                  { type: 'link', label: 'Companies', to: '/companies' },
                   companyName
-                     ? { type: 'link', label: companyName, to: '/esap/$company_id', params: { company_id } }
+                     ? { type: 'link', label: companyName, to: '/companies/$company_id', params: { company_id } }
                      : { type: 'loading' },
                   { type: 'current', label: 'All Reviews' },
                ]}

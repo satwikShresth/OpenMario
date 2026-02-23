@@ -43,7 +43,7 @@ const router = os.router({
       create: submission.createSubmission,
       update: submission.updateSubmission
    },
-   esap: {
+   companies: {
       listCompanies: esap.listCompanies,
       getCompany: esap.getCompany,
       getCompanyReviews: esap.getCompanyReviews
