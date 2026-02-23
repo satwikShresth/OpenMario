@@ -9,6 +9,7 @@ import {
    VStack,
 } from '@chakra-ui/react';
 import { useState } from 'react';
+import type { ReviewItem } from '@openmario/contracts';
 
 export const omegaColorPalette = (s: number | null) =>
    s === null ? 'gray' : s >= 70 ? 'green' : s >= 50 ? 'yellow' : 'red';
@@ -38,19 +39,6 @@ export const ratingLabelShort = (v: number) => {
       4: 'Very Satisfied',
    };
    return map[Math.round(v)] ?? '';
-};
-
-export type ReviewItem = {
-   id: string;
-   position_id: string;
-   position_name: string;
-   year: number;
-   coop_cycle: string;
-   department: string | null;
-   rating_overall: number | null;
-   would_recommend: boolean | null;
-   best_features: string | null;
-   challenges: string | null;
 };
 
 export function ReviewCard({

@@ -1,6 +1,6 @@
 import { createORPCClient, onError } from '@orpc/client';
 import type { JsonifiedClient } from '@orpc/openapi-client';
-import { contracts } from '@openmario/server/contracts';
+import { contracts } from '@openmario/contracts';
 import type { ContractRouterClient } from '@orpc/contract';
 import { OpenAPILink } from '@orpc/openapi-client/fetch';
 import { createTanstackQueryUtils } from '@orpc/tanstack-query';

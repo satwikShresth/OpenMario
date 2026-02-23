@@ -2,7 +2,7 @@ import { For, HoverCard, Portal, Table, Text, VStack } from '@chakra-ui/react';
 import { useQuery } from '@tanstack/react-query';
 import { Tag } from '@/components/ui';
 import { orpc } from '@/helpers';
-import type { Instructor } from '@openmario/server/contracts';
+import type { Instructor } from '@openmario/contracts';
 
 type AvailabilitesProps = {
    course_id: string;
@@ -11,9 +11,7 @@ type AvailabilitesProps = {
 export default ({ course_id }: AvailabilitesProps) => {
    const { data: availabilityTableData, isLoading } = useQuery(
       orpc.course.availabilities.queryOptions({
-         input: {
-            course_id
-         },
+         input: { course_id },
          select: (courseAvailRaw) => {
             const courseAvailInfo = courseAvailRaw ?? [];
             if (!courseAvailInfo || courseAvailInfo.length === 0) {

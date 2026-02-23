@@ -70,7 +70,7 @@ export const listProfessorsContract = oc
    .output(ProfessorListResponseSchema);
 
 // ============================================================================
-// GET /professors/:professor_id
+// GET /professors/{professor_id}
 // ============================================================================
 
 export const ProfessorIdParamSchema = z.object({
@@ -80,7 +80,7 @@ export const ProfessorIdParamSchema = z.object({
 export const getProfessorContract = oc
    .route({
       method: 'GET',
-      path: '/professors/:professor_id',
+      path: '/professors/{professor_id}',
       summary: 'Get professor profile',
       description: 'Retrieve full professor profile with stats',
       tags: ['Professors']
@@ -89,7 +89,7 @@ export const getProfessorContract = oc
    .output(ProfessorListItemSchema);
 
 // ============================================================================
-// GET /professors/:professor_id/sections
+// GET /professors/{professor_id}/sections
 // ============================================================================
 
 export const ProfessorSectionSchema = z.object({
@@ -106,7 +106,7 @@ export const ProfessorSectionSchema = z.object({
 export const getProfessorSectionsContract = oc
    .route({
       method: 'GET',
-      path: '/professors/:professor_id/sections',
+      path: '/professors/{professor_id}/sections',
       summary: 'Get professor sections',
       description:
          'Retrieve all sections taught by a professor across all terms',

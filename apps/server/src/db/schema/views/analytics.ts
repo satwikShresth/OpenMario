@@ -38,6 +38,10 @@ export const positionInformationMView = pgMaterializedView(
          avg_compensation:
             sql<number>`round(avg(${submission.compensation})::numeric, 2)`.as(
                'avg_compensation'
+            ),
+         median_compensation:
+            sql<number>`round(percentile_cont(0.5) within group (order by ${submission.compensation})::numeric, 2)`.as(
+               'median_compensation'
             )
       })
       .from(position)
@@ -291,11 +295,20 @@ export const companyReviewAggregateMView = pgMaterializedView(
          avg_comp_proactive:
             sql<number>`round(avg(${position_review.comp_proactive})::numeric, 2)`.as(
                'avg_comp_proactive'
+            ),
+         avg_compensation:
+            sql<number>`round(avg(${submission.compensation})::numeric, 2)`.as(
+               'avg_compensation'
+            ),
+         median_compensation:
+            sql<number>`round(percentile_cont(0.5) within group (order by ${submission.compensation})::numeric, 2)`.as(
+               'median_compensation'
             )
       })
       .from(company)
       .innerJoin(position, eq(position.company_id, company.id))
       .leftJoin(position_review, eq(position_review.position_id, position.id))
+      .leftJoin(submission, eq(submission.position_id, position.id))
       .groupBy(company.id, company.name)
 );
 
@@ -380,6 +393,138 @@ const workLifeScore = sql<number>`round((
       )
    ) * 100, 1)`.as('work_life_score');
 
+export const companyDetailMView = pgMaterializedView(
+   'company_detail_m_view'
+).as(qb =>
+   qb
+      .select({
+         company_id: company.id,
+         company_name: company.name,
+         total_reviews: sql<number>`count(distinct ${position_review.id})`.as(
+            'total_reviews'
+         ),
+         positions_reviewed:
+            sql<number>`count(distinct ${position.id}) filter (where ${position_review.id} is not null)`.as(
+               'positions_reviewed'
+            ),
+         total_submissions: sql<number>`count(distinct ${submission.id})`.as(
+            'total_submissions'
+         ),
+         avg_compensation:
+            sql<number>`round(avg(${submission.compensation})::numeric, 2)`.as(
+               'avg_compensation'
+            ),
+         median_compensation:
+            sql<number>`round(percentile_cont(0.5) within group (order by ${submission.compensation})::numeric, 2)`.as(
+               'median_compensation'
+            ),
+         omega_score: omegaScore,
+         satisfaction_score: satisfactionScore,
+         trust_score: trustScore,
+         integrity_score: integrityScore,
+         growth_score: growthScore,
+         work_life_score: workLifeScore,
+         avg_rating_overall:
+            sql<number>`round(avg(${position_review.rating_overall})::numeric, 2)`.as(
+               'avg_rating_overall'
+            ),
+         avg_rating_collaboration:
+            sql<number>`round(avg(${position_review.rating_collaboration})::numeric, 2)`.as(
+               'avg_rating_collaboration'
+            ),
+         avg_rating_work_variety:
+            sql<number>`round(avg(${position_review.rating_work_variety})::numeric, 2)`.as(
+               'avg_rating_work_variety'
+            ),
+         avg_rating_relationships:
+            sql<number>`round(avg(${position_review.rating_relationships})::numeric, 2)`.as(
+               'avg_rating_relationships'
+            ),
+         avg_rating_supervisor_access:
+            sql<number>`round(avg(${position_review.rating_supervisor_access})::numeric, 2)`.as(
+               'avg_rating_supervisor_access'
+            ),
+         avg_rating_training:
+            sql<number>`round(avg(${position_review.rating_training})::numeric, 2)`.as(
+               'avg_rating_training'
+            ),
+         pct_would_recommend: sql<number>`round(
+            100.0 * count(*) filter (where ${position_review.would_recommend} = true)
+            / nullif(count(*) filter (where ${position_review.would_recommend} is not null), 0), 1)`.as(
+            'pct_would_recommend'
+         ),
+         pct_description_accurate: sql<number>`round(
+            100.0 * count(*) filter (where ${position_review.description_accurate} = true)
+            / nullif(count(*) filter (where ${position_review.description_accurate} is not null), 0), 1)`.as(
+            'pct_description_accurate'
+         ),
+         avg_days_per_week:
+            sql<number>`round(avg(${position_review.days_per_week})::numeric, 1)`.as(
+               'avg_days_per_week'
+            ),
+         pct_public_transit: sql<number>`round(
+            100.0 * count(*) filter (where ${position_review.public_transit_available} = true)
+            / nullif(count(*) filter (where ${position_review.public_transit_available} is not null), 0), 1)`.as(
+            'pct_public_transit'
+         ),
+         pct_overtime_required: sql<number>`round(
+            100.0 * count(*) filter (where ${position_review.overtime_required} = true)
+            / nullif(count(*) filter (where ${position_review.overtime_required} is not null), 0), 1)`.as(
+            'pct_overtime_required'
+         )
+      })
+      .from(company)
+      .innerJoin(position, eq(position.company_id, company.id))
+      .leftJoin(position_review, eq(position_review.position_id, position.id))
+      .leftJoin(submission, eq(submission.position_id, position.id))
+      .groupBy(company.id, company.name)
+);
+
+export const companyPositionsMView = pgMaterializedView(
+   'company_positions_m_view'
+).as(qb =>
+   qb
+      .select({
+         position_id,
+         position_name,
+         company_id,
+         company_name,
+         total_reviews: sql<number>`count(distinct ${position_review.id})`.as(
+            'total_reviews'
+         ),
+         total_submissions: sql<number>`count(distinct ${submission.id})`.as(
+            'total_submissions'
+         ),
+         most_recent_posting_year: sql<number>`max(${job_posting.year})`.as(
+            'most_recent_posting_year'
+         ),
+         avg_rating_overall:
+            sql<number>`round(avg(${position_review.rating_overall})::numeric, 2)`.as(
+               'avg_rating_overall'
+            ),
+         avg_compensation:
+            sql<number>`round(avg(${submission.compensation})::numeric, 2)`.as(
+               'avg_compensation'
+            ),
+         median_compensation:
+            sql<number>`round(percentile_cont(0.5) within group (order by ${submission.compensation})::numeric, 2)`.as(
+               'median_compensation'
+            ),
+         omega_score: omegaScore,
+         satisfaction_score: satisfactionScore,
+         trust_score: trustScore,
+         integrity_score: integrityScore,
+         growth_score: growthScore,
+         work_life_score: workLifeScore
+      })
+      .from(position)
+      .innerJoin(company, eq(company.id, position.company_id))
+      .leftJoin(job_posting, eq(job_posting.position_id, position.id))
+      .leftJoin(position_review, eq(position_review.position_id, position.id))
+      .leftJoin(submission, eq(submission.position_id, position.id))
+      .groupBy(position.id, position.name, company.id, company.name)
+);
+
 export const positionOmegaMView = pgMaterializedView(
    'position_omega_m_view'
 ).as(qb =>
@@ -418,6 +563,17 @@ export const companyOmegaMView = pgMaterializedView('company_omega_m_view').as(
                sql<number>`count(distinct ${position.id}) filter (where ${position_review.id} is not null)`.as(
                   'positions_reviewed'
                ),
+            total_submissions: sql<number>`count(distinct ${submission.id})`.as(
+               'total_submissions'
+            ),
+            avg_compensation:
+               sql<number>`round(avg(${submission.compensation})::numeric, 2)`.as(
+                  'avg_compensation'
+               ),
+            median_compensation:
+               sql<number>`round(percentile_cont(0.5) within group (order by ${submission.compensation})::numeric, 2)`.as(
+                  'median_compensation'
+               ),
             omega_score: omegaScore,
             satisfaction_score: satisfactionScore,
             trust_score: trustScore,
@@ -431,5 +587,6 @@ export const companyOmegaMView = pgMaterializedView('company_omega_m_view').as(
             position_review,
             eq(position_review.position_id, position.id)
          )
+         .leftJoin(submission, eq(submission.position_id, position.id))
          .groupBy(company.id, company.name)
 );

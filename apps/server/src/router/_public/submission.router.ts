@@ -19,11 +19,7 @@ import {
    type SelectedFields
 } from 'drizzle-orm';
 import { maybe } from '@/utils';
-import type { SubmissionQuerySchema } from '@/contracts/submission.contract';
-import type { z } from 'zod';
-
-// Type definitions
-type SubmissionQueryParams = z.infer<typeof SubmissionQuerySchema>;
+import type { SubmissionQuery } from '@openmario/contracts';
 
 /**
  * Helper function to get position ID by company and position name
@@ -61,7 +57,7 @@ const getLocationCTE = (locationStr: string) => {
  * Helper function to build where clause from query parameters.
  * All filters target the flat materialized view — no runtime joins needed.
  */
-const buildWhereClause = (params: SubmissionQueryParams) =>
+const buildWhereClause = (params: SubmissionQuery) =>
    and(
       // BETWEEN is a single range check vs 22 OR equality conditions
       maybe(
@@ -114,9 +110,7 @@ const buildWhereClause = (params: SubmissionQueryParams) =>
 /**
  * Helper function to get sort column based on field name
  */
-const getSortColumn = (
-   field: SubmissionQueryParams['sortField']
-): SQL<unknown> => {
+const getSortColumn = (field: SubmissionQuery['sortField']): SQL<unknown> => {
    const map = {
       company: sql`company_name`,
       position: sql`position_name`,
@@ -126,7 +120,7 @@ const getSortColumn = (
       location: sql`city`
    };
    const value = map[field]!;
-   return map[field] ? value : sql`compensation`;
+   return map[field]! ? value : sql`compensation`;
 };
 
 /**

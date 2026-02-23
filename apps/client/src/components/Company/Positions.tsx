@@ -71,7 +71,12 @@ export function Positions() {
                                  </Text>
                                  {pos.avg_compensation != null && (
                                     <Text fontSize='sm' color='fg.muted'>
-                                       ${Number(pos.avg_compensation).toLocaleString()} avg comp
+                                       ${Number(pos.avg_compensation).toLocaleString()} avg
+                                    </Text>
+                                 )}
+                                 {pos.median_compensation != null && (
+                                    <Text fontSize='sm' color='fg.muted'>
+                                       ${Number(pos.median_compensation).toLocaleString()} median
                                     </Text>
                                  )}
                                  {pos.most_recent_posting_year != null && (

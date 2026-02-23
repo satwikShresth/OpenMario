@@ -14,6 +14,7 @@
     "start": "bun run ./dist/index.js"
   },
   "dependencies": {
+    "@openmario/contracts": "workspace:*",
     "@highlight-run/hono": "^1.0.25",
     "@hono/oidc-auth": "^1.7.1",
     "@neondatabase/serverless": "^1.0.2",

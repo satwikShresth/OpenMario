@@ -7,8 +7,8 @@ export function StatsGrid() {
 
    if (isLoading || !company) {
       return (
-         <Grid templateColumns={{ base: 'repeat(2,1fr)', md: 'repeat(4,1fr)' }} gap={4}>
-            {Array.from({ length: 4 }).map((_, i) => (
+         <Grid templateColumns={{ base: 'repeat(2,1fr)', md: 'repeat(3,1fr)', lg: 'repeat(6,1fr)' }} gap={4}>
+            {Array.from({ length: 6 }).map((_, i) => (
                <Skeleton key={i} height='96px' borderRadius='xl' />
             ))}
          </Grid>
@@ -30,9 +30,21 @@ export function StatsGrid() {
          label: 'Overtime Required',
          value: company.pct_overtime_required != null ? `${company.pct_overtime_required}%` : 'N/A',
       },
+      {
+         label: 'Avg Compensation',
+         value: company.avg_compensation != null
+            ? `$${Number(company.avg_compensation).toLocaleString()}`
+            : 'N/A',
+      },
+      {
+         label: 'Median Compensation',
+         value: company.median_compensation != null
+            ? `$${Number(company.median_compensation).toLocaleString()}`
+            : 'N/A',
+      },
    ];
    return (
-      <Grid templateColumns={{ base: 'repeat(2,1fr)', md: 'repeat(4,1fr)' }} gap={4}>
+      <Grid templateColumns={{ base: 'repeat(2,1fr)', md: 'repeat(3,1fr)', lg: 'repeat(6,1fr)' }} gap={4}>
          {stats.map(({ label, value }) => (
             <Box key={label} borderWidth='thin' borderRadius='xl' p={5}>
                <Stat.Root>

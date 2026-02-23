@@ -11,6 +11,7 @@ import {
    Stat,
    Text,
    VStack,
+   Image
 } from '@chakra-ui/react';
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 import { createFileRoute } from '@tanstack/react-router';
@@ -24,7 +25,7 @@ export const Route = createFileRoute('/companies/$company_id/$position_id')({
    beforeLoad: ({ context: { queryClient }, params: { company_id, position_id } }) => ({
       getLabel: () =>
          queryClient
-            .ensureQueryData(orpc.companies.getCompany.queryOptions({ input: { company_id }, staleTime: 30_000 }))
+            .ensureQueryData(orpc.companies.getCompany.queryOptions({ input: { params: { company_id } }, staleTime: 30_000 }))
             .then(data => data?.positions?.find(p => p.position_id === position_id)?.position_name ?? position_id),
    }),
    component: PositionReviewsPage,
@@ -37,18 +38,15 @@ function PositionReviewsPage() {
    const sentinelRef = useRef<HTMLDivElement>(null);
 
    const { data: companyData, isLoading: companyLoading } = useQuery(
-      orpc.companies.getCompany.queryOptions({ input: { company_id }, staleTime: 30_000 })
+      orpc.companies.getCompany.queryOptions({ input: { params: { company_id } }, staleTime: 30_000 })
    );
 
    const { data, isLoading: reviewsLoading, isFetchingNextPage, fetchNextPage, hasNextPage } =
       useInfiniteQuery(
-         orpc.companies.getCompanyReviews.infiniteOptions({
+         orpc.companies.getPositionReviews.infiniteOptions({
             input: (p: number) => ({
-               company_id,
-               position_id,
-               sort: 'year_desc' as const,
-               pageIndex: p,
-               pageSize: PAGE_SIZE,
+               params: { company_id, position_id },
+               query: { sort: 'year_desc' as const, pageIndex: p, pageSize: PAGE_SIZE },
             }),
             initialPageParam: 1,
             getNextPageParam: last => {
@@ -131,7 +129,7 @@ function PositionReviewsPage() {
                         {position.omega_score ?? '—'}
                      </Text>
                      <Flex align='center' justify='center' gap={1} mt={2}>
-                        <Box as='img' src='/omegascore-logo.png' alt='omΩ' h='18px' />
+                        <Image src='/omegascore-logo.png' alt='omΩ' h='18px' />
                      </Flex>
                   </Box>
                </Flex>
@@ -139,7 +137,7 @@ function PositionReviewsPage() {
 
             {/* Stats */}
             {!companyLoading && position && (
-               <Grid templateColumns={{ base: 'repeat(2,1fr)', md: 'repeat(4,1fr)' }} gap={4}>
+               <Grid templateColumns={{ base: 'repeat(2,1fr)', md: 'repeat(3,1fr)', lg: 'repeat(5,1fr)' }} gap={4}>
                   {[
                      { label: 'Reviews', value: position.total_reviews },
                      { label: 'Salary Submissions', value: position.total_submissions },
@@ -153,6 +151,12 @@ function PositionReviewsPage() {
                         label: 'Avg Compensation',
                         value: position.avg_compensation != null
                            ? `$${Number(position.avg_compensation).toLocaleString()}`
+                           : 'N/A',
+                     },
+                     {
+                        label: 'Median Compensation',
+                        value: position.median_compensation != null
+                           ? `$${Number(position.median_compensation).toLocaleString()}`
                            : 'N/A',
                      },
                   ].map(({ label, value }) => (

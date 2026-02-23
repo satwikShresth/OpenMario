@@ -12,7 +12,7 @@ export const CourseIdParamSchema = z.object({
 });
 
 // ============================================================================
-// GET /courses/:course_id
+// GET /courses/{course_id}
 // ============================================================================
 
 export const CourseSchema = z.object({
@@ -36,12 +36,13 @@ export const GetCourseResponseSchema = z.object({
 export const getCourseContract = oc
    .route({
       method: 'GET',
-      path: '/courses/:course_id',
+      path: '/courses/{course_id}',
       summary: 'Get course details',
       description: 'Retrieve all attributes for a specific course',
+      inputStructure: 'detailed',
       tags: ['Courses']
    })
-   .input(CourseIdParamSchema)
+   .input(z.object({ params: CourseIdParamSchema }))
    .output(GetCourseResponseSchema);
 
 // ============================================================================
@@ -80,7 +81,7 @@ export type GetPrerequisitesResponse = z.infer<
 export const getCoursePrerequisitesContract = oc
    .route({
       method: 'GET',
-      path: '/courses/:course_id/prerequisites',
+      path: '/courses/{course_id}/prerequisites',
       summary: 'Get course prerequisites',
       description:
          'Retrieve prerequisites for a specific course, grouped by OR-choice sets',
@@ -90,7 +91,7 @@ export const getCoursePrerequisitesContract = oc
    .output(GetPrerequisitesResponseSchema);
 
 // ============================================================================
-// GET /courses/:course_id/corequisites
+// GET /courses/{course_id}/corequisites
 // ============================================================================
 
 export const CorequisiteSchema = z.object({
@@ -110,7 +111,7 @@ export const GetCorequisitesResponseSchema = z.object({
 export const getCourseCorequistesContract = oc
    .route({
       method: 'GET',
-      path: '/courses/:course_id/corequisites',
+      path: '/courses/{course_id}/corequisites',
       summary: 'Get course corequisites',
       description: 'Retrieve corequisites for a specific course',
       tags: ['Courses']
@@ -119,7 +120,7 @@ export const getCourseCorequistesContract = oc
    .output(GetCorequisitesResponseSchema);
 
 // ============================================================================
-// GET /courses/:course_id/availabilities
+// GET /courses/{course_id}/availabilities
 // ============================================================================
 
 export const InstructorSchema = z.object({
@@ -143,7 +144,7 @@ export const GetCourseAvailabilitiesResponseSchema = z.array(
 export const getCourseAvailabilitiesContract = oc
    .route({
       method: 'GET',
-      path: '/courses/:course_id/availabilities',
+      path: '/courses/{course_id}/availabilities',
       summary: 'Get course availabilities',
       description:
          'Retrieve all sections available for a specific course across all terms',

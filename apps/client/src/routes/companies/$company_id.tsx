@@ -5,7 +5,7 @@ export const Route = createFileRoute('/companies/$company_id')({
    beforeLoad: ({ context: { queryClient }, params: { company_id } }) => ({
       getLabel: () =>
          queryClient
-            .ensureQueryData(orpc.companies.getCompany.queryOptions({ input: { company_id }, staleTime: 30_000 }))
+            .ensureQueryData(orpc.companies.getCompany.queryOptions({ input: { params: { company_id } }, staleTime: 30_000 }))
             .then(data => data?.company?.company_name ?? company_id),
    }),
    component: () => <Outlet />,

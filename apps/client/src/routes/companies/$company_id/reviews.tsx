@@ -46,10 +46,8 @@ function CompanyReviewsPage() {
       useInfiniteQuery(
          orpc.companies.getCompanyReviews.infiniteOptions({
             input: (p: number) => ({
-               company_id,
-               sort,
-               pageIndex: p,
-               pageSize: PAGE_SIZE,
+               params: { company_id },
+               query: { sort, pageIndex: p, pageSize: PAGE_SIZE },
             }),
             initialPageParam: 1,
             getNextPageParam: last => {

@@ -16,7 +16,7 @@ import { useCallback, useState } from 'react';
 import { Tooltip } from '@/components/ui/tooltip.jsx';
 import { Link } from '@tanstack/react-router';
 import { useSearch } from '@tanstack/react-router';
-import type { SubmissionListItem, SubmissionListResponse, SubmissionQuery } from '@openmario/server/contracts';
+import type { SubmissionListItem, SubmissionListResponse, SubmissionQuery } from '@openmario/contracts';
 
 export default (
    { data, count }: {

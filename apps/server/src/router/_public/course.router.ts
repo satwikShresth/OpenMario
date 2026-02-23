@@ -11,11 +11,11 @@ import {
 } from '@/db';
 
 // ---------------------------------------------------------------------------
-// GET /graph/courses/:course_id
+// GET /courses/{course_id}
 // ---------------------------------------------------------------------------
 
 export const getCourse = os.course.course.handler(
-   async ({ input: { course_id } }) => {
+   async ({ input: { params: { course_id } } }) => {
       const rows = await db
          .select({
             id: course.id,
@@ -48,7 +48,7 @@ export const getCourse = os.course.course.handler(
 );
 
 // ---------------------------------------------------------------------------
-// GET /graph/prereq/:course_id
+// GET /courses/{course_id}/prerequisites
 // ---------------------------------------------------------------------------
 
 export const getCoursePrerequisites = os.course.prerequisites.handler(
@@ -107,7 +107,7 @@ export const getCoursePrerequisites = os.course.prerequisites.handler(
 );
 
 // ---------------------------------------------------------------------------
-// GET /graph/coreq/:course_id
+// GET /courses/{course_id}/corequisites
 // ---------------------------------------------------------------------------
 
 export const getCourseCorequistes = os.course.corequisites.handler(
@@ -145,7 +145,7 @@ export const getCourseCorequistes = os.course.corequisites.handler(
 );
 
 // ---------------------------------------------------------------------------
-// GET /graph/courses/availabilities/:course_id
+// GET /courses/{course_id}/availabilities
 // ---------------------------------------------------------------------------
 
 export const getCourseAvailabilities = os.course.availabilities.handler(

@@ -15,6 +15,20 @@
       "when": 1771881971712,
       "tag": "0001_luxuriant_klaw",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1771882771626,
+      "tag": "0002_abandoned_agent_zero",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1771888842667,
+      "tag": "0003_striped_unicorn",
+      "breakpoints": true
     }
   ]
 }

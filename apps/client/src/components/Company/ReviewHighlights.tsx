@@ -16,11 +16,11 @@ function HighlightReview({
    const company_id = useCompanyDetail(s => s.company_id);
    const { data, isLoading } = useQuery(
       orpc.companies.getCompanyReviews.queryOptions({
-         input: { company_id, sort, pageSize: 1, pageIndex: 1 },
+         input: { params: { company_id }, query: { sort, pageSize: 1, pageIndex: 1 } },
          staleTime: 60_000,
       })
    );
-   const review = (data as any)?.data?.[0];
+   const review = data?.data?.[0];
    if (isLoading) return <Skeleton height='160px' borderRadius='xl' />;
    if (!review || (!review.best_features && !review.challenges)) return null;
    return (

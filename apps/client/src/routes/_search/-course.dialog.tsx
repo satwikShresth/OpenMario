@@ -12,9 +12,7 @@ export function CourseDialogPage() {
 
    const { data: courseInfo } = useQuery(
       orpc.course.course.queryOptions({
-         input: {
-            course_id
-         },
+         input: { params: { course_id } },
          select: (s) => s.data!
       })
    );

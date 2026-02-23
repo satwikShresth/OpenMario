@@ -32,7 +32,7 @@
         "@fullcalendar/timegrid": "^6.1.20",
         "@hey-api/openapi-ts": "^0.92.4",
         "@meilisearch/instant-meilisearch": "^0.29.0",
-        "@openmario/server": "workspace:*",
+        "@openmario/contracts": "workspace:*",
         "@orpc/client": "^1.13.2",
         "@orpc/contract": "^1.13.2",
         "@orpc/openapi-client": "^1.13.2",
@@ -65,7 +65,6 @@
         "next-themes": "^0.4.6",
         "react": "^19.2.3",
         "react-dom": "^19.2.3",
-        "react-icons": "^5.5.0",
         "react-instantsearch": "^7.21.0",
         "recharts": "^3.7.0",
         "tailwindcss": "^4.1.18",
@@ -98,6 +97,7 @@
         "@highlight-run/hono": "^1.0.25",
         "@hono/oidc-auth": "^1.7.1",
         "@neondatabase/serverless": "^1.0.2",
+        "@openmario/contracts": "workspace:*",
         "@orpc/contract": "^1.13.2",
         "@orpc/openapi": "^1.13.2",
         "@orpc/server": "^1.13.2",
@@ -119,6 +119,14 @@
         "@types/bun": "^1.3.5",
         "@types/pg": "^8.16.0",
         "drizzle-kit": "^0.31.9",
+      },
+    },
+    "packages/contracts": {
+      "name": "@openmario/contracts",
+      "version": "1.0.0",
+      "dependencies": {
+        "@orpc/contract": "^1.13.2",
+        "zod": "^4.2.1",
       },
     },
   },
@@ -450,6 +458,8 @@
     "@noble/hashes": ["@noble/hashes@2.0.1", "", {}, "sha512-XlOlEbQcE9fmuXxrVTXCTlG2nlRXa9Rj3rr5Ue/+tX+nmkgbX720YHh0VR3hBF9xDvwnb8D2shVGOwNx+ulArw=="],
 
     "@openmario/client": ["@openmario/client@workspace:apps/client"],
+
+    "@openmario/contracts": ["@openmario/contracts@workspace:packages/contracts"],
 
     "@openmario/server": ["@openmario/server@workspace:apps/server"],
 
@@ -1490,8 +1500,6 @@
     "react": ["react@19.2.4", "", {}, "sha512-9nfp2hYpCwOjAN+8TZFGhtWEwgvWHXqESH8qT89AT/lWklpLON22Lc8pEtnpsZz7VmawabSU0gCjnj8aC0euHQ=="],
 
     "react-dom": ["react-dom@19.2.4", "", { "dependencies": { "scheduler": "^0.27.0" }, "peerDependencies": { "react": "^19.2.4" } }, "sha512-AXJdLo8kgMbimY95O2aKQqsz2iWi9jMgKJhRBAxECE4IFxfcazB2LmzloIoibJI3C12IlY20+KFaLv+71bUJeQ=="],
-
-    "react-icons": ["react-icons@5.5.0", "", { "peerDependencies": { "react": "*" } }, "sha512-MEFcXdkP3dLo8uumGI5xN3lDFNsRtrjbOEKDLD7yv76v4wpnEq2Lt2qeHaQOr34I/wPN3s3+N08WkQ+CW37Xiw=="],
 
     "react-instantsearch": ["react-instantsearch@7.24.0", "", { "dependencies": { "@babel/runtime": "^7.27.6", "instantsearch-ui-components": "0.18.0", "instantsearch.js": "4.88.0", "react-instantsearch-core": "7.24.0" }, "peerDependencies": { "algoliasearch": ">= 3.1 < 6", "react": ">= 16.8.0 < 20", "react-dom": ">= 16.8.0 < 20" } }, "sha512-ddyOz3HZ652X32IHRLXqSk+aLSDj3U+wGNzqoqyMbLU1DK29hs26kugslqATLUc0eShID1Nw97OwPXyO/M1Htw=="],
 

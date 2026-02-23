@@ -3,14 +3,14 @@ import { useQueries } from '@tanstack/react-query';
 import { createFileRoute } from '@tanstack/react-router';
 import { useLayoutEffect } from 'react';
 import { orpc } from '@/helpers/rpc.ts';
-import { Professor, professorDetailStore, type Section, type ProfessorProfile, currentTermId } from '@/components/Professor';
+import { Professor, professorDetailStore, type ProfessorProfile, type Section, currentTermId } from '@/components/Professor';
 
 export const Route = createFileRoute('/professors/$professor_id')({
    beforeLoad: ({ context: { queryClient }, params: { professor_id } }) => ({
       getLabel: () =>
          queryClient
             .ensureQueryData(orpc.professor.get.queryOptions({ input: { professor_id: Number(professor_id) }, staleTime: 30_000 }))
-            .then((data) => data?.instructor_name ?? professor_id),
+            .then((data) => (data as ProfessorProfile | undefined)?.instructor_name ?? professor_id),
    }),
    component: ProfessorPage,
 });
@@ -28,7 +28,7 @@ function ProfessorPage() {
 
    const isLoading = profileQuery.isLoading || sectionsQuery.isLoading;
    const cutoff = currentTermId();
-   const allSections = (sectionsQuery.data as Section[] | undefined) ?? [];
+   const allSections = (sectionsQuery.data ?? []) as Section[];
 
    useLayoutEffect(() => {
       professorDetailStore.setState(() => ({

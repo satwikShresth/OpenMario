@@ -13,7 +13,7 @@ import {
    type UseDialogReturn,
    VStack,
 } from '@chakra-ui/react';
-import type { SubmissionListItem } from '@openmario/server/contracts';
+import type { SubmissionListItem } from '@openmario/contracts';
 
 import {
    CalendarDaysIcon,

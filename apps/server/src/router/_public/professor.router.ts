@@ -98,7 +98,7 @@ export const listProfessors = os.professor.list.handler(async ({ input }) => {
 });
 
 // ============================================================================
-// GET /professors/:professor_id
+// GET /professors/{professor_id}
 // ============================================================================
 
 export const getProfessor = os.professor.get.handler(
@@ -116,7 +116,7 @@ export const getProfessor = os.professor.get.handler(
 );
 
 // ============================================================================
-// GET /professors/:professor_id/sections
+// GET /professors/{professor_id}/sections
 // ============================================================================
 
 export const getProfessorSections = os.professor.sections.handler(

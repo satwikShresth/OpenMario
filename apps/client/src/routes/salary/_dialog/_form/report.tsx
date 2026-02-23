@@ -1,7 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router';
 import { toaster } from '@/components/ui/toaster';
 import { Salary } from '@/components/Salary';
-import type { SubmissionAggregate } from '@openmario/server/contracts';
+import type { SubmissionAggregate } from '@openmario/contracts';
 import { useMutation } from '@tanstack/react-query';
 import { orpc } from '@/helpers';
 import { submissionsCollection } from '@/helpers';

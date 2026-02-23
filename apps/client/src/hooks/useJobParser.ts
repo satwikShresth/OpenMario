@@ -1,4 +1,4 @@
-import type { SubmissionAggregate } from '@openmario/server/contracts';
+import type { SubmissionAggregate } from '@openmario/contracts';
 import { useCallback, useState } from 'react';
 
 type Submission = Omit<SubmissionAggregate, 'details'> & {

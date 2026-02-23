@@ -32,7 +32,7 @@ function AllPositionsPage() {
    const [sortDir, setSortDir] = useState<'asc' | 'desc'>('desc');
 
    const { data: companyData, isLoading } = useQuery(
-      orpc.companies.getCompany.queryOptions({ input: { company_id }, staleTime: 30_000 })
+      orpc.companies.getCompany.queryOptions({ input: { params: { company_id } }, staleTime: 30_000 })
    );
 
    const allPositions = companyData?.positions ?? [];

@@ -2,7 +2,7 @@ import { createFileRoute } from '@tanstack/react-router';
 import { Salary } from '@/components/Salary';
 import { useMutation } from '@tanstack/react-query';
 import { toaster } from '@/components/ui/toaster';
-import type { SubmissionAggregate } from '@openmario/server/contracts';
+import type { SubmissionAggregate } from '@openmario/contracts';
 import { orpc } from '@/helpers';
 import { useLiveQuery, eq, or } from '@tanstack/react-db';
 import { submissionsCollection } from '@/helpers';
