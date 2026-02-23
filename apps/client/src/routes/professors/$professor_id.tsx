@@ -10,7 +10,7 @@ export const Route = createFileRoute('/professors/$professor_id')({
       getLabel: () =>
          queryClient
             .ensureQueryData(orpc.professor.get.queryOptions({ input: { professor_id: Number(professor_id) }, staleTime: 30_000 }))
-            .then((data: ProfessorProfile | null | undefined) => data?.instructor_name ?? professor_id),
+            .then((data) => data?.instructor_name ?? professor_id),
    }),
    component: ProfessorPage,
 });
@@ -41,7 +41,7 @@ function ProfessorPage() {
    }, [profileQuery.data, allSections, isLoading, cutoff]);
 
    return (
-      <Professor.Root maxW='5xl' py={8}>
+      <Professor.Root maxW='5xl'>
          <Professor.Header />
          <Separator />
          <Professor.StatsGrid />

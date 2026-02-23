@@ -1,6 +1,6 @@
 import { Box, Drawer, IconButton, Separator, Text } from '@chakra-ui/react';
 import { RefinementCheckbox } from '../index.tsx';
-import { HiX } from 'react-icons/hi';
+import { CloseIcon } from '@/components/icons';
 import { useMobile } from '@/hooks';
 
 interface FilterDrawerProps {
@@ -49,7 +49,7 @@ export const Filters = ({
                   <Drawer.Title>Filters</Drawer.Title>
                   <Drawer.CloseTrigger asChild>
                      <IconButton variant='outline' size='sm'>
-                        <HiX />
+                        <CloseIcon />
                      </IconButton>
                   </Drawer.CloseTrigger>
                </Drawer.Header>

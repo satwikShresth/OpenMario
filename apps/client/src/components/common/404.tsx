@@ -9,7 +9,7 @@ import {
    Text,
    VStack,
 } from '@chakra-ui/react';
-import { MdArrowBack, MdFilePresent, MdHome } from 'react-icons/md';
+import { ArrowLeftIcon, FileTextIcon, HomeIcon } from '@/components/icons';
 import { Link, useRouter } from '@tanstack/react-router';
 import { useEffect, useState } from 'react';
 
@@ -48,7 +48,7 @@ export const NotFoundComponent: React.FC<NotFoundComponentProps> = ({
                <Card.Root size='lg' p='10'>
                   <Card.Header>
                      <EmptyState.Indicator>
-                        <MdFilePresent />
+                        <FileTextIcon />
                      </EmptyState.Indicator>
                   </Card.Header>
                   <Card.Body>
@@ -85,12 +85,12 @@ export const NotFoundComponent: React.FC<NotFoundComponentProps> = ({
                            variant='outline'
                            onClick={() => router.history.back()}
                         >
-                           <Icon as={MdArrowBack} />
+                           <Icon as={ArrowLeftIcon} />
                            <Text>Go Back Now</Text>
                         </Button>
                         <Link to='/'>
                            <Button colorPalette='blue'>
-                              <Icon as={MdHome} />
+                              <Icon as={HomeIcon} />
                               <Text>Go Home</Text>
                            </Button>
                         </Link>

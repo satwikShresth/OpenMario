@@ -14,7 +14,7 @@ import { createFileRoute, useNavigate } from '@tanstack/react-router';
 import { orpc } from '@/helpers/rpc.ts';
 import { omegaColorPalette } from '@/components/Company/helpers';
 import { useMemo, useState } from 'react';
-import { FiArrowDown, FiArrowUp, FiChevronRight } from 'react-icons/fi';
+import { ArrowDownIcon, ArrowUpIcon, ChevronRightIcon } from '@/components/icons';
 
 export const Route = createFileRoute('/companies/$company_id/positions')({
    beforeLoad: () => ({ getLabel: () => 'Positions' }),
@@ -65,7 +65,7 @@ function AllPositionsPage() {
 
    function SortIcon({ col }: { col: SortKey }) {
       if (sortKey !== col) return null;
-      return sortDir === 'asc' ? <FiArrowUp size={12} /> : <FiArrowDown size={12} />;
+      return sortDir === 'asc' ? <ArrowUpIcon size={12} /> : <ArrowDownIcon size={12} />;
    }
 
    const headerCell = (label: string, col: SortKey, align?: 'right') => (
@@ -187,7 +187,7 @@ function AllPositionsPage() {
                                  </Text>
                               </Table.Cell>
                               <Table.Cell textAlign='right' px={3}>
-                                 <FiChevronRight size={14} color='var(--chakra-colors-fg-subtle)' />
+                                 <ChevronRightIcon size={14} color='var(--chakra-colors-fg-subtle)' />
                               </Table.Cell>
                            </Table.Row>
                         ))}

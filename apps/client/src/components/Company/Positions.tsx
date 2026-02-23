@@ -1,6 +1,6 @@
 import { Badge, Box, Button, Flex, HStack, Text, VStack } from '@chakra-ui/react';
 import { Link, useNavigate } from '@tanstack/react-router';
-import { FiArrowRight, FiChevronRight } from 'react-icons/fi';
+import { ArrowRightIcon, ChevronRightIcon } from '@/components/icons';
 import { omegaColorPalette } from './helpers';
 import { useCompanyDetail } from './detailStore';
 
@@ -24,7 +24,7 @@ export function Positions() {
                   <Button variant='outline' size='sm'>
                      <HStack gap={2}>
                         <Text>View all {positions.length}</Text>
-                        <FiArrowRight size={14} />
+                        <ArrowRightIcon size={14} />
                      </HStack>
                   </Button>
                </Link>
@@ -82,7 +82,7 @@ export function Positions() {
                               </HStack>
                            </Box>
                         </HStack>
-                        <FiChevronRight size={18} color='var(--chakra-colors-fg-muted)' />
+                        <ChevronRightIcon size={18} color='var(--chakra-colors-fg-muted)' />
                      </Flex>
                   </Box>
                ))}

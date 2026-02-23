@@ -14,7 +14,7 @@ import {
 } from '@chakra-ui/react';
 import type { Section } from '@/types';
 import { Tag, Tooltip } from '@/components/ui';
-import { BiLinkExternal } from 'react-icons/bi';
+import { ExternalLinkIcon, HeartFilledIcon, HeartIcon } from '@/components/icons';
 import { Link, linkOptions, useMatch } from '@tanstack/react-router';
 import { getDifficultyColor, getRatingColor, weekItems } from './helpers';
 import { formatTime, orpc } from '@/helpers';
@@ -25,7 +25,6 @@ import { useMobile } from '@/hooks';
 import Req from './Req.tsx';
 import { useQuery } from '@tanstack/react-query';
 import Availabilites from './Availabilites.tsx';
-import { RiHeartFill, RiHeartLine } from 'react-icons/ri';
 import { sectionsCollection, termsCollection, coursesCollection } from '@/helpers/collections';
 import { eq, and, useLiveQuery } from '@tanstack/react-db';
 import { toaster } from '@/components/ui/toaster';
@@ -306,7 +305,7 @@ export const Card = ({ section }: { section: Section }) => {
                                              <Text fontSize={{ base: 'xs', md: 'sm' }}>
                                                 RMP
                                              </Text>
-                                             <BiLinkExternal size={14} />
+                                             <ExternalLinkIcon size={14} />
                                           </HStack>
                                        </Tag>
                                     )}
@@ -479,7 +478,7 @@ const CardButtons = (
                borderColor: likedSection?.liked ? 'pink.600' : 'pink.400',
             }}
          >
-            <Icon as={likedSection?.liked ? RiHeartFill : RiHeartLine} size='lg' />
+            <Icon as={likedSection?.liked ? HeartFilledIcon : HeartIcon} size='lg' />
          </IconButton>
          <Clipboard.Root
             value={globalThis.location.origin + globalThis.location.pathname +

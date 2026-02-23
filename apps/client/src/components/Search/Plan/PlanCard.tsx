@@ -14,8 +14,7 @@ import { toaster } from '@/components/ui/toaster'
 import { Link, useMatch } from '@tanstack/react-router'
 import { formatTime } from '@/helpers'
 import { getDifficultyColor, getRatingColor, weekItems } from '@/components/Search/Courses/helpers'
-import { BiLinkExternal } from 'react-icons/bi'
-import { MdAddCircleOutline, MdCheckCircle } from 'react-icons/md'
+import { ExternalLinkIcon, AddCircleIcon, CheckCircleIcon } from '@/components/icons'
 import { sectionsCollection, termsCollection, coursesCollection, planEventsCollection } from '@/helpers/collections'
 import { useLiveQuery, eq, and } from '@tanstack/react-db'
 
@@ -403,7 +402,7 @@ export const PlanCard = ({ section, currentTerm, currentYear }: PlanCardProps) =
                         >
                           <HStack gap={1}>
                             <Text fontSize="xs">RMP</Text>
-                            <BiLinkExternal size={12} />
+                            <ExternalLinkIcon size={12} />
                           </HStack>
                         </Tag>
                       </Link>
@@ -425,7 +424,7 @@ export const PlanCard = ({ section, currentTerm, currentYear }: PlanCardProps) =
                 onClick={handleAddCourse}
                 flex={1}
               >
-                <Icon as={MdAddCircleOutline} />
+                <Icon as={AddCircleIcon} />
                 {isOnlineAsync || !hasSchedule ? 'Add Course' : 'Add to Schedule'}
               </Button>
             )}
@@ -441,7 +440,7 @@ export const PlanCard = ({ section, currentTerm, currentYear }: PlanCardProps) =
               onClick={handleMarkAsTaken}
               width="fit-content"
             >
-              <Icon as={MdCheckCircle} />
+              <Icon as={CheckCircleIcon} />
               Mark as Taken
             </Button>
           </HStack>

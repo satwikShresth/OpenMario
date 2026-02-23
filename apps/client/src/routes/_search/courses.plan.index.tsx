@@ -23,7 +23,7 @@ import {
    coursesCollection,
 } from '@/helpers/collections'
 import { useState } from 'react'
-import { LuCalendarPlus, LuChevronRight, LuBookOpen, LuGraduationCap } from 'react-icons/lu'
+import { CalendarPlusIcon, ChevronRightIcon, BookOpenIcon, GraduationCapIcon } from '@/components/icons'
 
 const TERM_ORDER = ['Fall', 'Winter', 'Spring', 'Summer'] as const
 type TermName = typeof TERM_ORDER[number]
@@ -68,7 +68,7 @@ function NewPlanButton() {
       <Dialog.Root open={open} onOpenChange={e => setOpen(e.open)}>
          <Dialog.Trigger asChild>
             <Button colorPalette='blue' size='sm'>
-               <Icon as={LuCalendarPlus} />
+               <Icon as={CalendarPlusIcon} />
                New Plan
             </Button>
          </Dialog.Trigger>
@@ -115,7 +115,7 @@ function NewPlanButton() {
                         disabled={!currentId}
                      >
                         Open Plan
-                        <Icon as={LuChevronRight} />
+                        <Icon as={ChevronRightIcon} />
                      </Button>
                   </Dialog.Footer>
 
@@ -176,13 +176,13 @@ function PlanCard({ plan }: { plan: PlanSummary }) {
                            {plan.year}
                         </Text>
                      </VStack>
-                     <Icon as={LuChevronRight} color='fg.muted' boxSize={4} mt={1} />
+                     <Icon as={ChevronRightIcon} color='fg.muted' boxSize={4} mt={1} />
                   </Flex>
 
                   <Grid templateColumns='1fr 1fr' gap={3}>
                      <VStack align='flex-start' gap={0.5}>
                         <HStack gap={1}>
-                           <Icon as={LuBookOpen} boxSize={3} color='fg.muted' />
+                           <Icon as={BookOpenIcon} boxSize={3} color='fg.muted' />
                            <Text fontSize='2xs' color='fg.muted' textTransform='uppercase' letterSpacing='wider'>
                               Courses
                            </Text>
@@ -194,7 +194,7 @@ function PlanCard({ plan }: { plan: PlanSummary }) {
 
                      <VStack align='flex-start' gap={0.5}>
                         <HStack gap={1}>
-                           <Icon as={LuGraduationCap} boxSize={3} color='fg.muted' />
+                           <Icon as={GraduationCapIcon} boxSize={3} color='fg.muted' />
                            <Text fontSize='2xs' color='fg.muted' textTransform='uppercase' letterSpacing='wider'>
                               Credits
                            </Text>

@@ -11,7 +11,7 @@ import {
    Text,
    useDisclosure,
 } from '@chakra-ui/react';
-import { HiFilter } from 'react-icons/hi';
+import { FilterIcon } from '@/components/icons';
 import { Salary } from '@/components/Salary';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { createFileRoute, Outlet } from '@tanstack/react-router';
@@ -72,7 +72,7 @@ export const Route = createFileRoute('/salary')({
                {isMobile
                   ? (
                      <Button onClick={openFilter} variant='solid' size='sm'>
-                        <Icon as={HiFilter} />
+                        <Icon as={FilterIcon} />
                         <Text>Filters</Text>
                      </Button>
                   )

@@ -1,6 +1,6 @@
 import { HStack, Skeleton, Text } from '@chakra-ui/react';
 import { Link } from '@tanstack/react-router';
-import { FiChevronRight } from 'react-icons/fi';
+import { ChevronRightIcon } from '@/components/icons';
 
 export type BreadcrumbItem<TPrams> =
    | { type: 'link'; label: string; to: string; params?: TPrams }
@@ -16,7 +16,7 @@ export function Breadcrumb<TPrams>({ items }: BreadcrumbProps<TPrams>) {
       <HStack gap={1.5} fontSize='sm' color='fg.muted' flexWrap='wrap'>
          {items.map((item, i) => (
             <HStack key={i} gap={1.5}>
-               {i > 0 && <FiChevronRight size={13} />}
+               {i > 0 && <ChevronRightIcon size={13} />}
                {item.type === 'link' ? (
                   <Link to={item.to} params={item.params!}>
                      <Text

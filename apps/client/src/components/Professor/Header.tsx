@@ -1,5 +1,5 @@
 import { Badge, Box, Flex, HStack, Skeleton, Text, VStack } from '@chakra-ui/react';
-import { FiExternalLink, FiStar } from 'react-icons/fi';
+import { ExternalLinkIcon, StarIcon } from '@/components/icons';
 import { useProfessorDetail } from './detailStore';
 
 const ratingColor = (rating: number | null) => {
@@ -46,7 +46,7 @@ export function Header() {
                {prof.avg_rating != null && (
                   <Badge colorPalette={ratingColor(prof.avg_rating)} variant='subtle' px={3} py={1}>
                      <HStack gap={1}>
-                        <FiStar />
+                        <StarIcon size={13} />
                         <Text>{prof.avg_rating} / 5 rating</Text>
                      </HStack>
                   </Badge>
@@ -66,7 +66,7 @@ export function Header() {
                      <Badge variant='outline' px={3} py={1} cursor='pointer'>
                         <HStack gap={1}>
                            <Text>Rate My Professors</Text>
-                           <FiExternalLink />
+                           <ExternalLinkIcon size={12} />
                         </HStack>
                      </Badge>
                   </a>

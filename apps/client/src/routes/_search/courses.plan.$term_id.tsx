@@ -1,5 +1,5 @@
 import { Alert, Badge, Box, Flex, HStack, Icon, Splitter, Text, useBreakpointValue } from '@chakra-ui/react'
-import { LuMonitorX } from 'react-icons/lu'
+import { MonitorOffIcon } from '@/components/icons'
 import { createFileRoute, Outlet } from '@tanstack/react-router'
 import { useState } from 'react'
 import { Plan } from '@/components/Search/Plan'
@@ -144,7 +144,7 @@ function PlanTermPage() {
             display={{ base: 'none', sm: 'flex', lg: 'none' }}
           >
             <Alert.Indicator>
-              <Icon as={LuMonitorX} />
+              <Icon as={MonitorOffIcon} />
             </Alert.Indicator>
             <Alert.Description fontSize="xs">
               The plan editor works best at 1024 px or wider. Try expanding your window or using a larger screen.

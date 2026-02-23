@@ -14,7 +14,7 @@ import { useJobParser, useTesseract } from '@/hooks';
 import { submissionsCollection } from '@/helpers';
 import { useStore } from '@tanstack/react-form';
 import { useCallback, useState } from 'react';
-import { FaUpload } from 'react-icons/fa';
+import { UploadIcon } from '@/components/icons';
 
 export default ({ form }: any) => {
    const [progress, setProgress] = useState(0);
@@ -149,7 +149,7 @@ export default ({ form }: any) => {
                mb={4}
             >
                <Box mb={4}>
-                  <FaUpload size={40} />
+                  <UploadIcon size={40} />
                </Box>
                <FileUpload.DropzoneContent>
                   <Text
@@ -206,7 +206,7 @@ export default ({ form }: any) => {
                                        >
                                           <Box display='flex' alignItems='center' flex={1}>
                                              <Box mr={3}>
-                                                <FaUpload size={20} />
+                                                <UploadIcon size={20} />
                                              </Box>
                                              <Box>
                                                 <FileUpload.ItemName fontWeight='medium' />

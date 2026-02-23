@@ -1,5 +1,5 @@
 import { Button, Icon, HoverCard as ChakraHoverCard, Dialog as ChakraDialog, Portal, VStack, Text, ScrollArea, HStack, Badge } from '@chakra-ui/react'
-import { MdSchool, MdDelete } from 'react-icons/md'
+import { GraduationCapIcon, DeleteIcon } from '@/components/icons'
 import { useState } from 'react'
 import { useLiveQuery, eq } from '@tanstack/react-db'
 import { planEventsCollection, sectionsCollection, coursesCollection, termsCollection } from '@/helpers/collections'
@@ -166,7 +166,7 @@ export const CreditsIndicator = ({ currentTerm, currentYear }: CreditsIndicatorP
             size="xs"
             onClick={() => setDialogOpen(true)}
           >
-            <Icon as={MdSchool} />
+            <Icon as={GraduationCapIcon} />
             {totalCredits} / 20 Credits
           </Button>
         </HoverCard.Trigger>
@@ -220,7 +220,7 @@ export const CreditsIndicator = ({ currentTerm, currentYear }: CreditsIndicatorP
               <Dialog.Header>
                 <Dialog.Title>
                   <HStack>
-                    <Icon as={MdSchool} color={isOverloaded ? 'red.500' : 'blue.500'} />
+                    <Icon as={GraduationCapIcon} color={isOverloaded ? 'red.500' : 'blue.500'} />
                     <Text>Scheduled Courses - {currentTerm} {currentYear}</Text>
                     <Badge colorPalette={isOverloaded ? 'red' : 'blue'}>
                       {totalCredits} / 20 Credits
@@ -276,7 +276,7 @@ export const CreditsIndicator = ({ currentTerm, currentYear }: CreditsIndicatorP
                                 colorPalette="red"
                                 onClick={() => handleRemoveCourse(course)}
                               >
-                                <Icon as={MdDelete} />
+                                <Icon as={DeleteIcon} />
                                 Remove
                               </Button>
                             </HStack>

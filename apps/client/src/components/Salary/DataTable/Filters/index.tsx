@@ -1,7 +1,7 @@
 import { Drawer, IconButton } from '@chakra-ui/react';
 import { useMobile } from '@/hooks';
 import Fields from './Fields';
-import { HiX } from 'react-icons/hi';
+import { CloseIcon } from '@/components/icons';
 
 interface FilterDrawerProps {
    open: boolean;
@@ -27,7 +27,7 @@ export default ({
                   <Drawer.Title>Filters</Drawer.Title>
                   <Drawer.CloseTrigger asChild>
                      <IconButton variant='outline' size='sm'>
-                        <HiX />
+                        <CloseIcon />
                      </IconButton>
                   </Drawer.CloseTrigger>
                </Drawer.Header>

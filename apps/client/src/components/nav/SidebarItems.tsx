@@ -2,8 +2,7 @@ import { forwardRef } from 'react';
 import type React from 'react';
 import { Box, Flex, Icon, Separator, Text } from '@chakra-ui/react';
 import { Link, useRouterState } from '@tanstack/react-router';
-import { FiGithub, FiMessageCircle } from 'react-icons/fi';
-import { MdStorage } from 'react-icons/md';
+import { GithubIcon, MessageCircleIcon, DatabaseIcon } from '@/components/icons';
 import { useColorModeValue } from '@/components/ui/color-mode';
 import { FeedbackDialog } from '@/components/common/Feedback';
 import { DatabaseManagerDialog } from '@/components/common/DatabaseManager';
@@ -175,7 +174,7 @@ export function SidebarItems({ onClose, minimized }: SidebarItemsProps) {
             <Tooltip content='Database' placement='right' disabled={!minimized}>
                <DatabaseManagerDialog
                   trigger={
-                     <NavButton icon={MdStorage} label='Database' minimized={minimized} />
+                     <NavButton icon={DatabaseIcon} label='Database' minimized={minimized} />
                   }
                />
             </Tooltip>
@@ -183,7 +182,7 @@ export function SidebarItems({ onClose, minimized }: SidebarItemsProps) {
             <Tooltip content='Feedback' placement='right' disabled={!minimized}>
                <FeedbackDialog
                   trigger={
-                     <NavButton icon={FiMessageCircle} label='Feedback' minimized={minimized} />
+                     <NavButton icon={MessageCircleIcon} label='Feedback' minimized={minimized} />
                   }
                />
             </Tooltip>
@@ -195,7 +194,7 @@ export function SidebarItems({ onClose, minimized }: SidebarItemsProps) {
                   rel='noopener noreferrer'
                   style={{ display: 'block', textDecoration: 'none' }}
                >
-                  <NavButton icon={FiGithub} label='GitHub' minimized={minimized} />
+                  <NavButton icon={GithubIcon} label='GitHub' minimized={minimized} />
                </a>
             </Tooltip>
          </Flex>

@@ -1,7 +1,7 @@
 import { Box, Button, Flex, Grid, HStack, Skeleton, Text } from '@chakra-ui/react';
 import { useQuery } from '@tanstack/react-query';
 import { Link } from '@tanstack/react-router';
-import { FiArrowRight } from 'react-icons/fi';
+import { ArrowRightIcon } from '@/components/icons';
 import { orpc } from '@/helpers/rpc.ts';
 import { ReviewCard } from './helpers';
 import { useCompanyDetail } from './detailStore';
@@ -51,7 +51,7 @@ export function ReviewHighlights() {
                <Button variant='outline' size='sm'>
                   <HStack gap={2}>
                      <Text>View all reviews</Text>
-                     <FiArrowRight size={14} />
+                     <ArrowRightIcon size={14} />
                   </HStack>
                </Button>
             </Link>

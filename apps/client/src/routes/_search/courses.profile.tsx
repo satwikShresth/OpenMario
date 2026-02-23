@@ -26,7 +26,7 @@ import {
   Icon,
 } from '@chakra-ui/react';
 import { useState, useEffectEvent, useEffect } from 'react';
-import { MdAdd, MdCheckCircle, MdLightbulb } from 'react-icons/md';
+import { AddIcon, CheckCircleIcon, LightbulbIcon } from '@/components/icons';
 import { useInstantSearch, Configure } from 'react-instantsearch';
 import { toaster } from '@/components/ui/toaster';
 import { useSearchContext } from '@/components/Search';
@@ -92,8 +92,8 @@ function CourseSearchPopover({
   return (
     <Popover.Root open={open} onOpenChange={(e) => setOpen(e.open)}>
       <Popover.Trigger asChild>
-        <Button colorPalette="blue" size="md">
-          <Icon as={MdAdd} />
+        <Button variant="outline" size="sm">
+          <Icon as={AddIcon} />
           Add Course
         </Button>
       </Popover.Trigger>
@@ -154,7 +154,7 @@ function CourseSearchPopover({
                             variant="outline"
                             onClick={() => handleAddCourse(course, 'taken')}
                           >
-                            <Icon as={MdCheckCircle} />
+                            <Icon as={CheckCircleIcon} />
                             Taken
                           </Button>
                           <Button
@@ -163,7 +163,7 @@ function CourseSearchPopover({
                             variant="outline"
                             onClick={() => handleAddCourse(course, 'considering')}
                           >
-                            <Icon as={MdLightbulb} />
+                            <Icon as={LightbulbIcon} />
                             Consider
                           </Button>
                         </HStack>
@@ -463,11 +463,13 @@ function RouteComponent() {
     <>
       <VStack align="stretch" gap={4} maxW='5xl' mx='auto' w='full'>
         <Flex justify='space-between' align='center' wrap='wrap' gap={3}>
-          <Text fontSize='2xl' fontWeight='bold'>Course Profile</Text>
+          <HStack gap={3}>
+            <Text fontSize='2xl' fontWeight='bold'>Course Profile</Text>
+            <CourseSearchPopover onAddCourse={handleAddCourse} existingCourseIds={existingCourseIds} />
+          </HStack>
           <HStack gap={2}>
             <Badge colorPalette="green" variant='subtle'>{takenCredits} credits taken</Badge>
             <Badge colorPalette="blue" variant='subtle'>{activeCredits} credits active</Badge>
-            <CourseSearchPopover onAddCourse={handleAddCourse} existingCourseIds={existingCourseIds} />
           </HStack>
         </Flex>
 
@@ -594,7 +596,7 @@ function RouteComponent() {
                   colorPalette="green"
                   onClick={handleBulkMarkAsTaken}
                 >
-                  <Icon as={MdCheckCircle} />
+                  <Icon as={CheckCircleIcon} />
                   Mark as Taken
                 </Button>
                 <Button

@@ -1,6 +1,6 @@
 import { Flex, For, HoverCard, HStack, Portal, Text, VStack } from '@chakra-ui/react';
-import { IoIosInformationCircleOutline } from 'react-icons/io';
-import { useQueries } from '@tanstack/react-query';
+import { InfoIcon } from '@/components/icons';
+import { useQuery } from '@tanstack/react-query';
 import { Tag } from '@/components/ui';
 import { Link } from '@tanstack/react-router';
 import { useMobile } from '@/hooks';
@@ -12,19 +12,19 @@ type PreReqProps = {
 
 export default ({ course_id }: PreReqProps) => {
    const isMobile = useMobile();
+   const { data: prereqData, isPending: prereqPending } = useQuery(
+      orpc.course.prerequisites.queryOptions({
+         input: { course_id },
+         select: (s) => s.data!
+      })
+   );
 
-   const [{ data: prereqData, isPending: prereqPending }, { data: coreqData, isPending: coreqPending }] = useQueries({
-      queries: [
-         orpc.course.prerequisites.queryOptions({
-            input: { course_id },
-            select: (s) => s.data!
-         }),
-         orpc.course.corequisites.queryOptions({
-            input: { course_id },
-            select: (s) => s.data!
-         })
-      ]
-   })
+   const { data: coreqData, isPending: coreqPending } = useQuery(
+      orpc.course.corequisites.queryOptions({
+         input: { course_id },
+         select: (s) => s.data!
+      })
+   );
 
    if (prereqPending || coreqPending) return null;
 
@@ -77,7 +77,7 @@ export default ({ course_id }: PreReqProps) => {
                                                          size='lg'
                                                          colorScheme='blue'
                                                          cursor='pointer'
-                                                         endElement={<IoIosInformationCircleOutline />}
+                                                         endElement={<InfoIcon size={15} />}
                                                       >
                                                          {`${preReq.subjectId} ${preReq.courseNumber}`}
                                                       </Tag>

@@ -9,8 +9,7 @@ import {
    Text,
 } from '@chakra-ui/react';
 import { Link, linkOptions } from '@tanstack/react-router';
-import { FaClipboard } from 'react-icons/fa';
-import { LuExternalLink } from 'react-icons/lu';
+import { ClipboardIcon, ExternalLinkIcon } from '@/components/icons';
 
 export default ({ label, url, form }: { label: string; url: string; form: any }) => (
    <Clipboard.Root maxW='full' value={url} mt={10}>
@@ -27,7 +26,7 @@ export default ({ label, url, form }: { label: string; url: string; form: any })
          <Clipboard.Trigger asChild>
             <Button variant='surface' size='md' me='-2'>
                <Text>Copy</Text>
-               <FaClipboard />
+               <ClipboardIcon />
             </Button>
          </Clipboard.Trigger>
          <ChakraLink asChild>
@@ -48,7 +47,7 @@ export default ({ label, url, form }: { label: string; url: string; form: any })
                me='-2'
             >
                <Text>Open Link</Text>
-               <LuExternalLink />
+               <ExternalLinkIcon />
             </Button>
          </ChakraLink>
       </Flex>

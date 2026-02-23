@@ -1,6 +1,6 @@
 import { Box, Flex, Icon, IconButton, Image } from '@chakra-ui/react';
 import { Link } from '@tanstack/react-router';
-import { LuPanelLeftClose, LuPanelLeftOpen } from 'react-icons/lu';
+import { SidebarCollapseIcon, SidebarExpandIcon } from '@/components/icons';
 import {
    DrawerBackdrop,
    DrawerBody,
@@ -80,7 +80,7 @@ export function Sidebar() {
                            color='fg.muted'
                            _hover={{ color: 'fg', bg: 'bg.muted' }}
                         >
-                           <Icon as={LuPanelLeftClose} boxSize={4} />
+                           <Icon as={SidebarCollapseIcon} boxSize={4} />
                         </IconButton>
                      </DrawerCloseTrigger>
                   </Flex>
@@ -149,7 +149,7 @@ export function Sidebar() {
                      position='absolute'
                      right={2}
                   >
-                     <Icon as={LuPanelLeftClose} boxSize={4} />
+                     <Icon as={SidebarCollapseIcon} boxSize={4} />
                   </IconButton>
                )}
             </Flex>
@@ -189,7 +189,7 @@ export function Sidebar() {
                      color='fg.muted'
                      _hover={{ color: 'fg', bg: 'bg.muted' }}
                   >
-                     <Icon as={LuPanelLeftOpen} boxSize={4} />
+                     <Icon as={SidebarExpandIcon} boxSize={4} />
                   </IconButton>
                </Flex>
             )}

@@ -16,13 +16,13 @@ import {
 import type { SubmissionListItem } from '@openmario/server/contracts';
 
 import {
-   FaCalendarAlt,
-   FaClock,
-   FaDollarSign,
-   FaGraduationCap,
-   FaMapMarkerAlt,
-   FaSync,
-} from 'react-icons/fa';
+   CalendarDaysIcon,
+   ClockIcon,
+   DollarSignIcon,
+   GraduationCapIcon,
+   MapPinIcon,
+   RefreshIcon,
+} from '@/components/icons';
 
 const formatCurrency = (amount: number) => {
    return new Intl.NumberFormat('en-US', {
@@ -50,7 +50,7 @@ export default ({ dialog, submission }: DataTableDialogProps) => (
                            {/* Location and Basic Info */}
                            <Box>
                               <HStack mb={3}>
-                                 <Icon as={FaMapMarkerAlt} color='green.500' />
+                                 <Icon as={MapPinIcon} color='green.500' />
                                  <Text fontWeight='semibold' fontSize='md'>Location</Text>
                               </HStack>
                               <Text ml={2} fontSize='md'>
@@ -67,7 +67,7 @@ export default ({ dialog, submission }: DataTableDialogProps) => (
                            <Grid templateColumns='repeat(2, 1fr)' gap={4}>
                               <GridItem>
                                  <HStack mb={2}>
-                                    <Icon as={FaGraduationCap} color='purple.500' />
+                                    <Icon as={GraduationCapIcon} color='purple.500' />
                                     <Text fontSize='md' fontWeight='semibold'>
                                        Program Level
                                     </Text>
@@ -84,7 +84,7 @@ export default ({ dialog, submission }: DataTableDialogProps) => (
 
                               <GridItem>
                                  <HStack mb={2}>
-                                    <Icon as={FaCalendarAlt} color='orange.500' />
+                                    <Icon as={CalendarDaysIcon} color='orange.500' />
                                     <Text fontSize='md' fontWeight='semibold'>
                                        Academic Year
                                     </Text>
@@ -101,7 +101,7 @@ export default ({ dialog, submission }: DataTableDialogProps) => (
                            <Grid templateColumns='repeat(2, 1fr)' gap={4}>
                               <GridItem>
                                  <HStack mb={2}>
-                                    <Icon as={FaSync} color='blue.500' />
+                                    <Icon as={RefreshIcon} color='blue.500' />
                                     <Text fontSize='md' fontWeight='semibold'>Cycle</Text>
                                  </HStack>
                                  <Badge ml={2} size='lg' colorPalette='blue' variant='subtle'>
@@ -112,7 +112,7 @@ export default ({ dialog, submission }: DataTableDialogProps) => (
 
                               <GridItem>
                                  <HStack mb={2}>
-                                    <Icon as={FaClock} color='teal.500' />
+                                    <Icon as={ClockIcon} color='teal.500' />
                                     <Text fontSize='md' fontWeight='semibold'>
                                        Work Hours
                                     </Text>
@@ -128,7 +128,7 @@ export default ({ dialog, submission }: DataTableDialogProps) => (
                            {/* Compensation */}
                            <Box>
                               <HStack mb={3}>
-                                 <Icon as={FaDollarSign} color='green.500' />
+                                 <Icon as={DollarSignIcon} color='green.500' />
                                  <Text fontSize='md' fontWeight='semibold'>Compensation</Text>
                               </HStack>
                               <VStack align='start' spaceY={2}>

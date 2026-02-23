@@ -1,5 +1,5 @@
-import { Badge, Box, Card, Flex, HStack, Separator, Text } from '@chakra-ui/react';
-import { FiStar } from 'react-icons/fi';
+import { Badge, Box, Card, Flex, HStack, Separator, Span, Text } from '@chakra-ui/react';
+import { StarIcon } from '@/components/icons';
 import type { ProfessorListItem } from './types';
 
 const ratingMeta = (rating: number | null) => {
@@ -33,15 +33,14 @@ export function ProfessorCard({ prof, onClick }: { prof: ProfessorListItem; onCl
             {/* Top row: always horizontal — rating | info | stats */}
             <Flex align='center' gap={4}>
                {/* Rating */}
-               <Flex direction='column' align='center' justify='center' flexShrink={0} gap={0.5} minW='52px'>
-                  <HStack gap={1} align='baseline'>
-                     <Text fontSize='xl' fontWeight='bold' color={rating.color} lineHeight='1'>
-                        {rating.label}
-                     </Text>
-                     {prof.avg_rating != null && <FiStar size={11} color={rating.color} />}
-                  </HStack>
-                  <Text fontSize='2xs' color='fg.muted' letterSpacing='wide'>RATING</Text>
-               </Flex>
+               <HStack gap={1} align='center' flexShrink={0}>
+                  <Text fontSize='xl' fontWeight='bold' color={rating.color} lineHeight='1'>
+                     {rating.label}
+                  </Text>
+                  <Span color={rating.color} display='flex'>
+                     <StarIcon size={13} fill='currentColor' />
+                  </Span>
+               </HStack>
 
                <Separator orientation='vertical' h='52px' />
 

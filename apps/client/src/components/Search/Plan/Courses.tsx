@@ -9,8 +9,7 @@ import { Stats } from '@/components/Search/Stats'
 import { useEffect, useRef, useState } from 'react'
 import type { Section } from '@/types'
 import { Switch, Tooltip } from '@/components/ui'
-import { MdWarning, MdFilterList } from 'react-icons/md'
-import { RiHeartFill, RiHeartLine } from 'react-icons/ri'
+import { WarningIcon, FilterIcon, HeartFilledIcon, HeartIcon } from '@/components/icons'
 import { Tag } from '@/components/ui'
 
 // Helper function to check if two time ranges overlap
@@ -239,8 +238,8 @@ export const PlanCourses = ({ currentTerm, currentYear }: { currentTerm: string;
               <ChakraSwitch.HiddenInput />
               <ChakraSwitch.Control>
                 <ChakraSwitch.Thumb>
-                  <ChakraSwitch.ThumbIndicator fallback={<Icon as={RiHeartLine} />}>
-                    <Icon as={RiHeartFill} />
+                  <ChakraSwitch.ThumbIndicator fallback={<Icon as={HeartIcon} />}>
+                    <Icon as={HeartFilledIcon} />
                   </ChakraSwitch.ThumbIndicator>
                 </ChakraSwitch.Thumb>
               </ChakraSwitch.Control>
@@ -252,7 +251,7 @@ export const PlanCourses = ({ currentTerm, currentYear }: { currentTerm: string;
               variant="outline"
               onClick={() => setFiltersOpen(true)}
             >
-              <Icon as={MdFilterList} />
+              <Icon as={FilterIcon} />
               Filters
             </Button>
           </HStack>
@@ -480,7 +479,7 @@ const InfiniteHitsList = ({
                     alignItems="center"
                     gap={1}
                   >
-                    <Icon as={MdWarning} />
+                    <Icon as={WarningIcon} />
                     <Text>
                       {hasCourseOverlap && hasUnavailableOverlap
                         ? 'Both Conflicts'

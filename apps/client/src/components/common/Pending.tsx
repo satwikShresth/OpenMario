@@ -1,5 +1,5 @@
 import { Box, Card, Center, EmptyState, Spinner, Text, VStack } from '@chakra-ui/react';
-import { MdHourglassEmpty, MdRefresh } from 'react-icons/md';
+import { HourglassIcon, RefreshIcon } from '@/components/icons';
 import { keyframes } from '@emotion/react';
 
 interface LoadingComponentProps {
@@ -28,17 +28,6 @@ export const LoadingComponent: React.FC<LoadingComponentProps> = ({
    variant = 'default',
    size = 'lg',
 }) => {
-   const getIcon = () => {
-      switch (variant) {
-         case 'processing':
-            return <MdRefresh />;
-         case 'fetching':
-            return <MdHourglassEmpty />;
-         default:
-            return <MdHourglassEmpty />;
-      }
-   };
-
    const getIconAnimation = () => {
       switch (variant) {
          case 'processing':
@@ -50,7 +39,18 @@ export const LoadingComponent: React.FC<LoadingComponentProps> = ({
 
    const cardSize = size === 'sm' ? 'md' : size;
    const spinnerSize = size === 'sm' ? 'md' : 'xl';
-   const iconSize = size === 'sm' ? '32px' : '48px';
+   const iconPixelSize = size === 'sm' ? 32 : 48;
+
+   const getIcon = () => {
+      switch (variant) {
+         case 'processing':
+            return <RefreshIcon size={iconPixelSize} />;
+         case 'fetching':
+            return <HourglassIcon size={iconPixelSize} />;
+         default:
+            return <HourglassIcon size={iconPixelSize} />;
+      }
+   };
 
    return (
       <Center minH='200px' p={4}>
@@ -68,7 +68,6 @@ export const LoadingComponent: React.FC<LoadingComponentProps> = ({
                   <Card.Header pb={2}>
                      <EmptyState.Indicator>
                         <Box
-                           fontSize={iconSize}
                            color='blue.500'
                            animation={getIconAnimation()}
                         >

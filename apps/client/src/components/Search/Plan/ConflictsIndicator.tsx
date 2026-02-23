@@ -1,5 +1,5 @@
 import { Button, Icon, HoverCard as ChakraHoverCard, Dialog as ChakraDialog, Portal, VStack, Text, ScrollArea, HStack, Badge } from '@chakra-ui/react'
-import { MdWarning, MdOpenInNew, MdCheckCircle } from 'react-icons/md'
+import { WarningIcon, ExternalLinkIcon, CheckCircleIcon } from '@/components/icons'
 import { useRefinementList } from 'react-instantsearch'
 import { useConflicts } from '@/hooks/useConflicts'
 import { coursesCollection } from '@/helpers/collections'
@@ -176,7 +176,7 @@ export const ConflictsIndicator = ({ currentTerm, currentYear }: ConflictsIndica
             size="xs"
             onClick={() => setDialogOpen(true)}
           >
-            <Icon as={MdWarning} />
+            <Icon as={WarningIcon} />
             {conflicts.length} Conflicts
           </Button>
         </HoverCard.Trigger>
@@ -227,7 +227,7 @@ export const ConflictsIndicator = ({ currentTerm, currentYear }: ConflictsIndica
               <Dialog.Header>
                 <Dialog.Title>
                   <HStack>
-                    <Icon as={MdWarning} color="orange.500" />
+                    <Icon as={WarningIcon} color="orange.500" />
                     <Text>Schedule Conflicts ({conflicts.length})</Text>
                   </HStack>
                 </Dialog.Title>
@@ -346,7 +346,7 @@ export const ConflictsIndicator = ({ currentTerm, currentYear }: ConflictsIndica
                                                         colorPalette="green"
                                                         onClick={() => handleMarkAsTaken(course)}
                                                       >
-                                                        <Icon as={MdCheckCircle} />
+                                                        <Icon as={CheckCircleIcon} />
                                                         Taken
                                                       </Button>
                                                       <Button
@@ -358,7 +358,7 @@ export const ConflictsIndicator = ({ currentTerm, currentYear }: ConflictsIndica
                                                           setDialogOpen(false)
                                                         }}
                                                       >
-                                                        <Icon as={MdOpenInNew} />
+                                                        <Icon as={ExternalLinkIcon} />
                                                         Add
                                                       </Button>
                                                     </HStack>
@@ -399,7 +399,7 @@ export const ConflictsIndicator = ({ currentTerm, currentYear }: ConflictsIndica
                                               setDialogOpen(false)
                                             }}
                                           >
-                                            <Icon as={MdOpenInNew} />
+                                            <Icon as={ExternalLinkIcon} />
                                             Add to Schedule
                                           </Button>
                                         </HStack>

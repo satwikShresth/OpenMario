@@ -1,5 +1,5 @@
-import type { IconType } from 'react-icons';
-import { FiDollarSign, FiBriefcase, FiUsers, FiBookOpen, FiList, FiCalendar } from 'react-icons/fi';
+import type { AppIcon } from '@/components/icons';
+import { SalaryIcon, BriefcaseIcon, UsersIcon, BookOpenIcon, ListIcon, CalendarIcon } from '@/components/icons';
 
 export interface SubNavItem {
    label: string;
@@ -11,7 +11,7 @@ export interface SubNavItem {
 export interface NavItem {
    label: string;
    href: string;
-   icon: IconType;
+   icon: AppIcon;
    badge?: {
       text: string;
       colorPalette?:
@@ -37,27 +37,27 @@ export const NAV_ITEMS: NavItem[] = [
    {
       label: 'Salary',
       href: '/salary',
-      icon: FiDollarSign,
+      icon: SalaryIcon,
    },
    {
       label: 'Companies',
       href: '/companies',
-      icon: FiBriefcase,
+      icon: BriefcaseIcon,
    },
    {
       label: 'Professors',
       href: '/professors',
-      icon: FiUsers,
+      icon: UsersIcon,
    },
    {
       label: 'Explore',
       href: '/courses/explore',
-      icon: FiBookOpen,
+      icon: BookOpenIcon,
    },
    {
       label: 'Plan',
       href: '/courses/plan',
-      icon: FiCalendar,
+      icon: CalendarIcon,
       badge: {
          text: 'Beta',
          colorPalette: 'orange',
@@ -67,6 +67,6 @@ export const NAV_ITEMS: NavItem[] = [
    {
       label: 'Profile',
       href: '/courses/profile',
-      icon: FiList,
+      icon: ListIcon,
    },
 ];

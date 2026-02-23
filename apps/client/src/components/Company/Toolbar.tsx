@@ -1,5 +1,5 @@
 import { Box, Flex, Input, Select, createListCollection } from '@chakra-ui/react';
-import { FiSearch } from 'react-icons/fi';
+import { SearchIcon } from '@/components/icons';
 import { useNavigate, useSearch } from '@tanstack/react-router';
 import { useRef } from 'react';
 import type { SortBy } from './types';
@@ -49,7 +49,7 @@ export function Toolbar() {
                pl={9}
             />
             <Box position='absolute' left={3} top='50%' transform='translateY(-50%)' color='fg.muted'>
-               <FiSearch />
+               <SearchIcon size={15} />
             </Box>
          </Box>
          <Select.Root

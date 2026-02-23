@@ -7,7 +7,7 @@ import {
    Select,
 } from '@chakra-ui/react';
 import { PaginationLink } from '@/components/common';
-import { LuChevronLeft, LuChevronRight } from 'react-icons/lu';
+import { ChevronLeftIcon, ChevronRightIcon } from '@/components/icons';
 import { useMobile } from '@/hooks';
 import { useSearch } from '@tanstack/react-router';
 import { useNavigate } from '@tanstack/react-router';
@@ -75,7 +75,7 @@ export default ({ count }: { count: number }) => {
          >
             <ButtonGroup variant='ghost' size='sm' wrap='wrap'>
                <PaginationLink to='/salary' page='prev'>
-                  <LuChevronLeft />
+                  <ChevronLeftIcon />
                </PaginationLink>
 
                {isMobile ? <Pagination.PageText /> : (
@@ -96,7 +96,7 @@ export default ({ count }: { count: number }) => {
                )}
 
                <PaginationLink to='/salary' page='next'>
-                  <LuChevronRight />
+                  <ChevronRightIcon />
                </PaginationLink>
             </ButtonGroup>
          </Pagination.Root>

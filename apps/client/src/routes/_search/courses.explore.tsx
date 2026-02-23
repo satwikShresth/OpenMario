@@ -17,9 +17,8 @@ import {
   Stats,
 } from '@/components/Search';
 import { useMobile } from '@/hooks';
-import { HiFilter } from 'react-icons/hi';
+import { FilterIcon, HeartFilledIcon, HeartIcon } from '@/components/icons';
 import { Outlet } from '@tanstack/react-router';
-import { RiHeartFill, RiHeartLine } from 'react-icons/ri';
 import { Configure } from 'react-instantsearch';
 import z from 'zod';
 import { sectionsCollection } from '@/helpers';
@@ -97,7 +96,7 @@ export const Route = createFileRoute('/_search/courses/explore')({
           <Flex direction='row' width='full' gap={3} justify='space-between'>
             {/* Filter Button */}
             <Button onClick={openFilter} variant='outline' size='md'>
-              <Icon as={HiFilter} />
+              <Icon as={FilterIcon} />
               <Text>Filters</Text>
             </Button>
 
@@ -197,8 +196,8 @@ const ToggleFav = () => {
         <Switch.HiddenInput />
         <Switch.Control>
           <Switch.Thumb>
-            <Switch.ThumbIndicator fallback={<Icon as={RiHeartLine} />}>
-              <Icon as={RiHeartFill} />
+            <Switch.ThumbIndicator fallback={<Icon as={HeartIcon} />}>
+              <Icon as={HeartFilledIcon} />
             </Switch.ThumbIndicator>
           </Switch.Thumb>
         </Switch.Control>

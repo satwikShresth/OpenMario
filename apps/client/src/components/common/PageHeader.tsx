@@ -1,6 +1,6 @@
 import { Flex, Icon, IconButton, Image, Skeleton, Text } from '@chakra-ui/react';
 import { Link, useMatches, useNavigate } from '@tanstack/react-router';
-import { LuChevronRight, LuMenu, LuMoon, LuSun } from 'react-icons/lu';
+import { ChevronRightIcon, MenuIcon, MoonIcon, SunIcon } from '@/components/icons';
 import { useState, useEffect } from 'react';
 import { useColorMode, useColorModeValue } from '@/components/ui/color-mode';
 import { Tooltip } from '@/components/ui/tooltip';
@@ -87,12 +87,12 @@ function Breadcrumbs() {
                >
                   ...
                </Text>
-               <Icon as={LuChevronRight} color={separatorColor} boxSize={3} flexShrink={0} />
-            </>
+            <Icon as={ChevronRightIcon} color={separatorColor} boxSize={3} flexShrink={0} />
+         </>
          )}
 
          {!showEllipsis && crumbs.length > 0 && (
-            <Icon as={LuChevronRight} color={separatorColor} boxSize={3} flexShrink={0} />
+            <Icon as={ChevronRightIcon} color={separatorColor} boxSize={3} flexShrink={0} />
          )}
 
          {visibleCrumbs.map((crumb, i) => {
@@ -128,7 +128,7 @@ function Breadcrumbs() {
                         >
                            {crumb.title}
                         </Text>
-                        <Icon as={LuChevronRight} color={separatorColor} boxSize={3} flexShrink={0} />
+                        <Icon as={ChevronRightIcon} color={separatorColor} boxSize={3} flexShrink={0} />
                      </>
                   )}
                </Flex>
@@ -174,7 +174,7 @@ export function PageHeader() {
                flexShrink={0}
                onClick={() => setDrawerOpen(true)}
             >
-               <LuMenu size={16} />
+               <MenuIcon size={16} />
             </IconButton>
             <Breadcrumbs />
          </Flex>
@@ -190,7 +190,7 @@ export function PageHeader() {
                color='fg.muted'
                _hover={{ color: 'fg', bg: 'bg.muted' }}
             >
-               {colorMode === 'light' ? <LuMoon size={15} /> : <LuSun size={15} />}
+               {colorMode === 'light' ? <MoonIcon size={15} /> : <SunIcon size={15} />}
             </IconButton>
          </Tooltip>
       </Flex>
