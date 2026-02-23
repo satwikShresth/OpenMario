@@ -131,7 +131,7 @@ function ProfessorsPage() {
       if (!el) return;
       const observer = new IntersectionObserver(
          entries => {
-            if (entries[0].isIntersecting && hasNextPage && !isFetchingNextPage)
+            if (entries[0]?.isIntersecting && hasNextPage && !isFetchingNextPage)
                fetchNextPage();
          },
          { threshold: 0.1 }
@@ -251,28 +251,18 @@ function ProfessorsPage() {
                                  align={{ base: 'stretch', md: 'center' }}
                                  gap={5}
                               >
-                                 {/* Rating */}
-                                 <Flex
-                                    direction='column'
-                                    align='center'
-                                    justify='center'
-                                    minW='64px'
-                                    gap={0.5}
-                                 >
+                                 <Flex direction='column' align='center' justify='center' minW='64px' gap={0.5}>
                                     <HStack gap={1} align='baseline'>
                                        <Text fontSize='2xl' fontWeight='bold' color={rating.color} lineHeight='1'>
                                           {rating.label}
                                        </Text>
-                                       {prof.avg_rating != null && (
-                                          <FiStar size={12} color={rating.color} />
-                                       )}
+                                       {prof.avg_rating != null && <FiStar size={12} color={rating.color} />}
                                     </HStack>
                                     <Text fontSize='xs' color='fg.muted' letterSpacing='wide'>RATING</Text>
                                  </Flex>
 
                                  <Separator orientation='vertical' height='56px' display={{ base: 'none', md: 'block' }} />
 
-                                 {/* Name + dept + subjects */}
                                  <Box flex={1} minW={0}>
                                     <Text fontSize='lg' fontWeight='semibold' lineClamp={1}>
                                        {prof.instructor_name}
@@ -283,9 +273,7 @@ function ProfessorsPage() {
                                     {prof.subjects_taught && prof.subjects_taught.length > 0 && (
                                        <HStack gap={1} wrap='wrap'>
                                           {prof.subjects_taught.slice(0, 5).map(s => (
-                                             <Badge key={s} size='sm' variant='surface' colorPalette='blue'>
-                                                {s}
-                                             </Badge>
+                                             <Badge key={s} size='sm' variant='surface' colorPalette='blue'>{s}</Badge>
                                           ))}
                                           {prof.subjects_taught.length > 5 && (
                                              <Badge size='sm' variant='surface' colorPalette='gray'>
@@ -298,32 +286,18 @@ function ProfessorsPage() {
 
                                  <Separator orientation='vertical' height='56px' display={{ base: 'none', md: 'block' }} />
 
-                                 {/* Stats */}
                                  <Flex gap={5} wrap='wrap' justify={{ base: 'flex-start', md: 'flex-end' }}>
-                                    <Box textAlign='center' minW='56px'>
-                                       <Text fontSize='sm' fontWeight='semibold'>
-                                          {prof.avg_difficulty != null ? prof.avg_difficulty : '—'}
-                                       </Text>
-                                       <Text fontSize='xs' color='fg.muted'>Difficulty</Text>
-                                    </Box>
-                                    <Box textAlign='center' minW='56px'>
-                                       <Text fontSize='sm' fontWeight='semibold'>
-                                          {prof.num_ratings ?? 0}
-                                       </Text>
-                                       <Text fontSize='xs' color='fg.muted'>Ratings</Text>
-                                    </Box>
-                                    <Box textAlign='center' minW='56px'>
-                                       <Text fontSize='sm' fontWeight='semibold'>
-                                          {prof.total_sections_taught}
-                                       </Text>
-                                       <Text fontSize='xs' color='fg.muted'>Sections</Text>
-                                    </Box>
-                                    <Box textAlign='center' minW='56px'>
-                                       <Text fontSize='sm' fontWeight='semibold'>
-                                          {prof.total_courses_taught}
-                                       </Text>
-                                       <Text fontSize='xs' color='fg.muted'>Courses</Text>
-                                    </Box>
+                                    {[
+                                       { label: 'Difficulty', value: prof.avg_difficulty != null ? prof.avg_difficulty : '—' },
+                                       { label: 'Ratings', value: prof.num_ratings ?? 0 },
+                                       { label: 'Sections', value: prof.total_sections_taught },
+                                       { label: 'Courses', value: prof.total_courses_taught },
+                                    ].map(({ label, value }) => (
+                                       <Box key={label} textAlign='center' minW='56px'>
+                                          <Text fontSize='sm' fontWeight='semibold'>{value}</Text>
+                                          <Text fontSize='xs' color='fg.muted'>{label}</Text>
+                                       </Box>
+                                    ))}
                                  </Flex>
                               </Stack>
                            </Card.Body>
@@ -336,12 +310,12 @@ function ProfessorsPage() {
             <Box ref={sentinelRef} py={4} display='flex' justifyContent='center'>
                {isFetchingNextPage && <Spinner size='sm' color='fg.muted' />}
                {!hasNextPage && professors.length > 0 && (
-                  <Text fontSize='sm' color='fg.subtle'>
-                     All {totalCount} professors loaded
-                  </Text>
+                  <Text fontSize='sm' color='fg.subtle'>All {totalCount} professors loaded</Text>
                )}
             </Box>
          </VStack>
+
+         {/* Dialog overlay rendered here */}
          <Outlet />
       </Container>
    );

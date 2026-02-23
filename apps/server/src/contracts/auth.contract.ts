@@ -8,7 +8,7 @@ const SearchTokenResponseSchema = z.object({
 export const getSearchToken = oc
    .route({
       method: 'GET',
-      path: '/auth/search-token',
+      path: '/meili/search-token',
       summary: 'Get search token',
       description:
          'Get a tenant token for Meilisearch searching, filtering, and sorting (expires in 1 day)',

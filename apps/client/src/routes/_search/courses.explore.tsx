@@ -140,22 +140,12 @@ export const Route = createFileRoute('/_search/courses/explore')({
               )
               : <ToggleFav />}
 
-            {/* Cards and Pagination */}
+            {/* Cards */}
             {isMobile && <Stats />}
-            <Flex
-              direction='column'
-              flex='1'
-              minHeight='0'
-              gap={{ base: 4, md: 5 }}
-              align='stretch'
-            >
-              <Box flex='1' minHeight='0' overflow='hidden'>
-                <Search.Courses.Cards />
-              </Box>
-              <Box flexShrink={0}>
-                <Search.Courses.Pagination />
-              </Box>
-            </Flex>
+            <Box flex='1' minHeight='0' overflowY='auto'>
+              <Configure hitsPerPage={10} />
+              <Search.Courses.Cards />
+            </Box>
           </Flex>
         </Flex>
 

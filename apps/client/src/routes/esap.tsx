@@ -33,10 +33,10 @@ const esapSearchSchema = z.object({
 type EsapSearchSchema = z.infer<typeof esapSearchSchema>;
 
 const omegaMeta = (score: number | null) => {
-   if (score === null) return { color: 'gray.400', palette: 'gray', label: 'N/A' };
-   if (score >= 70) return { color: 'green.500', palette: 'green', label: `${score}` };
-   if (score >= 50) return { color: 'yellow.500', palette: 'yellow', label: `${score}` };
-   return { color: 'red.500', palette: 'red', label: `${score}` };
+   if (score === null) return { color: 'gray.400', label: 'N/A' };
+   if (score >= 70) return { color: 'green.500', label: `${score}` };
+   if (score >= 50) return { color: 'yellow.500', label: `${score}` };
+   return { color: 'red.500', label: `${score}` };
 };
 
 const sortOptions = createListCollection({
@@ -130,7 +130,7 @@ function EsapPage() {
       if (!el) return;
       const observer = new IntersectionObserver(
          entries => {
-            if (entries[0].isIntersecting && hasNextPage && !isFetchingNextPage)
+            if (entries[0]?.isIntersecting && hasNextPage && !isFetchingNextPage)
                fetchNextPage();
          },
          { threshold: 0.1 }
@@ -241,14 +241,7 @@ function EsapPage() {
                                  align={{ base: 'stretch', md: 'center' }}
                                  gap={5}
                               >
-                                 {/* Omega score */}
-                                 <Flex
-                                    direction='column'
-                                    align='center'
-                                    justify='center'
-                                    minW='72px'
-                                    gap={0.5}
-                                 >
+                                 <Flex direction='column' align='center' justify='center' minW='72px' gap={0.5}>
                                     <Text fontSize='2xl' fontWeight='bold' color={omega.color} lineHeight='1'>
                                        {omega.label}
                                     </Text>
@@ -257,18 +250,13 @@ function EsapPage() {
 
                                  <Separator orientation='vertical' height='56px' display={{ base: 'none', md: 'block' }} />
 
-                                 {/* Name + counts */}
                                  <Box flex={1} minW={0}>
                                     <Text fontSize='lg' fontWeight='semibold' lineClamp={1}>
                                        {company.company_name}
                                     </Text>
                                     <Flex gap={4} mt={1} wrap='wrap'>
-                                       <Text fontSize='sm' color='fg.muted'>
-                                          {company.total_reviews} reviews
-                                       </Text>
-                                       <Text fontSize='sm' color='fg.muted'>
-                                          {company.positions_reviewed} positions
-                                       </Text>
+                                       <Text fontSize='sm' color='fg.muted'>{company.total_reviews} reviews</Text>
+                                       <Text fontSize='sm' color='fg.muted'>{company.positions_reviewed} positions</Text>
                                        {company.avg_rating_overall != null && (
                                           <Badge variant='subtle' colorPalette='blue' size='sm'>
                                              {company.avg_rating_overall} / 4 avg
@@ -279,7 +267,6 @@ function EsapPage() {
 
                                  <Separator orientation='vertical' height='56px' display={{ base: 'none', md: 'block' }} />
 
-                                 {/* Score pills */}
                                  <Flex gap={4} wrap='wrap' justify={{ base: 'flex-start', md: 'flex-end' }}>
                                     <ScorePill label='Satisfaction' value={company.satisfaction_score} />
                                     <ScorePill label='Trust' value={company.trust_score} />
@@ -302,6 +289,8 @@ function EsapPage() {
                )}
             </Box>
          </VStack>
+
+         {/* Dialog overlay rendered here */}
          <Outlet />
       </Container>
    );

@@ -50,7 +50,7 @@ export default (
                const sort: 'ASC' | 'DESC' = (prev?.sortField === value)
                   ? (prev?.sort === 'DESC') ? 'ASC' : 'DESC'
                   : 'DESC';
-               return { ...prev, pageIndex: 1, sort, sortField: value };
+               return { ...prev, sort, sortField: value };
             }}
          >
             <HStack justify='space-between'>

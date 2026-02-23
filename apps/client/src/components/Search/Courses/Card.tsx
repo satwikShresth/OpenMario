@@ -18,7 +18,9 @@ import { BiLinkExternal } from 'react-icons/bi';
 import { Link, linkOptions, useMatch } from '@tanstack/react-router';
 import { getDifficultyColor, getRatingColor, weekItems } from './helpers';
 import { formatTime, orpc } from '@/helpers';
-import { useHits } from 'react-instantsearch';
+import { useInfiniteHits } from 'react-instantsearch';
+import { useEffect, useRef } from 'react';
+import { Spinner } from '@chakra-ui/react';
 import { useMobile } from '@/hooks';
 import Req from './Req.tsx';
 import { useQuery } from '@tanstack/react-query';
@@ -29,15 +31,25 @@ import { eq, and, useLiveQuery } from '@tanstack/react-db';
 import { toaster } from '@/components/ui/toaster';
 
 export const Cards = () => {
-   const infiniteHits = useHits<Section>();
+   const { items, showMore, isLastPage } = useInfiniteHits<Section>();
+   const sentinelRef = useRef<HTMLDivElement>(null);
+
+   useEffect(() => {
+      const el = sentinelRef.current;
+      if (!el) return;
+      const observer = new IntersectionObserver(
+         entries => {
+            if (entries[0].isIntersecting && !isLastPage) showMore();
+         },
+         { threshold: 0.1 }
+      );
+      observer.observe(el);
+      return () => observer.disconnect();
+   }, [isLastPage, showMore]);
+
    return (
-      <Flex
-         direction='column'
-         gap={5}
-         width='full'
-      >
-         <For each={infiniteHits.items}
-         >
+      <Flex direction='column' gap={5} width='full'>
+         <For each={items}>
             {(section) => (
                <Card
                   key={`${section.crn}-${section.instruction_method}-${section.instruction_type}`}
@@ -45,6 +57,9 @@ export const Cards = () => {
                />
             )}
          </For>
+         <Box ref={sentinelRef} py={3} display='flex' justifyContent='center'>
+            {!isLastPage && items.length > 0 && <Spinner size='sm' color='fg.muted' />}
+         </Box>
       </Flex>
    );
 };

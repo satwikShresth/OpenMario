@@ -8,18 +8,22 @@ import {
    Icon,
    IconButton,
    Separator,
+   Spinner,
    Text,
    useDisclosure,
    VStack,
 } from '@chakra-ui/react';
 import { HiFilter } from 'react-icons/hi';
 import { Salary } from '@/components/Salary';
-import { keepPreviousData, useQuery } from '@tanstack/react-query';
+import { useInfiniteQuery } from '@tanstack/react-query';
 import { createFileRoute, Outlet } from '@tanstack/react-router';
 import { salarySearchSchema } from './-validator.ts';
 import { useMobile } from '@/hooks';
 import { orpc } from '@/helpers/rpc.ts';
 import z from 'zod';
+import { useEffect, useRef } from 'react';
+
+const PAGE_SIZE = 20;
 
 export const Route = createFileRoute('/salary')({
    validateSearch: z.optional(salarySearchSchema),
@@ -27,17 +31,41 @@ export const Route = createFileRoute('/salary')({
       const query = Route.useSearch();
       const isMobile = useMobile();
       const { open: isFilterOpen, onOpen: openFilter, onClose: closeFilter } = useDisclosure();
-      const { data } = useQuery(
-         orpc.submission.list.queryOptions({
-            input: query!,
+      const sentinelRef = useRef<HTMLDivElement>(null);
+
+      const { data, isFetchingNextPage, fetchNextPage, hasNextPage } = useInfiniteQuery(
+         orpc.submission.list.infiniteOptions({
+            input: (pageParam: number) => ({
+               ...query!,
+               pageIndex: pageParam,
+               pageSize: PAGE_SIZE,
+            }),
+            initialPageParam: 1,
+            getNextPageParam: lastPage => {
+               const totalPages = Math.ceil(lastPage.count / lastPage.pageSize);
+               return lastPage.pageIndex < totalPages ? lastPage.pageIndex + 1 : undefined;
+            },
             staleTime: 3000,
             refetchOnWindowFocus: true,
-            placeholderData: keepPreviousData,
          })
       );
 
-      const rows = data?.data ?? [];
-      const count = data?.count ?? 0;
+      const rows = data?.pages.flatMap(p => p.data) ?? [];
+      const totalCount = data?.pages[0]?.count ?? 0;
+
+      useEffect(() => {
+         const el = sentinelRef.current;
+         if (!el) return;
+         const observer = new IntersectionObserver(
+            entries => {
+               if (entries[0].isIntersecting && hasNextPage && !isFetchingNextPage)
+                  fetchNextPage();
+            },
+            { threshold: 0.1 }
+         );
+         observer.observe(el);
+         return () => observer.disconnect();
+      }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
 
       return (
          <Container>
@@ -77,12 +105,18 @@ export const Route = createFileRoute('/salary')({
                         onClose={closeFilter}
                      />
                      <Box m={2} />
-                     {isMobile ? null : <Salary.DataTable.Pagination count={count} />}
                      <Salary.DataTable.Body
                         data={rows}
                         count={rows.length}
                      />
-                     <Salary.DataTable.Pagination count={count} />
+                     <Flex ref={sentinelRef} justify='center' py={4}>
+                        {isFetchingNextPage && <Spinner size='sm' color='fg.muted' />}
+                        {!hasNextPage && rows.length > 0 && (
+                           <Text fontSize='sm' color='fg.subtle'>
+                              All {totalCount} entries loaded
+                           </Text>
+                        )}
+                     </Flex>
                      <Salary.DataTable.Footer />
                      <Outlet />
                   </Box>

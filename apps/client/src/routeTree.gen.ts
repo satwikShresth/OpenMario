@@ -15,14 +15,13 @@ import { Route as EsapRouteImport } from './routes/esap'
 import { Route as SearchRouteImport } from './routes/_search'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as SalaryDialogRouteImport } from './routes/salary/_dialog'
-import { Route as ProfessorsDialogRouteImport } from './routes/professors/_dialog'
-import { Route as EsapCompany_idRouteImport } from './routes/esap.$company_id'
+import { Route as ProfessorsProfessor_idRouteImport } from './routes/professors/$professor_id'
+import { Route as EsapCompany_idRouteImport } from './routes/esap/$company_id'
 import { Route as SearchCoursesRouteImport } from './routes/_search/courses'
 import { Route as SalaryDialogSubmissionsRouteImport } from './routes/salary/_dialog/submissions'
 import { Route as SalaryDialogDraftsRouteImport } from './routes/salary/_dialog/drafts'
 import { Route as SalaryDialogAutoFillRouteImport } from './routes/salary/_dialog/auto-fill'
 import { Route as SalaryDialogFormRouteImport } from './routes/salary/_dialog/_form'
-import { Route as ProfessorsDialogProfessor_idRouteImport } from './routes/professors/_dialog/$professor_id'
 import { Route as SearchCoursesProfileRouteImport } from './routes/_search/courses.profile'
 import { Route as SearchCoursesPlanRouteImport } from './routes/_search/courses.plan'
 import { Route as SearchCoursesExploreRouteImport } from './routes/_search/courses.explore'
@@ -61,8 +60,9 @@ const SalaryDialogRoute = SalaryDialogRouteImport.update({
   id: '/_dialog',
   getParentRoute: () => SalaryRoute,
 } as any)
-const ProfessorsDialogRoute = ProfessorsDialogRouteImport.update({
-  id: '/_dialog',
+const ProfessorsProfessor_idRoute = ProfessorsProfessor_idRouteImport.update({
+  id: '/$professor_id',
+  path: '/$professor_id',
   getParentRoute: () => ProfessorsRoute,
 } as any)
 const EsapCompany_idRoute = EsapCompany_idRouteImport.update({
@@ -94,12 +94,6 @@ const SalaryDialogFormRoute = SalaryDialogFormRouteImport.update({
   id: '/_form',
   getParentRoute: () => SalaryDialogRoute,
 } as any)
-const ProfessorsDialogProfessor_idRoute =
-  ProfessorsDialogProfessor_idRouteImport.update({
-    id: '/$professor_id',
-    path: '/$professor_id',
-    getParentRoute: () => ProfessorsDialogRoute,
-  } as any)
 const SearchCoursesProfileRoute = SearchCoursesProfileRouteImport.update({
   id: '/profile',
   path: '/profile',
@@ -154,14 +148,14 @@ const SalaryDialogFormReportChar123IdxChar125Route =
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/esap': typeof EsapRouteWithChildren
-  '/professors': typeof ProfessorsDialogRouteWithChildren
+  '/professors': typeof ProfessorsRouteWithChildren
   '/salary': typeof SalaryDialogFormRouteWithChildren
   '/courses': typeof SearchCoursesRouteWithChildren
   '/esap/$company_id': typeof EsapCompany_idRoute
+  '/professors/$professor_id': typeof ProfessorsProfessor_idRoute
   '/courses/explore': typeof SearchCoursesExploreRouteWithChildren
   '/courses/plan': typeof SearchCoursesPlanRouteWithChildren
   '/courses/profile': typeof SearchCoursesProfileRouteWithChildren
-  '/professors/$professor_id': typeof ProfessorsDialogProfessor_idRoute
   '/salary/auto-fill': typeof SalaryDialogAutoFillRoute
   '/salary/drafts': typeof SalaryDialogDraftsRoute
   '/salary/submissions': typeof SalaryDialogSubmissionsRoute
@@ -175,14 +169,14 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/esap': typeof EsapRouteWithChildren
-  '/professors': typeof ProfessorsDialogRouteWithChildren
+  '/professors': typeof ProfessorsRouteWithChildren
   '/salary': typeof SalaryDialogFormRouteWithChildren
   '/courses': typeof SearchCoursesRouteWithChildren
   '/esap/$company_id': typeof EsapCompany_idRoute
+  '/professors/$professor_id': typeof ProfessorsProfessor_idRoute
   '/courses/explore': typeof SearchCoursesExploreRouteWithChildren
   '/courses/plan': typeof SearchCoursesPlanRouteWithChildren
   '/courses/profile': typeof SearchCoursesProfileRouteWithChildren
-  '/professors/$professor_id': typeof ProfessorsDialogProfessor_idRoute
   '/salary/auto-fill': typeof SalaryDialogAutoFillRoute
   '/salary/drafts': typeof SalaryDialogDraftsRoute
   '/salary/submissions': typeof SalaryDialogSubmissionsRoute
@@ -202,12 +196,11 @@ export interface FileRoutesById {
   '/salary': typeof SalaryRouteWithChildren
   '/_search/courses': typeof SearchCoursesRouteWithChildren
   '/esap/$company_id': typeof EsapCompany_idRoute
-  '/professors/_dialog': typeof ProfessorsDialogRouteWithChildren
+  '/professors/$professor_id': typeof ProfessorsProfessor_idRoute
   '/salary/_dialog': typeof SalaryDialogRouteWithChildren
   '/_search/courses/explore': typeof SearchCoursesExploreRouteWithChildren
   '/_search/courses/plan': typeof SearchCoursesPlanRouteWithChildren
   '/_search/courses/profile': typeof SearchCoursesProfileRouteWithChildren
-  '/professors/_dialog/$professor_id': typeof ProfessorsDialogProfessor_idRoute
   '/salary/_dialog/_form': typeof SalaryDialogFormRouteWithChildren
   '/salary/_dialog/auto-fill': typeof SalaryDialogAutoFillRoute
   '/salary/_dialog/drafts': typeof SalaryDialogDraftsRoute
@@ -228,10 +221,10 @@ export interface FileRouteTypes {
     | '/salary'
     | '/courses'
     | '/esap/$company_id'
+    | '/professors/$professor_id'
     | '/courses/explore'
     | '/courses/plan'
     | '/courses/profile'
-    | '/professors/$professor_id'
     | '/salary/auto-fill'
     | '/salary/drafts'
     | '/salary/submissions'
@@ -249,10 +242,10 @@ export interface FileRouteTypes {
     | '/salary'
     | '/courses'
     | '/esap/$company_id'
+    | '/professors/$professor_id'
     | '/courses/explore'
     | '/courses/plan'
     | '/courses/profile'
-    | '/professors/$professor_id'
     | '/salary/auto-fill'
     | '/salary/drafts'
     | '/salary/submissions'
@@ -271,12 +264,11 @@ export interface FileRouteTypes {
     | '/salary'
     | '/_search/courses'
     | '/esap/$company_id'
-    | '/professors/_dialog'
+    | '/professors/$professor_id'
     | '/salary/_dialog'
     | '/_search/courses/explore'
     | '/_search/courses/plan'
     | '/_search/courses/profile'
-    | '/professors/_dialog/$professor_id'
     | '/salary/_dialog/_form'
     | '/salary/_dialog/auto-fill'
     | '/salary/_dialog/drafts'
@@ -341,11 +333,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SalaryDialogRouteImport
       parentRoute: typeof SalaryRoute
     }
-    '/professors/_dialog': {
-      id: '/professors/_dialog'
-      path: ''
-      fullPath: '/professors'
-      preLoaderRoute: typeof ProfessorsDialogRouteImport
+    '/professors/$professor_id': {
+      id: '/professors/$professor_id'
+      path: '/$professor_id'
+      fullPath: '/professors/$professor_id'
+      preLoaderRoute: typeof ProfessorsProfessor_idRouteImport
       parentRoute: typeof ProfessorsRoute
     }
     '/esap/$company_id': {
@@ -389,13 +381,6 @@ declare module '@tanstack/react-router' {
       fullPath: '/salary'
       preLoaderRoute: typeof SalaryDialogFormRouteImport
       parentRoute: typeof SalaryDialogRoute
-    }
-    '/professors/_dialog/$professor_id': {
-      id: '/professors/_dialog/$professor_id'
-      path: '/$professor_id'
-      fullPath: '/professors/$professor_id'
-      preLoaderRoute: typeof ProfessorsDialogProfessor_idRouteImport
-      parentRoute: typeof ProfessorsDialogRoute
     }
     '/_search/courses/profile': {
       id: '/_search/courses/profile'
@@ -533,23 +518,12 @@ const EsapRouteChildren: EsapRouteChildren = {
 
 const EsapRouteWithChildren = EsapRoute._addFileChildren(EsapRouteChildren)
 
-interface ProfessorsDialogRouteChildren {
-  ProfessorsDialogProfessor_idRoute: typeof ProfessorsDialogProfessor_idRoute
-}
-
-const ProfessorsDialogRouteChildren: ProfessorsDialogRouteChildren = {
-  ProfessorsDialogProfessor_idRoute: ProfessorsDialogProfessor_idRoute,
-}
-
-const ProfessorsDialogRouteWithChildren =
-  ProfessorsDialogRoute._addFileChildren(ProfessorsDialogRouteChildren)
-
 interface ProfessorsRouteChildren {
-  ProfessorsDialogRoute: typeof ProfessorsDialogRouteWithChildren
+  ProfessorsProfessor_idRoute: typeof ProfessorsProfessor_idRoute
 }
 
 const ProfessorsRouteChildren: ProfessorsRouteChildren = {
-  ProfessorsDialogRoute: ProfessorsDialogRouteWithChildren,
+  ProfessorsProfessor_idRoute: ProfessorsProfessor_idRoute,
 }
 
 const ProfessorsRouteWithChildren = ProfessorsRoute._addFileChildren(

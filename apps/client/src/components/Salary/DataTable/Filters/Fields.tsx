@@ -36,7 +36,6 @@ export default () => {
             search: (prev) => ({
                ...prev,
                search: searchInput.trim() || undefined,
-               pageIndex: 1,
             }),
             reloadDocument: false,
             resetScroll: false,
@@ -66,7 +65,6 @@ export default () => {
                search: (prev) => ({
                   ...prev,
                   ...values,
-                  pageIndex: 1,
                }),
                reloadDocument: false,
                resetScroll: false,
