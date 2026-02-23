@@ -1,6 +1,6 @@
 import { os } from '@/router/helpers';
 import { db, instructorProfileMView } from '@/db';
-import { and, eq, ilike, or, asc, sql } from 'drizzle-orm';
+import { and, eq, asc, sql } from 'drizzle-orm';
 import { maybe } from '@/utils';
 
 const profileFields = {
@@ -27,13 +27,40 @@ export const listProfessors = os.professor.list.handler(async ({ input }) => {
    const { search, department, sort_by, order, pageIndex, pageSize } = input;
 
    const whereClause = and(
-      maybe(search, s =>
-         or(
-            ilike(instructorProfileMView.instructor_name, `%${s}%`),
-            ilike(instructorProfileMView.department, `%${s}%`)
-         )
-      ),
-      maybe(department, d => ilike(instructorProfileMView.department, `%${d}%`))
+      maybe(search, (s: string) => {
+         const terms = s.trim().split(/\s+/);
+
+         const termClauses = terms.map(
+            term => sql`paradedb.boolean(
+               should => ARRAY[
+                  paradedb.fuzzy_term('instructor_name', ${term}, distance => 2),
+                  paradedb.boost(3.0, paradedb.fuzzy_term('instructor_name', ${term}, distance => 2, prefix => true)),
+                  paradedb.fuzzy_term('department',      ${term}, distance => 2),
+                  paradedb.boost(1.5, paradedb.fuzzy_term('department',      ${term}, distance => 2, prefix => true))
+               ]
+            )`
+         );
+
+         return sql`${instructorProfileMView.instructor_id} @@@ paradedb.boolean(
+            must => ARRAY[${sql.join(termClauses, sql`, `)}]
+         )`;
+      }),
+      maybe(department, (d: string) => {
+         const terms = d.trim().split(/\s+/);
+
+         const termClauses = terms.map(
+            term => sql`paradedb.boolean(
+               should => ARRAY[
+                  paradedb.fuzzy_term('department', ${term}, distance => 2),
+                  paradedb.boost(2.0, paradedb.fuzzy_term('department', ${term}, distance => 2, prefix => true))
+               ]
+            )`
+         );
+
+         return sql`${instructorProfileMView.instructor_id} @@@ paradedb.boolean(
+            must => ARRAY[${sql.join(termClauses, sql`, `)}]
+         )`;
+      })
    );
 
    const sortColumnMap = {

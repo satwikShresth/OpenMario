@@ -9,7 +9,8 @@ import {
    position,
    position_review
 } from '@/db';
-import { and, eq, ilike, asc, sql, count, type SQL } from 'drizzle-orm';
+import { and, eq, asc, sql, count, type SQL } from 'drizzle-orm';
+import { maybe } from '@/utils';
 
 // ============================================================================
 // GET /esap/companies
@@ -19,9 +20,22 @@ export const listCompanies = os.esap.listCompanies.handler(
    async ({ input }) => {
       const { search, sort_by, order, pageIndex, pageSize } = input;
 
-      const whereClause = search
-         ? ilike(companyOmegaMView.company_name, `%${search}%`)
-         : undefined;
+      const whereClause = maybe(search, (s: string) => {
+         const terms = s.trim().split(/\s+/);
+
+         const termClauses = terms.map(
+            term => sql`paradedb.boolean(
+               should => ARRAY[
+                  paradedb.fuzzy_term('name', ${term}, distance => 2),
+                  paradedb.boost(2.0, paradedb.fuzzy_term('name', ${term}, distance => 2, prefix => true))
+               ]
+            )`
+         );
+
+         return sql`${companyOmegaMView.company_id} @@@ paradedb.boolean(
+            must => ARRAY[${sql.join(termClauses, sql`, `)}]
+         )`;
+      });
 
       const sortColumnMap: Record<string, SQL> = {
          omega_score: sql`omega_score`,
