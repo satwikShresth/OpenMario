@@ -1,5 +1,5 @@
 import { meilisearchService } from '@/services/meilisearch.service';
-import { os } from './context';
+import { os } from '@/router/helpers';
 
 /**
  * Get Meilisearch tenant token for search operations

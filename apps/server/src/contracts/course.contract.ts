@@ -73,12 +73,17 @@ export const GetPrerequisitesResponseSchema = z.object({
    })
 });
 
+export type GetPrerequisitesResponse = z.infer<
+   typeof GetPrerequisitesResponseSchema
+>;
+
 export const getCoursePrerequisitesContract = oc
    .route({
       method: 'GET',
       path: '/courses/:course_id/prerequisites',
       summary: 'Get course prerequisites',
-      description: 'Retrieve prerequisites for a specific course, grouped by OR-choice sets',
+      description:
+         'Retrieve prerequisites for a specific course, grouped by OR-choice sets',
       tags: ['Courses']
    })
    .input(CourseIdParamSchema)
@@ -140,7 +145,8 @@ export const getCourseAvailabilitiesContract = oc
       method: 'GET',
       path: '/courses/:course_id/availabilities',
       summary: 'Get course availabilities',
-      description: 'Retrieve all sections available for a specific course across all terms',
+      description:
+         'Retrieve all sections available for a specific course across all terms',
       tags: ['Courses']
    })
    .input(CourseIdParamSchema)

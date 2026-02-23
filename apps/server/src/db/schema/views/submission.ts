@@ -1,6 +1,6 @@
 import { pgMaterializedView } from 'drizzle-orm/pg-core';
 import { eq, sql } from 'drizzle-orm';
-import { submission, company, position, location } from './tables';
+import { submission, company, position, location } from '../tables';
 
 export const submissionMView = pgMaterializedView('submission_m_view')
    .with({ fillfactor: 90 })

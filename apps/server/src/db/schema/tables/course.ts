@@ -22,10 +22,6 @@ export const day_of_week = [
 
 export const day_of_week_enum = pgEnum('day_of_week', day_of_week);
 
-// ---------------------------------------------------------------------------
-// Reference / lookup tables
-// ---------------------------------------------------------------------------
-
 export const college = pgTable('college', {
    id: text().primaryKey(),
    name: text().notNull()
@@ -34,10 +30,6 @@ export const college = pgTable('college', {
 export const term = pgTable('term', {
    id: integer().primaryKey()
 });
-
-// ---------------------------------------------------------------------------
-// Core domain tables
-// ---------------------------------------------------------------------------
 
 export const subject = pgTable(
    'subject',
@@ -108,10 +100,6 @@ export const section = pgTable(
       index().on(table.subject_code)
    ]
 );
-
-// ---------------------------------------------------------------------------
-// Relationship tables
-// ---------------------------------------------------------------------------
 
 export const section_days = pgTable(
    'section_days',
@@ -186,7 +174,5 @@ export const course_corequisites = pgTable(
          .notNull()
          .references(() => course.id, { onDelete: 'cascade' })
    },
-   table => [
-      primaryKey({ columns: [table.course_id, table.corequisite_course_id] })
-   ]
+   table => [primaryKey({ columns: [table.course_id, table.corequisite_course_id] })]
 );

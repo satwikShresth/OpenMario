@@ -1,4 +1,10 @@
 import { type Column, type SQL, sql } from 'drizzle-orm';
+import { contracts } from '@/contracts';
+import { implement } from '@orpc/server';
+
+export const os = implement(contracts).$context<{
+   headers: Headers;
+}>();
 
 /**
  * Helper function to create fuzzy search SQL queries

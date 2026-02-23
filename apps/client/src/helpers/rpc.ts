@@ -1,11 +1,11 @@
 import { createORPCClient, onError } from '@orpc/client';
 import type { JsonifiedClient } from '@orpc/openapi-client';
-import { contract } from '@openmario/server/contracts';
+import { contracts } from '@openmario/server/contracts';
 import type { ContractRouterClient } from '@orpc/contract';
 import { OpenAPILink } from '@orpc/openapi-client/fetch';
 import { createTanstackQueryUtils } from '@orpc/tanstack-query';
 
-const link = new OpenAPILink(contract, {
+const link = new OpenAPILink(contracts, {
    url: `${window.location.origin}/api`,
    interceptors: [
       onError((error: unknown) => {
@@ -19,7 +19,7 @@ const link = new OpenAPILink(contract, {
 });
 
 // Create a type-safe client using the contract
-const openapiClient: JsonifiedClient<ContractRouterClient<typeof contract>> =
+const openapiClient: JsonifiedClient<ContractRouterClient<typeof contracts>> =
    createORPCClient(link);
 export const orpc = createTanstackQueryUtils(openapiClient);
 
