@@ -1,4 +1,6 @@
 import { Badge, Box, Flex, HStack, Skeleton, Text, VStack } from '@chakra-ui/react';
+import { Tooltip } from '@/components/ui/tooltip';
+import { WarningIcon } from '@/components/icons';
 import { omegaHex } from './helpers';
 import { useCompanyDetail } from './detailStore';
 
@@ -28,7 +30,14 @@ export function Header() {
                )}
             </HStack>
          </Box>
-         <Box textAlign='center' px={6} py={4} borderRadius='2xl' borderWidth='thin' minW='110px'>
+         <Box textAlign='center' px={6} py={4} borderRadius='2xl' borderWidth='thin' minW='110px' position='relative'>
+            {company.total_reviews < 5 && (
+               <Tooltip content='Limited data — omΩ score is based on fewer than 5 reviews and may not be representative'>
+                  <Box position='absolute' top='8px' right='10px' color='orange.400' cursor='help'>
+                     <WarningIcon size={14} />
+                  </Box>
+               </Tooltip>
+            )}
             <Text fontSize='4xl' fontWeight='extrabold' color={omegaHex(company.omega_score)} lineHeight='1'>
                {company.omega_score ?? '—'}
             </Text>

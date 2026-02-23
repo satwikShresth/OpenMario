@@ -16,9 +16,17 @@ import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 import { createFileRoute } from '@tanstack/react-router';
 import { orpc } from '@/helpers/rpc.ts';
 import { omegaHex, ReviewCard } from '@/components/Company/helpers';
+import { Tooltip } from '@/components/ui/tooltip';
+import { WarningIcon } from '@/components/icons';
 import { useEffect, useRef } from 'react';
 
 export const Route = createFileRoute('/companies/$company_id/$position_id')({
+   beforeLoad: ({ context: { queryClient }, params: { company_id, position_id } }) => ({
+      getLabel: () =>
+         queryClient
+            .ensureQueryData(orpc.companies.getCompany.queryOptions({ input: { company_id }, staleTime: 30_000 }))
+            .then(data => data?.positions?.find(p => p.position_id === position_id)?.position_name ?? position_id),
+   }),
    component: PositionReviewsPage,
 });
 
@@ -106,7 +114,14 @@ function PositionReviewsPage() {
                         </HStack>
                      )}
                   </Box>
-                  <Box textAlign='center' px={5} py={4} borderRadius='2xl' borderWidth='thin' minW='100px'>
+                  <Box textAlign='center' px={5} py={4} borderRadius='2xl' borderWidth='thin' minW='100px' position='relative'>
+                     {position.total_reviews < 5 && (
+                        <Tooltip content='Limited data — omΩ score is based on fewer than 5 reviews and may not be representative'>
+                           <Box position='absolute' top='8px' right='10px' color='orange.400' cursor='help'>
+                              <WarningIcon size={14} />
+                           </Box>
+                        </Tooltip>
+                     )}
                      <Text
                         fontSize='3xl'
                         fontWeight='extrabold'
@@ -115,7 +130,9 @@ function PositionReviewsPage() {
                      >
                         {position.omega_score ?? '—'}
                      </Text>
-                     <Text fontSize='xs' color='fg.muted' letterSpacing='widest' mt={1}>OMEGA</Text>
+                     <Flex align='center' justify='center' gap={1} mt={2}>
+                        <Box as='img' src='/omegascore-logo.png' alt='omΩ' h='18px' />
+                     </Flex>
                   </Box>
                </Flex>
             )}

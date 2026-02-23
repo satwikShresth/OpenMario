@@ -42,7 +42,7 @@ export function ProfessorCard({ prof, onClick }: { prof: ProfessorListItem; onCl
                   </Span>
                </HStack>
 
-               <Separator orientation='vertical' h='52px' />
+               <Separator orientation='vertical' alignSelf='stretch' />
 
                {/* Name + department + badges */}
                <Box flex={1} minW={0}>
@@ -64,7 +64,7 @@ export function ProfessorCard({ prof, onClick }: { prof: ProfessorListItem; onCl
 
                {/* Stats — inline on md+, hidden on small */}
                <Flex gap={4} flexShrink={0} display={{ base: 'none', md: 'flex' }}>
-                  <Separator orientation='vertical' h='52px' />
+                  <Separator orientation='vertical' alignSelf='stretch' />
                   {stats.map(({ label, value }) => (
                      <Box key={label} textAlign='center' minW='44px'>
                         <Text fontSize='sm' fontWeight='semibold'>{value}</Text>
