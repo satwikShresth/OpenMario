@@ -5,7 +5,7 @@ export function PageHeader() {
    const totalCount = useProfessorList(s => s.totalCount);
    return (
       <Flex justify='space-between' align='center' wrap='wrap' gap={3}>
-         <Text fontSize='3xl' fontWeight='bolder'>Professors</Text>
+         <Text fontSize='2xl' fontWeight='bold'>Professors</Text>
          <Text color='fg.muted' fontSize='sm'>{totalCount} instructors</Text>
       </Flex>
    );

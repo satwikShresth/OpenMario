@@ -40,7 +40,7 @@ export function Card({ company, onClick }: { company: CompanyListItem; onClick: 
       >
          <Flex direction='column' align='center' justify='center' minW='72px' gap={0.5}>
             <Text fontSize='2xl' fontWeight='bold' color={omega.color} lineHeight='1'>{omega.label}</Text>
-            <Text fontSize='xs' color='fg.muted' letterSpacing='wide'>OMEGA</Text>
+            <Box as='img' src='/omegascore-logo.png' alt='OMΩ' h='16px' />
          </Flex>
          <Separator orientation='vertical' height='56px' display={{ base: 'none', md: 'block' }} />
          <Box flex={1} minW={0}>

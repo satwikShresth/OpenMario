@@ -60,7 +60,7 @@ function ProfessorsPage() {
    }, [data, isLoading, isFetchingNextPage, hasNextPage, fetchNextPage]);
 
    return (
-      <Professor.Root maxW='4xl' py={10}>
+      <Professor.Root>
          <Professor.PageHeader />
          <Separator />
          <Professor.Toolbar />

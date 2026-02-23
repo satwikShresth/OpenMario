@@ -27,7 +27,6 @@ function CompanyOverviewPage() {
 
    return (
       <Company.Root maxW='5xl' py={10} gap={8}>
-         <Company.Breadcrumb />
          <Company.Header />
          <Separator />
          <Company.StatsGrid />

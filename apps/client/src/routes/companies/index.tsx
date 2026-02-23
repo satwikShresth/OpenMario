@@ -58,7 +58,7 @@ function CompaniesPage() {
    }, [data, isLoading, isFetchingNextPage, hasNextPage, fetchNextPage]);
 
    return (
-      <Company.Root maxW='4xl' py={10}>
+      <Company.Root>
          <Company.PageHeader />
          <Separator />
          <Company.Toolbar />

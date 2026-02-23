@@ -1,7 +1,6 @@
 import { Button, Icon, HoverCard as ChakraHoverCard, Dialog as ChakraDialog, Portal, VStack, Text, ScrollArea, HStack, Badge } from '@chakra-ui/react'
 import { MdWarning, MdOpenInNew, MdCheckCircle } from 'react-icons/md'
 import { useRefinementList } from 'react-instantsearch'
-import { useSearch } from '@tanstack/react-router'
 import { useConflicts } from '@/hooks/useConflicts'
 import { coursesCollection } from '@/helpers/collections'
 import { useState } from 'react'
@@ -58,8 +57,12 @@ const getConflictLabel = (type: ConflictType) => {
   }
 }
 
-export const ConflictsIndicator = () => {
-  const { term: currentTerm, year: currentYear } = useSearch({ from: '/_search/courses/plan' })
+type ConflictsIndicatorProps = {
+  currentTerm: string
+  currentYear: number
+}
+
+export const ConflictsIndicator = ({ currentTerm, currentYear }: ConflictsIndicatorProps) => {
   const courseRefinement = useRefinementList({ attribute: 'course' })
   const [dialogOpen, setDialogOpen] = useState(false)
 

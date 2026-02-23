@@ -6,6 +6,12 @@ import { orpc } from '@/helpers/rpc.ts';
 import { Professor, professorDetailStore, type Section, type ProfessorProfile, currentTermId } from '@/components/Professor';
 
 export const Route = createFileRoute('/professors/$professor_id')({
+   beforeLoad: ({ context: { queryClient }, params: { professor_id } }) => ({
+      getLabel: () =>
+         queryClient
+            .ensureQueryData(orpc.professor.get.queryOptions({ input: { professor_id: Number(professor_id) }, staleTime: 30_000 }))
+            .then((data: ProfessorProfile | null | undefined) => data?.instructor_name ?? professor_id),
+   }),
    component: ProfessorPage,
 });
 
@@ -36,7 +42,6 @@ function ProfessorPage() {
 
    return (
       <Professor.Root maxW='5xl' py={8}>
-         <Professor.Breadcrumb />
          <Professor.Header />
          <Separator />
          <Professor.StatsGrid />

@@ -1,54 +1,36 @@
 import { createRootRouteWithContext, Outlet } from '@tanstack/react-router';
 import { TanStackRouterDevtools } from '@tanstack/react-router-devtools';
-import { Box, Container, Flex, VStack } from '@chakra-ui/react';
+import { Box, Flex } from '@chakra-ui/react';
 import type { QueryClient } from '@tanstack/react-query';
 import TanStackQueryLayout from '@/integrations/tanstack-query/layout.tsx';
-import { Footer } from '@/components/common';
-import Navbar from '@/components/nav';
-import { useMobile } from '@/hooks';
-import type { ReactNode } from 'react';
+import { Footer, PageHeader } from '@/components/common';
+import { Sidebar, BottomBar } from '@/components/nav';
 
 interface MyRouterContext {
    queryClient: QueryClient;
 }
 
-const MobileLayout = ({ children }: { children: ReactNode }) => {
-   const isMobile = useMobile();
-   if (isMobile) {
-      return (
-         <>
-            <Navbar />
-            <Flex flex='fit-content' scrollbar='hidden'>
-               {children}
-            </Flex>
-         </>
-      );
-   }
-   return (
+export const Route = createRootRouteWithContext<MyRouterContext>()({
+   component: () => (
       <>
-         <Flex direction='column' minH='100vh' w='90%' mx='auto'>
-            <Navbar />
-            <Flex flex='1' scrollbar='hidden' overflowY='auto'>
-               {children}
+         <Flex minH='100dvh' align='flex-start'>
+            <Sidebar />
+            <Flex direction='column' flex='1' minW={0} h='100dvh' overflowY='auto'>
+               <PageHeader />
+               <Box
+                  flex='1'
+                  px={{ base: 4, md: 6 }}
+                  py={6}
+                  pb={{ base: '72px', sm: 6 }}
+               >
+                  <Outlet />
+               </Box>
+               <Footer />
             </Flex>
          </Flex>
+         <BottomBar />
          <TanStackRouterDevtools />
          <TanStackQueryLayout />
       </>
-   );
-};
-
-export const Route = createRootRouteWithContext<MyRouterContext>()({
-   component: () => (
-      <VStack align='normal'>
-         <Box width='100%' position='relative'>
-            <MobileLayout>
-               <Container>
-                  <Outlet />
-               </Container>
-            </MobileLayout>
-         </Box>
-         <Footer />
-      </VStack>
    ),
 });

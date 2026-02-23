@@ -56,7 +56,10 @@ export function Charts() {
    return (
       <Grid templateColumns={{ base: '1fr', md: '1fr 1fr' }} gap={6}>
          <Box borderWidth='thin' borderRadius='xl' p={5}>
-            <Text fontWeight='semibold' mb={4}>Omega Score Breakdown</Text>
+            <Flex align='center' gap={2} mb={4}>
+               <Box as='img' src='/omegascore-logo.png' alt='OMΩ' h='22px' />
+               <Text fontWeight='semibold'>Score Breakdown</Text>
+            </Flex>
             <ResponsiveContainer width='100%' height={260}>
                <RadarChart data={radarData}>
                   <PolarGrid />

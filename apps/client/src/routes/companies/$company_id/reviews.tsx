@@ -9,15 +9,15 @@ import {
    VStack,
    createListCollection,
 } from '@chakra-ui/react';
-import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
+import { useInfiniteQuery } from '@tanstack/react-query';
 import { createFileRoute } from '@tanstack/react-router';
 import { orpc } from '@/helpers/rpc.ts';
-import { Breadcrumb } from '@/components/ui/breadcrumb';
 import { ReviewCard } from '@/components/Company/helpers';
 import { useEffect, useRef, useState } from 'react';
 import { z } from 'zod';
 
 export const Route = createFileRoute('/companies/$company_id/reviews')({
+   beforeLoad: () => ({ getLabel: () => 'Reviews' }),
    validateSearch: z.object({
       sort: z.enum(['year_desc', 'rating_desc', 'rating_asc']).optional().catch('year_desc'),
    }),
@@ -41,11 +41,6 @@ function CompanyReviewsPage() {
       sortParam ?? 'year_desc'
    );
    const sentinelRef = useRef<HTMLDivElement>(null);
-
-   const { data: companyData } = useQuery(
-      orpc.companies.getCompany.queryOptions({ input: { company_id }, staleTime: 30_000 })
-   );
-   const companyName = companyData?.company?.company_name;
 
    const { data, isLoading, isFetchingNextPage, fetchNextPage, hasNextPage } =
       useInfiniteQuery(
@@ -84,15 +79,6 @@ function CompanyReviewsPage() {
    return (
       <Container maxW='4xl' py={10}>
          <VStack align='stretch' gap={8}>
-            <Breadcrumb
-               items={[
-                  { type: 'link', label: 'Companies', to: '/companies' },
-                  companyName
-                     ? { type: 'link', label: companyName, to: '/companies/$company_id', params: { company_id } }
-                     : { type: 'loading' },
-                  { type: 'current', label: 'All Reviews' },
-               ]}
-            />
 
             <Flex justify='space-between' align='center' wrap='wrap' gap={4}>
                <Box>

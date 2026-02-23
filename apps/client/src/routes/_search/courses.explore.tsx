@@ -61,6 +61,7 @@ const sortBy = createListCollection({
 });
 
 export const Route = createFileRoute('/_search/courses/explore')({
+  beforeLoad: () => ({ getLabel: () => 'Explore' }),
   validateSearch: z.object({
     showFavorites: z.catch(z.optional(z.boolean()), false)
   }),
@@ -71,8 +72,6 @@ export const Route = createFileRoute('/_search/courses/explore')({
     return (
       <Flex
         gap={{ base: 3, md: 4 }}
-        px={{ base: 3, md: 4 }}
-        py={{ base: 3, md: 4 }}
         direction='column'
         minHeight='0'
         width='full'

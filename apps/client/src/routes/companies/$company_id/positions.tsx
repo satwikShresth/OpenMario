@@ -12,12 +12,12 @@ import {
 import { useQuery } from '@tanstack/react-query';
 import { createFileRoute, useNavigate } from '@tanstack/react-router';
 import { orpc } from '@/helpers/rpc.ts';
-import { Breadcrumb } from '@/components/ui/breadcrumb';
 import { omegaColorPalette } from '@/components/Company/helpers';
 import { useMemo, useState } from 'react';
 import { FiArrowDown, FiArrowUp, FiChevronRight } from 'react-icons/fi';
 
 export const Route = createFileRoute('/companies/$company_id/positions')({
+   beforeLoad: () => ({ getLabel: () => 'Positions' }),
    component: AllPositionsPage,
 });
 
@@ -35,7 +35,6 @@ function AllPositionsPage() {
       orpc.companies.getCompany.queryOptions({ input: { company_id }, staleTime: 30_000 })
    );
 
-   const companyName = companyData?.company?.company_name;
    const allPositions = companyData?.positions ?? [];
 
    const sorted = useMemo(() => {
@@ -89,15 +88,6 @@ function AllPositionsPage() {
    return (
       <Container maxW='5xl' py={10}>
          <VStack align='stretch' gap={8}>
-            <Breadcrumb
-               items={[
-                  { type: 'link', label: 'Companies', to: '/companies' },
-                  companyName
-                     ? { type: 'link', label: companyName, to: '/companies/$company_id', params: { company_id } }
-                     : { type: 'loading' },
-                  { type: 'current', label: 'Positions' },
-               ]}
-            />
 
             <Flex justify='space-between' align='center' wrap='wrap' gap={4}>
                <Box>

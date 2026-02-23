@@ -15,7 +15,6 @@ import {
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 import { createFileRoute } from '@tanstack/react-router';
 import { orpc } from '@/helpers/rpc.ts';
-import { Breadcrumb } from '@/components/ui/breadcrumb';
 import { omegaHex, ReviewCard } from '@/components/Company/helpers';
 import { useEffect, useRef } from 'react';
 
@@ -83,22 +82,6 @@ function PositionReviewsPage() {
    return (
       <Container maxW='4xl' py={10}>
          <VStack align='stretch' gap={8}>
-            <Breadcrumb
-               items={[
-                  { type: 'link', label: 'Companies', to: '/companies' },
-                  companyName
-                     ? {
-                        type: 'link',
-                        label: companyName,
-                        to: '/companies/$company_id',
-                        params: { company_id },
-                     }
-                     : { type: 'loading' },
-                  position
-                     ? { type: 'current', label: position.position_name }
-                     : { type: 'loading' },
-               ]}
-            />
 
             {/* Header */}
             {companyLoading || !position ? (

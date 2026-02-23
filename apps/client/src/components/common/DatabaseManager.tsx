@@ -15,7 +15,7 @@ import { MdStorage, MdDownload, MdWarning } from 'react-icons/md';
 import { exportDatabaseAsCSV, clearDatabaseAndReload } from '@/helpers/database';
 import { toaster } from '@/components/ui/toaster';
 
-export function DatabaseManagerDialog() {
+export function DatabaseManagerDialog({ trigger }: { trigger?: React.ReactElement } = {}) {
    const dialog = useDialog();
    const [isExporting, setIsExporting] = React.useState(false);
    const [isClearing, setIsClearing] = React.useState(false);
@@ -85,14 +85,12 @@ export function DatabaseManagerDialog() {
             motionPreset="slide-in-bottom"
          >
             <Dialog.Trigger asChild>
-               <Button
-                  variant="ghost"
-                  _hover={{ color: 'accent' }}
-                  borderRadius="lg"
-               >
-                  <MdStorage />
-                  Database
-               </Button>
+               {trigger ?? (
+                  <Button variant="ghost" _hover={{ color: 'accent' }} borderRadius="lg">
+                     <MdStorage />
+                     Database
+                  </Button>
+               )}
             </Dialog.Trigger>
             <Portal>
                <Dialog.Backdrop />

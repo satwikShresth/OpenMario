@@ -3,7 +3,7 @@ import {
    Bar,
    BarChart,
    CartesianGrid,
-   Cell,
+   Rectangle,
    ResponsiveContainer,
    Tooltip,
    XAxis,
@@ -86,11 +86,17 @@ export function Charts() {
                      <XAxis type='number' tick={{ fontSize: 11 }} allowDecimals={false} />
                      <YAxis type='category' dataKey='subject' width={60} tick={{ fontSize: 11 }} />
                      <Tooltip content={<ChartTooltip labelKey='Subject' />} />
-                     <Bar dataKey='count' radius={[0, 4, 4, 0]} maxBarSize={22}>
-                        {sectionsPerSubject.map((_, i) => (
-                           <Cell key={i} fill={`hsl(${(i * 37) % 360}, 65%, 55%)`} />
-                        ))}
-                     </Bar>
+                     <Bar
+                        dataKey='count'
+                        maxBarSize={22}
+                        shape={(props: any) => (
+                           <Rectangle
+                              {...props}
+                              radius={[0, 4, 4, 0]}
+                              fill={`hsl(${(props.index * 37) % 360}, 65%, 55%)`}
+                           />
+                        )}
+                     />
                   </BarChart>
                </ResponsiveContainer>
             </Box>

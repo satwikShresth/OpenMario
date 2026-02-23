@@ -5,7 +5,7 @@ export function PageHeader() {
    const totalCount = useCompanyList(s => s.totalCount);
    return (
       <Flex justify='space-between' align='center' wrap='wrap' gap={3}>
-         <Text fontSize='3xl' fontWeight='bolder'>Companies</Text>
+         <Text fontSize='2xl' fontWeight='bold'>Companies</Text>
          <Text color='fg.muted' fontSize='sm'>{totalCount} companies</Text>
       </Flex>
    );

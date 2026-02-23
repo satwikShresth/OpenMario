@@ -1,20 +1,18 @@
-import { Container, VStack } from '@chakra-ui/react';
+import { Box, VStack } from '@chakra-ui/react';
 import type { ReactNode } from 'react';
 
 export function Root({
    children,
-   maxW = '5xl',
-   py = 8,
-   gap = 6,
+   maxW = '4xl',
+   gap = 4,
 }: {
    children: ReactNode;
    maxW?: string;
-   py?: number;
    gap?: number;
 }) {
    return (
-      <Container maxW={maxW} py={py}>
+      <Box maxW={maxW} w='full' mx='auto'>
          <VStack align='stretch' gap={gap}>{children}</VStack>
-      </Container>
+      </Box>
    );
 }

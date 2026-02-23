@@ -35,6 +35,12 @@ declare module '@tanstack/react-router' {
    }
 }
 
+declare module '@tanstack/react-router' {
+   interface RouteContext {
+      getLabel?: () => string | Promise<string>;
+   }
+}
+
 // Render app immediately - migration happens in background
 const rootElement = document.getElementById('app');
 if (rootElement && !rootElement.innerHTML) {

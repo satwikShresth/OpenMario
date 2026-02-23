@@ -2,7 +2,6 @@ import {
    Box,
    Button,
    Clipboard,
-   Container,
    Flex,
    HStack,
    Icon,
@@ -11,7 +10,6 @@ import {
    Spinner,
    Text,
    useDisclosure,
-   VStack,
 } from '@chakra-ui/react';
 import { HiFilter } from 'react-icons/hi';
 import { Salary } from '@/components/Salary';
@@ -26,6 +24,7 @@ import { useEffect, useRef } from 'react';
 const PAGE_SIZE = 20;
 
 export const Route = createFileRoute('/salary')({
+   beforeLoad: () => ({ getLabel: () => 'Salary' }),
    validateSearch: z.optional(salarySearchSchema),
    component: () => {
       const query = Route.useSearch();
@@ -68,61 +67,51 @@ export const Route = createFileRoute('/salary')({
       }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
 
       return (
-         <Container>
-            <VStack align='center'>
-               <Salary.Root>
-                  <Box>
-                     <Flex justify='space-between' mb={2} mt={10}>
-                        {isMobile
-                           ? (
-                              <Button onClick={openFilter} variant='solid'>
-                                 <Icon as={HiFilter} />
-                                 <Text>Filters</Text>
-                              </Button>
-                           )
-                           : <Text fontSize='3xl' fontWeight='bolder'>Self Reported Salaries</Text>}
+         <Salary.Root>
+            <Flex justify='space-between' align='center' mb={4} pt={4}>
+               {isMobile
+                  ? (
+                     <Button onClick={openFilter} variant='solid' size='sm'>
+                        <Icon as={HiFilter} />
+                        <Text>Filters</Text>
+                     </Button>
+                  )
+                  : <Text fontSize='2xl' fontWeight='bold'>Self Reported Salaries</Text>}
 
-                        <HStack>
-                           <Salary.ReportSalaryMenu />
+               <HStack>
+                  <Salary.ReportSalaryMenu />
+                  {!isMobile && (
+                     <Clipboard.Root value={globalThis.location.href} timeout={1000}>
+                        <Clipboard.Trigger asChild>
+                           <IconButton variant='solid' size='sm'>
+                              <Clipboard.Indicator />
+                           </IconButton>
+                        </Clipboard.Trigger>
+                     </Clipboard.Root>
+                  )}
+               </HStack>
+            </Flex>
 
-                           {isMobile
-                              ? null
-                              : (
-                                 <Clipboard.Root value={globalThis.location.href} timeout={1000}>
-                                    <Clipboard.Trigger asChild>
-                                       <IconButton variant='solid'>
-                                          <Clipboard.Indicator />
-                                       </IconButton>
-                                    </Clipboard.Trigger>
-                                 </Clipboard.Root>
-                              )}
-                        </HStack>
-                     </Flex>
+            {!isMobile && <Separator mb={4} />}
 
-                     {isMobile ? null : <Separator mb={5} />}
-                     <Salary.DataTable.Filters
-                        open={isFilterOpen}
-                        onClose={closeFilter}
-                     />
-                     <Box m={2} />
-                     <Salary.DataTable.Body
-                        data={rows}
-                        count={rows.length}
-                     />
-                     <Flex ref={sentinelRef} justify='center' py={4}>
-                        {isFetchingNextPage && <Spinner size='sm' color='fg.muted' />}
-                        {!hasNextPage && rows.length > 0 && (
-                           <Text fontSize='sm' color='fg.subtle'>
-                              All {totalCount} entries loaded
-                           </Text>
-                        )}
-                     </Flex>
-                     <Salary.DataTable.Footer />
-                     <Outlet />
-                  </Box>
-               </Salary.Root>
-            </VStack>
-         </Container>
+            <Salary.DataTable.Filters open={isFilterOpen} onClose={closeFilter} />
+
+            <Box overflowX='auto'>
+               <Salary.DataTable.Body data={rows} count={rows.length} />
+            </Box>
+
+            <Flex ref={sentinelRef} justify='center' py={4}>
+               {isFetchingNextPage && <Spinner size='sm' color='fg.muted' />}
+               {!hasNextPage && rows.length > 0 && (
+                  <Text fontSize='sm' color='fg.subtle'>
+                     All {totalCount} entries loaded
+                  </Text>
+               )}
+            </Flex>
+
+            <Salary.DataTable.Footer />
+            <Outlet />
+         </Salary.Root>
       );
    },
 });

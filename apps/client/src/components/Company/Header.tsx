@@ -32,7 +32,10 @@ export function Header() {
             <Text fontSize='4xl' fontWeight='extrabold' color={omegaHex(company.omega_score)} lineHeight='1'>
                {company.omega_score ?? '—'}
             </Text>
-            <Text fontSize='xs' color='fg.muted' letterSpacing='widest' mt={1.5}>OMEGA SCORE</Text>
+            <Flex align='center' justify='center' gap={1} mt={2}>
+               <Box as='img' src='/omegascore-logo.png' alt='OMΩ' h='22px' />
+               <Text fontSize='xs' color='fg.muted' letterSpacing='wide' fontWeight='medium'>Score</Text>
+            </Flex>
          </Box>
       </Flex>
    );
