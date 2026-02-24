@@ -1,4 +1,4 @@
-import { contracts } from '@/contracts';
+import { contracts } from '@openmario/contracts';
 import { OpenAPIGenerator } from '@orpc/openapi';
 import { ZodToJsonSchemaConverter } from '@orpc/zod/zod4'; // <-- zod v4
 
