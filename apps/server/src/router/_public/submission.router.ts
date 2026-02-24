@@ -120,7 +120,7 @@ const getSortColumn = (field: SubmissionQuery['sortField']): SQL<unknown> => {
       location: sql`city`
    };
    const value = map[field]!;
-   return map[field]! ? value : sql`compensation`;
+   return map[field] ? value : sql`compensation`;
 };
 
 /**
@@ -160,7 +160,9 @@ export const listSubmissions = os.submission.list.handler(async ({ input }) => {
       other_compensation: submissionMView.other_compensation,
       details: submissionMView.details,
       company: submissionMView.company_name,
+      company_id: submissionMView.company_id,
       position: submissionMView.position_name,
+      position_id: submissionMView.position_id,
       location_city: submissionMView.city,
       location_state: submissionMView.state,
       location_state_code: submissionMView.state_code,

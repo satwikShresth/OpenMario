@@ -29,6 +29,34 @@
       "when": 1771888842667,
       "tag": "0003_striped_unicorn",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1771889046977,
+      "tag": "0004_colorful_white_tiger",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1771890537844,
+      "tag": "0005_cooing_gargoyle",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1771890718287,
+      "tag": "0006_needy_wild_child",
+      "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1771892733484,
+      "tag": "0007_whole_warstar",
+      "breakpoints": true
     }
   ]
 }

@@ -56,9 +56,9 @@ export function Header() {
                      Difficulty: {prof.avg_difficulty} / 5
                   </Badge>
                )}
-               {prof.rmp_id != null && (
+               {prof.legacy_rmp_id != null && (
                   <a
-                     href={`https://www.ratemyprofessors.com/professor/${prof.rmp_id}`}
+                     href={`https://www.ratemyprofessors.com/professor/${prof.legacy_rmp_id}`}
                      target='_blank'
                      rel='noopener noreferrer'
                      style={{ textDecoration: 'none' }}

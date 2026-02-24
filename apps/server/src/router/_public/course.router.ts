@@ -15,7 +15,11 @@ import {
 // ---------------------------------------------------------------------------
 
 export const getCourse = os.course.course.handler(
-   async ({ input: { params: { course_id } } }) => {
+   async ({
+      input: {
+         params: { course_id }
+      }
+   }) => {
       const rows = await db
          .select({
             id: course.id,
@@ -52,7 +56,11 @@ export const getCourse = os.course.course.handler(
 // ---------------------------------------------------------------------------
 
 export const getCoursePrerequisites = os.course.prerequisites.handler(
-   async ({ input: { course_id } }) => {
+   async ({
+      input: {
+         params: { course_id }
+      }
+   }) => {
       const [courseRow] = await db
          .select({
             id: course.id,
@@ -111,7 +119,11 @@ export const getCoursePrerequisites = os.course.prerequisites.handler(
 // ---------------------------------------------------------------------------
 
 export const getCourseCorequistes = os.course.corequisites.handler(
-   async ({ input: { course_id } }) => {
+   async ({
+      input: {
+         params: { course_id }
+      }
+   }) => {
       const [courseRow] = await db
          .select({
             id: course.id,
@@ -149,7 +161,11 @@ export const getCourseCorequistes = os.course.corequisites.handler(
 // ---------------------------------------------------------------------------
 
 export const getCourseAvailabilities = os.course.availabilities.handler(
-   async ({ input: { course_id } }) => {
+   async ({
+      input: {
+         params: { course_id }
+      }
+   }) => {
       const rows = await db
          .select({
             term: section.term_id,

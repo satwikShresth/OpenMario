@@ -26,7 +26,7 @@ function CompanyOverviewPage() {
    }, [company_id, data, isLoading]);
 
    return (
-      <Company.Root maxW='5xl' py={10} gap={8}>
+      <Company.Root maxW='5xl' gap={8}>
          <Company.Header />
          <Separator />
          <Company.StatsGrid />

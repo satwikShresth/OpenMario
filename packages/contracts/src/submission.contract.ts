@@ -68,7 +68,9 @@ export const SubmissionListItemSchema = z.object({
    other_compensation: z.string().nullable(),
    details: z.string().nullable(),
    company: z.string(),
+   company_id: z.string().nullable(),
    position: z.string(),
+   position_id: z.string().nullable(),
    location_city: z.string(),
    location_state: z.string(),
    location_state_code: z.string()

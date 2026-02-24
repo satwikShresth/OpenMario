@@ -502,6 +502,26 @@ export const companyPositionsMView = pgMaterializedView(
             sql<number>`round(avg(${position_review.rating_overall})::numeric, 2)`.as(
                'avg_rating_overall'
             ),
+         avg_rating_collaboration:
+            sql<number>`round(avg(${position_review.rating_collaboration})::numeric, 2)`.as(
+               'avg_rating_collaboration'
+            ),
+         avg_rating_work_variety:
+            sql<number>`round(avg(${position_review.rating_work_variety})::numeric, 2)`.as(
+               'avg_rating_work_variety'
+            ),
+         avg_rating_relationships:
+            sql<number>`round(avg(${position_review.rating_relationships})::numeric, 2)`.as(
+               'avg_rating_relationships'
+            ),
+         avg_rating_supervisor_access:
+            sql<number>`round(avg(${position_review.rating_supervisor_access})::numeric, 2)`.as(
+               'avg_rating_supervisor_access'
+            ),
+         avg_rating_training:
+            sql<number>`round(avg(${position_review.rating_training})::numeric, 2)`.as(
+               'avg_rating_training'
+            ),
          avg_compensation:
             sql<number>`round(avg(${submission.compensation})::numeric, 2)`.as(
                'avg_compensation'

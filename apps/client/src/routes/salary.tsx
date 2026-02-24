@@ -52,18 +52,6 @@ export const Route = createFileRoute('/salary')({
       const rows = data?.pages.flatMap(p => p.data) ?? [];
       const totalCount = data?.pages[0]?.count ?? 0;
 
-      const compensations = rows.map(r => r.compensation).filter((c): c is number => c != null);
-      const avgComp = compensations.length > 0
-         ? compensations.reduce((a, b) => a + b, 0) / compensations.length
-         : null;
-      const medianComp = compensations.length > 0
-         ? (() => {
-              const sorted = [...compensations].sort((a, b) => a - b);
-              const mid = Math.floor(sorted.length / 2);
-              return sorted.length % 2 !== 0 ? sorted[mid]! : (sorted[mid - 1]! + sorted[mid]!) / 2;
-           })()
-         : null;
-
       useEffect(() => {
          const el = sentinelRef.current;
          if (!el) return;
@@ -108,6 +96,8 @@ export const Route = createFileRoute('/salary')({
 
             <Salary.DataTable.Filters open={isFilterOpen} onClose={closeFilter} />
 
+            <Salary.DataTable.Footer />
+
             <Box overflowX='auto'>
                <Salary.DataTable.Body data={rows} count={rows.length} />
             </Box>
@@ -120,8 +110,6 @@ export const Route = createFileRoute('/salary')({
                   </Text>
                )}
             </Flex>
-
-            <Salary.DataTable.Footer avg={avgComp} median={medianComp} />
             <Outlet />
          </Salary.Root>
       );

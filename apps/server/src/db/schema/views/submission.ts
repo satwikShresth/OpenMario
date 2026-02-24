@@ -2,7 +2,7 @@ import { pgMaterializedView } from 'drizzle-orm/pg-core';
 import { eq, sql } from 'drizzle-orm';
 import { submission, company, position, location } from '../tables';
 
-export const submissionMView = pgMaterializedView('submission_m_view')
+export const submissionMView = pgMaterializedView('submissions_m_view')
    .with({ fillfactor: 90 })
    .as(qb =>
       qb
@@ -18,6 +18,8 @@ export const submissionMView = pgMaterializedView('submission_m_view')
             details: submission.details,
             owner_id: submission.owner_id,
             created_at: submission.created_at,
+            company_id: sql`${company.id}`.as('company_id'),
+            position_id: sql`${position.id}`.as('position_id'),
             company_name: sql`${company.name}`.as('company_name'),
             position_name: sql`${position.name}`.as('position_name'),
             city: sql`${location.city}`.as('city'),

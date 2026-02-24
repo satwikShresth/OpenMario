@@ -20,6 +20,7 @@ export const instructorProfileMView = pgMaterializedView(
          avg_difficulty: instructor.avg_difficulty,
          num_ratings: instructor.num_ratings,
          rmp_id: instructor.rmp_id,
+         legacy_rmp_id: instructor.rmp_legacy_id,
          total_sections_taught: sql<number>`count(distinct ${section.crn})`.as(
             'total_sections_taught'
          ),
@@ -56,7 +57,8 @@ export const instructorProfileMView = pgMaterializedView(
          instructor.avg_rating,
          instructor.avg_difficulty,
          instructor.num_ratings,
-         instructor.rmp_id
+         instructor.rmp_id,
+         instructor.rmp_legacy_id
       )
 );
 
@@ -65,16 +67,22 @@ export const instructorSectionsMView = pgMaterializedView(
 ).as(qb =>
    qb
       .select({
-         instructor_id: instructor.id,
-         instructor_name: instructor.name,
-         section_crn: section.crn,
-         term_id: section.term_id,
-         subject_code: section.subject_code,
-         course_number: section.course_number,
-         course_title: course.title,
-         section_code: section.section,
-         instruction_method: section.instruction_method,
-         instruction_type: section.instruction_type
+         instructor_id: sql<number>`${instructor.id}`.as('instructor_id'),
+         instructor_name: sql<string>`${instructor.name}`.as('instructor_name'),
+         section_crn: sql<number>`${section.crn}`.as('section_crn'),
+         term_id: sql<number>`${section.term_id}`.as('term_id'),
+         subject_code: sql<string>`${section.subject_code}`.as('subject_code'),
+         course_number: sql<string>`${section.course_number}`.as(
+            'course_number'
+         ),
+         course_title: sql<string>`${course.title}`.as('course_title'),
+         section_code: sql<string>`${section.section}`.as('section_code'),
+         instruction_method: sql<
+            string | null
+         >`${section.instruction_method}`.as('instruction_method'),
+         instruction_type: sql<string | null>`${section.instruction_type}`.as(
+            'instruction_type'
+         )
       })
       .from(instructor)
       .innerJoin(

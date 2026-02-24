@@ -9,7 +9,7 @@ export const Route = createFileRoute('/professors/$professor_id')({
    beforeLoad: ({ context: { queryClient }, params: { professor_id } }) => ({
       getLabel: () =>
          queryClient
-            .ensureQueryData(orpc.professor.get.queryOptions({ input: { professor_id: Number(professor_id) }, staleTime: 30_000 }))
+            .ensureQueryData(orpc.professor.get.queryOptions({ input: { params: { professor_id: Number(professor_id) } }, staleTime: 30_000 }))
             .then((data) => (data as ProfessorProfile | undefined)?.instructor_name ?? professor_id),
    }),
    component: ProfessorPage,
@@ -21,8 +21,8 @@ function ProfessorPage() {
 
    const [profileQuery, sectionsQuery] = useQueries({
       queries: [
-         orpc.professor.get.queryOptions({ input: { professor_id: profIdNum }, staleTime: 30_000 }),
-         orpc.professor.sections.queryOptions({ input: { professor_id: profIdNum }, staleTime: 30_000 }),
+         orpc.professor.get.queryOptions({ input: { params: { professor_id: profIdNum } }, staleTime: 30_000 }),
+         orpc.professor.sections.queryOptions({ input: { params: { professor_id: profIdNum } }, staleTime: 30_000 }),
       ],
    });
 

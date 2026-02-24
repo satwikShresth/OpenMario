@@ -1,23 +1,7 @@
 import { os } from '@/router/helpers';
-import { db, instructorProfileMView } from '@/db';
-import { and, eq, asc, sql } from 'drizzle-orm';
+import { db, instructorProfileMView, instructorSectionsMView } from '@/db';
+import { and, eq, asc, sql, desc } from 'drizzle-orm';
 import { maybe } from '@/utils';
-
-const profileFields = {
-   instructor_id: instructorProfileMView.instructor_id,
-   instructor_name: instructorProfileMView.instructor_name,
-   department: instructorProfileMView.department,
-   avg_rating: instructorProfileMView.avg_rating,
-   avg_difficulty: instructorProfileMView.avg_difficulty,
-   num_ratings: instructorProfileMView.num_ratings,
-   rmp_id: instructorProfileMView.rmp_id,
-   total_sections_taught: instructorProfileMView.total_sections_taught,
-   total_courses_taught: instructorProfileMView.total_courses_taught,
-   total_terms_active: instructorProfileMView.total_terms_active,
-   most_recent_term: instructorProfileMView.most_recent_term,
-   subjects_taught: instructorProfileMView.subjects_taught,
-   instruction_methods: instructorProfileMView.instruction_methods
-};
 
 // ============================================================================
 // GET /professors
@@ -77,7 +61,7 @@ export const listProfessors = os.professor.list.handler(async ({ input }) => {
 
    const countPromise = db.$count(instructorProfileMView, whereClause);
    const dataPromise = db
-      .select(profileFields)
+      .select()
       .from(instructorProfileMView)
       .where(whereClause)
       .orderBy(orderExpr)
@@ -102,16 +86,20 @@ export const listProfessors = os.professor.list.handler(async ({ input }) => {
 // ============================================================================
 
 export const getProfessor = os.professor.get.handler(
-   async ({ input: { professor_id } }) => {
+   async ({
+      input: {
+         params: { professor_id }
+      }
+   }) => {
       const [row] = await db
-         .select(profileFields)
+         .select()
          .from(instructorProfileMView)
          .where(eq(instructorProfileMView.instructor_id, professor_id))
          .limit(1);
 
       if (!row) throw new Error('Professor not found');
 
-      return row as any;
+      return row;
    }
 );
 
@@ -120,28 +108,19 @@ export const getProfessor = os.professor.get.handler(
 // ============================================================================
 
 export const getProfessorSections = os.professor.sections.handler(
-   async ({ input: { professor_id } }) => {
-      // instructor_sections_m_view was created without .as() aliases, so the
-      // actual DB column names follow the underlying table column names:
-      //   instructor.id   → "id"      (not "instructor_id")
-      //   section.crn     → "crn"     (not "section_crn")
-      //   course.title    → "title"   (not "course_title")
-      //   section.section → "section" (not "section_code")
-      const result = await db.execute(sql`
-         SELECT
-            crn               AS section_crn,
-            term_id,
-            subject_code,
-            course_number,
-            title             AS course_title,
-            section           AS section_code,
-            instruction_method,
-            instruction_type
-         FROM instructor_sections_m_view
-         WHERE id = ${professor_id}
-         ORDER BY term_id DESC
-      `);
+   async ({
+      input: {
+         params: { professor_id }
+      }
+   }) => {
+      const result = await db
+         .select()
+         .from(instructorSectionsMView)
+         .where(eq(instructorSectionsMView.instructor_id, professor_id))
+         .orderBy(desc(instructorSectionsMView.term_id));
 
-      return result.rows as any;
+      if (!result) throw new Error('Professor not found');
+
+      return result;
    }
 );

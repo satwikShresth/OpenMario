@@ -36,6 +36,7 @@ export const ProfessorListItemSchema = z.object({
    avg_difficulty: z.coerce.number().nullable(),
    num_ratings: z.coerce.number().nullable(),
    rmp_id: z.string().nullable(),
+   legacy_rmp_id: z.coerce.number().nullable(),
    total_sections_taught: z.coerce.number(),
    total_courses_taught: z.coerce.number(),
    total_terms_active: z.coerce.number(),
@@ -83,9 +84,10 @@ export const getProfessorContract = oc
       path: '/professors/{professor_id}',
       summary: 'Get professor profile',
       description: 'Retrieve full professor profile with stats',
-      tags: ['Professors']
+      tags: ['Professors'],
+      inputStructure: 'detailed'
    })
-   .input(ProfessorIdParamSchema)
+   .input(z.object({ params: ProfessorIdParamSchema }))
    .output(ProfessorListItemSchema);
 
 // ============================================================================
@@ -110,9 +112,10 @@ export const getProfessorSectionsContract = oc
       summary: 'Get professor sections',
       description:
          'Retrieve all sections taught by a professor across all terms',
-      tags: ['Professors']
+      tags: ['Professors'],
+      inputStructure: 'detailed'
    })
-   .input(ProfessorIdParamSchema)
+   .input(z.object({ params: ProfessorIdParamSchema }))
    .output(z.array(ProfessorSectionSchema));
 
 // ============================================================================

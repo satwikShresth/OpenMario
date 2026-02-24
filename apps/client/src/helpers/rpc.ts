@@ -1,5 +1,4 @@
 import { createORPCClient, onError } from '@orpc/client';
-import type { JsonifiedClient } from '@orpc/openapi-client';
 import { contracts } from '@openmario/contracts';
 import type { ContractRouterClient } from '@orpc/contract';
 import { OpenAPILink } from '@orpc/openapi-client/fetch';
@@ -18,9 +17,7 @@ const link = new OpenAPILink(contracts, {
    ]
 });
 
-// Create a type-safe client using the contract
-const openapiClient: JsonifiedClient<ContractRouterClient<typeof contracts>> =
-   createORPCClient(link);
+const openapiClient: ContractRouterClient<typeof contracts> = createORPCClient(link);
 export const orpc = createTanstackQueryUtils(openapiClient);
 
 // Export types for convenience
