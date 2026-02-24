@@ -9,6 +9,7 @@ import { SubjectBadges } from './SubjectBadges';
 import { Charts } from './Charts';
 import { InstructionMethods } from './InstructionMethods';
 import { SectionsTab } from './SectionsTab';
+import { Filters } from './Filters';
 
 export const Professor = {
    Root,
@@ -22,6 +23,7 @@ export const Professor = {
    Charts,
    InstructionMethods,
    SectionsTab,
+   Filters,
 };
 
 export * from './types';

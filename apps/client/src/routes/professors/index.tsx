@@ -1,5 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router';
-import { Box, createListCollection, Flex } from '@chakra-ui/react';
+import { Box, Button, createListCollection, Flex, Icon, Text, useDisclosure } from '@chakra-ui/react';
 import { instantMeiliSearch } from '@meilisearch/instant-meilisearch';
 import { useSuspenseQuery } from '@tanstack/react-query';
 import { Suspense } from 'react';
@@ -9,6 +9,8 @@ import { Professor } from '@/components/Professor';
 import { orpc } from '@/helpers';
 import { env } from '@env';
 import { INDEX_NAMES } from '@openmario/meilisearch';
+import { useMobile } from '@/hooks';
+import { FilterIcon } from '@/components/icons';
 
 const sortByCollection = createListCollection({
    items: [
@@ -27,10 +29,14 @@ export const Route = createFileRoute('/professors/')({
 });
 
 function ProfessorsSearch() {
+   const isMobile = useMobile();
+   const { open: isFilterOpen, onOpen: openFilter, onClose: closeFilter } = useDisclosure();
+
    return (
       <Index indexName={INDEX_NAMES.professors}>
          <Configure hitsPerPage={20} />
          <Flex direction='column' gap={4}>
+            {/* Search header */}
             <Flex
                direction={{ base: 'column', sm: 'row' }}
                align={{ base: 'stretch', sm: 'center' }}
@@ -39,17 +45,57 @@ function ProfessorsSearch() {
                <Box flex='1' minWidth='0'>
                   <SearchBox />
                </Box>
-               <Box flexShrink={0}>
+            </Flex>
+
+            {/* Mobile filter + sort row */}
+            {isMobile && (
+               <Flex direction='row' width='full' gap={3} justify='space-between'>
+                  <Button onClick={openFilter} variant='outline' size='md'>
+                     <Icon as={FilterIcon} />
+                     <Text>Filters</Text>
+                  </Button>
                   <SortSelect sortBy={sortByCollection} />
-               </Box>
-            </Flex>
+               </Flex>
+            )}
 
-            <Flex justify='space-between' align='center'>
-               <Stats />
-            </Flex>
+            {/* Main content */}
+            <Flex
+               direction={{ base: 'column', lg: 'row' }}
+               flex='1'
+               width='full'
+               gap={{ base: 4, md: 5 }}
+               align='stretch'
+            >
+               {/* Desktop sidebar */}
+               {!isMobile && (
+                  <Box width='280px' flexShrink={0}>
+                     <Professor.Filters open={isFilterOpen} onClose={closeFilter} />
+                  </Box>
+               )}
 
-            <Professor.Cards />
+               {/* Results */}
+               <Flex direction='column' flex='1' minWidth='0' gap={{ base: 3, md: 4 }}>
+                  {!isMobile ? (
+                     <Flex justify='space-between' align='center' gap={3}>
+                        <Box flex='1' minWidth='0'>
+                           <Stats />
+                        </Box>
+                        <Box flexShrink={0}>
+                           <SortSelect sortBy={sortByCollection} />
+                        </Box>
+                     </Flex>
+                  ) : (
+                     <Stats />
+                  )}
+                  <Professor.Cards />
+               </Flex>
+            </Flex>
          </Flex>
+
+         {/* Mobile filter drawer */}
+         {isMobile && (
+            <Professor.Filters open={isFilterOpen} onClose={closeFilter} />
+         )}
       </Index>
    );
 }

@@ -1,7 +1,6 @@
 import {
    Box,
    Card as CCard,
-   Clipboard,
    Flex,
    For,
    HStack,
@@ -437,16 +436,7 @@ const CardButtons = (
          >
             <Icon as={liked ? HeartFilledIcon : HeartIcon} size='lg' />
          </IconButton>
-         <Clipboard.Root
-            value={globalThis.location.origin + globalThis.location.pathname +
-               `/${section.crn}` + globalThis.location.search}
-         >
-            <Clipboard.Trigger asChild>
-               <IconButton variant='surface' size='sm'>
-                  <Clipboard.Indicator />
-               </IconButton>
-            </Clipboard.Trigger>
-         </Clipboard.Root>
+
       </Stack>
    );
 };

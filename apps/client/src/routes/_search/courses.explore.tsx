@@ -57,7 +57,7 @@ const sortBy = createListCollection({
 });
 
 export const Route = createFileRoute('/_search/courses/explore')({
-  beforeLoad: () => ({ getLabel: () => 'Explore' }),
+  beforeLoad: () => ({ getLabel: () => 'Explore Courses' }),
   validateSearch: z.object({
     showFavorites: z.catch(z.optional(z.boolean()), false)
   }),
@@ -73,6 +73,7 @@ export const Route = createFileRoute('/_search/courses/explore')({
         width='full'
         flex='1'
       >
+        <Text fontSize='2xl' fontWeight='bold'>Explore Courses</Text>
         {/* Search Header */}
         <Flex
           direction={{ base: 'column', sm: 'row' }}

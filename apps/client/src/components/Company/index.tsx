@@ -8,6 +8,7 @@ import { StatsGrid } from './StatsGrid';
 import { Charts } from './Charts';
 import { Positions } from './Positions';
 import { ReviewHighlights } from './ReviewHighlights';
+import { Filters } from './Filters';
 
 export const Company = {
    Root,
@@ -20,6 +21,7 @@ export const Company = {
    Charts,
    Positions,
    ReviewHighlights,
+   Filters,
 };
 
 export * from './helpers';
