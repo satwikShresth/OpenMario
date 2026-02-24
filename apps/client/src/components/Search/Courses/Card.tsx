@@ -38,7 +38,7 @@ export const Cards = () => {
       if (!el) return;
       const observer = new IntersectionObserver(
          entries => {
-            if (entries[0].isIntersecting && !isLastPage) showMore();
+            if (entries[0]!.isIntersecting && !isLastPage) showMore();
          },
          { threshold: 0.1 }
       );
@@ -98,7 +98,7 @@ export const Card = ({ section }: { section: Section }) => {
                         width='full'
                      >
                         <Link
-                           to={`${(match.fullPath) as '/courses/plan' | '/courses/profile' | '/courses/explore'}/$course_id`}
+                           to={`${(match.fullPath) as '/courses/explore'}/$course_id`}
                            params={{ course_id: section?.course_id! }}
                            reloadDocument={false}
                            resetScroll={false}

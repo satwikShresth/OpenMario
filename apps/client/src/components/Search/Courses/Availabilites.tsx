@@ -11,7 +11,7 @@ type AvailabilitesProps = {
 export default ({ course_id }: AvailabilitesProps) => {
    const { data: availabilityTableData, isLoading } = useQuery(
       orpc.course.availabilities.queryOptions({
-         input: { course_id },
+         input: { params: { course_id } },
          select: (courseAvailRaw) => {
             const courseAvailInfo = courseAvailRaw ?? [];
             if (!courseAvailInfo || courseAvailInfo.length === 0) {

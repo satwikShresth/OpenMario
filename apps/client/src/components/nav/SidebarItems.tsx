@@ -1,13 +1,13 @@
 import { forwardRef } from 'react';
 import type React from 'react';
-import { Box, Flex, Icon, Separator, Text } from '@chakra-ui/react';
-import { Link, useRouterState } from '@tanstack/react-router';
+import { Link, Box, Flex, Icon, Separator, Text } from '@chakra-ui/react';
+import { Link as TLink, useRouterState } from '@tanstack/react-router';
 import { GithubIcon, MessageCircleIcon, DatabaseIcon } from '@/components/icons';
 import { useColorModeValue } from '@/components/ui/color-mode';
 import { FeedbackDialog } from '@/components/common/Feedback';
 import { DatabaseManagerDialog } from '@/components/common/DatabaseManager';
 import { Tooltip } from '@/components/ui/tooltip';
-import { NAV_ITEMS } from './items';
+import { NAV_GROUPS } from './items';
 
 interface SidebarItemsProps {
    onClose?: () => void;
@@ -84,94 +84,143 @@ const NavButton = forwardRef<HTMLButtonElement, NavButtonProps>(
    },
 );
 
+const PRIMARY_GROUP_IDS = ['coop', 'academics'];
+
 export function SidebarItems({ onClose, minimized }: SidebarItemsProps) {
    const pathname = useRouterState({ select: s => s.location.pathname });
    const subActiveBg = useColorModeValue('rgba(0,0,0,0.05)', 'rgba(255,255,255,0.07)');
    const subHoverBg = useColorModeValue('rgba(0,0,0,0.03)', 'rgba(255,255,255,0.04)');
    const trackColor = useColorModeValue('rgba(0,0,0,0.10)', 'rgba(255,255,255,0.10)');
 
+   const primaryGroups = NAV_GROUPS.filter(g => PRIMARY_GROUP_IDS.includes(g.id));
+   const bottomGroups = NAV_GROUPS.filter(g => !PRIMARY_GROUP_IDS.includes(g.id));
+
+   const renderGroupItems = (items: typeof NAV_GROUPS[number]['items']) =>
+      items.map(item => {
+         const isActive = item.activeWhen
+            ? item.activeWhen(pathname)
+            : pathname.startsWith(item.href);
+         const showChildren = isActive && !minimized && item.children?.length;
+
+         return (
+            <Box key={item.label}>
+               <Tooltip content={item.label} disabled={!minimized}>
+                  <TLink
+                     to={item.href}
+                     onClick={onClose}
+                     style={{ textDecoration: 'none', display: 'block' }}
+                  >
+                     <NavButton
+                        icon={item.icon}
+                        label={item.label}
+                        minimized={minimized}
+                        isActive={isActive}
+                        badge={item.badge?.text}
+                     />
+                  </TLink>
+               </Tooltip>
+
+               {showChildren && (
+                  <Flex
+                     direction='column'
+                     gap={0.5}
+                     mt={0.5}
+                     ml={3}
+                     pl={3}
+                     borderLeftWidth='1.5px'
+                     borderColor={trackColor}
+                  >
+                     {item.children!.map(child => {
+                        const childActive = child.isActive
+                           ? child.isActive(pathname)
+                           : pathname.startsWith(child.href);
+                        return (
+                           <TLink
+                              key={child.href}
+                              to={child.href}
+                              onClick={onClose}
+                              style={{ textDecoration: 'none', display: 'block' }}
+                           >
+                              <Flex
+                                 w='full'
+                                 align='center'
+                                 px={2}
+                                 py={1.5}
+                                 borderRadius='md'
+                                 bg={childActive ? subActiveBg : 'transparent'}
+                                 color={childActive ? 'fg' : 'fg.muted'}
+                                 fontWeight={childActive ? 'medium' : 'normal'}
+                                 _hover={{ bg: subHoverBg, color: 'fg' }}
+                                 transition='all 0.15s ease'
+                                 cursor='pointer'
+                              >
+                                 <Text fontSize='sm' lineHeight='1'>
+                                    {child.label}
+                                 </Text>
+                              </Flex>
+                           </TLink>
+                        );
+                     })}
+                  </Flex>
+               )}
+            </Box>
+         );
+      });
+
    return (
       <Flex direction='column' h='full' justify='space-between' px={minimized ? 1.5 : 3} py={1}>
-         {/* Primary nav */}
-         <Flex direction='column' gap={0.5}>
-            {NAV_ITEMS.map(item => {
-               const isActive = item.activeWhen
-                  ? item.activeWhen(pathname)
-                  : pathname.startsWith(item.href);
-               const showChildren = isActive && !minimized && item.children?.length;
-
-               return (
-                  <Box key={item.label}>
-                     <Tooltip content={item.label} placement='right' disabled={!minimized}>
-                        <Link
-                           to={item.href}
-                           onClick={onClose}
-                           style={{ textDecoration: 'none', display: 'block' }}
-                        >
-                           <NavButton
-                              icon={item.icon}
-                              label={item.label}
-                              minimized={minimized}
-                              isActive={isActive}
-                              badge={item.badge?.text}
-                           />
-                        </Link>
-                     </Tooltip>
-
-                     {/* Sub-items — visible when parent active and sidebar is expanded */}
-                     {showChildren && (
-                        <Flex
-                           direction='column'
-                           gap={0.5}
-                           mt={0.5}
-                           ml={3}
-                           pl={3}
-                           borderLeftWidth='1.5px'
-                           borderColor={trackColor}
-                        >
-                           {item.children!.map(child => {
-                              const childActive = child.isActive
-                                 ? child.isActive(pathname)
-                                 : pathname.startsWith(child.href);
-                              return (
-                                 <Link
-                                    key={child.href}
-                                    to={child.href}
-                                    onClick={onClose}
-                                    style={{ textDecoration: 'none', display: 'block' }}
-                                 >
-                                    <Flex
-                                       w='full'
-                                       align='center'
-                                       px={2}
-                                       py={1.5}
-                                       borderRadius='md'
-                                       bg={childActive ? subActiveBg : 'transparent'}
-                                       color={childActive ? 'fg' : 'fg.muted'}
-                                       fontWeight={childActive ? 'medium' : 'normal'}
-                                       _hover={{ bg: subHoverBg, color: 'fg' }}
-                                       transition='all 0.15s ease'
-                                       cursor='pointer'
-                                    >
-                                       <Text fontSize='sm' lineHeight='1'>
-                                          {child.label}
-                                       </Text>
-                                    </Flex>
-                                 </Link>
-                              );
-                           })}
-                        </Flex>
-                     )}
-                  </Box>
-               );
-            })}
+         {/* Primary nav — Co-op & Academics */}
+         <Flex direction='column' gap={1}>
+            {primaryGroups.map((group, groupIdx) => (
+               <Box key={group.id}>
+                  {groupIdx > 0 && <Separator my={1.5} />}
+                  {!minimized && (
+                     <Text
+                        fontSize='2xs'
+                        fontWeight='semibold'
+                        letterSpacing='wider'
+                        textTransform='uppercase'
+                        color='fg.subtle'
+                        px={3}
+                        pb={0.5}
+                     >
+                        {group.label}
+                     </Text>
+                  )}
+                  <Flex direction='column' gap={0.5}>
+                     {renderGroupItems(group.items)}
+                  </Flex>
+               </Box>
+            ))}
          </Flex>
 
-         {/* Bottom utilities */}
+         {/* Bottom — Profile + utilities */}
          <Flex direction='column' gap={0.5} pb={2}>
+            {bottomGroups.map(group => (
+               <Box key={group.id}>
+                  <Separator mb={1.5} mt={1} />
+                  {!minimized && (
+                     <Text
+                        fontSize='2xs'
+                        fontWeight='semibold'
+                        letterSpacing='wider'
+                        textTransform='uppercase'
+                        color='fg.subtle'
+                        px={3}
+                        pb={0.5}
+                     >
+                        {group.label}
+                     </Text>
+                  )}
+                  <Flex direction='column' gap={0.5}>
+                     {renderGroupItems(group.items)}
+                  </Flex>
+               </Box>
+            ))}
+
             <Separator mb={1.5} mt={1} />
 
-            <Tooltip content='Database' placement='right' disabled={!minimized}>
+            <Tooltip content='Database' disabled={!minimized}>
                <DatabaseManagerDialog
                   trigger={
                      <NavButton icon={DatabaseIcon} label='Database' minimized={minimized} />
@@ -179,7 +228,7 @@ export function SidebarItems({ onClose, minimized }: SidebarItemsProps) {
                />
             </Tooltip>
 
-            <Tooltip content='Feedback' placement='right' disabled={!minimized}>
+            <Tooltip content='Feedback' disabled={!minimized}>
                <FeedbackDialog
                   trigger={
                      <NavButton icon={MessageCircleIcon} label='Feedback' minimized={minimized} />
@@ -187,15 +236,15 @@ export function SidebarItems({ onClose, minimized }: SidebarItemsProps) {
                />
             </Tooltip>
 
-            <Tooltip content='GitHub' placement='right' disabled={!minimized}>
-               <a
+            <Tooltip content='GitHub' disabled={!minimized}>
+               <Link
                   href='https://github.com/satwikShresth/openmario'
                   target='_blank'
                   rel='noopener noreferrer'
                   style={{ display: 'block', textDecoration: 'none' }}
                >
                   <NavButton icon={GithubIcon} label='GitHub' minimized={minimized} />
-               </a>
+               </Link>
             </Tooltip>
          </Flex>
       </Flex>

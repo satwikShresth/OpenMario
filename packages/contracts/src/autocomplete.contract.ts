@@ -12,7 +12,9 @@ export const AutocompleteResultSchema = z.object({
    name: z.string()
 });
 
-export const CompanyListResponseSchema = z.array(AutocompleteResultSchema);
+export const AutocompleteCompanyListResponseSchema = z.array(
+   AutocompleteResultSchema
+);
 export const PositionListResponseSchema = z.array(AutocompleteResultSchema);
 export const LocationListResponseSchema = z.array(AutocompleteResultSchema);
 
@@ -40,7 +42,7 @@ export const searchCompanyContract = oc
       tags: ['Search', 'Autocomplete']
    })
    .input(CompanyQuerySchema)
-   .output(CompanyListResponseSchema);
+   .output(AutocompleteCompanyListResponseSchema);
 
 export const searchPositionContract = oc
    .route({

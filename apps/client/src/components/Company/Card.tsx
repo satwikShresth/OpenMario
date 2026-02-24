@@ -1,4 +1,4 @@
-import { Badge, Box, Flex, Separator, Stack, Text } from '@chakra-ui/react';
+import { Image, Box, Flex, Separator, Stack, Text } from '@chakra-ui/react';
 import { Tooltip } from '@/components/ui/tooltip';
 import { WarningIcon } from '@/components/icons';
 import type { CompanyListItem } from './types';
@@ -42,7 +42,7 @@ export function Card({ company, onClick }: { company: CompanyListItem; onClick: 
       >
          <Flex direction='column' align='center' justify='center' minW='72px' gap={0.5} position='relative'>
             <Text fontSize='2xl' fontWeight='bold' color={omega.color} lineHeight='1'>{omega.label}</Text>
-            <Box as='img' src='/omegascore-logo.png' alt='OMΩ' h='16px' />
+            <Image src='/omegascore-logo.png' alt='OMΩ' h='16px' />
             {company.total_reviews < 5 && (
                <Tooltip content='Limited data — omΩ score is based on fewer than 5 reviews and may not be representative'>
                   <Box position='absolute' top='-6px' right='-10px' color='orange.400' cursor='help'>
@@ -57,11 +57,6 @@ export function Card({ company, onClick }: { company: CompanyListItem; onClick: 
             <Flex gap={4} mt={1} wrap='wrap'>
                <Text fontSize='sm' color='fg.muted'>{company.total_reviews} reviews</Text>
                <Text fontSize='sm' color='fg.muted'>{company.positions_reviewed} positions</Text>
-               {company.avg_rating_overall != null && (
-                  <Badge variant='subtle' colorPalette='blue' size='sm'>
-                     {company.avg_rating_overall} / 4 avg
-                  </Badge>
-               )}
             </Flex>
          </Box>
          <Separator orientation='vertical' height='56px' display={{ base: 'none', md: 'block' }} />

@@ -87,8 +87,8 @@ function Breadcrumbs() {
                >
                   ...
                </Text>
-            <Icon as={ChevronRightIcon} color={separatorColor} boxSize={3} flexShrink={0} />
-         </>
+               <Icon as={ChevronRightIcon} color={separatorColor} boxSize={3} flexShrink={0} />
+            </>
          )}
 
          {!showEllipsis && crumbs.length > 0 && (
@@ -179,7 +179,7 @@ export function PageHeader() {
             <Breadcrumbs />
          </Flex>
 
-         <Tooltip content={colorMode === 'light' ? 'Dark mode' : 'Light mode'} placement='left'>
+         <Tooltip content={colorMode === 'light' ? 'Dark mode' : 'Light mode'}>
             <IconButton
                aria-label='Toggle color mode'
                variant='ghost'

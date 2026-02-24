@@ -33,40 +33,66 @@ export interface NavItem {
    activeWhen?: (pathname: string) => boolean;
 }
 
-export const NAV_ITEMS: NavItem[] = [
+export interface NavGroup {
+   id: string;
+   label: string;
+   items: NavItem[];
+}
+
+export const NAV_GROUPS: NavGroup[] = [
    {
-      label: 'Salary',
-      href: '/salary',
-      icon: SalaryIcon,
+      id: 'coop',
+      label: 'Co-op',
+      items: [
+         {
+            label: 'Salary',
+            href: '/salary',
+            icon: SalaryIcon,
+         },
+         {
+            label: 'Companies',
+            href: '/companies',
+            icon: BriefcaseIcon,
+         },
+      ],
    },
    {
-      label: 'Companies',
-      href: '/companies',
-      icon: BriefcaseIcon,
+      id: 'academics',
+      label: 'Academics',
+      items: [
+         {
+            label: 'Professors',
+            href: '/professors',
+            icon: UsersIcon,
+         },
+         {
+            label: 'Explore',
+            href: '/courses/explore',
+            icon: BookOpenIcon,
+         },
+         {
+            label: 'Plan',
+            href: '/courses/plan',
+            icon: CalendarIcon,
+            badge: {
+               text: 'Beta',
+               colorPalette: 'orange',
+               variant: 'subtle',
+            },
+         },
+      ],
    },
    {
-      label: 'Professors',
-      href: '/professors',
-      icon: UsersIcon,
-   },
-   {
-      label: 'Explore',
-      href: '/courses/explore',
-      icon: BookOpenIcon,
-   },
-   {
-      label: 'Plan',
-      href: '/courses/plan',
-      icon: CalendarIcon,
-      badge: {
-         text: 'Beta',
-         colorPalette: 'orange',
-         variant: 'subtle',
-      },
-   },
-   {
+      id: 'profile',
       label: 'Profile',
-      href: '/courses/profile',
-      icon: ListIcon,
+      items: [
+         {
+            label: 'Profile',
+            href: '/courses/profile',
+            icon: ListIcon,
+         },
+      ],
    },
 ];
+
+export const NAV_ITEMS: NavItem[] = NAV_GROUPS.flatMap(g => g.items);

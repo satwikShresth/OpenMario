@@ -1,4 +1,4 @@
-import { Box, Flex, Grid, HStack, Text, VStack } from '@chakra-ui/react';
+import { Image, Box, Flex, Grid, HStack, Text, VStack } from '@chakra-ui/react';
 import {
    Bar,
    BarChart,
@@ -104,7 +104,7 @@ export function Charts() {
             {/* Score Breakdown */}
             <Box borderWidth='thin' borderRadius='xl' p={5}>
                <Flex align='center' gap={2} mb={4}>
-                  <Box as='img' src='/omegascore-logo.png' alt='OMΩ' h='22px' />
+                  <Image src='/omegascore-logo.png' alt='OMΩ' h='22px' />
                   <Text fontWeight='semibold'>Score Breakdown</Text>
                </Flex>
                <ResponsiveContainer width='100%' height={260}>

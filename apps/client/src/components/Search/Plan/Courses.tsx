@@ -125,7 +125,7 @@ export const checkCourseOverlap = (section: Section, dbEvents: any[]): boolean =
   })
 }
 
-export const PlanCourses = ({ currentTerm, currentYear }: { currentTerm: string; currentYear: number }) => {
+export const PlanCourses = ({ currentTerm, currentYear }: { currentTerm: "Fall" | "Winter" | "Spring" | "Summer"; currentYear: number }) => {
   const isMobile = useMobile()
   const [searchQuery, setSearchQuery] = useState<string | undefined>(undefined)
   const [hideCoursesOverlap, setHideCoursesOverlap] = useState(false)
@@ -389,7 +389,7 @@ const InfiniteHitsList = ({
   hideUnavailableOverlap
 }: {
   currentYear: number,
-  currentTerm: string,
+  currentTerm: "Fall" | "Winter" | "Spring" | "Summer",
   allEvents: any[],
   hideCoursesOverlap: boolean,
   hideUnavailableOverlap: boolean

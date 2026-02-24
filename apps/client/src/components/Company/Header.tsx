@@ -1,4 +1,4 @@
-import { Badge, Box, Flex, HStack, Skeleton, Text, VStack } from '@chakra-ui/react';
+import { Badge, Box, Flex, HStack, Image, Skeleton, Text, VStack } from '@chakra-ui/react';
 import { Tooltip } from '@/components/ui/tooltip';
 import { WarningIcon } from '@/components/icons';
 import { omegaHex } from './helpers';
@@ -42,7 +42,7 @@ export function Header() {
                {company.omega_score ?? '—'}
             </Text>
             <Flex align='center' justify='center' gap={1} mt={2}>
-               <Box as='img' src='/omegascore-logo.png' alt='OMΩ' h='22px' />
+               <Image src='/omegascore-logo.png' alt='OMΩ' h='22px' />
                <Text fontSize='xs' color='fg.muted' letterSpacing='wide' fontWeight='medium'>Score</Text>
             </Flex>
          </Box>

@@ -5,20 +5,20 @@ import { NAV_ITEMS } from './items';
 const MobileNav = ({ onToggle }: { onToggle: () => void }) => {
    return (
       <Stack bg='card' p={4} borderRadius='lg' gap={5}>
-         {NAV_ITEMS.map(({ label, section, href, badge }) => (
+         {NAV_ITEMS.map(({ label, href, badge }) => (
             <Box key={`mobile-${label}`} position='relative' display='inline-block'>
-            <ChakraLink
-               as={Link}
-               {...linkOptions({
-                  to: `${href}${section}`,
-                  hashScrollIntoView: true,
-               })}
-               onClick={() => onToggle()}
-               _hover={{ color: 'accent' }}
-               fontWeight={600}
-            >
-               <Text>{label}</Text>
-            </ChakraLink>
+               <ChakraLink
+                  as={Link}
+                  {...linkOptions({
+                     to: `${href}`,
+                     hashScrollIntoView: true,
+                  })}
+                  onClick={() => onToggle()}
+                  _hover={{ color: 'accent' }}
+                  fontWeight={600}
+               >
+                  <Text>{label}</Text>
+               </ChakraLink>
                {badge && (
                   <Float placement='top-end' offsetX='-2' offsetY='2'>
                      <Badge

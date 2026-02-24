@@ -32,7 +32,7 @@ function getSavedSizes(): number[] {
       const parsed = JSON.parse(raw)
       if (Array.isArray(parsed) && parsed.length === 2) return parsed
     }
-  } catch {}
+  } catch { }
   return DEFAULT_SIZES
 }
 
@@ -70,7 +70,7 @@ function PlanTermPage() {
     [term_id]
   )
 
-  const currentTerm = termRow?.[0]?.term ?? ''
+  const currentTerm = termRow?.[0]?.term as "Fall" | "Winter" | "Spring" | "Summer" ?? 'Fall'
   const currentYear = termRow?.[0]?.year ?? 0
   const termColor = TERM_COLORS[currentTerm] ?? 'gray'
 

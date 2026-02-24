@@ -225,7 +225,7 @@ function PlanIndexPage() {
                eq(events.crn, s.crn)
             )
             .leftJoin({ c: coursesCollection }, ({ s, c }) =>
-               eq(s.courseId, c.id)
+               eq(s!.courseId, c.id)
             )
             .select(({ events, t, c }) => ({
                termId: t.id,

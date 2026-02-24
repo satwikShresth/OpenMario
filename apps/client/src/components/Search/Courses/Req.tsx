@@ -14,14 +14,14 @@ export default ({ course_id }: PreReqProps) => {
    const isMobile = useMobile();
    const { data: prereqData, isPending: prereqPending } = useQuery(
       orpc.course.prerequisites.queryOptions({
-         input: { course_id },
+         input: { params: { course_id } },
          select: (s) => s.data!
       })
    );
 
    const { data: coreqData, isPending: coreqPending } = useQuery(
       orpc.course.corequisites.queryOptions({
-         input: { course_id },
+         input: { params: { course_id } },
          select: (s) => s.data!
       })
    );
