@@ -48,18 +48,22 @@ export function ProfessorCard({ prof, onClick }: { prof: ProfessorListItem; onCl
                <Box flex={1} minW={0}>
                   <Text fontSize='md' fontWeight='semibold' lineClamp={1}>{prof.name}</Text>
                   <Text fontSize='sm' color='fg.muted' mb={1} truncate>{prof.department ?? 'Unknown Department'}</Text>
-                  {prof.subjects_taught && prof.subjects_taught.length > 0 && (
-                     <HStack gap={1} wrap='wrap'>
-                        {prof.subjects_taught.slice(0, 4).map(s => (
-                           <Badge key={s} size='sm' variant='surface' colorPalette='blue'>{s}</Badge>
-                        ))}
-                        {prof.subjects_taught.length > 4 && (
-                           <Badge size='sm' variant='surface' colorPalette='gray'>
-                              +{prof.subjects_taught.length - 4}
-                           </Badge>
-                        )}
-                     </HStack>
-                  )}
+                  {(() => {
+                     const subjects = (prof.subjects_taught ?? []).filter((s): s is string => Boolean(s?.trim()));
+                     if (subjects.length === 0) return null;
+                     return (
+                        <HStack gap={1} wrap='wrap'>
+                           {subjects.slice(0, 4).map(s => (
+                              <Badge key={s} size='sm' variant='surface' colorPalette='blue'>{s}</Badge>
+                           ))}
+                           {subjects.length > 4 && (
+                              <Badge size='sm' variant='surface' colorPalette='gray'>
+                                 +{subjects.length - 4}
+                              </Badge>
+                           )}
+                        </HStack>
+                     );
+                  })()}
                </Box>
 
                {/* Stats — inline on md+, hidden on small */}
