@@ -1,5 +1,5 @@
 import { Box, Container, Flex, Text, VStack } from '@chakra-ui/react';
-import { Link } from '@tanstack/react-router';
+import { Link, useNavigate } from '@tanstack/react-router';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 declare global {
@@ -73,13 +73,27 @@ function PixiesPlayer({ autostart }: { autostart: boolean }) {
    // eslint-disable-next-line @typescript-eslint/no-explicit-any
    const playerRef = useRef<any>(null);
    const started = useRef(false);
+   const autostartRef = useRef(autostart);
+   autostartRef.current = autostart;
 
    useEffect(() => {
+      const play = () => {
+         if (started.current) return;
+         started.current = true;
+         playerRef.current?.playVideo();
+      };
+
       const init = () => {
          if (!containerRef.current) return;
          playerRef.current = new window.YT.Player(containerRef.current, {
             videoId: 'OJ62RzJkYUo',
             playerVars: { autoplay: 0, mute: 0, controls: 0, loop: 1, playlist: 'OJ62RzJkYUo', rel: 0 },
+            events: {
+               // eslint-disable-next-line @typescript-eslint/no-explicit-any
+               onReady: (_e: any) => {
+                  if (autostartRef.current) play();
+               },
+            },
          });
       };
       const prev = window.onYouTubeIframeAPIReady;
@@ -95,7 +109,8 @@ function PixiesPlayer({ autostart }: { autostart: boolean }) {
    }, []);
 
    useEffect(() => {
-      if (autostart && !started.current && playerRef.current?.playVideo) {
+      if (autostart && playerRef.current?.playVideo) {
+         if (started.current) return;
          started.current = true;
          playerRef.current.playVideo();
       }
@@ -108,8 +123,108 @@ function PixiesPlayer({ autostart }: { autostart: boolean }) {
    );
 }
 
+// ─── Oppenheimer-style building buzz (Web Audio) ──────────────────────────
+function EerieScore({ stop }: { stop: boolean }) {
+   const ctxRef  = useRef<AudioContext | null>(null);
+   const gainRef = useRef<GainNode | null>(null);
+
+   useEffect(() => {
+      const ctx = new AudioContext();
+      ctxRef.current = ctx;
+      const t = ctx.currentTime;
+      const DURATION = 38; // seconds until impact
+
+      // master — fades in over 4s, stays there
+      const master = ctx.createGain();
+      master.gain.setValueAtTime(0, t);
+      master.gain.linearRampToValueAtTime(0.18, t + 4);
+      master.connect(ctx.destination);
+      gainRef.current = master;
+
+      // ── low sub-bass square buzz rising from 40 → 80 Hz ──────────────────
+      const buzz = ctx.createOscillator();
+      buzz.type = 'square';
+      buzz.frequency.setValueAtTime(40, t);
+      buzz.frequency.exponentialRampToValueAtTime(80, t + DURATION);
+
+      // bandpass to keep it tight and buzzy, not bassy
+      const bp = ctx.createBiquadFilter();
+      bp.type = 'bandpass';
+      bp.frequency.setValueAtTime(120, t);
+      bp.frequency.exponentialRampToValueAtTime(400, t + DURATION);
+      bp.Q.setValueAtTime(2, t);
+
+      const buzzGain = ctx.createGain();
+      buzzGain.gain.setValueAtTime(0.6, t);
+      buzz.connect(bp);
+      bp.connect(buzzGain);
+      buzzGain.connect(master);
+      buzz.start();
+
+      // ── high-frequency tension whine (sine) rising 800 → 1800 Hz ─────────
+      const whine = ctx.createOscillator();
+      whine.type = 'sine';
+      whine.frequency.setValueAtTime(800, t);
+      whine.frequency.exponentialRampToValueAtTime(1800, t + DURATION);
+
+      const whineGain = ctx.createGain();
+      whineGain.gain.setValueAtTime(0, t);
+      whineGain.gain.linearRampToValueAtTime(0.08, t + 8);
+      whineGain.gain.linearRampToValueAtTime(0.22, t + DURATION);
+      whine.connect(whineGain);
+      whineGain.connect(master);
+      whine.start();
+
+      // ── white noise layer for texture ────────────────────────────────────
+      const bufLen = ctx.sampleRate * 2;
+      const noiseBuf = ctx.createBuffer(1, bufLen, ctx.sampleRate);
+      const data = noiseBuf.getChannelData(0);
+      for (let i = 0; i < bufLen; i++) data[i] = Math.random() * 2 - 1;
+      const noise = ctx.createBufferSource();
+      noise.buffer = noiseBuf;
+      noise.loop = true;
+
+      const noiseFilter = ctx.createBiquadFilter();
+      noiseFilter.type = 'highpass';
+      noiseFilter.frequency.setValueAtTime(2000, t);
+
+      const noiseGain = ctx.createGain();
+      noiseGain.gain.setValueAtTime(0, t);
+      noiseGain.gain.linearRampToValueAtTime(0.04, t + DURATION * 0.6);
+      noiseGain.gain.linearRampToValueAtTime(0.12, t + DURATION);
+      noise.connect(noiseFilter);
+      noiseFilter.connect(noiseGain);
+      noiseGain.connect(master);
+      noise.start();
+
+      ctx.resume().catch(() => {});
+      const resume = () => ctx.resume();
+      document.addEventListener('click',     resume, { once: true });
+      document.addEventListener('keydown',   resume, { once: true });
+      document.addEventListener('touchstart', resume, { once: true });
+
+      return () => {
+         document.removeEventListener('click',     resume);
+         document.removeEventListener('keydown',   resume);
+         document.removeEventListener('touchstart', resume);
+         try { buzz.stop(); whine.stop(); noise.stop(); } catch {}
+         ctx.close();
+      };
+   }, []);
+
+   // cut on impact
+   useEffect(() => {
+      if (stop && gainRef.current && ctxRef.current) {
+         gainRef.current.gain.cancelScheduledValues(ctxRef.current.currentTime);
+         gainRef.current.gain.linearRampToValueAtTime(0, ctxRef.current.currentTime + 0.3);
+      }
+   }, [stop]);
+
+   return null;
+}
+
 // ─── Shaft video ──────────────────────────────────────────────────────────
-function DrexelShaftVideo({ onDrop }: { onDrop: () => void }) {
+function DrexelShaftVideo({ onDrop, onStop }: { onDrop: () => void; onStop: () => void }) {
    const containerRef = useRef<HTMLDivElement>(null);
    // eslint-disable-next-line @typescript-eslint/no-explicit-any
    const playerRef = useRef<any>(null);
@@ -132,12 +247,14 @@ function DrexelShaftVideo({ onDrop }: { onDrop: () => void }) {
                      // building hits ground at 37.1s
                      if (t >= 37.1 && !droppedRef.current) {
                         droppedRef.current = true;
+                        playerRef.current.setPlaybackRate(1);
                         onDrop();
                      }
                      // freeze at 1:31
                      if (t >= 91) {
                         playerRef.current.pauseVideo();
                         clearInterval(poll);
+                        onStop();
                      }
                   }, 200);
                },
@@ -154,7 +271,7 @@ function DrexelShaftVideo({ onDrop }: { onDrop: () => void }) {
             document.head.appendChild(tag);
          }
       }
-   }, [onDrop]);
+   }, [onDrop, onStop]);
 
    return (
       <Box
@@ -177,14 +294,24 @@ const TOOLS = [
 
 type Phase = 'before' | 'impact' | 'after';
 
+const SHAFT_KEY = 'shaft-seen';
+
 export function Landing() {
-   const [phase, setPhase]           = useState<Phase>('before');
+   const navigate                     = useNavigate();
+   const [phase, setPhase]            = useState<Phase>('before');
    const [showTitle,   setShowTitle]  = useState(false);
    const [showQuote,   setShowQuote]  = useState(false);
    const [showTools,   setShowTools]  = useState(false);
    const [showNav,     setShowNav]    = useState(false);
    const [startMusic,  setStartMusic] = useState(false);
+   const [eerieStop,   setEerieStop]  = useState(false);
    const [glitch, setGlitch]          = useState(false);
+
+   useEffect(() => {
+      if (localStorage.getItem(SHAFT_KEY)) {
+         navigate({ to: '/salary' });
+      }
+   }, [navigate]);
 
    useEffect(() => {
       if (!document.getElementById('landing-keyframes')) {
@@ -206,9 +333,9 @@ export function Landing() {
    }, [showTitle]);
 
    const handleDrop = useCallback(() => {
+      localStorage.setItem(SHAFT_KEY, '1');
       setPhase('impact');
-
-      // music fires at the exact drop, content staggers in quickly after
+      setEerieStop(true);
       setStartMusic(true);
       setTimeout(() => setPhase('after'),  900);
       setTimeout(() => setShowTitle(true), 1000);
@@ -216,6 +343,9 @@ export function Landing() {
       setTimeout(() => setShowTools(true), 2200);
       setTimeout(() => setShowNav(true),   2800);
    }, []);
+
+   const handleStop = useCallback(() => {}, []);
+
 
    const isAfter  = phase === 'after';
    const isImpact = phase === 'impact';
@@ -244,6 +374,9 @@ export function Landing() {
                   animation: 'scanroll 8s linear infinite',
                }} />
          )}
+
+         {/* eerie ambient drone — plays until impact */}
+         <EerieScore stop={eerieStop} />
 
          {/* hidden music player — starts after drop */}
          <PixiesPlayer autostart={startMusic} />
@@ -286,8 +419,8 @@ export function Landing() {
                   </VStack>
                </Reveal>
 
-               {/* video — always visible */}
-               <DrexelShaftVideo onDrop={handleDrop} />
+               {/* video */}
+               <DrexelShaftVideo onDrop={handleDrop} onStop={handleStop} />
 
                {/* quote */}
                <Reveal show={showQuote} delay={0}>
