@@ -1,0 +1,62 @@
+{
+  "version": "7",
+  "dialect": "postgresql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "7",
+      "when": 1771820642088,
+      "tag": "0000_elite_lifeguard",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1771881971712,
+      "tag": "0001_luxuriant_klaw",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1771882771626,
+      "tag": "0002_abandoned_agent_zero",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1771888842667,
+      "tag": "0003_striped_unicorn",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1771889046977,
+      "tag": "0004_colorful_white_tiger",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1771890537844,
+      "tag": "0005_cooing_gargoyle",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1771890718287,
+      "tag": "0006_needy_wild_child",
+      "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1771892733484,
+      "tag": "0007_whole_warstar",
+      "breakpoints": true
+    }
+  ]
+}

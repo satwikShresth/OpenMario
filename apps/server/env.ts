@@ -11,9 +11,8 @@ export const env = createEnv({
       DATABASE_URL: z.url(),
       MEILI_HOST: z.url(),
       MEILI_MASTER_KEY: z.string(),
-      NEO4J_URI: z.url(),
-      NEO4J_USERNAME: z.string(),
-      NEO4J_PASSWORD: z.string()
+      BETTER_AUTH_SECRET: z.string(),
+      BETTER_AUTH_BASE_URL: z.url()
    },
    clientPrefix: 'VITE_',
    client: {},

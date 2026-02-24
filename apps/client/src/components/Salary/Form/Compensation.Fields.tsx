@@ -2,7 +2,7 @@ import { Badge, Field, HStack, InputGroup, NumberInput, Slider, Stack } from '@c
 import { useMobile } from '@/hooks';
 import type { withForm } from './context';
 import { capitalizeWords, defaultValues, isInvalid, marksMaker } from '@/helpers';
-import { LuDollarSign } from 'react-icons/lu';
+import { DollarSignIcon } from '@/components/icons';
 
 export default (withForm: withForm) =>
    withForm({
@@ -125,7 +125,7 @@ export default (withForm: withForm) =>
                                        onValueChange={({ value }) =>
                                           handleChange(parseInt(value[0]!))}
                                     >
-                                       <InputGroup startElement={<LuDollarSign />} endElement='/hr'>
+                                       <InputGroup startElement={<DollarSignIcon size={14} />} endElement='/hr'>
                                           <NumberInput.Input />
                                        </InputGroup>
                                     </NumberInput.Root>

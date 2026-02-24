@@ -1,6 +1,5 @@
-import { createFileRoute } from '@tanstack/react-router';
+import { Outlet, createFileRoute } from '@tanstack/react-router';
 import { Dialog, Portal } from '@chakra-ui/react';
-import { Outlet } from '@tanstack/react-router';
 
 export const Route = createFileRoute('/salary/_dialog')({
    component: () => {

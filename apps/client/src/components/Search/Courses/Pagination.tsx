@@ -10,7 +10,7 @@ import {
    Select,
    Text,
 } from '@chakra-ui/react';
-import { LuChevronLeft, LuChevronRight } from 'react-icons/lu';
+import { ChevronLeftIcon, ChevronRightIcon } from '@/components/icons';
 import { useMobile } from '@/hooks';
 
 export const Pagination = () => {
@@ -90,7 +90,7 @@ export const Pagination = () => {
                   <ButtonGroup gap={3} size='sm' variant='ghost'>
                      <CPagination.PrevTrigger asChild>
                         <IconButton size='sm' disabled={!instantPagination.isFirstPage === false}>
-                           <LuChevronLeft />
+                           <ChevronLeftIcon />
                         </IconButton>
                      </CPagination.PrevTrigger>
 
@@ -103,7 +103,7 @@ export const Pagination = () => {
 
                      <CPagination.NextTrigger asChild>
                         <IconButton size='sm' disabled={!instantPagination.isLastPage === false}>
-                           <LuChevronRight />
+                           <ChevronRightIcon />
                         </IconButton>
                      </CPagination.NextTrigger>
                   </ButtonGroup>
@@ -113,7 +113,7 @@ export const Pagination = () => {
                   <ButtonGroup variant='ghost' size='sm' gap={1}>
                      <CPagination.PrevTrigger asChild>
                         <IconButton>
-                           <LuChevronLeft />
+                           <ChevronLeftIcon />
                         </IconButton>
                      </CPagination.PrevTrigger>
 
@@ -130,7 +130,7 @@ export const Pagination = () => {
 
                      <CPagination.NextTrigger asChild>
                         <IconButton>
-                           <LuChevronRight />
+                           <ChevronRightIcon />
                         </IconButton>
                      </CPagination.NextTrigger>
                   </ButtonGroup>

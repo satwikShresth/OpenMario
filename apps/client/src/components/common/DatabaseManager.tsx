@@ -11,11 +11,11 @@ import {
    VStack,
    useDialog
 } from '@chakra-ui/react';
-import { MdStorage, MdDownload, MdWarning } from 'react-icons/md';
+import { DatabaseIcon, DownloadIcon, WarningIcon } from '@/components/icons';
 import { exportDatabaseAsCSV, clearDatabaseAndReload } from '@/helpers/database';
 import { toaster } from '@/components/ui/toaster';
 
-export function DatabaseManagerDialog() {
+export function DatabaseManagerDialog({ trigger }: { trigger?: React.ReactElement } = {}) {
    const dialog = useDialog();
    const [isExporting, setIsExporting] = React.useState(false);
    const [isClearing, setIsClearing] = React.useState(false);
@@ -85,14 +85,12 @@ export function DatabaseManagerDialog() {
             motionPreset="slide-in-bottom"
          >
             <Dialog.Trigger asChild>
-               <Button
-                  variant="ghost"
-                  _hover={{ color: 'accent' }}
-                  borderRadius="lg"
-               >
-                  <MdStorage />
-                  Database
-               </Button>
+               {trigger ?? (
+                  <Button variant="ghost" _hover={{ color: 'accent' }} borderRadius="lg">
+                     <DatabaseIcon />
+                     Database
+                  </Button>
+               )}
             </Dialog.Trigger>
             <Portal>
                <Dialog.Backdrop />
@@ -101,7 +99,7 @@ export function DatabaseManagerDialog() {
                      <Dialog.Header>
                         <Dialog.Title>
                            <Box display="flex" alignItems="center" gap={2}>
-                              <MdStorage />
+                              <DatabaseIcon />
                               Database Management
                            </Box>
                         </Dialog.Title>
@@ -125,7 +123,7 @@ export function DatabaseManagerDialog() {
                                     colorPalette={'blue'}
                                     width="full"
                                  >
-                                    <MdDownload />
+                                    <DownloadIcon />
                                     Export Data as CSV
                                  </Button>
                               </Box>
@@ -138,7 +136,7 @@ export function DatabaseManagerDialog() {
                                  colorPalette={'orange'}
                               >
                                  <Box display="flex" alignItems="start" gap={2} mb={3}>
-                                    <MdWarning color='orange' />
+                                    <WarningIcon color='orange' />
                                     <Heading size="sm" color="orange" >
                                        Danger Zone
                                     </Heading>
@@ -169,7 +167,7 @@ export function DatabaseManagerDialog() {
                                  borderWidth={2}
                               >
                                  <Box display="flex" alignItems="center" gap={2} mb={3}>
-                                    <MdWarning size={24} color="red" />
+                                    <WarningIcon size={24} color="red" />
                                     <Heading size="md" color="red.700">
                                        Are you absolutely sure?
                                     </Heading>

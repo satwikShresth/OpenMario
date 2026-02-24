@@ -11,7 +11,7 @@ import {
 } from '@chakra-ui/react';
 import { useForm } from '@tanstack/react-form';
 import { useEffect, useRef, useState } from 'react';
-import { HiCheck, HiX } from 'react-icons/hi';
+import { CheckIcon, CloseIcon } from '@/components/icons';
 import { useMobile } from '@/hooks';
 import { capitalizeWords, coopCycle, coopYear, marksMaker, programLevel } from '@/helpers';
 import { useSearch } from '@tanstack/react-router';
@@ -36,7 +36,6 @@ export default () => {
             search: (prev) => ({
                ...prev,
                search: searchInput.trim() || undefined,
-               pageIndex: 1,
             }),
             reloadDocument: false,
             resetScroll: false,
@@ -66,7 +65,6 @@ export default () => {
                search: (prev) => ({
                   ...prev,
                   ...values,
-                  pageIndex: 1,
                }),
                reloadDocument: false,
                resetScroll: false,
@@ -106,9 +104,9 @@ export default () => {
                         <Switch.Control>
                            <Switch.Thumb>
                               <Switch.ThumbIndicator
-                                 fallback={<HiX color='black' />}
+                                 fallback={<CloseIcon color='black' />}
                               >
-                                 <HiCheck />
+                                 <CheckIcon />
                               </Switch.ThumbIndicator>
                            </Switch.Thumb>
                         </Switch.Control>

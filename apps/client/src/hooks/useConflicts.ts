@@ -482,9 +482,9 @@ export function useConflicts(currentTerm: string, currentYear: number) {
                queryClient
                   .fetchQuery(
                      orpc.course.prerequisites.queryOptions({
-                        input: { course_id: course.courseId },
+                        input: { params: { course_id: course.courseId } },
                         staleTime: 5 * 60 * 1000,
-                        gcTime: 10 * 60 * 1000,
+                        gcTime: 10 * 60 * 1000
                      })
                   )
                   .catch(error => {
@@ -496,9 +496,9 @@ export function useConflicts(currentTerm: string, currentYear: number) {
                queryClient
                   .fetchQuery(
                      orpc.course.corequisites.queryOptions({
-                        input: { course_id: course.courseId },
+                        input: { params: { course_id: course.courseId } },
                         staleTime: 5 * 60 * 1000,
-                        gcTime: 10 * 60 * 1000,
+                        gcTime: 10 * 60 * 1000
                      })
                   )
                   .catch(error => {
@@ -506,12 +506,12 @@ export function useConflicts(currentTerm: string, currentYear: number) {
                         `Error fetching corequisites for ${course.courseId}:`,
                         error
                      );
-                  }),
+                  })
             ]);
 
             const data = {
                prerequisites: prereqResult?.data?.prerequisites ?? [],
-               corequisites: coreqResult?.data?.corequisites ?? [],
+               corequisites: coreqResult?.data?.corequisites ?? []
             };
 
             // Check for missing corequisites

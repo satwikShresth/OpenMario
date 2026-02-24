@@ -9,10 +9,8 @@ import { Stats } from '@/components/Search/Stats'
 import { useEffect, useRef, useState } from 'react'
 import type { Section } from '@/types'
 import { Switch, Tooltip } from '@/components/ui'
-import { MdWarning, MdFilterList } from 'react-icons/md'
-import { RiHeartFill, RiHeartLine } from 'react-icons/ri'
+import { WarningIcon, FilterIcon, HeartFilledIcon, HeartIcon } from '@/components/icons'
 import { Tag } from '@/components/ui'
-import { useSearch, useNavigate } from '@tanstack/react-router'
 
 // Helper function to check if two time ranges overlap
 const timeRangesOverlap = (
@@ -127,17 +125,16 @@ export const checkCourseOverlap = (section: Section, dbEvents: any[]): boolean =
   })
 }
 
-export const PlanCourses = () => {
-  const { term: currentTerm, year: currentYear, search: searchQuery } = useSearch({ from: '/_search/courses/plan' })
-  const navigate = useNavigate({ from: '/courses/plan' })
+export const PlanCourses = ({ currentTerm, currentYear }: { currentTerm: "Fall" | "Winter" | "Spring" | "Summer"; currentYear: number }) => {
   const isMobile = useMobile()
+  const [searchQuery, setSearchQuery] = useState<string | undefined>(undefined)
   const [hideCoursesOverlap, setHideCoursesOverlap] = useState(false)
   const [hideUnavailableOverlap, setHideUnavailableOverlap] = useState(false)
   const [showOnlyLiked, setShowOnlyLiked] = useState(false)
   const [filtersOpen, setFiltersOpen] = useState(false)
 
   const handleSearchChange = (query: string) => {
-    navigate({ search: { term: currentTerm, year: currentYear, search: query || undefined } })
+    setSearchQuery(query || undefined)
   }
 
   // Fetch sections that are planned for current term/year (to get CRNs)
@@ -203,7 +200,7 @@ export const PlanCourses = () => {
   return (
     <Box
       w="full"
-      h='95%'
+      h="full"
       bg="bg"
       borderRadius="lg"
       borderWidth="1px"
@@ -241,8 +238,8 @@ export const PlanCourses = () => {
               <ChakraSwitch.HiddenInput />
               <ChakraSwitch.Control>
                 <ChakraSwitch.Thumb>
-                  <ChakraSwitch.ThumbIndicator fallback={<Icon as={RiHeartLine} />}>
-                    <Icon as={RiHeartFill} />
+                  <ChakraSwitch.ThumbIndicator fallback={<Icon as={HeartIcon} />}>
+                    <Icon as={HeartFilledIcon} />
                   </ChakraSwitch.ThumbIndicator>
                 </ChakraSwitch.Thumb>
               </ChakraSwitch.Control>
@@ -254,7 +251,7 @@ export const PlanCourses = () => {
               variant="outline"
               onClick={() => setFiltersOpen(true)}
             >
-              <Icon as={MdFilterList} />
+              <Icon as={FilterIcon} />
               Filters
             </Button>
           </HStack>
@@ -364,8 +361,8 @@ export const PlanCourses = () => {
       </Dialog.Root>
 
       {/* Scrollable Content */}
-      <ScrollArea.Root flex="1" minH="0" variant="hover">
-        <ScrollArea.Viewport>
+      <ScrollArea.Root flex="1" minH="0" overflow="hidden" variant="hover">
+        <ScrollArea.Viewport h="100%">
           <ScrollArea.Content px={4} pb={4}>
             <InfiniteHitsList
               currentTerm={currentTerm}
@@ -430,7 +427,7 @@ const InfiniteHitsList = ({
   })
 
   return (
-    <Box>
+    <Box maxW="520px" mx="auto" w="full">
       <Flex direction="column" gap={3} width="full">
         {filteredItems.map((section) => {
           const hasCourseOverlap = checkCourseOverlap(section, allEvents)
@@ -482,7 +479,7 @@ const InfiniteHitsList = ({
                     alignItems="center"
                     gap={1}
                   >
-                    <Icon as={MdWarning} />
+                    <Icon as={WarningIcon} />
                     <Text>
                       {hasCourseOverlap && hasUnavailableOverlap
                         ? 'Both Conflicts'

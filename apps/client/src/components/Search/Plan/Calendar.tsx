@@ -1,4 +1,4 @@
-import { VStack, Box } from '@chakra-ui/react'
+import { Box } from '@chakra-ui/react'
 import FullCalendar from '@fullcalendar/react'
 import timeGridPlugin from '@fullcalendar/timegrid'
 import interactionPlugin from '@fullcalendar/interaction'
@@ -8,7 +8,6 @@ import { planEventsCollection, sectionsCollection, termsCollection } from '@/hel
 import { useLiveQuery, eq, and } from '@tanstack/react-db'
 import { css } from './calender.css'
 import { ConfirmDialog } from './ConfirmDialog'
-import { useSearch } from '@tanstack/react-router'
 import { useConflicts } from '@/hooks/useConflicts'
 
 type EventType = 'unavailable' | 'course'
@@ -22,8 +21,7 @@ const getTermMonth = (term: string): number => {
   }
 }
 
-export const PlanCalendar = () => {
-  const { term: currentTerm, year: currentYear } = useSearch({ from: '/_search/courses/plan' })
+export const PlanCalendar = ({ currentTerm, currentYear }: { currentTerm: string; currentYear: number }) => {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
   const [eventToDelete, setEventToDelete] = useState<{ id: string; crn: string | null; type: EventType } | null>(null)
   const calendarRef = useRef<FullCalendar>(null)
@@ -309,11 +307,12 @@ export const PlanCalendar = () => {
   initialDate.setDate(initialDate.getDate() + mondayOffset)
 
   return (
-    <VStack align='stretch' gap={2}>
-
+    <Box h="full" display="flex" flexDirection="column">
+      {/* Calendar fills all available panel height and scrolls internally */}
       <Box
-        w="full"
-        minH="400px"
+        flex="1"
+        minH="0"
+        overflow="hidden"
         bg="bg"
         borderRadius="lg"
         borderWidth="1px"
@@ -337,8 +336,7 @@ export const PlanCalendar = () => {
           hiddenDays={[0]}
           allDaySlot={false}
           expandRows={false}
-          height="auto"
-          contentHeight="auto"
+          height="100%"
           slotDuration="00:30:00"
           slotLabelInterval="01:00:00"
           slotLabelFormat={{
@@ -359,7 +357,6 @@ export const PlanCalendar = () => {
         />
       </Box>
 
-      {/* Delete Confirmation Dialog */}
       <ConfirmDialog
         setDeleteDialogOpen={setDeleteDialogOpen}
         deleteDialogOpen={deleteDialogOpen}
@@ -374,28 +371,18 @@ export const PlanCalendar = () => {
           const event = dbEvents?.find((e: any) => e.id === eventToDelete)
           if (event?.type !== 'course') return undefined
 
-          // Format the event time
-          const formatTime = (date: Date) => {
-            return date.toLocaleTimeString('en-US', {
-              hour: 'numeric',
-              minute: '2-digit',
-              hour12: true
-            })
-          }
-
-          const startTime = event.start ? formatTime(new Date(event.start)) : undefined
-          const endTime = event.end ? formatTime(new Date(event.end)) : undefined
-          const dayName = event.start ? new Date(event.start).toLocaleDateString('en-US', { weekday: 'long' }) : undefined
+          const formatTime = (date: Date) =>
+            date.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true })
 
           return {
             title: event.title || undefined,
-            days: dayName,
-            startTime,
-            endTime
+            days: event.start ? new Date(event.start).toLocaleDateString('en-US', { weekday: 'long' }) : undefined,
+            startTime: event.start ? formatTime(new Date(event.start)) : undefined,
+            endTime: event.end ? formatTime(new Date(event.end)) : undefined,
           }
         })()}
       />
-    </VStack>
+    </Box>
   )
 }
 

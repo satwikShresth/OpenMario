@@ -1,7 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router';
 import { toaster } from '@/components/ui/toaster';
 import { Salary } from '@/components/Salary';
-import type { SubmissionAggregate } from '@openmario/server/contracts';
+import type { SubmissionAggregate } from '@openmario/contracts';
 import { useMutation } from '@tanstack/react-query';
 import { orpc } from '@/helpers';
 import { submissionsCollection } from '@/helpers';
@@ -42,7 +42,7 @@ export const Route = createFileRoute('/salary/_dialog/_form/report')({
 						syncedAt: new Date(),
 						createdAt: new Date(),
 						updatedAt: new Date()
-					});
+					})
 					navigate({ to: '/salary' });
 				})
 				.catch(console.error);
@@ -57,14 +57,14 @@ export const Route = createFileRoute('/salary/_dialog/_form/report')({
 					description: 'Something wrong with the submission',
 				},
 				loading: { title: 'Reporting...', description: 'Please wait' },
-			});
-		};
+			})
+		}
 
 		return (
 			<Salary.Form
 				onSubmit={onSubmit}
 			/>
-		);
+		)
 	},
 });
 

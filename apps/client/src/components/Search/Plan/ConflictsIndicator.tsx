@@ -1,7 +1,6 @@
 import { Button, Icon, HoverCard as ChakraHoverCard, Dialog as ChakraDialog, Portal, VStack, Text, ScrollArea, HStack, Badge } from '@chakra-ui/react'
-import { MdWarning, MdOpenInNew, MdCheckCircle } from 'react-icons/md'
+import { WarningIcon, ExternalLinkIcon, CheckCircleIcon } from '@/components/icons'
 import { useRefinementList } from 'react-instantsearch'
-import { useSearch } from '@tanstack/react-router'
 import { useConflicts } from '@/hooks/useConflicts'
 import { coursesCollection } from '@/helpers/collections'
 import { useState } from 'react'
@@ -58,8 +57,12 @@ const getConflictLabel = (type: ConflictType) => {
   }
 }
 
-export const ConflictsIndicator = () => {
-  const { term: currentTerm, year: currentYear } = useSearch({ from: '/_search/courses/plan' })
+type ConflictsIndicatorProps = {
+  currentTerm: string
+  currentYear: number
+}
+
+export const ConflictsIndicator = ({ currentTerm, currentYear }: ConflictsIndicatorProps) => {
   const courseRefinement = useRefinementList({ attribute: 'course' })
   const [dialogOpen, setDialogOpen] = useState(false)
 
@@ -173,7 +176,7 @@ export const ConflictsIndicator = () => {
             size="xs"
             onClick={() => setDialogOpen(true)}
           >
-            <Icon as={MdWarning} />
+            <Icon as={WarningIcon} />
             {conflicts.length} Conflicts
           </Button>
         </HoverCard.Trigger>
@@ -224,7 +227,7 @@ export const ConflictsIndicator = () => {
               <Dialog.Header>
                 <Dialog.Title>
                   <HStack>
-                    <Icon as={MdWarning} color="orange.500" />
+                    <Icon as={WarningIcon} color="orange.500" />
                     <Text>Schedule Conflicts ({conflicts.length})</Text>
                   </HStack>
                 </Dialog.Title>
@@ -343,7 +346,7 @@ export const ConflictsIndicator = () => {
                                                         colorPalette="green"
                                                         onClick={() => handleMarkAsTaken(course)}
                                                       >
-                                                        <Icon as={MdCheckCircle} />
+                                                        <Icon as={CheckCircleIcon} />
                                                         Taken
                                                       </Button>
                                                       <Button
@@ -355,7 +358,7 @@ export const ConflictsIndicator = () => {
                                                           setDialogOpen(false)
                                                         }}
                                                       >
-                                                        <Icon as={MdOpenInNew} />
+                                                        <Icon as={ExternalLinkIcon} />
                                                         Add
                                                       </Button>
                                                     </HStack>
@@ -396,7 +399,7 @@ export const ConflictsIndicator = () => {
                                               setDialogOpen(false)
                                             }}
                                           >
-                                            <Icon as={MdOpenInNew} />
+                                            <Icon as={ExternalLinkIcon} />
                                             Add to Schedule
                                           </Button>
                                         </HStack>

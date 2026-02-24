@@ -11,13 +11,12 @@ import {
    VStack,
 } from '@chakra-ui/react';
 import DataTableDialog from './Dialog';
-import { HiColorSwatch } from 'react-icons/hi';
+import { EmptyIcon, SortIcon, SortAscIcon, SortDescIcon } from '@/components/icons';
 import { useCallback, useState } from 'react';
-import { FaSort, FaSortDown, FaSortUp } from 'react-icons/fa';
 import { Tooltip } from '@/components/ui/tooltip.jsx';
 import { Link } from '@tanstack/react-router';
 import { useSearch } from '@tanstack/react-router';
-import type { SubmissionListItem, SubmissionListResponse, SubmissionQuery } from '@openmario/server/contracts';
+import type { SubmissionListItem, SubmissionListResponse, SubmissionQuery } from '@openmario/contracts';
 
 export default (
    { data, count }: {
@@ -50,7 +49,7 @@ export default (
                const sort: 'ASC' | 'DESC' = (prev?.sortField === value)
                   ? (prev?.sort === 'DESC') ? 'ASC' : 'DESC'
                   : 'DESC';
-               return { ...prev, pageIndex: 1, sort, sortField: value };
+               return { ...prev, sort, sortField: value };
             }}
          >
             <HStack justify='space-between'>
@@ -62,8 +61,8 @@ export default (
                >
                   <Icon size='sm'>
                      {(search!.sortField === value)
-                        ? (search!.sort === 'ASC') ? <FaSortUp /> : <FaSortDown />
-                        : <FaSort />}
+                        ? (search!.sort === 'ASC') ? <SortAscIcon /> : <SortDescIcon />
+                        : <SortIcon />}
                   </Icon>
                </Tooltip>
             </HStack>
@@ -184,7 +183,7 @@ export default (
                            <EmptyState.Root>
                               <EmptyState.Content>
                                  <EmptyState.Indicator>
-                                    <HiColorSwatch />
+                                    <EmptyIcon />
                                  </EmptyState.Indicator>
                                  <VStack textAlign='center'>
                                     <EmptyState.Title>No results found</EmptyState.Title>

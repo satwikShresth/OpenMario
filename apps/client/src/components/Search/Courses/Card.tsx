@@ -14,30 +14,41 @@ import {
 } from '@chakra-ui/react';
 import type { Section } from '@/types';
 import { Tag, Tooltip } from '@/components/ui';
-import { BiLinkExternal } from 'react-icons/bi';
+import { ExternalLinkIcon, HeartFilledIcon, HeartIcon } from '@/components/icons';
 import { Link, linkOptions, useMatch } from '@tanstack/react-router';
 import { getDifficultyColor, getRatingColor, weekItems } from './helpers';
 import { formatTime, orpc } from '@/helpers';
-import { useHits } from 'react-instantsearch';
+import { useInfiniteHits } from 'react-instantsearch';
+import { useEffect, useRef } from 'react';
+import { Spinner } from '@chakra-ui/react';
 import { useMobile } from '@/hooks';
 import Req from './Req.tsx';
 import { useQuery } from '@tanstack/react-query';
 import Availabilites from './Availabilites.tsx';
-import { RiHeartFill, RiHeartLine } from 'react-icons/ri';
 import { sectionsCollection, termsCollection, coursesCollection } from '@/helpers/collections';
 import { eq, and, useLiveQuery } from '@tanstack/react-db';
 import { toaster } from '@/components/ui/toaster';
 
 export const Cards = () => {
-   const infiniteHits = useHits<Section>();
+   const { items, showMore, isLastPage } = useInfiniteHits<Section>();
+   const sentinelRef = useRef<HTMLDivElement>(null);
+
+   useEffect(() => {
+      const el = sentinelRef.current;
+      if (!el) return;
+      const observer = new IntersectionObserver(
+         entries => {
+            if (entries[0]!.isIntersecting && !isLastPage) showMore();
+         },
+         { threshold: 0.1 }
+      );
+      observer.observe(el);
+      return () => observer.disconnect();
+   }, [isLastPage, showMore]);
+
    return (
-      <Flex
-         direction='column'
-         gap={5}
-         width='full'
-      >
-         <For each={infiniteHits.items}
-         >
+      <Flex direction='column' gap={5} width='full'>
+         <For each={items}>
             {(section) => (
                <Card
                   key={`${section.crn}-${section.instruction_method}-${section.instruction_type}`}
@@ -45,6 +56,9 @@ export const Cards = () => {
                />
             )}
          </For>
+         <Box ref={sentinelRef} py={3} display='flex' justifyContent='center'>
+            {!isLastPage && items.length > 0 && <Spinner size='sm' color='fg.muted' />}
+         </Box>
       </Flex>
    );
 };
@@ -53,7 +67,7 @@ export const Card = ({ section }: { section: Section }) => {
    const isMobile = useMobile();
    const match = useMatch({ strict: false });
    const { data: courseRaw } = useQuery(
-      orpc.course.course.queryOptions({ input: { course_id: section.course_id } })
+      orpc.course.course.queryOptions({ input: { params: { course_id: section.course_id } } })
    );
    const { data: courseInfo } = courseRaw ?? {};
 
@@ -84,7 +98,7 @@ export const Card = ({ section }: { section: Section }) => {
                         width='full'
                      >
                         <Link
-                           to={`${(match.fullPath) as '/courses/plan' | '/courses/profile' | '/courses/explore'}/$course_id`}
+                           to={`${(match.fullPath) as '/courses/explore'}/$course_id`}
                            params={{ course_id: section?.course_id! }}
                            reloadDocument={false}
                            resetScroll={false}
@@ -129,7 +143,7 @@ export const Card = ({ section }: { section: Section }) => {
                <Flex>
                   {section.days && section.days.length > 0
                      ? (
-                        <HStack align='normal'>
+                        <HStack align='center'>
                            <Tag
                               size='xl'
                               width={isMobile ? 'full' : 'fit-content'}
@@ -138,9 +152,8 @@ export const Card = ({ section }: { section: Section }) => {
                               justifyContent='center'
                               alignItems='center'
                               px={4}
-                              py={2}
+                              py={3}
                               maxW='64'
-                              maxH='28'
                            >
                               <VStack>
                                  <HStack
@@ -291,7 +304,7 @@ export const Card = ({ section }: { section: Section }) => {
                                              <Text fontSize={{ base: 'xs', md: 'sm' }}>
                                                 RMP
                                              </Text>
-                                             <BiLinkExternal size={14} />
+                                             <ExternalLinkIcon size={14} />
                                           </HStack>
                                        </Tag>
                                     )}
@@ -464,7 +477,7 @@ const CardButtons = (
                borderColor: likedSection?.liked ? 'pink.600' : 'pink.400',
             }}
          >
-            <Icon as={likedSection?.liked ? RiHeartFill : RiHeartLine} size='lg' />
+            <Icon as={likedSection?.liked ? HeartFilledIcon : HeartIcon} size='lg' />
          </IconButton>
          <Clipboard.Root
             value={globalThis.location.origin + globalThis.location.pathname +

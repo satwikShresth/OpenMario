@@ -14,18 +14,19 @@ import {
   Button,
   Kbd,
   VStack,
-  Heading,
+  Separator,
   Badge,
   HStack,
   Popover,
   Input,
   Text,
+  Flex,
+  Box,
   Spinner,
   Icon,
-  Container
 } from '@chakra-ui/react';
-import { useState, useMemo, useEffectEvent, useEffect } from 'react';
-import { MdAdd, MdCheckCircle, MdLightbulb } from 'react-icons/md';
+import { useState, useEffectEvent, useEffect } from 'react';
+import { AddIcon, CheckCircleIcon, LightbulbIcon } from '@/components/icons';
 import { useInstantSearch, Configure } from 'react-instantsearch';
 import { toaster } from '@/components/ui/toaster';
 import { useSearchContext } from '@/components/Search';
@@ -33,7 +34,8 @@ import { LoadingComponent } from '@/components/common';
 import { useMigration } from '@/contexts/MigrationContext';
 
 export const Route = createFileRoute('/_search/courses/profile')({
-  component: RouteComponent
+  beforeLoad: () => ({ getLabel: () => 'Profile' }),
+  component: RouteComponent,
 });
 
 type CombinedCourseData = {
@@ -77,13 +79,9 @@ function CourseSearchPopover({
   const courses = results.__isArtificial ? [] : results.hits;
 
   // Build filter string to exclude existing courses
-  const filterString = useMemo(() => {
-    if (existingCourseIds.length === 0) return 'distinct="course_id"';
-
-    // Create NOT filters for each existing course (using 'course' field, not 'id')
-    const notFilters = existingCourseIds.map(id => `course_id != "${id}"`).join(' AND ');
-    return notFilters;
-  }, [existingCourseIds]);
+  const filterString = existingCourseIds.length === 0
+    ? 'distinct="course_id"'
+    : existingCourseIds.map(id => `course_id != "${id}"`).join(' AND ');
 
   const handleAddCourse = (course: any, status: 'taken' | 'considering') => {
     onAddCourse(course, status);
@@ -94,8 +92,8 @@ function CourseSearchPopover({
   return (
     <Popover.Root open={open} onOpenChange={(e) => setOpen(e.open)}>
       <Popover.Trigger asChild>
-        <Button colorPalette="blue" size="md">
-          <Icon as={MdAdd} />
+        <Button variant="outline" size="sm">
+          <Icon as={AddIcon} />
           Add Course
         </Button>
       </Popover.Trigger>
@@ -156,7 +154,7 @@ function CourseSearchPopover({
                             variant="outline"
                             onClick={() => handleAddCourse(course, 'taken')}
                           >
-                            <Icon as={MdCheckCircle} />
+                            <Icon as={CheckCircleIcon} />
                             Taken
                           </Button>
                           <Button
@@ -165,7 +163,7 @@ function CourseSearchPopover({
                             variant="outline"
                             onClick={() => handleAddCourse(course, 'considering')}
                           >
-                            <Icon as={MdLightbulb} />
+                            <Icon as={LightbulbIcon} />
                             Consider
                           </Button>
                         </HStack>
@@ -193,33 +191,13 @@ function RouteComponent() {
   const navigate = useNavigate();
   const { status } = useMigration();
 
-  // Show loading if database is still initializing
-  if (status === 'pending' || status === 'initializing') {
-    return (
-      <LoadingComponent
-        title="Initializing Database"
-        message="Setting up your local database and running migrations. This may take a moment..."
-        variant="processing"
-      />
-    )
-  }
+  // ── all hooks must be called unconditionally before any early returns ──
 
-  // Show error if migration failed
-  if (status === 'error') {
-    return (
-      <Container maxW="container.xl" py={4}>
-        <Text color="red.500">Failed to initialize database. Please refresh the page.</Text>
-      </Container>
-    )
-  }
-
-  // Fetch all courses
   const { data: allCourses } = useLiveQuery(
     q => q.from({ courses: coursesCollection }).select(({ courses }) => ({ ...courses })),
     []
   );
 
-  // Fetch all sections with their course data
   const { data: allSections } = useLiveQuery(
     q =>
       q
@@ -236,7 +214,6 @@ function RouteComponent() {
     []
   );
 
-  // Fetch all plan events
   const { data: allPlanEvents } = useLiveQuery(
     q =>
       q
@@ -253,63 +230,64 @@ function RouteComponent() {
     []
   );
 
-  // Combine data
-  const combinedData: CombinedCourseData[] = [];
+  const combinedData: CombinedCourseData[] = (allCourses ?? []).map((course) => {
+    const courseSections = allSections?.filter((s) => s.courseId === course.id) || [];
+    const crns = courseSections.map((s) => s.crn);
+    const hasLikedSection = courseSections.some((s: any) => s.liked);
+    const plannedTerm = courseSections.length > 0 && courseSections[0]!.term
+      ? termsCollection.get(courseSections[0]!.term)
+      : null;
 
-  if (allCourses) {
-    allCourses.forEach((course) => {
-      // Find all sections for this course
-      const courseSections = allSections?.filter((s) => s.courseId === course.id) || [];
-      const crns = courseSections.map((s) => s.crn);
+    let courseStatus: 'considering' | 'planned' | 'liked' | 'taken';
+    if (course.completed) {
+      courseStatus = 'taken';
+    } else if (hasLikedSection) {
+      courseStatus = 'liked';
+    } else if (courseSections.length > 0) {
+      courseStatus = 'planned';
+    } else {
+      courseStatus = 'considering';
+    }
 
-      // Check if any section is liked
-      const hasLikedSection = courseSections.some((s: any) => s.liked);
+    return {
+      courseId: course.id,
+      courseName: course.title,
+      courseNumber: course.course,
+      credits: course.credits,
+      status: courseStatus,
+      crns,
+      plannedTerm: plannedTerm ? `${plannedTerm.term} ${plannedTerm.year}` : '-'
+    };
+  });
 
-      // Find all planned terms for this course's CRNs (deduplicated)
-      const plannedTerm = courseSections.length > 0 && courseSections[0]!.term
-        ? termsCollection.get(courseSections[0]!.term)
-        : null;
+  const takenCredits = combinedData
+    .filter(item => item.status === 'taken' && item.credits)
+    .reduce((sum, item) => sum + (item.credits || 0), 0);
 
-      // Determine status
-      let status: 'considering' | 'planned' | 'liked' | 'taken';
-      if (course.completed) {
-        status = 'taken';
-      } else if (hasLikedSection) {
-        status = 'liked';
-      } else if (courseSections.length > 0) {
-        status = 'planned';
-      } else {
-        status = 'considering';
-      }
+  const activeCredits = combinedData
+    .filter(item => item.status !== 'taken' && item.credits)
+    .reduce((sum, item) => sum + (item.credits || 0), 0);
 
-      combinedData.push({
-        courseId: course.id,
-        courseName: course.title,
-        courseNumber: course.course,
-        credits: course.credits,
-        status,
-        crns,
-        plannedTerm: plannedTerm ? `${plannedTerm.term} ${plannedTerm.year}` : '-'
-      });
-    });
+  const existingCourseIds = combinedData.map(item => item.courseId);
+
+  // ── early returns after all hooks ──
+
+  if (status === 'pending' || status === 'initializing') {
+    return (
+      <LoadingComponent
+        title="Initializing Database"
+        message="Setting up your local database and running migrations. This may take a moment..."
+        variant="processing"
+      />
+    )
+  }
+
+  if (status === 'error') {
+    return <Text color="red.500">Failed to initialize database. Please refresh the page.</Text>
   }
 
   const hasSelection = selection.length > 0;
   const indeterminate = hasSelection && selection.length < combinedData.length;
-
-  // Calculate taken credits
-  const takenCredits = useMemo(() => {
-    return combinedData
-      .filter(item => item.status === 'taken' && item.credits)
-      .reduce((sum, item) => sum + (item.credits || 0), 0);
-  }, [combinedData]);
-
-  // Calculate planned + considering + liked credits (all non-taken)
-  const activeCredits = useMemo(() => {
-    return combinedData
-      .filter(item => item.status !== 'taken' && item.credits)
-      .reduce((sum, item) => sum + (item.credits || 0), 0);
-  }, [combinedData]);
 
   // Check if all selected items are liked
   const selectedItems = combinedData.filter(item => selection.includes(item.courseId));
@@ -473,10 +451,6 @@ function RouteComponent() {
     }
   };
 
-  // Get list of existing course IDs (map from course.id to course_id for filtering)
-  const existingCourseIds = useMemo(() => {
-    return combinedData.map(item => item.courseId);
-  }, [combinedData]);
 
   const handleRowClick = (courseId: string) => {
     navigate({
@@ -487,34 +461,21 @@ function RouteComponent() {
 
   return (
     <>
-      <VStack align="stretch" gap={6} p={6}>
-        <HStack justify="space-between" align="center">
-          <Heading size="xl">Course Profile</Heading>
+      <VStack align="stretch" gap={4} maxW='5xl' mx='auto' w='full'>
+        <Flex justify='space-between' align='center' wrap='wrap' gap={3}>
           <HStack gap={3}>
+            <Text fontSize='2xl' fontWeight='bold'>Course Profile</Text>
             <CourseSearchPopover onAddCourse={handleAddCourse} existingCourseIds={existingCourseIds} />
-            <Badge
-              size="lg"
-              colorPalette="green"
-              px={4}
-              py={2}
-              fontSize="md"
-              fontWeight="bold"
-            >
-              {takenCredits} Taken
-            </Badge>
-            <Badge
-              size="lg"
-              colorPalette="blue"
-              px={4}
-              py={2}
-              fontSize="md"
-              fontWeight="bold"
-            >
-              {activeCredits} Active
-            </Badge>
           </HStack>
-        </HStack>
+          <HStack gap={2}>
+            <Badge colorPalette="green" variant='subtle'>{takenCredits} credits taken</Badge>
+            <Badge colorPalette="blue" variant='subtle'>{activeCredits} credits active</Badge>
+          </HStack>
+        </Flex>
 
+        <Separator />
+
+        <Box overflowX='auto'>
         <Table.Root size="sm" variant="outline" interactive>
           <Table.Header>
             <Table.Row>
@@ -619,6 +580,7 @@ function RouteComponent() {
             ))}
           </Table.Body>
         </Table.Root>
+        </Box>
 
         <ActionBar.Root open={hasSelection}>
           <Portal>
@@ -634,7 +596,7 @@ function RouteComponent() {
                   colorPalette="green"
                   onClick={handleBulkMarkAsTaken}
                 >
-                  <Icon as={MdCheckCircle} />
+                  <Icon as={CheckCircleIcon} />
                   Mark as Taken
                 </Button>
                 <Button

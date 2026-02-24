@@ -1,43 +1,39 @@
 import {
-   TbSquareLetterF,
-   TbSquareLetterFFilled,
-   TbSquareLetterM,
-   TbSquareLetterMFilled,
-   TbSquareLetterT,
-   TbSquareLetterTFilled,
-   TbSquareLetterW,
-   TbSquareLetterWFilled
-} from 'react-icons/tb';
+   SquareMIcon, SquareMFilledIcon,
+   SquareTIcon, SquareTFilledIcon,
+   SquareWIcon, SquareWFilledIcon,
+   SquareFIcon, SquareFFilledIcon,
+} from '@/components/icons';
 
 export const weekItems = [
    {
       label: 'M',
-      icon: TbSquareLetterM,
-      filledIcon: TbSquareLetterMFilled,
+      icon: SquareMIcon,
+      filledIcon: SquareMFilledIcon,
       value: 'Monday'
    },
    {
       label: 'T',
-      icon: TbSquareLetterT,
-      filledIcon: TbSquareLetterTFilled,
+      icon: SquareTIcon,
+      filledIcon: SquareTFilledIcon,
       value: 'Tuesday'
    },
    {
       label: 'W',
-      icon: TbSquareLetterW,
-      filledIcon: TbSquareLetterWFilled,
+      icon: SquareWIcon,
+      filledIcon: SquareWFilledIcon,
       value: 'Wednesday'
    },
    {
       label: 'Th',
-      icon: TbSquareLetterT,
-      filledIcon: TbSquareLetterTFilled,
+      icon: SquareTIcon,
+      filledIcon: SquareTFilledIcon,
       value: 'Thursday'
    },
    {
       label: 'F',
-      icon: TbSquareLetterF,
-      filledIcon: TbSquareLetterFFilled,
+      icon: SquareFIcon,
+      filledIcon: SquareFFilledIcon,
       value: 'Friday'
    }
 ];

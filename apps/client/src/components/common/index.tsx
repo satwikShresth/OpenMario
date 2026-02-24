@@ -6,3 +6,4 @@ export * from './asyncComponents';
 export * from './404';
 export * from './Error';
 export * from './DatabaseManager';
+export * from './PageHeader';

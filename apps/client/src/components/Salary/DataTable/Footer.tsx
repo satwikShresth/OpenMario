@@ -1,9 +1,13 @@
 import { Box, Text } from '@chakra-ui/react';
 
-export default () => (
-   <Box mt={4} p={3} bg='gray.50' borderRadius='md'>
-      <Text fontSize='sm' color='gray.600'>
-         Note: All compensation data is self-reported by students.
-      </Text>
-   </Box>
-);
+export default function Footer() {
+   return (
+      <Box mb={3}>
+         <Box px={3} py={2} bg='bg.subtle' borderRadius='md'>
+            <Text fontSize='sm' color='fg.muted'>
+               Note: All compensation data is self-reported by students.
+            </Text>
+         </Box>
+      </Box>
+   );
+}

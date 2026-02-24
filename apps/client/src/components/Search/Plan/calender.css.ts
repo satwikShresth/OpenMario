@@ -22,19 +22,15 @@ export const css = {
       height: '30px !important',
       minHeight: '30px !important'
    },
-   // Add padding to the calendar body
+   // Let the timegrid body fill the available width
    '& .fc-timegrid-body': {
-      minHeight: '400px'
+      width: '100% !important'
    },
    // Header toolbar spacing
    '& .fc-header-toolbar': {
       marginBottom: '10px !important',
       padding: '5px 0',
       display: 'none !important' // Hide default toolbar
-   },
-   // Make scrollable area more spacious
-   '& .fc-scroller': {
-      overflowY: 'auto !important'
    },
    // Ensure proper table layout
    '& .fc-timegrid-axis-frame': {

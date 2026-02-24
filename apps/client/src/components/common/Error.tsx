@@ -1,5 +1,5 @@
 import { Button, Card, Center, EmptyState, HStack, Icon, Text, VStack } from '@chakra-ui/react';
-import { MdError, MdHome, MdRefresh } from 'react-icons/md';
+import { ErrorIcon, HomeIcon, RefreshIcon } from '@/components/icons';
 import { type ErrorComponentProps as TanStackErrorProps, useRouter } from '@tanstack/react-router';
 import { Link } from '@tanstack/react-router';
 
@@ -34,7 +34,7 @@ export const ErrorComponent: React.FC<ErrorComponentProps> = ({
                <Card.Root size='lg' p='10'>
                   <Card.Header>
                      <EmptyState.Indicator>
-                        <Icon as={MdError} boxSize={12} color='red.500' />
+                        <Icon as={ErrorIcon} boxSize={12} color='red.500' />
                      </EmptyState.Indicator>
                   </Card.Header>
                   <Card.Body>
@@ -50,12 +50,12 @@ export const ErrorComponent: React.FC<ErrorComponentProps> = ({
                   <Card.Footer justifyContent='center'>
                      <HStack gap='3'>
                         <Button onClick={handleRetry} colorPalette='red'>
-                           <Icon as={MdRefresh} />
+                           <Icon as={RefreshIcon} />
                            Try Again
                         </Button>
                         <Link to='/'>
                            <Button colorPalette='blue'>
-                              <Icon as={MdHome} />
+                              <Icon as={HomeIcon} />
                               <Text>Go Home</Text>
                            </Button>
                         </Link>

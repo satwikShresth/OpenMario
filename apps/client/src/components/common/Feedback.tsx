@@ -64,7 +64,7 @@ const sendFeedbackToDiscord = async (data: FeedbackData) => {
    return response;
 };
 
-export function FeedbackDialog() {
+export function FeedbackDialog({ trigger }: { trigger?: React.ReactElement } = {}) {
    const dialog = useDialog();
 
    const mutation = useMutation({
@@ -111,13 +111,11 @@ export function FeedbackDialog() {
             motionPreset='slide-in-bottom'
          >
             <Dialog.Trigger asChild>
-               <Button
-                  variant='ghost'
-                  _hover={{ color: 'accent' }}
-                  borderRadius='lg'
-               >
-                  Feedback
-               </Button>
+               {trigger ?? (
+                  <Button variant='ghost' _hover={{ color: 'accent' }} borderRadius='lg'>
+                     Feedback
+                  </Button>
+               )}
             </Dialog.Trigger>
             <Portal>
                <Dialog.Backdrop />

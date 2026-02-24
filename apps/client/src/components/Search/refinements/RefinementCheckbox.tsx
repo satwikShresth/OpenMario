@@ -33,9 +33,9 @@ export const RefinementCheckbox = ({ attribute }: { attribute: string }) => {
    );
 
    return (
-      <Box p={2}>
+      <Box pt={1} pb={2} px={2}>
          <Fieldset.Root size='sm' width='sm'>
-            <Field.Root mt={3}>
+            <Field.Root mt={0}>
                <Field.Label fontSize='md'>{placeholder}</Field.Label>
                <Input
                   width='65%'

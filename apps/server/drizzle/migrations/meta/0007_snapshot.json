@@ -1,0 +1,2375 @@
+{
+  "id": "4a61b132-5a5b-4d36-aeca-91cb0224f159",
+  "prevId": "2feeccca-3b99-4731-a13d-13a6183a624e",
+  "version": "7",
+  "dialect": "postgresql",
+  "tables": {
+    "public.major": {
+      "name": "major",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "program_level": {
+          "name": "program_level",
+          "type": "program_level",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "major_name_unique": {
+          "name": "major_name_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "name"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.minor": {
+      "name": "minor",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "program_level": {
+          "name": "program_level",
+          "type": "program_level",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "minor_name_unique": {
+          "name": "minor_name_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "name"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.profile_major": {
+      "name": "profile_major",
+      "schema": "",
+      "columns": {
+        "user_id": {
+          "name": "user_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "major_id": {
+          "name": "major_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "profile_major_user_id_users_id_fk": {
+          "name": "profile_major_user_id_users_id_fk",
+          "tableFrom": "profile_major",
+          "tableTo": "users",
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "profile_major_major_id_major_id_fk": {
+          "name": "profile_major_major_id_major_id_fk",
+          "tableFrom": "profile_major",
+          "tableTo": "major",
+          "columnsFrom": [
+            "major_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "profile_major_user_id_major_id_pk": {
+          "name": "profile_major_user_id_major_id_pk",
+          "columns": [
+            "user_id",
+            "major_id"
+          ]
+        }
+      },
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.profile_minor": {
+      "name": "profile_minor",
+      "schema": "",
+      "columns": {
+        "user_id": {
+          "name": "user_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "minor_id": {
+          "name": "minor_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "profile_minor_user_id_users_id_fk": {
+          "name": "profile_minor_user_id_users_id_fk",
+          "tableFrom": "profile_minor",
+          "tableTo": "users",
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "profile_minor_minor_id_minor_id_fk": {
+          "name": "profile_minor_minor_id_minor_id_fk",
+          "tableFrom": "profile_minor",
+          "tableTo": "minor",
+          "columnsFrom": [
+            "minor_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "profile_minor_user_id_minor_id_pk": {
+          "name": "profile_minor_user_id_minor_id_pk",
+          "columns": [
+            "user_id",
+            "minor_id"
+          ]
+        }
+      },
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.users": {
+      "name": "users",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "username": {
+          "name": "username",
+          "type": "varchar(100)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "email": {
+          "name": "email",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "users_email_unique": {
+          "name": "users_email_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "email"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.company": {
+      "name": "company",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "name": {
+          "name": "name",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "owner_id": {
+          "name": "owner_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "company_owner_id_users_id_fk": {
+          "name": "company_owner_id_users_id_fk",
+          "tableFrom": "company",
+          "tableTo": "users",
+          "columnsFrom": [
+            "owner_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "company_name_unique": {
+          "name": "company_name_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "name"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.location": {
+      "name": "location",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "state_code": {
+          "name": "state_code",
+          "type": "varchar(3)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "state": {
+          "name": "state",
+          "type": "varchar(100)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "city": {
+          "name": "city",
+          "type": "varchar(100)",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "location_state_code_state_city_unique": {
+          "name": "location_state_code_state_city_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "state_code",
+            "state",
+            "city"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.position": {
+      "name": "position",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "company_id": {
+          "name": "company_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "owner_id": {
+          "name": "owner_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "position_company_id_company_id_fk": {
+          "name": "position_company_id_company_id_fk",
+          "tableFrom": "position",
+          "tableTo": "company",
+          "columnsFrom": [
+            "company_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "restrict",
+          "onUpdate": "no action"
+        },
+        "position_owner_id_users_id_fk": {
+          "name": "position_owner_id_users_id_fk",
+          "tableFrom": "position",
+          "tableTo": "users",
+          "columnsFrom": [
+            "owner_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "position_company_id_name_unique": {
+          "name": "position_company_id_name_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "company_id",
+            "name"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.job_experience_levels": {
+      "name": "job_experience_levels",
+      "schema": "",
+      "columns": {
+        "job_posting_id": {
+          "name": "job_posting_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "experience_level": {
+          "name": "experience_level",
+          "type": "experience_level",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "job_experience_levels_job_posting_id_job_posting_id_fk": {
+          "name": "job_experience_levels_job_posting_id_job_posting_id_fk",
+          "tableFrom": "job_experience_levels",
+          "tableTo": "job_posting",
+          "columnsFrom": [
+            "job_posting_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "job_experience_levels_job_posting_id_experience_level_pk": {
+          "name": "job_experience_levels_job_posting_id_experience_level_pk",
+          "columns": [
+            "job_posting_id",
+            "experience_level"
+          ]
+        }
+      },
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.job_posting": {
+      "name": "job_posting",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "position_id": {
+          "name": "position_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "location_id": {
+          "name": "location_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "job_type": {
+          "name": "job_type",
+          "type": "job_type",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "job_status": {
+          "name": "job_status",
+          "type": "job_status",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'Inactive'"
+        },
+        "coop_cycle": {
+          "name": "coop_cycle",
+          "type": "coop_cycle",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "year": {
+          "name": "year",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "job_length": {
+          "name": "job_length",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 2
+        },
+        "work_hours": {
+          "name": "work_hours",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 40
+        },
+        "openings": {
+          "name": "openings",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "default": 1
+        },
+        "division_description": {
+          "name": "division_description",
+          "type": "varchar(10000)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "position_description": {
+          "name": "position_description",
+          "type": "varchar(15000)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "recommended_qualifications": {
+          "name": "recommended_qualifications",
+          "type": "varchar(5000)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "minimum_gpa": {
+          "name": "minimum_gpa",
+          "type": "double precision",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "is_nonprofit": {
+          "name": "is_nonprofit",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false,
+          "default": false
+        },
+        "exposure_hazardous_materials": {
+          "name": "exposure_hazardous_materials",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false,
+          "default": false
+        },
+        "is_research_position": {
+          "name": "is_research_position",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false,
+          "default": false
+        },
+        "is_third_party_employer": {
+          "name": "is_third_party_employer",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false,
+          "default": false
+        },
+        "travel_required": {
+          "name": "travel_required",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false,
+          "default": false
+        },
+        "citizenship_restriction": {
+          "name": "citizenship_restriction",
+          "type": "citizenship_restriction",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "pre_employment_screening": {
+          "name": "pre_employment_screening",
+          "type": "varchar(1000)",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "'None'"
+        },
+        "transportation": {
+          "name": "transportation",
+          "type": "varchar(1000)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "compensation_status": {
+          "name": "compensation_status",
+          "type": "compensation_status",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "compensation_details": {
+          "name": "compensation_details",
+          "type": "varchar(5000)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "other_compensation": {
+          "name": "other_compensation",
+          "type": "varchar(5000)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "job_posting_position_id_position_id_fk": {
+          "name": "job_posting_position_id_position_id_fk",
+          "tableFrom": "job_posting",
+          "tableTo": "position",
+          "columnsFrom": [
+            "position_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "job_posting_location_id_location_id_fk": {
+          "name": "job_posting_location_id_location_id_fk",
+          "tableFrom": "job_posting",
+          "tableTo": "location",
+          "columnsFrom": [
+            "location_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "restrict",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.job_posting_major": {
+      "name": "job_posting_major",
+      "schema": "",
+      "columns": {
+        "job_posting_id": {
+          "name": "job_posting_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "major_id": {
+          "name": "major_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "job_posting_major_job_posting_id_job_posting_id_fk": {
+          "name": "job_posting_major_job_posting_id_job_posting_id_fk",
+          "tableFrom": "job_posting_major",
+          "tableTo": "job_posting",
+          "columnsFrom": [
+            "job_posting_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "job_posting_major_major_id_major_id_fk": {
+          "name": "job_posting_major_major_id_major_id_fk",
+          "tableFrom": "job_posting_major",
+          "tableTo": "major",
+          "columnsFrom": [
+            "major_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "job_posting_major_job_posting_id_major_id_pk": {
+          "name": "job_posting_major_job_posting_id_major_id_pk",
+          "columns": [
+            "job_posting_id",
+            "major_id"
+          ]
+        }
+      },
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.submission": {
+      "name": "submission",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "position_id": {
+          "name": "position_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "location_id": {
+          "name": "location_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "program_level": {
+          "name": "program_level",
+          "type": "program_level",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "work_hours": {
+          "name": "work_hours",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 40
+        },
+        "coop_cycle": {
+          "name": "coop_cycle",
+          "type": "coop_cycle",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "coop_year": {
+          "name": "coop_year",
+          "type": "coop_year",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "year": {
+          "name": "year",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "compensation": {
+          "name": "compensation",
+          "type": "double precision",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "other_compensation": {
+          "name": "other_compensation",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "details": {
+          "name": "details",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "owner_id": {
+          "name": "owner_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "submission_position_id_position_id_fk": {
+          "name": "submission_position_id_position_id_fk",
+          "tableFrom": "submission",
+          "tableTo": "position",
+          "columnsFrom": [
+            "position_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "restrict",
+          "onUpdate": "no action"
+        },
+        "submission_location_id_location_id_fk": {
+          "name": "submission_location_id_location_id_fk",
+          "tableFrom": "submission",
+          "tableTo": "location",
+          "columnsFrom": [
+            "location_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "restrict",
+          "onUpdate": "no action"
+        },
+        "submission_owner_id_users_id_fk": {
+          "name": "submission_owner_id_users_id_fk",
+          "tableFrom": "submission",
+          "tableTo": "users",
+          "columnsFrom": [
+            "owner_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.position_review": {
+      "name": "position_review",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "position_id": {
+          "name": "position_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "job_id": {
+          "name": "job_id",
+          "type": "varchar(20)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "review_index": {
+          "name": "review_index",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 1
+        },
+        "coop_cycle": {
+          "name": "coop_cycle",
+          "type": "coop_cycle",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "year": {
+          "name": "year",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "coop_sequence": {
+          "name": "coop_sequence",
+          "type": "coop_sequence",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "department": {
+          "name": "department",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "days_per_week": {
+          "name": "days_per_week",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "shift_work_required": {
+          "name": "shift_work_required",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "overtime_required": {
+          "name": "overtime_required",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "public_transit_available": {
+          "name": "public_transit_available",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "employer_housing_assistance": {
+          "name": "employer_housing_assistance",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "rating_collaboration": {
+          "name": "rating_collaboration",
+          "type": "smallint",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "rating_work_variety": {
+          "name": "rating_work_variety",
+          "type": "smallint",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "rating_relationships": {
+          "name": "rating_relationships",
+          "type": "smallint",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "rating_supervisor_access": {
+          "name": "rating_supervisor_access",
+          "type": "smallint",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "rating_training": {
+          "name": "rating_training",
+          "type": "smallint",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "rating_overall": {
+          "name": "rating_overall",
+          "type": "smallint",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "would_recommend": {
+          "name": "would_recommend",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "description_accurate": {
+          "name": "description_accurate",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "best_features": {
+          "name": "best_features",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "challenges": {
+          "name": "challenges",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "resume_description": {
+          "name": "resume_description",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "comp_written_comm": {
+          "name": "comp_written_comm",
+          "type": "smallint",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "comp_verbal_comm": {
+          "name": "comp_verbal_comm",
+          "type": "smallint",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "comp_comm_style": {
+          "name": "comp_comm_style",
+          "type": "smallint",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "comp_original_ideas": {
+          "name": "comp_original_ideas",
+          "type": "smallint",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "comp_problem_solving": {
+          "name": "comp_problem_solving",
+          "type": "smallint",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "comp_info_evaluation": {
+          "name": "comp_info_evaluation",
+          "type": "smallint",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "comp_data_decisions": {
+          "name": "comp_data_decisions",
+          "type": "smallint",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "comp_ethical_standards": {
+          "name": "comp_ethical_standards",
+          "type": "smallint",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "comp_technology_use": {
+          "name": "comp_technology_use",
+          "type": "smallint",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "comp_goal_setting": {
+          "name": "comp_goal_setting",
+          "type": "smallint",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "comp_diversity": {
+          "name": "comp_diversity",
+          "type": "smallint",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "comp_work_habits": {
+          "name": "comp_work_habits",
+          "type": "smallint",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "comp_proactive": {
+          "name": "comp_proactive",
+          "type": "smallint",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "position_review_position_id_position_id_fk": {
+          "name": "position_review_position_id_position_id_fk",
+          "tableFrom": "position_review",
+          "tableTo": "position",
+          "columnsFrom": [
+            "position_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "position_review_position_id_job_id_review_index_unique": {
+          "name": "position_review_position_id_job_id_review_index_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "position_id",
+            "job_id",
+            "review_index"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.college": {
+      "name": "college",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.course": {
+      "name": "course",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "subject_id": {
+          "name": "subject_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "course_number": {
+          "name": "course_number",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "title": {
+          "name": "title",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "credits": {
+          "name": "credits",
+          "type": "numeric(5, 1)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "credit_range": {
+          "name": "credit_range",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "description": {
+          "name": "description",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "writing_intensive": {
+          "name": "writing_intensive",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
+        "repeat_status": {
+          "name": "repeat_status",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "restrictions": {
+          "name": "restrictions",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {
+        "course_subject_id_index": {
+          "name": "course_subject_id_index",
+          "columns": [
+            {
+              "expression": "subject_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "course_subject_id_subject_id_fk": {
+          "name": "course_subject_id_subject_id_fk",
+          "tableFrom": "course",
+          "tableTo": "subject",
+          "columnsFrom": [
+            "subject_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "restrict",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.course_corequisites": {
+      "name": "course_corequisites",
+      "schema": "",
+      "columns": {
+        "course_id": {
+          "name": "course_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "corequisite_course_id": {
+          "name": "corequisite_course_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "course_corequisites_course_id_course_id_fk": {
+          "name": "course_corequisites_course_id_course_id_fk",
+          "tableFrom": "course_corequisites",
+          "tableTo": "course",
+          "columnsFrom": [
+            "course_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "course_corequisites_corequisite_course_id_course_id_fk": {
+          "name": "course_corequisites_corequisite_course_id_course_id_fk",
+          "tableFrom": "course_corequisites",
+          "tableTo": "course",
+          "columnsFrom": [
+            "corequisite_course_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "course_corequisites_course_id_corequisite_course_id_pk": {
+          "name": "course_corequisites_course_id_corequisite_course_id_pk",
+          "columns": [
+            "course_id",
+            "corequisite_course_id"
+          ]
+        }
+      },
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.course_prerequisites": {
+      "name": "course_prerequisites",
+      "schema": "",
+      "columns": {
+        "course_id": {
+          "name": "course_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "prerequisite_course_id": {
+          "name": "prerequisite_course_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "relationship_type": {
+          "name": "relationship_type",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "group_id": {
+          "name": "group_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "can_take_concurrent": {
+          "name": "can_take_concurrent",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
+        "minimum_grade": {
+          "name": "minimum_grade",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {
+        "course_prerequisites_prerequisite_course_id_index": {
+          "name": "course_prerequisites_prerequisite_course_id_index",
+          "columns": [
+            {
+              "expression": "prerequisite_course_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "course_prerequisites_course_id_course_id_fk": {
+          "name": "course_prerequisites_course_id_course_id_fk",
+          "tableFrom": "course_prerequisites",
+          "tableTo": "course",
+          "columnsFrom": [
+            "course_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "course_prerequisites_prerequisite_course_id_course_id_fk": {
+          "name": "course_prerequisites_prerequisite_course_id_course_id_fk",
+          "tableFrom": "course_prerequisites",
+          "tableTo": "course",
+          "columnsFrom": [
+            "prerequisite_course_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "course_prerequisites_course_id_prerequisite_course_id_pk": {
+          "name": "course_prerequisites_course_id_prerequisite_course_id_pk",
+          "columns": [
+            "course_id",
+            "prerequisite_course_id"
+          ]
+        }
+      },
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.instructor": {
+      "name": "instructor",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "integer",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "department": {
+          "name": "department",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "rmp_legacy_id": {
+          "name": "rmp_legacy_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "rmp_id": {
+          "name": "rmp_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "num_ratings": {
+          "name": "num_ratings",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "avg_rating": {
+          "name": "avg_rating",
+          "type": "numeric(3, 1)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "avg_difficulty": {
+          "name": "avg_difficulty",
+          "type": "numeric(3, 1)",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.instructor_courses": {
+      "name": "instructor_courses",
+      "schema": "",
+      "columns": {
+        "instructor_id": {
+          "name": "instructor_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "course_id": {
+          "name": "course_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {
+        "instructor_courses_course_id_index": {
+          "name": "instructor_courses_course_id_index",
+          "columns": [
+            {
+              "expression": "course_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "instructor_courses_instructor_id_instructor_id_fk": {
+          "name": "instructor_courses_instructor_id_instructor_id_fk",
+          "tableFrom": "instructor_courses",
+          "tableTo": "instructor",
+          "columnsFrom": [
+            "instructor_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "instructor_courses_course_id_course_id_fk": {
+          "name": "instructor_courses_course_id_course_id_fk",
+          "tableFrom": "instructor_courses",
+          "tableTo": "course",
+          "columnsFrom": [
+            "course_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "instructor_courses_instructor_id_course_id_pk": {
+          "name": "instructor_courses_instructor_id_course_id_pk",
+          "columns": [
+            "instructor_id",
+            "course_id"
+          ]
+        }
+      },
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.instructor_sections": {
+      "name": "instructor_sections",
+      "schema": "",
+      "columns": {
+        "instructor_id": {
+          "name": "instructor_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "section_crn": {
+          "name": "section_crn",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {
+        "instructor_sections_section_crn_index": {
+          "name": "instructor_sections_section_crn_index",
+          "columns": [
+            {
+              "expression": "section_crn",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "instructor_sections_instructor_id_instructor_id_fk": {
+          "name": "instructor_sections_instructor_id_instructor_id_fk",
+          "tableFrom": "instructor_sections",
+          "tableTo": "instructor",
+          "columnsFrom": [
+            "instructor_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "instructor_sections_section_crn_section_crn_fk": {
+          "name": "instructor_sections_section_crn_section_crn_fk",
+          "tableFrom": "instructor_sections",
+          "tableTo": "section",
+          "columnsFrom": [
+            "section_crn"
+          ],
+          "columnsTo": [
+            "crn"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "instructor_sections_instructor_id_section_crn_pk": {
+          "name": "instructor_sections_instructor_id_section_crn_pk",
+          "columns": [
+            "instructor_id",
+            "section_crn"
+          ]
+        }
+      },
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.section": {
+      "name": "section",
+      "schema": "",
+      "columns": {
+        "crn": {
+          "name": "crn",
+          "type": "integer",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "course_id": {
+          "name": "course_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "subject_code": {
+          "name": "subject_code",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "course_number": {
+          "name": "course_number",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "term_id": {
+          "name": "term_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "section": {
+          "name": "section",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "max_enroll": {
+          "name": "max_enroll",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "start_time": {
+          "name": "start_time",
+          "type": "time",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "end_time": {
+          "name": "end_time",
+          "type": "time",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "instruction_method": {
+          "name": "instruction_method",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "instruction_type": {
+          "name": "instruction_type",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {
+        "section_course_id_index": {
+          "name": "section_course_id_index",
+          "columns": [
+            {
+              "expression": "course_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "section_term_id_index": {
+          "name": "section_term_id_index",
+          "columns": [
+            {
+              "expression": "term_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "section_subject_code_index": {
+          "name": "section_subject_code_index",
+          "columns": [
+            {
+              "expression": "subject_code",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "section_course_id_course_id_fk": {
+          "name": "section_course_id_course_id_fk",
+          "tableFrom": "section",
+          "tableTo": "course",
+          "columnsFrom": [
+            "course_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "restrict",
+          "onUpdate": "no action"
+        },
+        "section_subject_code_subject_id_fk": {
+          "name": "section_subject_code_subject_id_fk",
+          "tableFrom": "section",
+          "tableTo": "subject",
+          "columnsFrom": [
+            "subject_code"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "restrict",
+          "onUpdate": "no action"
+        },
+        "section_term_id_term_id_fk": {
+          "name": "section_term_id_term_id_fk",
+          "tableFrom": "section",
+          "tableTo": "term",
+          "columnsFrom": [
+            "term_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "restrict",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.section_days": {
+      "name": "section_days",
+      "schema": "",
+      "columns": {
+        "section_crn": {
+          "name": "section_crn",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "day": {
+          "name": "day",
+          "type": "day_of_week",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "section_days_section_crn_section_crn_fk": {
+          "name": "section_days_section_crn_section_crn_fk",
+          "tableFrom": "section_days",
+          "tableTo": "section",
+          "columnsFrom": [
+            "section_crn"
+          ],
+          "columnsTo": [
+            "crn"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "section_days_section_crn_day_pk": {
+          "name": "section_days_section_crn_day_pk",
+          "columns": [
+            "section_crn",
+            "day"
+          ]
+        }
+      },
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.subject": {
+      "name": "subject",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "college_id": {
+          "name": "college_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {
+        "subject_college_id_index": {
+          "name": "subject_college_id_index",
+          "columns": [
+            {
+              "expression": "college_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "subject_college_id_college_id_fk": {
+          "name": "subject_college_id_college_id_fk",
+          "tableFrom": "subject",
+          "tableTo": "college",
+          "columnsFrom": [
+            "college_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "restrict",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.term": {
+      "name": "term",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "integer",
+          "primaryKey": true,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    }
+  },
+  "enums": {
+    "public.citizenship_restriction": {
+      "name": "citizenship_restriction",
+      "schema": "public",
+      "values": [
+        "No Restriction",
+        "Resident Alien (Green Card) or US Citizen",
+        "US Citizen Only"
+      ]
+    },
+    "public.compensation_status": {
+      "name": "compensation_status",
+      "schema": "public",
+      "values": [
+        "Unpaid Position",
+        "Hourly Paid or Salaried Position"
+      ]
+    },
+    "public.coop_cycle": {
+      "name": "coop_cycle",
+      "schema": "public",
+      "values": [
+        "Fall/Winter",
+        "Winter/Spring",
+        "Spring/Summer",
+        "Summer/Fall"
+      ]
+    },
+    "public.coop_sequence": {
+      "name": "coop_sequence",
+      "schema": "public",
+      "values": [
+        "Only",
+        "First",
+        "Second",
+        "Third"
+      ]
+    },
+    "public.coop_year": {
+      "name": "coop_year",
+      "schema": "public",
+      "values": [
+        "1st",
+        "2nd",
+        "3rd"
+      ]
+    },
+    "public.experience_level": {
+      "name": "experience_level",
+      "schema": "public",
+      "values": [
+        "Advanced",
+        "Beginner",
+        "Intermediate"
+      ]
+    },
+    "public.job_status": {
+      "name": "job_status",
+      "schema": "public",
+      "values": [
+        "Inactive",
+        "Pending",
+        "Cancelled",
+        "Active",
+        "Delete"
+      ]
+    },
+    "public.job_type": {
+      "name": "job_type",
+      "schema": "public",
+      "values": [
+        "Co-op Experience",
+        "Graduate Co-op Experience",
+        "Summer-Only Coop"
+      ]
+    },
+    "public.program_level": {
+      "name": "program_level",
+      "schema": "public",
+      "values": [
+        "Undergraduate",
+        "Graduate"
+      ]
+    },
+    "public.day_of_week": {
+      "name": "day_of_week",
+      "schema": "public",
+      "values": [
+        "Monday",
+        "Tuesday",
+        "Wednesday",
+        "Thursday",
+        "Friday",
+        "Saturday"
+      ]
+    }
+  },
+  "schemas": {},
+  "sequences": {},
+  "roles": {},
+  "policies": {},
+  "views": {
+    "public.submissions_m_view": {
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "year": {
+          "name": "year",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "coop_year": {
+          "name": "coop_year",
+          "type": "coop_year",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "coop_cycle": {
+          "name": "coop_cycle",
+          "type": "coop_cycle",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "program_level": {
+          "name": "program_level",
+          "type": "program_level",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "work_hours": {
+          "name": "work_hours",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 40
+        },
+        "compensation": {
+          "name": "compensation",
+          "type": "double precision",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "other_compensation": {
+          "name": "other_compensation",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "details": {
+          "name": "details",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "owner_id": {
+          "name": "owner_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "definition": "select \"submission\".\"id\", \"submission\".\"year\", \"submission\".\"coop_year\", \"submission\".\"coop_cycle\", \"submission\".\"program_level\", \"submission\".\"work_hours\", \"submission\".\"compensation\", \"submission\".\"other_compensation\", \"submission\".\"details\", \"submission\".\"owner_id\", \"submission\".\"created_at\", \"company\".\"id\" as \"company_id\", \"position\".\"id\" as \"position_id\", \"company\".\"name\" as \"company_name\", \"position\".\"name\" as \"position_name\", \"location\".\"city\" as \"city\", \"location\".\"state\" as \"state\", \"location\".\"state_code\" as \"state_code\", \n          coalesce(\"company\".\"name\", '')                  || ' ' ||\n          coalesce(\"position\".\"name\", '')                 || ' ' ||\n          coalesce(\"location\".\"city\", '')                 || ' ' ||\n          coalesce(\"location\".\"state\", '')                || ' ' ||\n          coalesce(\"location\".\"state_code\", '')           || ' ' ||\n          coalesce(\"submission\".\"details\", '')            || ' ' ||\n          coalesce(\"submission\".\"other_compensation\", '')\n         as \"search_text\" from \"submission\" left join \"position\" on \"submission\".\"position_id\" = \"position\".\"id\" left join \"location\" on \"submission\".\"location_id\" = \"location\".\"id\" left join \"company\" on \"position\".\"company_id\" = \"company\".\"id\"",
+      "name": "submissions_m_view",
+      "schema": "public",
+      "isExisting": false,
+      "with": {
+        "fillfactor": 90
+      },
+      "materialized": true
+    },
+    "public.instructor_profile_m_view": {
+      "columns": {
+        "department": {
+          "name": "department",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "avg_rating": {
+          "name": "avg_rating",
+          "type": "numeric(3, 1)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "avg_difficulty": {
+          "name": "avg_difficulty",
+          "type": "numeric(3, 1)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "num_ratings": {
+          "name": "num_ratings",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "rmp_id": {
+          "name": "rmp_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "rmp_legacy_id": {
+          "name": "rmp_legacy_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "definition": "select \"instructor\".\"id\" as \"instructor_id\", \"instructor\".\"name\" as \"instructor_name\", \"instructor\".\"department\", \"instructor\".\"avg_rating\", \"instructor\".\"avg_difficulty\", \"instructor\".\"num_ratings\", \"instructor\".\"rmp_id\", \"instructor\".\"rmp_legacy_id\", count(distinct \"section\".\"crn\") as \"total_sections_taught\", count(distinct \"course\".\"id\") as \"total_courses_taught\", count(distinct \"section\".\"term_id\") as \"total_terms_active\", max(\"section\".\"term_id\") as \"most_recent_term\", array_agg(distinct \"subject\".\"id\") as \"subjects_taught\", array_agg(distinct \"section\".\"instruction_method\") as \"instruction_methods\" from \"instructor\" left join \"instructor_sections\" on \"instructor_sections\".\"instructor_id\" = \"instructor\".\"id\" left join \"section\" on \"section\".\"crn\" = \"instructor_sections\".\"section_crn\" left join \"course\" on \"course\".\"id\" = \"section\".\"course_id\" left join \"subject\" on \"subject\".\"id\" = \"section\".\"subject_code\" group by \"instructor\".\"id\", \"instructor\".\"name\", \"instructor\".\"department\", \"instructor\".\"avg_rating\", \"instructor\".\"avg_difficulty\", \"instructor\".\"num_ratings\", \"instructor\".\"rmp_id\", \"instructor\".\"rmp_legacy_id\"",
+      "name": "instructor_profile_m_view",
+      "schema": "public",
+      "isExisting": false,
+      "materialized": true
+    },
+    "public.instructor_sections_m_view": {
+      "columns": {},
+      "definition": "select \"instructor\".\"id\" as \"instructor_id\", \"instructor\".\"name\" as \"instructor_name\", \"section\".\"crn\" as \"section_crn\", \"section\".\"term_id\" as \"term_id\", \"section\".\"subject_code\" as \"subject_code\", \"section\".\"course_number\" as \"course_number\", \"course\".\"title\" as \"course_title\", \"section\".\"section\" as \"section_code\", \"section\".\"instruction_method\" as \"instruction_method\", \"section\".\"instruction_type\" as \"instruction_type\" from \"instructor\" inner join \"instructor_sections\" on \"instructor_sections\".\"instructor_id\" = \"instructor\".\"id\" inner join \"section\" on \"section\".\"crn\" = \"instructor_sections\".\"section_crn\" inner join \"course\" on \"course\".\"id\" = \"section\".\"course_id\" inner join \"subject\" on \"subject\".\"id\" = \"section\".\"subject_code\"",
+      "name": "instructor_sections_m_view",
+      "schema": "public",
+      "isExisting": false,
+      "materialized": true
+    },
+    "public.corequisites_m_view": {
+      "columns": {
+        "course_id": {
+          "name": "course_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "definition": "select \"course_corequisites\".\"course_id\", \"course\".\"title\" as \"course_title\", \"course\".\"subject_id\" as \"course_subject_id\", \"course\".\"course_number\" as \"course_number\", \"coreq_course\".\"id\" as \"coreq_id\", \"coreq_course\".\"title\" as \"coreq_title\", \"coreq_course\".\"subject_id\" as \"coreq_subject_id\", \"coreq_course\".\"course_number\" as \"coreq_course_number\" from \"course_corequisites\" inner join \"course\" on \"course\".\"id\" = \"course_corequisites\".\"course_id\" inner join \"course\" \"coreq_course\" on \"coreq_course\".\"id\" = \"course_corequisites\".\"corequisite_course_id\"",
+      "name": "corequisites_m_view",
+      "schema": "public",
+      "isExisting": false,
+      "with": {
+        "fillfactor": 90
+      },
+      "materialized": true
+    },
+    "public.prerequisites_m_view": {
+      "columns": {
+        "course_id": {
+          "name": "course_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "relationship_type": {
+          "name": "relationship_type",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "group_id": {
+          "name": "group_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "can_take_concurrent": {
+          "name": "can_take_concurrent",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
+        "minimum_grade": {
+          "name": "minimum_grade",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "definition": "select \"course_prerequisites\".\"course_id\", \"course\".\"title\" as \"course_title\", \"course\".\"subject_id\" as \"course_subject_id\", \"course\".\"course_number\" as \"course_number\", \"prereq_course\".\"id\" as \"prereq_id\", \"prereq_course\".\"title\" as \"prereq_title\", \"prereq_course\".\"subject_id\" as \"prereq_subject_id\", \"prereq_course\".\"course_number\" as \"prereq_course_number\", \"course_prerequisites\".\"relationship_type\", \"course_prerequisites\".\"group_id\", \"course_prerequisites\".\"can_take_concurrent\", \"course_prerequisites\".\"minimum_grade\" from \"course_prerequisites\" inner join \"course\" on \"course\".\"id\" = \"course_prerequisites\".\"course_id\" inner join \"course\" \"prereq_course\" on \"prereq_course\".\"id\" = \"course_prerequisites\".\"prerequisite_course_id\"",
+      "name": "prerequisites_m_view",
+      "schema": "public",
+      "isExisting": false,
+      "with": {
+        "fillfactor": 90
+      },
+      "materialized": true
+    },
+    "public.company_detail_m_view": {
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "name": {
+          "name": "name",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "definition": "select \"company\".\"id\", \"company\".\"name\", count(distinct \"position_review\".\"id\") as \"total_reviews\", count(distinct \"position\".\"id\") filter (where \"position_review\".\"id\" is not null) as \"positions_reviewed\", count(distinct \"submission\".\"id\") as \"total_submissions\", round(avg(\"submission\".\"compensation\")::numeric, 2) as \"avg_compensation\", round(percentile_cont(0.5) within group (order by \"submission\".\"compensation\")::numeric, 2) as \"median_compensation\", round((\n      0.30 * (\n         (avg(\"position_review\".\"rating_collaboration\") + avg(\"position_review\".\"rating_work_variety\") +\n          avg(\"position_review\".\"rating_relationships\") + avg(\"position_review\".\"rating_supervisor_access\") +\n          avg(\"position_review\".\"rating_training\")) / 5.0 / 4.0\n      ) +\n      0.25 * (\n         count(*) filter (where \"position_review\".\"would_recommend\" = true)::numeric\n         / nullif(count(*) filter (where \"position_review\".\"would_recommend\" is not null), 0)\n      ) +\n      0.15 * (\n         count(*) filter (where \"position_review\".\"description_accurate\" = true)::numeric\n         / nullif(count(*) filter (where \"position_review\".\"description_accurate\" is not null), 0)\n      ) +\n      0.20 * (\n         (avg(\"position_review\".\"comp_written_comm\") + avg(\"position_review\".\"comp_verbal_comm\") +\n          avg(\"position_review\".\"comp_comm_style\") + avg(\"position_review\".\"comp_original_ideas\") +\n          avg(\"position_review\".\"comp_problem_solving\") + avg(\"position_review\".\"comp_info_evaluation\") +\n          avg(\"position_review\".\"comp_data_decisions\") + avg(\"position_review\".\"comp_ethical_standards\") +\n          avg(\"position_review\".\"comp_technology_use\") + avg(\"position_review\".\"comp_goal_setting\") +\n          avg(\"position_review\".\"comp_diversity\") + avg(\"position_review\".\"comp_work_habits\") +\n          avg(\"position_review\".\"comp_proactive\")) / 13.0 / 4.0\n      ) +\n      0.10 * (\n         1.0 - (\n            0.5 * count(*) filter (where \"position_review\".\"overtime_required\" = true)::numeric\n                / nullif(count(*) filter (where \"position_review\".\"overtime_required\" is not null), 0)\n            +\n            0.5 * least(greatest(avg(\"position_review\".\"days_per_week\") - 3, 0), 2) / 2.0\n         )\n      )\n   ) * 100, 1) as \"omega_score\", round(\n      (avg(\"position_review\".\"rating_collaboration\") + avg(\"position_review\".\"rating_work_variety\") +\n       avg(\"position_review\".\"rating_relationships\") + avg(\"position_review\".\"rating_supervisor_access\") +\n       avg(\"position_review\".\"rating_training\")) / 5.0 / 4.0 * 100, 1) as \"satisfaction_score\", round(\n      count(*) filter (where \"position_review\".\"would_recommend\" = true)::numeric\n      / nullif(count(*) filter (where \"position_review\".\"would_recommend\" is not null), 0) * 100, 1) as \"trust_score\", round(\n      count(*) filter (where \"position_review\".\"description_accurate\" = true)::numeric\n      / nullif(count(*) filter (where \"position_review\".\"description_accurate\" is not null), 0) * 100, 1) as \"integrity_score\", round(\n      (avg(\"position_review\".\"comp_written_comm\") + avg(\"position_review\".\"comp_verbal_comm\") +\n       avg(\"position_review\".\"comp_comm_style\") + avg(\"position_review\".\"comp_original_ideas\") +\n       avg(\"position_review\".\"comp_problem_solving\") + avg(\"position_review\".\"comp_info_evaluation\") +\n       avg(\"position_review\".\"comp_data_decisions\") + avg(\"position_review\".\"comp_ethical_standards\") +\n       avg(\"position_review\".\"comp_technology_use\") + avg(\"position_review\".\"comp_goal_setting\") +\n       avg(\"position_review\".\"comp_diversity\") + avg(\"position_review\".\"comp_work_habits\") +\n       avg(\"position_review\".\"comp_proactive\")) / 13.0 / 4.0 * 100, 1) as \"growth_score\", round((\n      1.0 - (\n         0.5 * count(*) filter (where \"position_review\".\"overtime_required\" = true)::numeric\n             / nullif(count(*) filter (where \"position_review\".\"overtime_required\" is not null), 0)\n         +\n         0.5 * least(greatest(avg(\"position_review\".\"days_per_week\") - 3, 0), 2) / 2.0\n      )\n   ) * 100, 1) as \"work_life_score\", round(avg(\"position_review\".\"rating_overall\")::numeric, 2) as \"avg_rating_overall\", round(avg(\"position_review\".\"rating_collaboration\")::numeric, 2) as \"avg_rating_collaboration\", round(avg(\"position_review\".\"rating_work_variety\")::numeric, 2) as \"avg_rating_work_variety\", round(avg(\"position_review\".\"rating_relationships\")::numeric, 2) as \"avg_rating_relationships\", round(avg(\"position_review\".\"rating_supervisor_access\")::numeric, 2) as \"avg_rating_supervisor_access\", round(avg(\"position_review\".\"rating_training\")::numeric, 2) as \"avg_rating_training\", round(\n            100.0 * count(*) filter (where \"position_review\".\"would_recommend\" = true)\n            / nullif(count(*) filter (where \"position_review\".\"would_recommend\" is not null), 0), 1) as \"pct_would_recommend\", round(\n            100.0 * count(*) filter (where \"position_review\".\"description_accurate\" = true)\n            / nullif(count(*) filter (where \"position_review\".\"description_accurate\" is not null), 0), 1) as \"pct_description_accurate\", round(avg(\"position_review\".\"days_per_week\")::numeric, 1) as \"avg_days_per_week\", round(\n            100.0 * count(*) filter (where \"position_review\".\"public_transit_available\" = true)\n            / nullif(count(*) filter (where \"position_review\".\"public_transit_available\" is not null), 0), 1) as \"pct_public_transit\", round(\n            100.0 * count(*) filter (where \"position_review\".\"overtime_required\" = true)\n            / nullif(count(*) filter (where \"position_review\".\"overtime_required\" is not null), 0), 1) as \"pct_overtime_required\" from \"company\" inner join \"position\" on \"position\".\"company_id\" = \"company\".\"id\" left join \"position_review\" on \"position_review\".\"position_id\" = \"position\".\"id\" left join \"submission\" on \"submission\".\"position_id\" = \"position\".\"id\" group by \"company\".\"id\", \"company\".\"name\"",
+      "name": "company_detail_m_view",
+      "schema": "public",
+      "isExisting": false,
+      "materialized": true
+    },
+    "public.company_omega_m_view": {
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "name": {
+          "name": "name",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "definition": "select \"company\".\"id\", \"company\".\"name\", count(\"position_review\".\"id\") as \"total_reviews\", count(distinct \"position\".\"id\") filter (where \"position_review\".\"id\" is not null) as \"positions_reviewed\", count(distinct \"submission\".\"id\") as \"total_submissions\", round(avg(\"submission\".\"compensation\")::numeric, 2) as \"avg_compensation\", round(percentile_cont(0.5) within group (order by \"submission\".\"compensation\")::numeric, 2) as \"median_compensation\", round((\n      0.30 * (\n         (avg(\"position_review\".\"rating_collaboration\") + avg(\"position_review\".\"rating_work_variety\") +\n          avg(\"position_review\".\"rating_relationships\") + avg(\"position_review\".\"rating_supervisor_access\") +\n          avg(\"position_review\".\"rating_training\")) / 5.0 / 4.0\n      ) +\n      0.25 * (\n         count(*) filter (where \"position_review\".\"would_recommend\" = true)::numeric\n         / nullif(count(*) filter (where \"position_review\".\"would_recommend\" is not null), 0)\n      ) +\n      0.15 * (\n         count(*) filter (where \"position_review\".\"description_accurate\" = true)::numeric\n         / nullif(count(*) filter (where \"position_review\".\"description_accurate\" is not null), 0)\n      ) +\n      0.20 * (\n         (avg(\"position_review\".\"comp_written_comm\") + avg(\"position_review\".\"comp_verbal_comm\") +\n          avg(\"position_review\".\"comp_comm_style\") + avg(\"position_review\".\"comp_original_ideas\") +\n          avg(\"position_review\".\"comp_problem_solving\") + avg(\"position_review\".\"comp_info_evaluation\") +\n          avg(\"position_review\".\"comp_data_decisions\") + avg(\"position_review\".\"comp_ethical_standards\") +\n          avg(\"position_review\".\"comp_technology_use\") + avg(\"position_review\".\"comp_goal_setting\") +\n          avg(\"position_review\".\"comp_diversity\") + avg(\"position_review\".\"comp_work_habits\") +\n          avg(\"position_review\".\"comp_proactive\")) / 13.0 / 4.0\n      ) +\n      0.10 * (\n         1.0 - (\n            0.5 * count(*) filter (where \"position_review\".\"overtime_required\" = true)::numeric\n                / nullif(count(*) filter (where \"position_review\".\"overtime_required\" is not null), 0)\n            +\n            0.5 * least(greatest(avg(\"position_review\".\"days_per_week\") - 3, 0), 2) / 2.0\n         )\n      )\n   ) * 100, 1) as \"omega_score\", round(\n      (avg(\"position_review\".\"rating_collaboration\") + avg(\"position_review\".\"rating_work_variety\") +\n       avg(\"position_review\".\"rating_relationships\") + avg(\"position_review\".\"rating_supervisor_access\") +\n       avg(\"position_review\".\"rating_training\")) / 5.0 / 4.0 * 100, 1) as \"satisfaction_score\", round(\n      count(*) filter (where \"position_review\".\"would_recommend\" = true)::numeric\n      / nullif(count(*) filter (where \"position_review\".\"would_recommend\" is not null), 0) * 100, 1) as \"trust_score\", round(\n      count(*) filter (where \"position_review\".\"description_accurate\" = true)::numeric\n      / nullif(count(*) filter (where \"position_review\".\"description_accurate\" is not null), 0) * 100, 1) as \"integrity_score\", round(\n      (avg(\"position_review\".\"comp_written_comm\") + avg(\"position_review\".\"comp_verbal_comm\") +\n       avg(\"position_review\".\"comp_comm_style\") + avg(\"position_review\".\"comp_original_ideas\") +\n       avg(\"position_review\".\"comp_problem_solving\") + avg(\"position_review\".\"comp_info_evaluation\") +\n       avg(\"position_review\".\"comp_data_decisions\") + avg(\"position_review\".\"comp_ethical_standards\") +\n       avg(\"position_review\".\"comp_technology_use\") + avg(\"position_review\".\"comp_goal_setting\") +\n       avg(\"position_review\".\"comp_diversity\") + avg(\"position_review\".\"comp_work_habits\") +\n       avg(\"position_review\".\"comp_proactive\")) / 13.0 / 4.0 * 100, 1) as \"growth_score\", round((\n      1.0 - (\n         0.5 * count(*) filter (where \"position_review\".\"overtime_required\" = true)::numeric\n             / nullif(count(*) filter (where \"position_review\".\"overtime_required\" is not null), 0)\n         +\n         0.5 * least(greatest(avg(\"position_review\".\"days_per_week\") - 3, 0), 2) / 2.0\n      )\n   ) * 100, 1) as \"work_life_score\" from \"company\" inner join \"position\" on \"position\".\"company_id\" = \"company\".\"id\" left join \"position_review\" on \"position_review\".\"position_id\" = \"position\".\"id\" left join \"submission\" on \"submission\".\"position_id\" = \"position\".\"id\" group by \"company\".\"id\", \"company\".\"name\"",
+      "name": "company_omega_m_view",
+      "schema": "public",
+      "isExisting": false,
+      "materialized": true
+    },
+    "public.company_positions_m_view": {
+      "columns": {},
+      "definition": "select \"position\".\"id\" as \"position_id\", \"position\".\"name\" as \"position_name\", \"company\".\"id\" as \"company_id\", \"company\".\"name\" as \"company_name\", count(distinct \"position_review\".\"id\") as \"total_reviews\", count(distinct \"submission\".\"id\") as \"total_submissions\", max(\"job_posting\".\"year\") as \"most_recent_posting_year\", round(avg(\"position_review\".\"rating_overall\")::numeric, 2) as \"avg_rating_overall\", round(avg(\"position_review\".\"rating_collaboration\")::numeric, 2) as \"avg_rating_collaboration\", round(avg(\"position_review\".\"rating_work_variety\")::numeric, 2) as \"avg_rating_work_variety\", round(avg(\"position_review\".\"rating_relationships\")::numeric, 2) as \"avg_rating_relationships\", round(avg(\"position_review\".\"rating_supervisor_access\")::numeric, 2) as \"avg_rating_supervisor_access\", round(avg(\"position_review\".\"rating_training\")::numeric, 2) as \"avg_rating_training\", round(avg(\"submission\".\"compensation\")::numeric, 2) as \"avg_compensation\", round(percentile_cont(0.5) within group (order by \"submission\".\"compensation\")::numeric, 2) as \"median_compensation\", round((\n      0.30 * (\n         (avg(\"position_review\".\"rating_collaboration\") + avg(\"position_review\".\"rating_work_variety\") +\n          avg(\"position_review\".\"rating_relationships\") + avg(\"position_review\".\"rating_supervisor_access\") +\n          avg(\"position_review\".\"rating_training\")) / 5.0 / 4.0\n      ) +\n      0.25 * (\n         count(*) filter (where \"position_review\".\"would_recommend\" = true)::numeric\n         / nullif(count(*) filter (where \"position_review\".\"would_recommend\" is not null), 0)\n      ) +\n      0.15 * (\n         count(*) filter (where \"position_review\".\"description_accurate\" = true)::numeric\n         / nullif(count(*) filter (where \"position_review\".\"description_accurate\" is not null), 0)\n      ) +\n      0.20 * (\n         (avg(\"position_review\".\"comp_written_comm\") + avg(\"position_review\".\"comp_verbal_comm\") +\n          avg(\"position_review\".\"comp_comm_style\") + avg(\"position_review\".\"comp_original_ideas\") +\n          avg(\"position_review\".\"comp_problem_solving\") + avg(\"position_review\".\"comp_info_evaluation\") +\n          avg(\"position_review\".\"comp_data_decisions\") + avg(\"position_review\".\"comp_ethical_standards\") +\n          avg(\"position_review\".\"comp_technology_use\") + avg(\"position_review\".\"comp_goal_setting\") +\n          avg(\"position_review\".\"comp_diversity\") + avg(\"position_review\".\"comp_work_habits\") +\n          avg(\"position_review\".\"comp_proactive\")) / 13.0 / 4.0\n      ) +\n      0.10 * (\n         1.0 - (\n            0.5 * count(*) filter (where \"position_review\".\"overtime_required\" = true)::numeric\n                / nullif(count(*) filter (where \"position_review\".\"overtime_required\" is not null), 0)\n            +\n            0.5 * least(greatest(avg(\"position_review\".\"days_per_week\") - 3, 0), 2) / 2.0\n         )\n      )\n   ) * 100, 1) as \"omega_score\", round(\n      (avg(\"position_review\".\"rating_collaboration\") + avg(\"position_review\".\"rating_work_variety\") +\n       avg(\"position_review\".\"rating_relationships\") + avg(\"position_review\".\"rating_supervisor_access\") +\n       avg(\"position_review\".\"rating_training\")) / 5.0 / 4.0 * 100, 1) as \"satisfaction_score\", round(\n      count(*) filter (where \"position_review\".\"would_recommend\" = true)::numeric\n      / nullif(count(*) filter (where \"position_review\".\"would_recommend\" is not null), 0) * 100, 1) as \"trust_score\", round(\n      count(*) filter (where \"position_review\".\"description_accurate\" = true)::numeric\n      / nullif(count(*) filter (where \"position_review\".\"description_accurate\" is not null), 0) * 100, 1) as \"integrity_score\", round(\n      (avg(\"position_review\".\"comp_written_comm\") + avg(\"position_review\".\"comp_verbal_comm\") +\n       avg(\"position_review\".\"comp_comm_style\") + avg(\"position_review\".\"comp_original_ideas\") +\n       avg(\"position_review\".\"comp_problem_solving\") + avg(\"position_review\".\"comp_info_evaluation\") +\n       avg(\"position_review\".\"comp_data_decisions\") + avg(\"position_review\".\"comp_ethical_standards\") +\n       avg(\"position_review\".\"comp_technology_use\") + avg(\"position_review\".\"comp_goal_setting\") +\n       avg(\"position_review\".\"comp_diversity\") + avg(\"position_review\".\"comp_work_habits\") +\n       avg(\"position_review\".\"comp_proactive\")) / 13.0 / 4.0 * 100, 1) as \"growth_score\", round((\n      1.0 - (\n         0.5 * count(*) filter (where \"position_review\".\"overtime_required\" = true)::numeric\n             / nullif(count(*) filter (where \"position_review\".\"overtime_required\" is not null), 0)\n         +\n         0.5 * least(greatest(avg(\"position_review\".\"days_per_week\") - 3, 0), 2) / 2.0\n      )\n   ) * 100, 1) as \"work_life_score\" from \"position\" inner join \"company\" on \"company\".\"id\" = \"position\".\"company_id\" left join \"job_posting\" on \"job_posting\".\"position_id\" = \"position\".\"id\" left join \"position_review\" on \"position_review\".\"position_id\" = \"position\".\"id\" left join \"submission\" on \"submission\".\"position_id\" = \"position\".\"id\" group by \"position\".\"id\", \"position\".\"name\", \"company\".\"id\", \"company\".\"name\"",
+      "name": "company_positions_m_view",
+      "schema": "public",
+      "isExisting": false,
+      "materialized": true
+    },
+    "public.company_review_aggregate_m_view": {
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "name": {
+          "name": "name",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "definition": "select \"company\".\"id\", \"company\".\"name\", count(distinct \"position\".\"id\") filter (where \"position_review\".\"id\" is not null) as \"positions_with_reviews\", count(\"position_review\".\"id\") as \"total_reviews\", min(\"position_review\".\"year\") as \"first_review_year\", max(\"position_review\".\"year\") as \"last_review_year\", round(avg(\"position_review\".\"rating_overall\")::numeric, 2) as \"avg_rating_overall\", round(avg(\"position_review\".\"rating_collaboration\")::numeric, 2) as \"avg_rating_collaboration\", round(avg(\"position_review\".\"rating_work_variety\")::numeric, 2) as \"avg_rating_work_variety\", round(avg(\"position_review\".\"rating_relationships\")::numeric, 2) as \"avg_rating_relationships\", round(avg(\"position_review\".\"rating_supervisor_access\")::numeric, 2) as \"avg_rating_supervisor_access\", round(avg(\"position_review\".\"rating_training\")::numeric, 2) as \"avg_rating_training\", round(\n               100.0 * count(*) filter (where \"position_review\".\"would_recommend\" = true)\n               / nullif(count(*) filter (where \"position_review\".\"would_recommend\" is not null), 0), 1) as \"pct_would_recommend\", round(\n               100.0 * count(*) filter (where \"position_review\".\"description_accurate\" = true)\n               / nullif(count(*) filter (where \"position_review\".\"description_accurate\" is not null), 0), 1) as \"pct_description_accurate\", round(avg(\"position_review\".\"days_per_week\")::numeric, 1) as \"avg_days_per_week\", round(\n               100.0 * count(*) filter (where \"position_review\".\"public_transit_available\" = true)\n               / nullif(count(*) filter (where \"position_review\".\"public_transit_available\" is not null), 0), 1) as \"pct_public_transit\", round(\n               100.0 * count(*) filter (where \"position_review\".\"overtime_required\" = true)\n               / nullif(count(*) filter (where \"position_review\".\"overtime_required\" is not null), 0), 1) as \"pct_overtime_required\", round(avg(\"position_review\".\"comp_written_comm\")::numeric, 2) as \"avg_comp_written_comm\", round(avg(\"position_review\".\"comp_verbal_comm\")::numeric, 2) as \"avg_comp_verbal_comm\", round(avg(\"position_review\".\"comp_comm_style\")::numeric, 2) as \"avg_comp_comm_style\", round(avg(\"position_review\".\"comp_original_ideas\")::numeric, 2) as \"avg_comp_original_ideas\", round(avg(\"position_review\".\"comp_problem_solving\")::numeric, 2) as \"avg_comp_problem_solving\", round(avg(\"position_review\".\"comp_info_evaluation\")::numeric, 2) as \"avg_comp_info_evaluation\", round(avg(\"position_review\".\"comp_data_decisions\")::numeric, 2) as \"avg_comp_data_decisions\", round(avg(\"position_review\".\"comp_ethical_standards\")::numeric, 2) as \"avg_comp_ethical_standards\", round(avg(\"position_review\".\"comp_technology_use\")::numeric, 2) as \"avg_comp_technology_use\", round(avg(\"position_review\".\"comp_goal_setting\")::numeric, 2) as \"avg_comp_goal_setting\", round(avg(\"position_review\".\"comp_diversity\")::numeric, 2) as \"avg_comp_diversity\", round(avg(\"position_review\".\"comp_work_habits\")::numeric, 2) as \"avg_comp_work_habits\", round(avg(\"position_review\".\"comp_proactive\")::numeric, 2) as \"avg_comp_proactive\", round(avg(\"submission\".\"compensation\")::numeric, 2) as \"avg_compensation\", round(percentile_cont(0.5) within group (order by \"submission\".\"compensation\")::numeric, 2) as \"median_compensation\" from \"company\" inner join \"position\" on \"position\".\"company_id\" = \"company\".\"id\" left join \"position_review\" on \"position_review\".\"position_id\" = \"position\".\"id\" left join \"submission\" on \"submission\".\"position_id\" = \"position\".\"id\" group by \"company\".\"id\", \"company\".\"name\"",
+      "name": "company_review_aggregate_m_view",
+      "schema": "public",
+      "isExisting": false,
+      "materialized": true
+    },
+    "public.position_information_m_view": {
+      "columns": {},
+      "definition": "select \"position\".\"id\" as \"position_id\", \"position\".\"name\" as \"position_name\", \"company\".\"id\" as \"company_id\", \"company\".\"name\" as \"company_name\", max(\"job_posting\".\"year\") as \"most_recent_posting_year\", count(distinct \"position_review\".\"id\") as \"total_reviews\", round(avg(\"position_review\".\"rating_overall\")::numeric, 2) as \"avg_rating_overall\", count(distinct \"submission\".\"id\") as \"total_submissions\", round(avg(\"submission\".\"compensation\")::numeric, 2) as \"avg_compensation\", round(percentile_cont(0.5) within group (order by \"submission\".\"compensation\")::numeric, 2) as \"median_compensation\" from \"position\" inner join \"company\" on \"company\".\"id\" = \"position\".\"company_id\" left join \"job_posting\" on \"job_posting\".\"position_id\" = \"position\".\"id\" left join \"position_review\" on \"position_review\".\"position_id\" = \"position\".\"id\" left join \"submission\" on \"submission\".\"position_id\" = \"position\".\"id\" group by \"position\".\"id\", \"position\".\"name\", \"company\".\"id\", \"company\".\"name\"",
+      "name": "position_information_m_view",
+      "schema": "public",
+      "isExisting": false,
+      "materialized": true
+    },
+    "public.position_omega_m_view": {
+      "columns": {},
+      "definition": "select \"position\".\"id\" as \"position_id\", \"position\".\"name\" as \"position_name\", \"company\".\"id\" as \"company_id\", \"company\".\"name\" as \"company_name\", count(\"position_review\".\"id\") as \"total_reviews\", round((\n      0.30 * (\n         (avg(\"position_review\".\"rating_collaboration\") + avg(\"position_review\".\"rating_work_variety\") +\n          avg(\"position_review\".\"rating_relationships\") + avg(\"position_review\".\"rating_supervisor_access\") +\n          avg(\"position_review\".\"rating_training\")) / 5.0 / 4.0\n      ) +\n      0.25 * (\n         count(*) filter (where \"position_review\".\"would_recommend\" = true)::numeric\n         / nullif(count(*) filter (where \"position_review\".\"would_recommend\" is not null), 0)\n      ) +\n      0.15 * (\n         count(*) filter (where \"position_review\".\"description_accurate\" = true)::numeric\n         / nullif(count(*) filter (where \"position_review\".\"description_accurate\" is not null), 0)\n      ) +\n      0.20 * (\n         (avg(\"position_review\".\"comp_written_comm\") + avg(\"position_review\".\"comp_verbal_comm\") +\n          avg(\"position_review\".\"comp_comm_style\") + avg(\"position_review\".\"comp_original_ideas\") +\n          avg(\"position_review\".\"comp_problem_solving\") + avg(\"position_review\".\"comp_info_evaluation\") +\n          avg(\"position_review\".\"comp_data_decisions\") + avg(\"position_review\".\"comp_ethical_standards\") +\n          avg(\"position_review\".\"comp_technology_use\") + avg(\"position_review\".\"comp_goal_setting\") +\n          avg(\"position_review\".\"comp_diversity\") + avg(\"position_review\".\"comp_work_habits\") +\n          avg(\"position_review\".\"comp_proactive\")) / 13.0 / 4.0\n      ) +\n      0.10 * (\n         1.0 - (\n            0.5 * count(*) filter (where \"position_review\".\"overtime_required\" = true)::numeric\n                / nullif(count(*) filter (where \"position_review\".\"overtime_required\" is not null), 0)\n            +\n            0.5 * least(greatest(avg(\"position_review\".\"days_per_week\") - 3, 0), 2) / 2.0\n         )\n      )\n   ) * 100, 1) as \"omega_score\", round(\n      (avg(\"position_review\".\"rating_collaboration\") + avg(\"position_review\".\"rating_work_variety\") +\n       avg(\"position_review\".\"rating_relationships\") + avg(\"position_review\".\"rating_supervisor_access\") +\n       avg(\"position_review\".\"rating_training\")) / 5.0 / 4.0 * 100, 1) as \"satisfaction_score\", round(\n      count(*) filter (where \"position_review\".\"would_recommend\" = true)::numeric\n      / nullif(count(*) filter (where \"position_review\".\"would_recommend\" is not null), 0) * 100, 1) as \"trust_score\", round(\n      count(*) filter (where \"position_review\".\"description_accurate\" = true)::numeric\n      / nullif(count(*) filter (where \"position_review\".\"description_accurate\" is not null), 0) * 100, 1) as \"integrity_score\", round(\n      (avg(\"position_review\".\"comp_written_comm\") + avg(\"position_review\".\"comp_verbal_comm\") +\n       avg(\"position_review\".\"comp_comm_style\") + avg(\"position_review\".\"comp_original_ideas\") +\n       avg(\"position_review\".\"comp_problem_solving\") + avg(\"position_review\".\"comp_info_evaluation\") +\n       avg(\"position_review\".\"comp_data_decisions\") + avg(\"position_review\".\"comp_ethical_standards\") +\n       avg(\"position_review\".\"comp_technology_use\") + avg(\"position_review\".\"comp_goal_setting\") +\n       avg(\"position_review\".\"comp_diversity\") + avg(\"position_review\".\"comp_work_habits\") +\n       avg(\"position_review\".\"comp_proactive\")) / 13.0 / 4.0 * 100, 1) as \"growth_score\", round((\n      1.0 - (\n         0.5 * count(*) filter (where \"position_review\".\"overtime_required\" = true)::numeric\n             / nullif(count(*) filter (where \"position_review\".\"overtime_required\" is not null), 0)\n         +\n         0.5 * least(greatest(avg(\"position_review\".\"days_per_week\") - 3, 0), 2) / 2.0\n      )\n   ) * 100, 1) as \"work_life_score\" from \"position\" inner join \"company\" on \"company\".\"id\" = \"position\".\"company_id\" left join \"position_review\" on \"position_review\".\"position_id\" = \"position\".\"id\" group by \"position\".\"id\", \"position\".\"name\", \"company\".\"id\", \"company\".\"name\"",
+      "name": "position_omega_m_view",
+      "schema": "public",
+      "isExisting": false,
+      "materialized": true
+    },
+    "public.position_review_aggregate_m_view": {
+      "columns": {},
+      "definition": "select \"position\".\"id\" as \"position_id\", \"position\".\"name\" as \"position_name\", \"company\".\"name\" as \"company_name\", count(\"position_review\".\"id\") as \"total_reviews\", min(\"position_review\".\"year\") as \"first_review_year\", max(\"position_review\".\"year\") as \"last_review_year\", round(avg(\"position_review\".\"rating_overall\")::numeric, 2) as \"avg_rating_overall\", round(avg(\"position_review\".\"rating_collaboration\")::numeric, 2) as \"avg_rating_collaboration\", round(avg(\"position_review\".\"rating_work_variety\")::numeric, 2) as \"avg_rating_work_variety\", round(avg(\"position_review\".\"rating_relationships\")::numeric, 2) as \"avg_rating_relationships\", round(avg(\"position_review\".\"rating_supervisor_access\")::numeric, 2) as \"avg_rating_supervisor_access\", round(avg(\"position_review\".\"rating_training\")::numeric, 2) as \"avg_rating_training\", round(\n            100.0 * count(*) filter (where \"position_review\".\"would_recommend\" = true)\n            / nullif(count(*) filter (where \"position_review\".\"would_recommend\" is not null), 0), 1) as \"pct_would_recommend\", round(\n            100.0 * count(*) filter (where \"position_review\".\"description_accurate\" = true)\n            / nullif(count(*) filter (where \"position_review\".\"description_accurate\" is not null), 0), 1) as \"pct_description_accurate\", round(avg(\"position_review\".\"days_per_week\")::numeric, 1) as \"avg_days_per_week\", round(\n            100.0 * count(*) filter (where \"position_review\".\"public_transit_available\" = true)\n            / nullif(count(*) filter (where \"position_review\".\"public_transit_available\" is not null), 0), 1) as \"pct_public_transit\", round(\n            100.0 * count(*) filter (where \"position_review\".\"overtime_required\" = true)\n            / nullif(count(*) filter (where \"position_review\".\"overtime_required\" is not null), 0), 1) as \"pct_overtime_required\", round(avg(\"position_review\".\"comp_written_comm\")::numeric, 2) as \"avg_comp_written_comm\", round(avg(\"position_review\".\"comp_verbal_comm\")::numeric, 2) as \"avg_comp_verbal_comm\", round(avg(\"position_review\".\"comp_comm_style\")::numeric, 2) as \"avg_comp_comm_style\", round(avg(\"position_review\".\"comp_original_ideas\")::numeric, 2) as \"avg_comp_original_ideas\", round(avg(\"position_review\".\"comp_problem_solving\")::numeric, 2) as \"avg_comp_problem_solving\", round(avg(\"position_review\".\"comp_info_evaluation\")::numeric, 2) as \"avg_comp_info_evaluation\", round(avg(\"position_review\".\"comp_data_decisions\")::numeric, 2) as \"avg_comp_data_decisions\", round(avg(\"position_review\".\"comp_ethical_standards\")::numeric, 2) as \"avg_comp_ethical_standards\", round(avg(\"position_review\".\"comp_technology_use\")::numeric, 2) as \"avg_comp_technology_use\", round(avg(\"position_review\".\"comp_goal_setting\")::numeric, 2) as \"avg_comp_goal_setting\", round(avg(\"position_review\".\"comp_diversity\")::numeric, 2) as \"avg_comp_diversity\", round(avg(\"position_review\".\"comp_work_habits\")::numeric, 2) as \"avg_comp_work_habits\", round(avg(\"position_review\".\"comp_proactive\")::numeric, 2) as \"avg_comp_proactive\" from \"position\" inner join \"company\" on \"company\".\"id\" = \"position\".\"company_id\" left join \"position_review\" on \"position_review\".\"position_id\" = \"position\".\"id\" group by \"position\".\"id\", \"position\".\"name\", \"company\".\"name\"",
+      "name": "position_review_aggregate_m_view",
+      "schema": "public",
+      "isExisting": false,
+      "materialized": true
+    }
+  },
+  "_meta": {
+    "columns": {},
+    "schemas": {},
+    "tables": {}
+  }
+}

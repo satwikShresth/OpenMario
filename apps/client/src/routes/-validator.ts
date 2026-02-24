@@ -16,8 +16,6 @@ export const year = z.coerce.number().check(
 );
 
 export const salarySearchSchema = z.object({
-   pageIndex: z.catch(z.optional(z.coerce.number().check(z.minimum(1))), 1),
-   pageSize: z.catch(z.coerce.number().check(z.minimum(10), z.maximum(50)), 10),
    search: z.catch(
       z.optional(z.string().check(z.minLength(1), z.maxLength(200))),
       undefined
