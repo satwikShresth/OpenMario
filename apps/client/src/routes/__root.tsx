@@ -1,4 +1,4 @@
-import { createRootRouteWithContext, Outlet } from '@tanstack/react-router';
+import { createRootRouteWithContext, Outlet, useRouterState } from '@tanstack/react-router';
 import { TanStackRouterDevtools } from '@tanstack/react-router-devtools';
 import { Box, Flex } from '@chakra-ui/react';
 import type { QueryClient } from '@tanstack/react-query';
@@ -10,8 +10,19 @@ interface MyRouterContext {
    queryClient: QueryClient;
 }
 
-export const Route = createRootRouteWithContext<MyRouterContext>()({
-   component: () => (
+function RootComponent() {
+   const pathname = useRouterState({ select: (s) => s.location.pathname });
+
+   if (pathname === '/') {
+      return (
+         <>
+            <Outlet />
+            <TanStackQueryLayout />
+         </>
+      );
+   }
+
+   return (
       <>
          <Flex minH='100dvh' align='flex-start'>
             <Sidebar />
@@ -32,5 +43,9 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
          <TanStackRouterDevtools />
          <TanStackQueryLayout />
       </>
-   ),
+   );
+}
+
+export const Route = createRootRouteWithContext<MyRouterContext>()({
+   component: RootComponent,
 });

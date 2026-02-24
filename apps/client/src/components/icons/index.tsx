@@ -65,6 +65,7 @@ import {
   Trash2,
   Upload,
   Users,
+  Skull,
   Wand2,
   X,
   XCircle,
@@ -151,6 +152,7 @@ export const SurveyIcon = ClipboardList;
 
 // ─── Domain — Misc ───────────────────────────────────────────────────────────
 export const HomeIcon = Home;
+export const ShaftIcon = Skull;
 export const MonitorIcon = Monitor;
 export const MonitorOffIcon = MonitorX;
 export const AutoFillIcon = Sparkles;

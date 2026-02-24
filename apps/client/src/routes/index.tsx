@@ -1,9 +1,6 @@
-import { redirect } from '@tanstack/react-router';
 import { createFileRoute } from '@tanstack/react-router';
+import { Landing } from '@/components/Landing';
 
 export const Route = createFileRoute('/')({
-   loader: () => {
-      //@ts-ignore: shutp
-      throw redirect({ to: '/salary' });
-   },
+   component: Landing,
 });

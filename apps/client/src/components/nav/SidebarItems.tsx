@@ -1,8 +1,8 @@
 import { forwardRef } from 'react';
 import type React from 'react';
 import { Link, Box, Flex, Icon, Separator, Text } from '@chakra-ui/react';
-import { Link as TLink, useRouterState } from '@tanstack/react-router';
-import { GithubIcon, MessageCircleIcon, DatabaseIcon } from '@/components/icons';
+import { Link as TLink, useNavigate, useRouterState } from '@tanstack/react-router';
+import { GithubIcon, MessageCircleIcon, DatabaseIcon, ShaftIcon } from '@/components/icons';
 import { useColorModeValue } from '@/components/ui/color-mode';
 import { FeedbackDialog } from '@/components/common/Feedback';
 import { DatabaseManagerDialog } from '@/components/common/DatabaseManager';
@@ -88,6 +88,13 @@ const PRIMARY_GROUP_IDS = ['coop', 'academics'];
 
 export function SidebarItems({ onClose, minimized }: SidebarItemsProps) {
    const pathname = useRouterState({ select: s => s.location.pathname });
+   const navigate = useNavigate();
+
+   const handleWatchShaft = () => {
+      localStorage.removeItem('shaft-seen');
+      onClose?.();
+      navigate({ to: '/' });
+   };
    const subActiveBg = useColorModeValue('rgba(0,0,0,0.05)', 'rgba(255,255,255,0.07)');
    const subHoverBg = useColorModeValue('rgba(0,0,0,0.03)', 'rgba(255,255,255,0.04)');
    const trackColor = useColorModeValue('rgba(0,0,0,0.10)', 'rgba(255,255,255,0.10)');
@@ -219,6 +226,15 @@ export function SidebarItems({ onClose, minimized }: SidebarItemsProps) {
             ))}
 
             <Separator mb={1.5} mt={1} />
+
+            <Tooltip content='Watch the Shaft' disabled={!minimized}>
+               <NavButton
+                  icon={ShaftIcon}
+                  label='Watch the Shaft'
+                  minimized={minimized}
+                  onClick={handleWatchShaft}
+               />
+            </Tooltip>
 
             <Tooltip content='Database' disabled={!minimized}>
                <DatabaseManagerDialog

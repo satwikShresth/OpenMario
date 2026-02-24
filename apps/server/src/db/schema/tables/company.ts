@@ -1,10 +1,10 @@
-import { pgTable, unique, uuid, varchar } from 'drizzle-orm/pg-core';
-import { users } from './users';
+import { pgTable, text, unique, uuid, varchar } from 'drizzle-orm/pg-core';
+import { user } from './auth';
 
 export const company = pgTable('company', {
    id: uuid().defaultRandom().primaryKey(),
    name: varchar({ length: 255 }).notNull().unique(),
-   owner_id: uuid().references(() => users.id, { onDelete: 'set null' })
+   owner_id: text().references(() => user.id, { onDelete: 'set null' })
 });
 
 export const position = pgTable(
@@ -15,7 +15,7 @@ export const position = pgTable(
          .notNull()
          .references(() => company.id, { onDelete: 'restrict' }),
       name: varchar({ length: 255 }).notNull(),
-      owner_id: uuid().references(() => users.id, { onDelete: 'set null' })
+      owner_id: text().references(() => user.id, { onDelete: 'set null' })
    },
    table => [unique().on(table.company_id, table.name)]
 );

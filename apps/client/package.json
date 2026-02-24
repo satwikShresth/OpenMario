@@ -28,6 +28,8 @@
     "@orpc/contract": "^1.13.2",
     "@orpc/openapi-client": "^1.13.2",
     "@orpc/tanstack-query": "^1.13.2",
+    "@react-three/drei": "^10.7.7",
+    "@react-three/fiber": "^9.5.0",
     "@t3-oss/env-core": "^0.13.10",
     "@tailwindcss/vite": "^4.1.18",
     "@tanstack/match-sorter-utils": "^8.19.4",
@@ -61,6 +63,7 @@
     "tailwindcss": "^4.1.18",
     "tanstack-db-pglite": "^1.0.5",
     "tesseract.js": "^7.0.0",
+    "three": "^0.183.1",
     "zod": "^4.2.1"
   },
   "devDependencies": {
@@ -70,6 +73,7 @@
     "@types/node": "^25.0.3",
     "@types/react": "^19.2.7",
     "@types/react-dom": "^19.2.3",
+    "@types/three": "^0.183.1",
     "@vitejs/plugin-react": "^5.1.2",
     "babel-plugin-react-compiler": "^1.0.0",
     "drizzle-kit": "^0.31.8",
