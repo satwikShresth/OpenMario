@@ -1,0 +1,12 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"],
+      "@env": ["./env.ts"]
+    }
+  },
+  "include": ["./**/*", "env.ts"],
+  "exclude": ["node_modules", "dist"]
+}
