@@ -74,7 +74,7 @@ export function Header() {
             </HStack>
          </Box>
          {prof.avg_rating != null && (
-            <Box textAlign='center' p={4} borderRadius='xl' borderWidth='thin' minW='100px'>
+            <Box textAlign='center' p={4} borderRadius='xl' borderWidth='2px' borderColor='border' minW='100px' boxShadow='sm'>
                <Text fontSize='3xl' fontWeight='extrabold' color={ratingHex(prof.avg_rating)} lineHeight='1'>
                   {prof.avg_rating}
                </Text>

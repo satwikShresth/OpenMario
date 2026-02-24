@@ -143,7 +143,7 @@ export const Card = ({ section }: { section: Section }) => {
                <Flex>
                   {section.days && section.days.length > 0
                      ? (
-                        <HStack align='normal'>
+                        <HStack align='center'>
                            <Tag
                               size='xl'
                               width={isMobile ? 'full' : 'fit-content'}
@@ -152,9 +152,8 @@ export const Card = ({ section }: { section: Section }) => {
                               justifyContent='center'
                               alignItems='center'
                               px={4}
-                              py={2}
+                              py={3}
                               maxW='64'
-                              maxH='28'
                            >
                               <VStack>
                                  <HStack

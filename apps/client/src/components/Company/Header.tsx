@@ -30,7 +30,7 @@ export function Header() {
                )}
             </HStack>
          </Box>
-         <Box textAlign='center' px={6} py={4} borderRadius='2xl' borderWidth='thin' minW='110px' position='relative'>
+         <Box textAlign='center' p={4} borderRadius='xl' borderWidth='2px' borderColor='border' minW='100px' position='relative' boxShadow='sm'>
             {company.total_reviews < 5 && (
                <Tooltip content='Limited data — omΩ score is based on fewer than 5 reviews and may not be representative'>
                   <Box position='absolute' top='8px' right='10px' color='orange.400' cursor='help'>

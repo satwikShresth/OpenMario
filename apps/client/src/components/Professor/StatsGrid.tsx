@@ -22,7 +22,7 @@ export function StatsGrid() {
             { label: 'Courses Taught', value: prof.total_courses_taught },
             { label: 'Terms Active', value: prof.total_terms_active },
          ].map(({ label, value }) => (
-            <Box key={label} borderWidth='thin' borderRadius='lg' p={4}>
+            <Box key={label} borderWidth='2px' borderColor='border' borderRadius='xl' p={4} boxShadow='xs'>
                <Stat.Root>
                   <Stat.Label fontSize='xs'>{label}</Stat.Label>
                   <Stat.ValueText fontSize='xl'>{value}</Stat.ValueText>

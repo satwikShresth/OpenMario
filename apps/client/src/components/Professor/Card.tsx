@@ -24,10 +24,10 @@ export function ProfessorCard({ prof, onClick }: { prof: ProfessorListItem; onCl
       <Card.Root
          variant='outline'
          borderRadius='xl'
-         _hover={{ shadow: 'md', borderColor: 'colorPalette.400' }}
          cursor='pointer'
-         transition='all 0.15s'
          onClick={onClick}
+         _hover={{ boxShadow: 'lg', borderColor: 'border.emphasized', transform: 'translate(-2px, -2px)' }}
+         transition='transform 120ms ease, box-shadow 120ms ease, border-color 120ms ease'
       >
          <Card.Body py={4} px={5}>
             {/* Top row: always horizontal — rating | info | stats */}

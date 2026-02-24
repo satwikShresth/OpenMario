@@ -1,0 +1,230 @@
+import { defineRecipe } from "@chakra-ui/react"
+
+export const buttonRecipe = defineRecipe({
+  className: "chakra-button",
+  base: {
+    display: "inline-flex",
+    appearance: "none",
+    alignItems: "center",
+    justifyContent: "center",
+    userSelect: "none",
+    position: "relative",
+    borderRadius: "l2",
+    whiteSpace: "nowrap",
+    verticalAlign: "middle",
+    borderWidth: "2px",
+    borderColor: "transparent",
+    cursor: "button",
+    flexShrink: "0",
+    outline: "0",
+    lineHeight: "1.2",
+    isolation: "isolate",
+    fontWeight: "bold",
+    fontFamily: "body",
+    letterSpacing: "0.03em",
+    transitionProperty: "transform, box-shadow",
+    transitionDuration: "fast",
+    transitionTimingFunction: "ease",
+    focusVisibleRing: "outside",
+    _disabled: {
+      layerStyle: "disabled",
+    },
+    _icon: {
+      flexShrink: "0",
+    },
+  },
+  variants: {
+    size: {
+      "2xs": {
+        h: "6",
+        minW: "6",
+        textStyle: "xs",
+        px: "2",
+        gap: "1",
+        _icon: {
+          width: "3.5",
+          height: "3.5",
+        },
+      },
+      xs: {
+        h: "8",
+        minW: "8",
+        textStyle: "xs",
+        px: "2.5",
+        gap: "1",
+        _icon: {
+          width: "4",
+          height: "4",
+        },
+      },
+      sm: {
+        h: "9",
+        minW: "9",
+        px: "3.5",
+        textStyle: "sm",
+        gap: "2",
+        _icon: {
+          width: "4",
+          height: "4",
+        },
+      },
+      md: {
+        h: "10",
+        minW: "10",
+        textStyle: "sm",
+        px: "4",
+        gap: "2",
+        _icon: {
+          width: "5",
+          height: "5",
+        },
+      },
+      lg: {
+        h: "11",
+        minW: "11",
+        textStyle: "md",
+        px: "5",
+        gap: "3",
+        _icon: {
+          width: "5",
+          height: "5",
+        },
+      },
+      xl: {
+        h: "12",
+        minW: "12",
+        textStyle: "md",
+        px: "5",
+        gap: "2.5",
+        _icon: {
+          width: "5",
+          height: "5",
+        },
+      },
+      "2xl": {
+        h: "16",
+        minW: "16",
+        textStyle: "lg",
+        px: "7",
+        gap: "3",
+        _icon: {
+          width: "6",
+          height: "6",
+        },
+      },
+    },
+    variant: {
+      solid: {
+        bg: "colorPalette.solid",
+        color: "colorPalette.contrast",
+        borderColor: "colorPalette.emphasized",
+        shadow: "4px 4px 0 var(--shadow-color), 0 4px 14px color-mix(in srgb, var(--shadow-color) 30%, transparent)",
+        shadowColor: "colorPalette.800",
+        _hover: {
+          bg: "colorPalette.solid/92",
+          shadow: "6px 6px 0 var(--shadow-color), 0 6px 18px color-mix(in srgb, var(--shadow-color) 35%, transparent)",
+          transform: "translate(-2px, -2px)",
+        },
+        _active: {
+          bg: "colorPalette.solid/88",
+          shadow: "0px 0px 0 var(--shadow-color)",
+          transform: "translate(4px, 4px)",
+        },
+        _expanded: {
+          bg: "colorPalette.solid/88",
+          shadow: "1px 1px 0 var(--shadow-color)",
+          transform: "translate(3px, 3px)",
+        },
+      },
+      subtle: {
+        colorPalette: "gray",
+        bg: "colorPalette.subtle",
+        color: "colorPalette.fg",
+        borderColor: "colorPalette.muted",
+        shadow: "3px 3px 0 var(--shadow-color), 0 3px 10px color-mix(in srgb, var(--shadow-color) 20%, transparent)",
+        shadowColor: "colorPalette.emphasized",
+        _hover: {
+          bg: "colorPalette.muted",
+          shadow: "5px 5px 0 var(--shadow-color), 0 5px 14px color-mix(in srgb, var(--shadow-color) 25%, transparent)",
+          transform: "translate(-2px, -2px)",
+        },
+        _active: {
+          bg: "colorPalette.muted",
+          shadow: "0px 0px 0 var(--shadow-color)",
+          transform: "translate(3px, 3px)",
+        },
+        _expanded: {
+          bg: "colorPalette.muted",
+          shadow: "1px 1px 0 var(--shadow-color)",
+          transform: "translate(2px, 2px)",
+        },
+      },
+      surface: {
+        colorPalette: "gray",
+        bg: "colorPalette.subtle",
+        color: "colorPalette.fg",
+        borderColor: "colorPalette.muted",
+        shadow: "3px 3px 0 var(--shadow-color), 0 3px 10px color-mix(in srgb, var(--shadow-color) 20%, transparent)",
+        shadowColor: "colorPalette.emphasized",
+        _hover: {
+          bg: "colorPalette.muted",
+          shadow: "5px 5px 0 var(--shadow-color), 0 5px 14px color-mix(in srgb, var(--shadow-color) 25%, transparent)",
+          transform: "translate(-2px, -2px)",
+        },
+        _active: {
+          bg: "colorPalette.muted",
+          shadow: "0px 0px 0 var(--shadow-color)",
+          transform: "translate(3px, 3px)",
+        },
+        _expanded: {
+          bg: "colorPalette.muted",
+          shadow: "1px 1px 0 var(--shadow-color)",
+          transform: "translate(2px, 2px)",
+        },
+      },
+      outline: {
+        colorPalette: "gray",
+        borderWidth: "2px",
+        borderColor: "colorPalette.border",
+        color: "colorPalette.fg",
+        shadow: "3px 3px 0 var(--shadow-color), 0 3px 10px color-mix(in srgb, var(--shadow-color) 20%, transparent)",
+        shadowColor: "colorPalette.emphasized",
+        _hover: {
+          bg: "colorPalette.subtle",
+          shadow: "5px 5px 0 var(--shadow-color), 0 5px 14px color-mix(in srgb, var(--shadow-color) 25%, transparent)",
+          transform: "translate(-2px, -2px)",
+        },
+        _active: {
+          bg: "colorPalette.subtle",
+          shadow: "0px 0px 0 var(--shadow-color)",
+          transform: "translate(3px, 3px)",
+        },
+        _expanded: {
+          bg: "colorPalette.subtle",
+          shadow: "1px 1px 0 var(--shadow-color)",
+          transform: "translate(2px, 2px)",
+        },
+      },
+      ghost: {
+        colorPalette: "gray",
+        bg: "transparent",
+        color: "colorPalette.fg",
+        borderColor: "transparent",
+        _hover: {
+          bg: "colorPalette.subtle",
+        },
+        _expanded: {
+          bg: "colorPalette.subtle",
+        },
+      },
+      plain: {
+        colorPalette: "gray",
+        color: "colorPalette.fg",
+      },
+    },
+  },
+  defaultVariants: {
+    size: "md",
+    variant: "solid",
+  },
+})
