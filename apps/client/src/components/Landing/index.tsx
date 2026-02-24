@@ -278,7 +278,6 @@ function DrexelShaftVideo({ onDrop, onStop }: { onDrop: () => void; onStop: () =
          borderRadius='lg' overflow='hidden' borderWidth='1px' borderColor='#1a1a1a'
          style={{
             aspectRatio: '16/9',
-            filter: 'contrast(1.3) brightness(0.8) saturate(0.4)',
          }}
       >
          <div ref={containerRef} style={{ width: '100%', height: '100%' }} />
@@ -396,14 +395,14 @@ export function Landing() {
             </Flex>
          </Reveal>
 
-         <Container maxW='2xl' py={{ base: 8, md: 12 }}>
-            <VStack gap={10} align='stretch'>
+         <Container maxW='5xl' py={{ base: 4, md: 6 }}>
+            <VStack gap={4} align='stretch'>
 
                {/* title — hidden until after drop */}
                <Reveal show={showTitle} animation='glitchIn 1.4s ease-in-out forwards'>
                   <VStack gap={1} textAlign='center'>
                      <Text
-                        fontSize={{ base: '3xl', md: '5xl' }}
+                        fontSize={{ base: '2xl', md: '3xl' }}
                         fontWeight='black'
                         lineHeight='1'
                         letterSpacing='tight'
@@ -424,8 +423,8 @@ export function Landing() {
 
                {/* quote */}
                <Reveal show={showQuote} delay={0}>
-                  <Box textAlign='center' py={6} px={4} borderTopWidth='1px' borderBottomWidth='1px' borderColor='#1a1a1a'>
-                     <Text fontSize={{ base: 'md', md: 'xl' }} color='#ccc' lineHeight='1.9' fontStyle='italic'>
+                  <Box textAlign='center' py={3} px={4} borderTopWidth='1px' borderBottomWidth='1px' borderColor='#1a1a1a'>
+                     <Text fontSize={{ base: 'sm', md: 'md' }} color='#ccc' lineHeight='1.7' fontStyle='italic'>
                         "The Drexel shaft may be dead,<br />
                         but the suffering it brings to us students<br />
                         still lives on"
