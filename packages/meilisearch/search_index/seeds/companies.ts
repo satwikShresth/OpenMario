@@ -9,6 +9,7 @@ export default async function seedCompanies(
    indexName: string
 ): Promise<void> {
    console.log(`[companies] Fetching rows from meili_companies_idx view...`);
+   await db.refreshMaterializedView(meiliCompaniesIdx);
 
    const rows = await db.select().from(meiliCompaniesIdx);
 

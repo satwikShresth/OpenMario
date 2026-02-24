@@ -11,7 +11,7 @@ export function Root({
    gap?: number;
 }) {
    return (
-      <Box maxW={maxW} w='full' mx='auto'>
+      <Box maxW={maxW} w='full' mx='auto' overflowX='hidden'>
          <VStack align='stretch' gap={gap}>{children}</VStack>
       </Box>
    );

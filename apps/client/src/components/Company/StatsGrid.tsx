@@ -1,4 +1,4 @@
-import { Box, Grid, Skeleton, Stat } from '@chakra-ui/react';
+import { Box, Flex, Skeleton, Stat } from '@chakra-ui/react';
 import { useCompanyDetail } from './detailStore';
 
 export function StatsGrid() {
@@ -7,11 +7,11 @@ export function StatsGrid() {
 
    if (isLoading || !company) {
       return (
-         <Grid templateColumns={{ base: 'repeat(2,1fr)', md: 'repeat(3,1fr)', lg: 'repeat(6,1fr)' }} gap={4}>
+         <Flex wrap='wrap' gap={4}>
             {Array.from({ length: 6 }).map((_, i) => (
-               <Skeleton key={i} height='96px' borderRadius='xl' />
+               <Skeleton key={i} height='96px' borderRadius='xl' flex='1 1 140px' minW={0} />
             ))}
-         </Grid>
+         </Flex>
       );
    }
    const stats = [
@@ -44,15 +44,26 @@ export function StatsGrid() {
       },
    ];
    return (
-      <Grid templateColumns={{ base: 'repeat(2,1fr)', md: 'repeat(3,1fr)', lg: 'repeat(6,1fr)' }} gap={4}>
+      <Flex wrap='wrap' gap={4}>
          {stats.map(({ label, value }) => (
-            <Box key={label} borderWidth='2px' borderColor='border' borderRadius='xl' p={4} boxShadow='xs'>
+            <Box
+               key={label}
+               borderWidth='2px'
+               borderColor='border'
+               borderRadius='xl'
+               p={4}
+               boxShadow='xs'
+               flex='1 1 140px'
+               minW={0}
+            >
                <Stat.Root>
                   <Stat.Label fontSize='sm' color='fg.muted'>{label}</Stat.Label>
-                  <Stat.ValueText fontSize='2xl' fontWeight='bold' mt={1}>{value}</Stat.ValueText>
+                  <Stat.ValueText fontSize={{ base: 'lg', md: '2xl' }} fontWeight='bold' mt={1}>
+                     {value}
+                  </Stat.ValueText>
                </Stat.Root>
             </Box>
          ))}
-      </Grid>
+      </Flex>
    );
 }

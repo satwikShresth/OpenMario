@@ -135,8 +135,11 @@
       "name": "@openmario/db",
       "version": "1.0.0",
       "dependencies": {
+        "@dotenvx/dotenvx": "^1.52.0",
         "@neondatabase/serverless": "^1.0.2",
+        "@t3-oss/env-core": "^0.13.10",
         "drizzle-orm": "^0.45.1",
+        "zod": "^4.2.1",
       },
     },
     "packages/meilisearch": {
@@ -145,6 +148,20 @@
       "dependencies": {
         "@openmario/db": "workspace:*",
         "meilisearch": "^0.54.0",
+      },
+    },
+    "packages/scraper": {
+      "name": "@openmario/scraper",
+      "version": "1.0.0",
+      "dependencies": {
+        "@dotenvx/dotenvx": "^1.52.0",
+        "@openmario/db": "workspace:*",
+        "@t3-oss/env-core": "^0.13.10",
+        "drizzle-orm": "^0.45.1",
+        "zod": "^4.2.1",
+      },
+      "devDependencies": {
+        "typescript": "^5.9.3",
       },
     },
   },
@@ -486,6 +503,8 @@
     "@openmario/db": ["@openmario/db@workspace:packages/db"],
 
     "@openmario/meilisearch": ["@openmario/meilisearch@workspace:packages/meilisearch"],
+
+    "@openmario/scraper": ["@openmario/scraper@workspace:packages/scraper"],
 
     "@openmario/server": ["@openmario/server@workspace:apps/server"],
 
