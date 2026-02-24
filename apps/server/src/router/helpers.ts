@@ -1,5 +1,5 @@
 import { type Column, type SQL, sql } from 'drizzle-orm';
-import { contracts } from '@/contracts';
+import { contracts } from '@openmario/contracts';
 import { implement } from '@orpc/server';
 
 export const os = implement(contracts).$context<{
