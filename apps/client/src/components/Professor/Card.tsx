@@ -10,7 +10,7 @@ const ratingMeta = (rating: number | null) => {
 };
 
 const STATS = (prof: ProfessorListItem) => [
-   { label: 'Difficulty', value: prof.avg_difficulty != null ? prof.avg_difficulty : '—' },
+   { label: 'Difficulty', value: prof.avg_difficulty != null ? Number(prof.avg_difficulty).toFixed(1) : '—' },
    { label: 'Ratings', value: prof.num_ratings ?? 0 },
    { label: 'Sections', value: prof.total_sections_taught },
    { label: 'Courses', value: prof.total_courses_taught },
@@ -46,20 +46,24 @@ export function ProfessorCard({ prof, onClick }: { prof: ProfessorListItem; onCl
 
                {/* Name + department + badges */}
                <Box flex={1} minW={0}>
-                  <Text fontSize='md' fontWeight='semibold' lineClamp={1}>{prof.instructor_name}</Text>
+                  <Text fontSize='md' fontWeight='semibold' lineClamp={1}>{prof.name}</Text>
                   <Text fontSize='sm' color='fg.muted' mb={1} truncate>{prof.department ?? 'Unknown Department'}</Text>
-                  {prof.subjects_taught && prof.subjects_taught.length > 0 && (
-                     <HStack gap={1} wrap='wrap'>
-                        {prof.subjects_taught.slice(0, 4).map(s => (
-                           <Badge key={s} size='sm' variant='surface' colorPalette='blue'>{s}</Badge>
-                        ))}
-                        {prof.subjects_taught.length > 4 && (
-                           <Badge size='sm' variant='surface' colorPalette='gray'>
-                              +{prof.subjects_taught.length - 4}
-                           </Badge>
-                        )}
-                     </HStack>
-                  )}
+                  {(() => {
+                     const subjects = (prof.subjects_taught ?? []).filter((s): s is string => Boolean(s?.trim()));
+                     if (subjects.length === 0) return null;
+                     return (
+                        <HStack gap={1} wrap='wrap'>
+                           {subjects.slice(0, 4).map(s => (
+                              <Badge key={s} size='sm' variant='surface' colorPalette='blue'>{s}</Badge>
+                           ))}
+                           {subjects.length > 4 && (
+                              <Badge size='sm' variant='surface' colorPalette='gray'>
+                                 +{subjects.length - 4}
+                              </Badge>
+                           )}
+                        </HStack>
+                     );
+                  })()}
                </Box>
 
                {/* Stats — inline on md+, hidden on small */}

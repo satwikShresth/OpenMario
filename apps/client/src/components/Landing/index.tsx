@@ -89,14 +89,20 @@ function DrexelShaftVideo({ onDrop, onStop }: { onDrop: () => void; onStop: () =
                   e.target.unMute();
                   e.target.playVideo();
                   const DROP = 37.1;
-                  const RAMP_START = 10; // start fading in audio from 10s
+                  const VOL_START = 10;   // volume ramp starts
+                  const SLOW_START = 25;   // speed ramp starts
                   const poll = setInterval(() => {
                      if (!playerRef.current?.getCurrentTime) return;
                      const t = playerRef.current.getCurrentTime();
                      // gradually increase volume from 10s → impact
-                     if (t >= RAMP_START && !droppedRef.current) {
-                        const pct = Math.min((t - RAMP_START) / (DROP - RAMP_START), 1);
+                     if (t >= VOL_START && !droppedRef.current) {
+                        const pct = Math.min((t - VOL_START) / (DROP - VOL_START), 1);
                         playerRef.current.setVolume(Math.round(pct * 100));
+                     }
+                     // gradually slow from 2x → 1x between 25s → impact
+                     if (t >= SLOW_START && !droppedRef.current) {
+                        const pct = Math.min((t - SLOW_START) / (DROP - SLOW_START), 1);
+                        playerRef.current.setPlaybackRate(2 - pct);
                      }
                      // building hits ground at 37.1s
                      if (t >= DROP && !droppedRef.current) {
@@ -142,8 +148,8 @@ function DrexelShaftVideo({ onDrop, onStop }: { onDrop: () => void; onStop: () =
 
 const TOOLS = [
    { emoji: '🏢', label: 'co-op reviews', to: '/companies' },
-   { emoji: '📚', label: 'courses',        to: '/courses/explore' },
-   { emoji: '👨‍🏫', label: 'professors',     to: '/professors' },
+   { emoji: '📚', label: 'courses', to: '/courses/explore' },
+   { emoji: '👨‍🏫', label: 'professors', to: '/professors' },
 ];
 
 type Phase = 'before' | 'impact' | 'after';
@@ -151,14 +157,14 @@ type Phase = 'before' | 'impact' | 'after';
 const SHAFT_KEY = 'shaft-seen';
 
 export function Landing() {
-   const navigate                     = useNavigate();
-   const [phase, setPhase]            = useState<Phase>('before');
-   const [showTitle,   setShowTitle]  = useState(false);
-   const [showQuote,   setShowQuote]  = useState(false);
-   const [showTools,   setShowTools]  = useState(false);
-   const [showNav,     setShowNav]    = useState(false);
+   const navigate = useNavigate();
+   const [phase, setPhase] = useState<Phase>('before');
+   const [showTitle, setShowTitle] = useState(false);
+   const [showQuote, setShowQuote] = useState(false);
+   const [showTools, setShowTools] = useState(false);
+   const [showNav, setShowNav] = useState(false);
 
-   const [glitch, setGlitch]          = useState(false);
+   const [glitch, setGlitch] = useState(false);
 
    useEffect(() => {
       if (localStorage.getItem(SHAFT_KEY)) {
@@ -188,17 +194,17 @@ export function Landing() {
    const handleDrop = useCallback(() => {
       localStorage.setItem(SHAFT_KEY, '1');
       setPhase('impact');
-      setTimeout(() => setPhase('after'),  900);
+      setTimeout(() => setPhase('after'), 900);
       setTimeout(() => setShowTitle(true), 1000);
       setTimeout(() => setShowQuote(true), 1600);
       setTimeout(() => setShowTools(true), 2200);
-      setTimeout(() => setShowNav(true),   2800);
+      setTimeout(() => setShowNav(true), 2800);
    }, []);
 
-   const handleStop = useCallback(() => {}, []);
+   const handleStop = useCallback(() => { }, []);
 
 
-   const isAfter  = phase === 'after';
+   const isAfter = phase === 'after';
    const isImpact = phase === 'impact';
 
    return (

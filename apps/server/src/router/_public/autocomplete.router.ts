@@ -1,5 +1,5 @@
 import { querySQL, orderSQL, os } from '@/router/helpers';
-import { db, company, position, location } from '@/db';
+import { db, company, position, location } from '@openmario/db';
 import { and, eq, or, sql } from 'drizzle-orm';
 
 const LIMIT = 100;

@@ -3,14 +3,14 @@ import { useQueries } from '@tanstack/react-query';
 import { createFileRoute } from '@tanstack/react-router';
 import { useLayoutEffect } from 'react';
 import { orpc } from '@/helpers/rpc.ts';
-import { Professor, professorDetailStore, type ProfessorProfile, type Section, currentTermId } from '@/components/Professor';
+import { Professor, professorDetailStore, currentTermId } from '@/components/Professor';
 
 export const Route = createFileRoute('/professors/$professor_id')({
    beforeLoad: ({ context: { queryClient }, params: { professor_id } }) => ({
       getLabel: () =>
          queryClient
             .ensureQueryData(orpc.professor.get.queryOptions({ input: { params: { professor_id: Number(professor_id) } }, staleTime: 30_000 }))
-            .then((data) => (data as ProfessorProfile | undefined)?.instructor_name ?? professor_id),
+            .then((data) => data?.name),
    }),
    component: ProfessorPage,
 });
@@ -21,18 +21,18 @@ function ProfessorPage() {
 
    const [profileQuery, sectionsQuery] = useQueries({
       queries: [
-         orpc.professor.get.queryOptions({ input: { params: { professor_id: profIdNum } }, staleTime: 30_000 }),
+         orpc.professor.get.queryOptions({ input: { params: { professor_id: profIdNum }, }, staleTime: 30_000 }),
          orpc.professor.sections.queryOptions({ input: { params: { professor_id: profIdNum } }, staleTime: 30_000 }),
       ],
    });
 
    const isLoading = profileQuery.isLoading || sectionsQuery.isLoading;
    const cutoff = currentTermId();
-   const allSections = (sectionsQuery.data ?? []) as Section[];
+   const allSections = sectionsQuery.data ?? [];
 
    useLayoutEffect(() => {
       professorDetailStore.setState(() => ({
-         prof: profileQuery.data as ProfessorProfile | undefined,
+         prof: profileQuery.data,
          allSections,
          upcomingSections: allSections.filter(s => s.term_id >= cutoff),
          pastSections: allSections.filter(s => s.term_id < cutoff),

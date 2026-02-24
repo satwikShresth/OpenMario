@@ -2,31 +2,15 @@ import { Badge, Button, HStack, Icon, Menu, Portal, Text } from '@chakra-ui/reac
 import { AutoFillIcon, SurveyIcon, MailIcon, MailReadIcon, AddIcon } from '@/components/icons';
 import { useMobile } from '@/hooks';
 import { useNavigate } from '@tanstack/react-router';
-import { useLiveQuery, eq } from '@tanstack/react-db';
-import { submissionsCollection } from '@/helpers';
+import { useSubmissions } from '@/db/stores/submissions';
 
 export const ReportSalaryMenu = () => {
    const navigate = useNavigate();
 
-   // Query for drafts
-   const { data: draftSubmissions = [] } = useLiveQuery(
-      (q) => q
-         .from({ sub: submissionsCollection })
-         .select(({ sub }) => sub)
-         .where(({ sub }) => eq(sub.isDraft, true))
-   );
-
-   // Query for submissions
-   const { data: submissionsData = [] } = useLiveQuery(
-      (q) => q
-         .from({ sub: submissionsCollection })
-         .select(({ sub }) => sub)
-         .where(({ sub }) => eq(sub.isDraft, false))
-   );
-
-   const drafts = draftSubmissions.length;
-   const submissionsCount = submissionsData.length;
+   const drafts = useSubmissions(true).length;
+   const submissionsCount = useSubmissions(false).length;
    const isMobile = useMobile();
+
    return (
       <Menu.Root
          onSelect={({ value }) =>

@@ -1,9 +1,7 @@
 import { Root } from './Root';
 import { PageHeader } from './PageHeader';
-import { Toolbar } from './Toolbar';
 import { ProfessorCard } from './Card';
-import { List } from './List';
-import { InfiniteScrollSentinel } from './InfiniteScrollSentinel';
+import { Cards } from './Cards';
 import { ProfessorBreadcrumb } from './Breadcrumb';
 import { Header } from './Header';
 import { StatsGrid } from './StatsGrid';
@@ -11,14 +9,13 @@ import { SubjectBadges } from './SubjectBadges';
 import { Charts } from './Charts';
 import { InstructionMethods } from './InstructionMethods';
 import { SectionsTab } from './SectionsTab';
+import { Filters } from './Filters';
 
 export const Professor = {
    Root,
    PageHeader,
-   Toolbar,
    Card: ProfessorCard,
-   List,
-   InfiniteScrollSentinel,
+   Cards,
    Breadcrumb: ProfessorBreadcrumb,
    Header,
    StatsGrid,
@@ -26,8 +23,8 @@ export const Professor = {
    Charts,
    InstructionMethods,
    SectionsTab,
+   Filters,
 };
 
 export * from './types';
-export { professorListStore } from './listStore';
 export { professorDetailStore } from './detailStore';

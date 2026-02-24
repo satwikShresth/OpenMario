@@ -4,20 +4,27 @@
       "searchableAttributes": [
          "name",
          "department",
-         "searchableText"
+         "courses_taught.code",
+         "courses_taught.title"
       ],
       "filterableAttributes": [
          "id",
          "department",
          "avg_difficulty",
          "avg_rating",
-         "num_ratings"
+         "num_ratings",
+         "subjects_taught",
+         "instruction_methods",
+         "most_recent_term",
+         "total_sections_taught"
       ],
       "sortableAttributes": [
          "name",
          "avg_rating",
          "avg_difficulty",
-         "num_ratings"
+         "num_ratings",
+         "total_sections_taught",
+         "weighted_score"
       ],
       "displayedAttributes": [
          "id",
@@ -25,9 +32,17 @@
          "avg_difficulty",
          "avg_rating",
          "num_ratings",
+         "weighted_score",
          "department",
          "rmp_legacy_id",
-         "rmp_id"
+         "rmp_id",
+         "total_sections_taught",
+         "total_courses_taught",
+         "total_terms_active",
+         "most_recent_term",
+         "subjects_taught",
+         "instruction_methods",
+         "courses_taught"
       ],
       "rankingRules": [
          "words",

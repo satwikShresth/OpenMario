@@ -1,71 +1,133 @@
-import { Separator } from '@chakra-ui/react';
-import { useInfiniteQuery } from '@tanstack/react-query';
 import { createFileRoute } from '@tanstack/react-router';
-import { useLayoutEffect } from 'react';
-import { z } from 'zod';
-import { orpc } from '@/helpers/rpc.ts';
-import { Professor, professorListStore, type ProfessorListItem } from '@/components/Professor';
+import { Box, Button, createListCollection, Flex, Icon, Text, useDisclosure } from '@chakra-ui/react';
+import { instantMeiliSearch } from '@meilisearch/instant-meilisearch';
+import { useSuspenseQuery } from '@tanstack/react-query';
+import { Suspense } from 'react';
+import { Configure, Index, InstantSearch } from 'react-instantsearch';
+import { SearchBox, SortSelect, Stats } from '@/components/Search';
+import { Professor } from '@/components/Professor';
+import { orpc } from '@/helpers';
+import { env } from '@env';
+import { INDEX_NAMES } from '@openmario/meilisearch';
+import { useMobile } from '@/hooks';
+import { FilterIcon } from '@/components/icons';
 
-const professorsSearchSchema = z.object({
-   search: z.string().optional().catch(undefined),
-   department: z.string().optional().catch(undefined),
-   sort_by: z
-      .enum(['avg_rating', 'avg_difficulty', 'num_ratings', 'total_sections_taught', 'instructor_name'])
-      .optional()
-      .catch('num_ratings'),
-   order: z.enum(['asc', 'desc']).optional().catch('desc'),
+const sortByCollection = createListCollection({
+   items: [
+      { label: 'Most Relevant', value: INDEX_NAMES.professors },
+      { label: 'Avg Rating', value: `${INDEX_NAMES.professors}:avg_rating:desc` },
+      { label: 'Most Rated', value: `${INDEX_NAMES.professors}:num_ratings:desc` },
+      { label: 'Most Sections', value: `${INDEX_NAMES.professors}:total_sections_taught:desc` },
+      { label: 'Difficulty (Hard)', value: `${INDEX_NAMES.professors}:avg_difficulty:desc` },
+      { label: 'Difficulty (Easy)', value: `${INDEX_NAMES.professors}:avg_difficulty:asc` },
+      { label: 'Name A→Z', value: `${INDEX_NAMES.professors}:name:asc` },
+   ],
 });
 
 export const Route = createFileRoute('/professors/')({
-   validateSearch: professorsSearchSchema,
    component: ProfessorsPage,
 });
 
-const PAGE_SIZE = 20;
-
-function ProfessorsPage() {
-   const { search, department, sort_by, order } = Route.useSearch();
-   const sortBy = sort_by ?? 'num_ratings';
-   const sortOrder = order ?? 'desc';
-
-   const { data, isLoading, isFetchingNextPage, fetchNextPage, hasNextPage } =
-      useInfiniteQuery(
-         orpc.professor.list.infiniteOptions({
-            input: (pageParam: number) => ({
-               search,
-               department,
-               sort_by: sortBy,
-               order: sortOrder,
-               pageIndex: pageParam,
-               pageSize: PAGE_SIZE,
-            }),
-            initialPageParam: 1,
-            getNextPageParam: lastPage => {
-               const totalPages = Math.ceil(lastPage.count / lastPage.pageSize);
-               return lastPage.pageIndex < totalPages ? lastPage.pageIndex + 1 : undefined;
-            },
-            staleTime: 30_000,
-         })
-      );
-
-   useLayoutEffect(() => {
-      professorListStore.setState(() => ({
-         professors: (data?.pages.flatMap(p => (p as any).data) ?? []) as ProfessorListItem[],
-         totalCount: (data?.pages[0] as any)?.count ?? 0,
-         isLoading,
-         isFetchingNextPage,
-         hasNextPage: !!hasNextPage,
-         fetchNextPage,
-      }));
-   }, [data, isLoading, isFetchingNextPage, hasNextPage, fetchNextPage]);
+function ProfessorsSearch() {
+   const isMobile = useMobile();
+   const { open: isFilterOpen, onOpen: openFilter, onClose: closeFilter } = useDisclosure();
 
    return (
-      <Professor.Root>
-         <Professor.PageHeader />
-         <Separator />
-         <Professor.Toolbar />
-         <Professor.List />
-         <Professor.InfiniteScrollSentinel />
-      </Professor.Root>
+      <Index indexName={INDEX_NAMES.professors}>
+         <Configure hitsPerPage={20} />
+         <Flex direction='column' gap={4}>
+            {/* Search header */}
+            <Flex
+               direction={{ base: 'column', sm: 'row' }}
+               align={{ base: 'stretch', sm: 'center' }}
+               gap={{ base: 3, sm: 4 }}
+            >
+               <Box flex='1' minWidth='0'>
+                  <SearchBox />
+               </Box>
+            </Flex>
+
+            {/* Mobile filter + sort row */}
+            {isMobile && (
+               <Flex direction='row' width='full' gap={3} justify='space-between'>
+                  <Button onClick={openFilter} variant='outline' size='md'>
+                     <Icon as={FilterIcon} />
+                     <Text>Filters</Text>
+                  </Button>
+                  <SortSelect sortBy={sortByCollection} />
+               </Flex>
+            )}
+
+            {/* Main content */}
+            <Flex
+               direction={{ base: 'column', lg: 'row' }}
+               flex='1'
+               width='full'
+               gap={{ base: 4, md: 5 }}
+               align='stretch'
+            >
+               {/* Desktop sidebar */}
+               {!isMobile && (
+                  <Box width='280px' flexShrink={0}>
+                     <Professor.Filters open={isFilterOpen} onClose={closeFilter} />
+                  </Box>
+               )}
+
+               {/* Results */}
+               <Flex direction='column' flex='1' minWidth='0' gap={{ base: 3, md: 4 }}>
+                  {!isMobile ? (
+                     <Flex justify='space-between' align='center' gap={3}>
+                        <Box flex='1' minWidth='0'>
+                           <Stats />
+                        </Box>
+                        <Box flexShrink={0}>
+                           <SortSelect sortBy={sortByCollection} />
+                        </Box>
+                     </Flex>
+                  ) : (
+                     <Stats />
+                  )}
+                  <Professor.Cards />
+               </Flex>
+            </Flex>
+         </Flex>
+
+         {/* Mobile filter drawer */}
+         {isMobile && (
+            <Professor.Filters open={isFilterOpen} onClose={closeFilter} />
+         )}
+      </Index>
+   );
+}
+
+function ProfessorsPage() {
+   const refetchInterval = 1000 * 60 * 10;
+   const { data } = useSuspenseQuery(
+      orpc.auth.getSearchToken.queryOptions({
+         staleTime: refetchInterval - 1000,
+         gcTime: refetchInterval - 1000,
+         refetchInterval,
+         refetchIntervalInBackground: true,
+      })
+   );
+
+   const { searchClient } = instantMeiliSearch(
+      env.VITE_MEILI_HOST,
+      () => (data as { token: string }).token
+   );
+
+   return (
+      <Suspense>
+         <Professor.Root>
+            <Professor.PageHeader />
+            {/* @ts-ignore: shupp */}
+            <InstantSearch
+               searchClient={searchClient}
+               future={{ preserveSharedStateOnUnmount: true }}
+            >
+               <ProfessorsSearch />
+            </InstantSearch>
+         </Professor.Root>
+      </Suspense>
    );
 }

@@ -44,13 +44,11 @@ const router = os.router({
       update: submission.updateSubmission
    },
    companies: {
-      listCompanies: esap.listCompanies,
       getCompany: esap.getCompany,
       getCompanyReviews: esap.getCompanyReviews,
       getPositionReviews: esap.getPositionReviews
    },
    professor: {
-      list: professor.listProfessors,
       get: professor.getProfessor,
       sections: professor.getProfessorSections
    }

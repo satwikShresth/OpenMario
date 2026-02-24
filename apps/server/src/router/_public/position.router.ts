@@ -1,5 +1,5 @@
 import { os } from '@/router/helpers';
-import { db, company, position } from '@/db';
+import { db, company, position } from '@openmario/db';
 import { eq } from 'drizzle-orm';
 
 /**

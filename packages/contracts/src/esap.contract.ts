@@ -7,64 +7,6 @@ import { z } from 'zod';
  */
 
 // ============================================================================
-// Shared schemas
-// ============================================================================
-
-export const CompanyListQuerySchema = z.object({
-   search: z.string().min(1).max(200).optional(),
-   sort_by: z
-      .enum([
-         'omega_score',
-         'total_reviews',
-         'avg_rating_overall',
-         'company_name'
-      ])
-      .optional()
-      .default('total_reviews'),
-   order: z.enum(['asc', 'desc']).optional().default('desc'),
-   pageIndex: z.coerce.number().nonnegative().min(1).optional().default(1),
-   pageSize: z.coerce.number().nonnegative().max(100).optional().default(20)
-});
-
-// ============================================================================
-// GET /esap/companies
-// ============================================================================
-
-export const CompanyListItemSchema = z.object({
-   company_id: z.string(),
-   company_name: z.string(),
-   total_reviews: z.coerce.number().catch(0),
-   positions_reviewed: z.coerce.number().catch(0),
-   total_submissions: z.coerce.number().catch(0),
-   omega_score: z.coerce.number().nullable().catch(null),
-   satisfaction_score: z.coerce.number().nullable().catch(null),
-   trust_score: z.coerce.number().nullable().catch(null),
-   integrity_score: z.coerce.number().nullable().catch(null),
-   growth_score: z.coerce.number().nullable().catch(null),
-   work_life_score: z.coerce.number().nullable().catch(null),
-   avg_compensation: z.coerce.number().nullable().catch(null),
-   median_compensation: z.coerce.number().nullable().catch(null)
-});
-
-export const CompanyListResponseSchema = z.object({
-   pageIndex: z.number(),
-   pageSize: z.number(),
-   count: z.number(),
-   data: z.array(CompanyListItemSchema)
-});
-
-export const listCompaniesContract = oc
-   .route({
-      method: 'GET',
-      path: '/esap/companies',
-      summary: 'List ESAP companies',
-      description: 'Retrieve companies with review aggregates and omega scores',
-      tags: ['ESAP']
-   })
-   .input(CompanyListQuerySchema)
-   .output(CompanyListResponseSchema);
-
-// ============================================================================
 // GET /esap/companies/:company_id
 // ============================================================================
 
@@ -241,7 +183,6 @@ export const getPositionReviewsContract = oc
 // ============================================================================
 
 export const esapContract = {
-   listCompanies: listCompaniesContract,
    getCompany: getCompanyContract,
    getCompanyReviews: getCompanyReviewsContract,
    getPositionReviews: getPositionReviewsContract

@@ -1,64 +1,12 @@
 import { os } from '@/router/helpers';
 import {
    db,
-   companyOmegaMView,
    companyDetailMView,
    companyPositionsMView,
    position,
    position_review
-} from '@/db';
-import { eq, asc, inArray, sql, type SQL } from 'drizzle-orm';
-import { maybe } from '@/utils';
-
-// ============================================================================
-// GET /esap/companies
-// ============================================================================
-
-export const listCompanies = os.companies.listCompanies.handler(
-   async ({ input }) => {
-      const { search, sort_by, order, pageIndex, pageSize } = input;
-
-      const whereClause = maybe(search, (s: string) => {
-         const terms = s.trim().split(/\s+/);
-
-         const termClauses = terms.map(
-            term => sql`paradedb.boolean(
-               should => ARRAY[
-                  paradedb.fuzzy_term('name', ${term}, distance => 2),
-                  paradedb.boost(2.0, paradedb.fuzzy_term('name', ${term}, distance => 2, prefix => true))
-               ]
-            )`
-         );
-
-         return sql`${companyOmegaMView.company_id} @@@ paradedb.boolean(
-            must => ARRAY[${sql.join(termClauses, sql`, `)}]
-         )`;
-      });
-
-      const sortColumnMap: Record<string, SQL> = {
-         omega_score: sql`omega_score`,
-         total_reviews: sql`total_reviews`,
-         avg_rating_overall: sql`omega_score`,
-         company_name: sql`company_name`
-      };
-
-      const sortCol = sortColumnMap[sort_by] ?? sql`omega_score`;
-      const orderExpr =
-         order === 'asc' ? asc(sortCol) : sql`${sortCol} DESC NULLS LAST`;
-
-      const count = await db.$count(companyOmegaMView, whereClause);
-
-      const data = await db
-         .select()
-         .from(companyOmegaMView)
-         .where(whereClause)
-         .orderBy(orderExpr)
-         .offset((pageIndex - 1) * pageSize)
-         .limit(pageSize);
-
-      return { pageIndex, pageSize, count, data };
-   }
-);
+} from '@openmario/db';
+import { eq, inArray, sql } from 'drizzle-orm';
 
 // ============================================================================
 // GET /esap/company/{company_id}

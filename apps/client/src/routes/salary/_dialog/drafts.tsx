@@ -10,19 +10,13 @@ import {
    Text,
    VStack,
 } from '@chakra-ui/react';
-import { useLiveQuery, eq } from '@tanstack/react-db';
-import { submissionsCollection } from '@/helpers';
+import { useSubmissions } from '@/db/stores/submissions';
 
 export const Route = createFileRoute('/salary/_dialog/drafts')({
    component: () => {
       const navigate = Route.useNavigate();
 
-      const { data: drafts = [] } = useLiveQuery(
-         (q) => q
-            .from({ sub: submissionsCollection })
-            .select(({ sub }) => ({ ...sub }))
-            .where(({ sub }) => eq(sub.isDraft, true))
-      );
+      const drafts = useSubmissions(true);
 
       return (
          <Box>
@@ -56,7 +50,6 @@ export const Route = createFileRoute('/salary/_dialog/drafts')({
                            >
                               <Card.Body>
                                  <VStack align='start' gap={3}>
-                                    {/* Header */}
                                     <VStack align='start' gap={1}>
                                        <Text fontWeight='semibold' fontSize='lg'>
                                           {draft.company}
@@ -65,39 +58,33 @@ export const Route = createFileRoute('/salary/_dialog/drafts')({
                                           {draft.position}
                                        </Text>
                                     </VStack>
-
-                                    {/* Location & Hours */}
                                     <HStack justify='space-between' width='full'>
                                        <Text fontSize='sm' color='fg.muted'>
                                           {draft.location}
                                        </Text>
                                        <Text fontSize='sm'>
-                                          {draft.workHours}h/week
+                                          {draft.work_hours}h/week
                                        </Text>
                                     </HStack>
-
-                                    {/* Compensation */}
                                     <HStack justify='space-between' width='full'>
                                        <Text fontWeight='medium'>
                                           ${draft.compensation.toLocaleString()}
                                        </Text>
-                                       {draft.otherCompensation && (
+                                       {draft.other_compensation && (
                                           <Text fontSize='sm' color='fg.muted'>
-                                             +{draft.otherCompensation}
+                                             +{draft.other_compensation}
                                           </Text>
                                        )}
                                     </HStack>
-
-                                    {/* Badges */}
                                     <HStack wrap='wrap' gap={2}>
                                        <Badge size='sm' variant='outline'>
-                                          {draft.coopYear} Year
+                                          {draft.coop_year} Year
                                        </Badge>
                                        <Badge size='sm' variant='outline'>
-                                          {draft.coopCycle}
+                                          {draft.coop_cycle}
                                        </Badge>
                                        <Badge size='sm' variant='outline'>
-                                          {draft.programLevel}
+                                          {draft.program_level}
                                        </Badge>
                                        <Badge size='sm' variant='outline'>
                                           {draft.year}

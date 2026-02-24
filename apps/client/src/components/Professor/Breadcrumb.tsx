@@ -2,7 +2,7 @@ import { Breadcrumb } from '@/components/ui/breadcrumb';
 import { useProfessorDetail } from './detailStore';
 
 export function ProfessorBreadcrumb() {
-   const name = useProfessorDetail(s => s.prof?.instructor_name);
+   const name = useProfessorDetail(s => s.prof?.name);
    return (
       <Breadcrumb items={[
          { type: 'link', label: 'Professors', to: '/professors' },

@@ -5,19 +5,13 @@ import tsconfigPaths from 'vite-tsconfig-paths';
 
 import { tanstackRouter } from '@tanstack/router-plugin/vite';
 import { fileURLToPath, URL } from 'node:url';
-import { compileMigrations, fastRefreshPolyfill } from './plugins';
+import { fastRefreshPolyfill } from './plugins';
 
 // https://vitejs.dev/config/
 export default defineConfig({
-   optimizeDeps: {
-      exclude: ['@electric-sql/pglite']
-   },
-   worker: {
-      format: 'es'
-   },
+
    plugins: [
       fastRefreshPolyfill(),
-      compileMigrations(),
       // devtools(),
       tanstackRouter({
          target: 'react',

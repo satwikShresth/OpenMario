@@ -1,32 +1,29 @@
 import { Root } from './Root';
 import { PageHeader } from './PageHeader';
-import { Toolbar } from './Toolbar';
 import { Card } from './Card';
-import { List } from './List';
-import { InfiniteScrollSentinel } from './InfiniteScrollSentinel';
+import { Cards } from './Cards';
 import { CompanyBreadcrumb } from './Breadcrumb';
 import { Header } from './Header';
 import { StatsGrid } from './StatsGrid';
 import { Charts } from './Charts';
 import { Positions } from './Positions';
 import { ReviewHighlights } from './ReviewHighlights';
+import { Filters } from './Filters';
 
 export const Company = {
    Root,
    PageHeader,
-   Toolbar,
    Card,
-   List,
-   InfiniteScrollSentinel,
+   Cards,
    Breadcrumb: CompanyBreadcrumb,
    Header,
    StatsGrid,
    Charts,
    Positions,
    ReviewHighlights,
+   Filters,
 };
 
 export * from './helpers';
 export * from './types';
-export { companyListStore } from './listStore';
 export { companyDetailStore } from './detailStore';

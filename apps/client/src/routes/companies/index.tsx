@@ -1,69 +1,132 @@
-import { Separator } from '@chakra-ui/react';
-import { useInfiniteQuery } from '@tanstack/react-query';
 import { createFileRoute } from '@tanstack/react-router';
-import { useLayoutEffect } from 'react';
-import { z } from 'zod';
-import { orpc } from '@/helpers/rpc.ts';
-import { Company, companyListStore, type CompanyListItem } from '@/components/Company';
+import { Box, Button, createListCollection, Flex, Icon, Text, useDisclosure } from '@chakra-ui/react';
+import { instantMeiliSearch } from '@meilisearch/instant-meilisearch';
+import { useSuspenseQuery } from '@tanstack/react-query';
+import { Suspense } from 'react';
+import { Configure, Index, InstantSearch } from 'react-instantsearch';
+import { SearchBox, SortSelect, Stats } from '@/components/Search';
+import { Company } from '@/components/Company';
+import { orpc } from '@/helpers';
+import { env } from '@env';
+import { INDEX_NAMES } from '@openmario/meilisearch';
+import { useMobile } from '@/hooks';
+import { FilterIcon } from '@/components/icons';
 
-const companiesSearchSchema = z.object({
-   search: z.string().optional().catch(undefined),
-   sort_by: z
-      .enum(['omega_score', 'total_reviews', 'avg_rating_overall', 'company_name'])
-      .optional()
-      .catch('total_reviews'),
-   order: z.enum(['asc', 'desc']).optional().catch('desc'),
+const sortByCollection = createListCollection({
+   items: [
+      { label: 'Most Relevant', value: INDEX_NAMES.companies },
+      { label: 'Omega Score', value: `${INDEX_NAMES.companies}:omega_score:desc` },
+      { label: 'Total Reviews', value: `${INDEX_NAMES.companies}:total_reviews:desc` },
+      { label: 'Avg Compensation', value: `${INDEX_NAMES.companies}:avg_compensation:desc` },
+      { label: '% Recommend', value: `${INDEX_NAMES.companies}:pct_would_recommend:desc` },
+      { label: 'Company Name A→Z', value: `${INDEX_NAMES.companies}:company_name:asc` },
+   ],
 });
 
 export const Route = createFileRoute('/companies/')({
-   validateSearch: companiesSearchSchema,
    component: CompaniesPage,
 });
 
-const PAGE_SIZE = 20;
-
-function CompaniesPage() {
-   const { search, sort_by, order } = Route.useSearch();
-   const sortBy = sort_by ?? 'total_reviews';
-   const sortOrder = order ?? 'desc';
-
-   const { data, isLoading, isFetchingNextPage, fetchNextPage, hasNextPage } =
-      useInfiniteQuery(
-         orpc.companies.listCompanies.infiniteOptions({
-            input: (pageParam: number) => ({
-               search,
-               sort_by: sortBy,
-               order: sortOrder,
-               pageIndex: pageParam,
-               pageSize: PAGE_SIZE,
-            }),
-            initialPageParam: 1,
-            getNextPageParam: lastPage => {
-               const totalPages = Math.ceil(lastPage.count / lastPage.pageSize);
-               return lastPage.pageIndex < totalPages ? lastPage.pageIndex + 1 : undefined;
-            },
-            staleTime: 30_000,
-         })
-      );
-
-   useLayoutEffect(() => {
-      companyListStore.setState(() => ({
-         companies: (data?.pages.flatMap(p => p.data) ?? []) as CompanyListItem[],
-         totalCount: data?.pages[0]?.count ?? 0,
-         isLoading,
-         isFetchingNextPage,
-         hasNextPage: !!hasNextPage,
-         fetchNextPage,
-      }));
-   }, [data, isLoading, isFetchingNextPage, hasNextPage, fetchNextPage]);
+function CompaniesSearch() {
+   const isMobile = useMobile();
+   const { open: isFilterOpen, onOpen: openFilter, onClose: closeFilter } = useDisclosure();
 
    return (
-      <Company.Root>
-         <Company.PageHeader />
-         <Separator />
-         <Company.Toolbar />
-         <Company.List />
-         <Company.InfiniteScrollSentinel />
-      </Company.Root>
+      <Index indexName={INDEX_NAMES.companies}>
+         <Configure hitsPerPage={20} />
+         <Flex direction='column' gap={4}>
+            {/* Search header */}
+            <Flex
+               direction={{ base: 'column', sm: 'row' }}
+               align={{ base: 'stretch', sm: 'center' }}
+               gap={{ base: 3, sm: 4 }}
+            >
+               <Box flex='1' minWidth='0'>
+                  <SearchBox />
+               </Box>
+            </Flex>
+
+            {/* Mobile filter + sort row */}
+            {isMobile && (
+               <Flex direction='row' width='full' gap={3} justify='space-between'>
+                  <Button onClick={openFilter} variant='outline' size='md'>
+                     <Icon as={FilterIcon} />
+                     <Text>Filters</Text>
+                  </Button>
+                  <SortSelect sortBy={sortByCollection} />
+               </Flex>
+            )}
+
+            {/* Main content */}
+            <Flex
+               direction={{ base: 'column', lg: 'row' }}
+               flex='1'
+               width='full'
+               gap={{ base: 4, md: 5 }}
+               align='stretch'
+            >
+               {/* Desktop sidebar */}
+               {!isMobile && (
+                  <Box width='280px' flexShrink={0}>
+                     <Company.Filters open={isFilterOpen} onClose={closeFilter} />
+                  </Box>
+               )}
+
+               {/* Results */}
+               <Flex direction='column' flex='1' minWidth='0' gap={{ base: 3, md: 4 }}>
+                  {!isMobile ? (
+                     <Flex justify='space-between' align='center' gap={3}>
+                        <Box flex='1' minWidth='0'>
+                           <Stats />
+                        </Box>
+                        <Box flexShrink={0}>
+                           <SortSelect sortBy={sortByCollection} />
+                        </Box>
+                     </Flex>
+                  ) : (
+                     <Stats />
+                  )}
+                  <Company.Cards />
+               </Flex>
+            </Flex>
+         </Flex>
+
+         {/* Mobile filter drawer */}
+         {isMobile && (
+            <Company.Filters open={isFilterOpen} onClose={closeFilter} />
+         )}
+      </Index>
+   );
+}
+
+function CompaniesPage() {
+   const refetchInterval = 1000 * 60 * 10;
+   const { data } = useSuspenseQuery(
+      orpc.auth.getSearchToken.queryOptions({
+         staleTime: refetchInterval - 1000,
+         gcTime: refetchInterval - 1000,
+         refetchInterval,
+         refetchIntervalInBackground: true,
+      })
+   );
+
+   const { searchClient } = instantMeiliSearch(
+      env.VITE_MEILI_HOST,
+      () => (data as { token: string }).token
+   );
+
+   return (
+      <Suspense>
+         <Company.Root>
+            <Company.PageHeader />
+            {/* @ts-ignore: shupp */}
+            <InstantSearch
+               searchClient={searchClient}
+               future={{ preserveSharedStateOnUnmount: true }}
+            >
+               <CompaniesSearch />
+            </InstantSearch>
+         </Company.Root>
+      </Suspense>
    );
 }

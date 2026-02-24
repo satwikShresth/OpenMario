@@ -132,11 +132,17 @@ export default ({ course_id }: AvailabilitesProps) => {
                                                 <HoverCard.Root>
                                                    <HoverCard.Trigger asChild>
                                                       <Tag
-                                                         //@ts-expect-error it can accept px
-                                                         size='10px'
+                                                         size='sm'
                                                          cursor='pointer'
+                                                         maxW='100%'
+                                                         truncate
                                                       >
-                                                         {section.name} ({section.crn.join(', ')})
+                                                         {section.name}
+                                                         {section.crn.length > 1 && (
+                                                            <Text as='span' color='fg.muted' ml={1} fontSize='xs'>
+                                                               +{section.crn.length - 1}
+                                                            </Text>
+                                                         )}
                                                       </Tag>
                                                    </HoverCard.Trigger>
 
