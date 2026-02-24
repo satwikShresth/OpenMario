@@ -1,7 +1,15 @@
-import { pgTable, primaryKey, text, timestamp, uuid, varchar } from 'drizzle-orm/pg-core';
+import {
+   pgTable,
+   primaryKey,
+   text,
+   timestamp,
+   uuid,
+   varchar
+} from 'drizzle-orm/pg-core';
+import { user } from './auth.ts';
 import { program_level_type } from './enums';
 
-export const users = pgTable('users', {
+export const old_users = pgTable('old_users', {
    id: uuid().primaryKey().defaultRandom(),
    username: varchar({ length: 100 }).notNull(),
    email: text().notNull().unique(),
@@ -24,9 +32,9 @@ export const minor = pgTable('minor', {
 export const profile_major = pgTable(
    'profile_major',
    {
-      user_id: uuid()
+      user_id: text()
          .notNull()
-         .references(() => users.id, { onDelete: 'cascade' }),
+         .references(() => user.id, { onDelete: 'cascade' }),
       major_id: uuid()
          .notNull()
          .references(() => major.id, { onDelete: 'cascade' })
@@ -37,9 +45,9 @@ export const profile_major = pgTable(
 export const profile_minor = pgTable(
    'profile_minor',
    {
-      user_id: uuid()
+      user_id: text()
          .notNull()
-         .references(() => users.id, { onDelete: 'cascade' }),
+         .references(() => user.id, { onDelete: 'cascade' }),
       minor_id: uuid()
          .notNull()
          .references(() => minor.id, { onDelete: 'cascade' })

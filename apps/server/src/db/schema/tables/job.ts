@@ -6,6 +6,7 @@ import {
    primaryKey,
    timestamp,
    uuid,
+   text,
    varchar
 } from 'drizzle-orm/pg-core';
 import {
@@ -19,7 +20,8 @@ import {
    program_level_type
 } from './enums';
 import { position, location } from './company';
-import { users, major } from './users';
+import { user } from './auth';
+import { major } from './users';
 
 export const submission = pgTable('submission', {
    id: uuid().defaultRandom().primaryKey(),
@@ -37,7 +39,7 @@ export const submission = pgTable('submission', {
    compensation: doublePrecision(),
    other_compensation: varchar({ length: 255 }),
    details: varchar({ length: 255 }),
-   owner_id: uuid().references(() => users.id, { onDelete: 'set null' }),
+   owner_id: text().references(() => user.id, { onDelete: 'set null' }),
    created_at: timestamp().notNull().defaultNow()
 });
 
