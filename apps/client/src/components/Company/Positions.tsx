@@ -33,13 +33,13 @@ export function Positions() {
          {positions.length === 0 ? (
             <Text color='fg.muted'>No positions found</Text>
          ) : (
-            <VStack gap={{ base: 3, md: 4, xl: 5 }} align='stretch'>
+            <VStack gap={3} align='stretch'>
                {positions.slice(0, 5).map(pos => (
                   <Box
                      key={pos.position_id}
                      borderWidth='thin'
                      borderRadius='xl'
-                     p={{ base: 5, md: 6 }}
+                     p={5}
                      cursor='pointer'
                      _hover={{ shadow: 'md', borderColor: 'colorPalette.300' }}
                      transition='all 0.15s'

@@ -26,7 +26,7 @@ function CompanyOverviewPage() {
    }, [company_id, data, isLoading]);
 
    return (
-      <Company.Root maxW={{ base: 'full', md: '5xl', xl: '6xl', '2xl': '7xl' }} gap={{ base: 6, md: 8, xl: 10, '2xl': 12 }}>
+      <Company.Root maxW='5xl' gap={8}>
          <Company.Header />
          <Separator />
          <Company.StatsGrid />

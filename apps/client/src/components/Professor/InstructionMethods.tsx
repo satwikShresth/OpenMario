@@ -20,7 +20,7 @@ export function InstructionMethods() {
    if (methodBreakdown.length <= 1) return null;
 
    return (
-      <Box borderWidth='thin' borderRadius='xl' p={{ base: 4, md: 5, xl: 6 }}>
+      <Box borderWidth='thin' borderRadius='xl' p={4}>
          <Text fontWeight='semibold' mb={3}>Instruction Methods</Text>
          <HStack gap={3} wrap='wrap'>
             {methodBreakdown.map(({ method, count }) => (

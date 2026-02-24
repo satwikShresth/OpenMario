@@ -99,10 +99,10 @@ export function Charts() {
    const accentColor = omegaHex(company.omega_score);
 
    return (
-      <VStack gap={{ base: 6, md: 8, xl: 10 }} align='stretch'>
-         <Grid templateColumns={{ base: '1fr', md: '1fr 1fr' }} gap={{ base: 6, md: 8, xl: 10 }}>
+      <VStack gap={6} align='stretch'>
+         <Grid templateColumns={{ base: '1fr', md: '1fr 1fr' }} gap={6}>
             {/* Score Breakdown */}
-            <Box borderWidth='thin' borderRadius='xl' p={{ base: 5, md: 6, xl: 8 }}>
+            <Box borderWidth='thin' borderRadius='xl' p={5}>
                <Flex align='center' gap={2} mb={4}>
                   <Image src='/omegascore-logo.png' alt='OMΩ' h='22px' />
                   <Text fontWeight='semibold'>Score Breakdown</Text>
@@ -126,7 +126,7 @@ export function Charts() {
             </Box>
 
             {/* Rating Breakdown */}
-            <Box borderWidth='thin' borderRadius='xl' p={{ base: 5, md: 6, xl: 8 }}>
+            <Box borderWidth='thin' borderRadius='xl' p={5}>
                <Text fontWeight='semibold' mb={5}>Rating Breakdown (out of 4)</Text>
                <VStack gap={4} align='stretch'>
                   {ratingsData.map(({ name, value }) => {
@@ -159,7 +159,7 @@ export function Charts() {
 
          {/* Salary by Position */}
          {salaryData.length > 0 && (
-            <Box borderWidth='thin' borderRadius='xl' p={{ base: 5, md: 6, xl: 8 }}>
+            <Box borderWidth='thin' borderRadius='xl' p={5}>
                <Text fontWeight='semibold' mb={5}>Compensation by Position</Text>
                <ResponsiveContainer width='100%' height={Math.max(200, salaryData.length * 42)}>
                   <BarChart

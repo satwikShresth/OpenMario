@@ -7,7 +7,7 @@ export function StatsGrid() {
 
    if (isLoading || !prof) {
       return (
-         <Grid templateColumns={{ base: 'repeat(2,1fr)', md: 'repeat(4,1fr)' }} gap={{ base: 3, md: 4, xl: 5 }}>
+         <Grid templateColumns={{ base: 'repeat(2,1fr)', md: 'repeat(4,1fr)' }} gap={3}>
             {Array.from({ length: 4 }).map((_, i) => (
                <Skeleton key={i} height='80px' borderRadius='lg' />
             ))}
@@ -15,7 +15,7 @@ export function StatsGrid() {
       );
    }
    return (
-      <Grid templateColumns={{ base: 'repeat(2,1fr)', md: 'repeat(4,1fr)' }} gap={{ base: 3, md: 4, xl: 5 }}>
+      <Grid templateColumns={{ base: 'repeat(2,1fr)', md: 'repeat(4,1fr)' }} gap={3}>
          {[
             { label: 'No of Ratings', value: prof.num_ratings ?? 0 },
             { label: 'Sections Taught', value: prof.total_sections_taught },
