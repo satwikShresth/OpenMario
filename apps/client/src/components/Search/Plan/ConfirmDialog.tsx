@@ -18,12 +18,6 @@ export type ConfirmDialogProps = {
   courseInfo?: CourseInfo;
 }
 
-const formatTime = (time: string) => {
-  const [hours, minutes] = time.split(':').map(Number)
-  const period = hours! >= 12 ? 'PM' : 'AM'
-  const displayHours = hours! % 12 || 12
-  return `${displayHours}:${minutes?.toString().padStart(2, '0')} ${period}`
-}
 
 export function ConfirmDialog($props: ConfirmDialogProps) {
   return (
@@ -63,7 +57,7 @@ export function ConfirmDialog($props: ConfirmDialogProps) {
                       )}
                       {$props.courseInfo.startTime && $props.courseInfo.endTime && (
                         <Badge size="sm" colorPalette="green">
-                          {formatTime($props.courseInfo.startTime)} - {formatTime($props.courseInfo.endTime)}
+                          {$props.courseInfo.startTime} - {$props.courseInfo.endTime}
                         </Badge>
                       )}
                     </HStack>

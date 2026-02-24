@@ -1,5 +1,5 @@
 import { os } from '@/router/helpers';
-import { db } from '@/db';
+import { db } from '@openmario/db';
 import { eq } from 'drizzle-orm';
 import {
    course,
@@ -8,7 +8,7 @@ import {
    section,
    prerequisitesMView,
    corequisitesMView
-} from '@/db';
+} from '@openmario/db';
 
 // ---------------------------------------------------------------------------
 // GET /courses/{course_id}

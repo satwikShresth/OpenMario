@@ -11,7 +11,7 @@ import {
    useFileUpload,
 } from '@chakra-ui/react';
 import { useJobParser, useTesseract } from '@/hooks';
-import { submissionsCollection } from '@/helpers';
+import { upsertSubmission } from '@/db/mutations';
 import { useStore } from '@tanstack/react-form';
 import { useCallback, useState } from 'react';
 import { UploadIcon } from '@/components/icons';
@@ -44,38 +44,26 @@ export default ({ form }: any) => {
 
             const processedJobs = processText(text, common);
 
-            processedJobs.forEach((job) => {
-               submissionsCollection.insert({
-                  id: crypto.randomUUID(),
-                  serverId: null,
-                  ownerId: null,
-                  status: 'draft',
-                  isDraft: true,
-                  company: job.company || '',
-                  companyId: job.company || '',
-                  position: job.position || '',
-                  positionId: job.position || '',
-                  location: job.location || '',
-                  locationCity: null,
-                  locationState: null,
-                  locationStateCode: null,
-                  year: job.year || new Date().getFullYear(),
-                  coopYear: job.coop_year || '1st',
-                  coopCycle: job.coop_cycle || 'Fall/Winter',
-                  programLevel: job.program_level || 'Undergraduate',
-                  workHours: job.work_hours || 40,
+            await Promise.all(processedJobs.map((job) =>
+               upsertSubmission({
+                  id: crypto.randomUUID(), server_id: null, owner_id: null,
+                  status: 'draft', is_draft: true,
+                  company: job.company ?? '', company_id: job.company ?? '',
+                  position: job.position ?? '', position_id: job.position ?? '',
+                  location: job.location ?? '', location_city: null, location_state: null, location_state_code: null,
+                  year: job.year ?? new Date().getFullYear(),
+                  coop_year: job.coop_year ?? '1st',
+                  coop_cycle: job.coop_cycle ?? 'Fall/Winter',
+                  program_level: job.program_level ?? 'Undergraduate',
+                  work_hours: job.work_hours ?? 40,
                   compensation: job.compensation
-                     ? parseFloat(String(job.compensation).replace('$', ''))
+                     ? Number.parseFloat(String(job.compensation).replace('$', ''))
                      : 10,
-                  otherCompensation: job.other_compensation || '',
-                  details: `Employer ID: ${job.employer_id || 'N/A'}, Position ID: ${job.position_id || 'N/A'
-                     }, Job Length: ${job.job_length || 'N/A'}, Coop Round: ${job.coop_round || 'N/A'
-                     }`,
-                  createdAt: new Date(),
-                  updatedAt: new Date(),
-                  syncedAt: null
-               });
-            });
+                  other_compensation: job.other_compensation ?? '',
+                  details: `Employer ID: ${job.employer_id ?? 'N/A'}, Position ID: ${job.position_id ?? 'N/A'}, Job Length: ${job.job_length ?? 'N/A'}, Coop Round: ${job.coop_round ?? 'N/A'}`,
+                  synced_at: null,
+               })
+            ));
 
             if (processedJobs.length > 0) {
                setFileLog(`Successfully added ${processedJobs.length} jobs as drafts`);
@@ -194,7 +182,7 @@ export default ({ form }: any) => {
                                  <Text fontWeight='bold' fontSize='lg'>Processed Files</Text>
                                  <Separator mt={2} mb={2} />
                                  {acceptedFiles.map((file) => (
-                                    <Flex wrap='wrap' gap={2}>
+                                    <Flex key={file.name} wrap='wrap' gap={2}>
                                        <FileUpload.Item
                                           key={file.name}
                                           file={file}

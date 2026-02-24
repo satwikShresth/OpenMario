@@ -1,160 +1,102 @@
 import { Button, Icon, HoverCard as ChakraHoverCard, Dialog as ChakraDialog, Portal, VStack, Text, ScrollArea, HStack, Badge } from '@chakra-ui/react'
 import { GraduationCapIcon, DeleteIcon } from '@/components/icons'
 import { useState } from 'react'
-import { useLiveQuery, eq } from '@tanstack/react-db'
-import { planEventsCollection, sectionsCollection, coursesCollection, termsCollection } from '@/helpers/collections'
+import { deletePlanEvent, deleteSection } from '@/db/mutations'
+import { useTermByNameYear } from '@/db/stores/terms'
+import { useSectionsByTermId } from '@/db/stores/sections'
+import { usePlanEventsByTermId } from '@/db/stores/plan-events'
+import { coursesStore } from '@/db/stores/courses'
+import { useStore } from '@tanstack/react-store'
 import { toaster } from '@/components/ui/toaster'
 
-// Create aliases for easier use
 const HoverCard = {
-  Root: ChakraHoverCard.Root,
-  Trigger: ChakraHoverCard.Trigger,
-  Positioner: ChakraHoverCard.Positioner,
-  Content: ChakraHoverCard.Content,
+  Root: ChakraHoverCard.Root, Trigger: ChakraHoverCard.Trigger,
+  Positioner: ChakraHoverCard.Positioner, Content: ChakraHoverCard.Content,
   Arrow: ChakraHoverCard.Arrow,
 }
-
 const Dialog = {
-  Root: ChakraDialog.Root,
-  Trigger: ChakraDialog.Trigger,
-  Backdrop: ChakraDialog.Backdrop,
-  Positioner: ChakraDialog.Positioner,
-  Content: ChakraDialog.Content,
-  Header: ChakraDialog.Header,
-  Title: ChakraDialog.Title,
-  Body: ChakraDialog.Body,
-  Footer: ChakraDialog.Footer,
-  CloseTrigger: ChakraDialog.CloseTrigger,
+  Root: ChakraDialog.Root, Trigger: ChakraDialog.Trigger, Backdrop: ChakraDialog.Backdrop,
+  Positioner: ChakraDialog.Positioner, Content: ChakraDialog.Content,
+  Header: ChakraDialog.Header, Title: ChakraDialog.Title, Body: ChakraDialog.Body,
+  Footer: ChakraDialog.Footer, CloseTrigger: ChakraDialog.CloseTrigger,
   ActionTrigger: ChakraDialog.ActionTrigger,
 }
 
-type CreditsIndicatorProps = {
-  currentTerm: string
-  currentYear: number
-}
-
-export const CreditsIndicator = ({ currentTerm, currentYear }: CreditsIndicatorProps) => {
+export const CreditsIndicator = ({ currentTerm, currentYear }: { currentTerm: string; currentYear: number }) => {
   const [dialogOpen, setDialogOpen] = useState(false)
 
-  // Fetch sections for current term (includes both courses with and without events)
-  const { data: currentTermSections } = useLiveQuery(
-    q =>
-      q
-        .from({ sections: sectionsCollection })
-        .innerJoin({ terms: termsCollection }, ({ sections, terms }) =>
-          eq(sections.termId, terms.id)
-        )
-        .leftJoin({ courses: coursesCollection }, ({ sections, courses }) =>
-          eq(sections.courseId, courses.id)
-        )
-        .select(({ courses, terms, sections }) => ({
-          courseId: courses?.id,
-          courseName: courses?.title,
-          courseNumber: courses?.course,
-          credits: courses?.credits,
-          crn: sections.crn,
-          termName: terms.term,
-          termYear: terms.year,
-        }))
-        .where(({ terms }) => eq(terms.term, currentTerm) && eq(terms.year, currentYear)),
-    [currentTerm, currentYear]
-  );
+  const termData = useTermByNameYear(currentTerm, currentYear)
+  const termId = termData?.id ?? null
 
-  // Fetch plan events for current term (to get event IDs for deletion)
-  const { data: currentTermEvents } = useLiveQuery(
-    q =>
-      q
-        .from({ events: planEventsCollection })
-        .innerJoin({ terms: termsCollection }, ({ events, terms }) =>
-          eq(events.termId, terms.id)
-        )
-        .select(({ events }) => ({
-          eventId: events.id,
-          crn: events.crn,
-        }))
-        .where(({ terms }) => eq(terms.term, currentTerm) && eq(terms.year, currentYear)),
-    [currentTerm, currentYear]
-  );
+  const rawSections = useSectionsByTermId(termId)
+  const rawEvents = usePlanEventsByTermId(termId)
+  const allCourses = useStore(coursesStore)
 
-  // Get unique courses with their details
+  const currentTermSections = rawSections.map(s => {
+    const c = allCourses.get(s.course_id)
+    return {
+      crn: s.crn,
+      course_id: s.course_id,
+      course_name: c?.title ?? 'Untitled',
+      course_number: c?.course ?? s.course_id,
+      credits: c?.credits ?? 0,
+    }
+  })
+
+  const currentTermEvents = rawEvents.map(e => ({ event_id: e.id, crn: e.crn }))
+
   const uniqueCourses = new Map<string, {
-    courseId: string
-    courseName: string
-    courseNumber: string
-    credits: number
-    crns: string[]
-    eventIds: string[]
-  }>();
+    courseId: string; courseName: string; courseNumber: string
+    credits: number; crns: string[]; eventIds: string[]
+  }>()
 
-  currentTermSections?.forEach((section: any) => {
-    if (section.courseId && section.credits) {
-      const existing = uniqueCourses.get(section.courseId);
+  currentTermSections.forEach((section) => {
+    if (section.course_id && section.credits) {
+      const existing = uniqueCourses.get(section.course_id)
       if (existing) {
-        if (!existing.crns.includes(section.crn)) {
-          existing.crns.push(section.crn);
-        }
+        if (!existing.crns.includes(section.crn)) existing.crns.push(section.crn)
       } else {
-        uniqueCourses.set(section.courseId, {
-          courseId: section.courseId,
-          courseName: section.courseName || 'Untitled',
-          courseNumber: section.courseNumber || section.courseId,
+        uniqueCourses.set(section.course_id, {
+          courseId: section.course_id,
+          courseName: section.course_name || 'Untitled',
+          courseNumber: section.course_number || section.course_id,
           credits: section.credits,
           crns: [section.crn],
           eventIds: []
-        });
+        })
       }
     }
-  });
+  })
 
-  // Add event IDs to courses
-  currentTermEvents?.forEach((event: any) => {
-    // Find which course this event belongs to
-    currentTermSections?.forEach((section: any) => {
-      if (section.crn === event.crn && section.courseId) {
-        const course = uniqueCourses.get(section.courseId);
-        if (course && !course.eventIds.includes(event.eventId)) {
-          course.eventIds.push(event.eventId);
+  currentTermEvents.forEach((event) => {
+    currentTermSections.forEach((section) => {
+      if (section.crn === event.crn && section.course_id) {
+        const course = uniqueCourses.get(section.course_id)
+        if (course && event.event_id && !course.eventIds.includes(event.event_id)) {
+          course.eventIds.push(event.event_id)
         }
       }
-    });
-  });
+    })
+  })
 
-  const courses = Array.from(uniqueCourses.values());
-  const totalCredits = courses.reduce((sum, course) => sum + course.credits, 0);
-  const isOverloaded = totalCredits > 20;
+  const courses = Array.from(uniqueCourses.values())
+  const totalCredits = courses.reduce((sum, c) => sum + (Number(c.credits) || 0), 0)
+  const isOverloaded = totalCredits > 20
 
-  const handleRemoveCourse = (course: typeof courses[0]) => {
+  const handleRemoveCourse = async (course: typeof courses[0]) => {
     try {
-      // Delete all plan events for this course in this term
-      course.eventIds.forEach(eventId => {
-        if (eventId) {
-          planEventsCollection.delete(eventId);
-        }
-      });
-
-      // Delete all sections for this course in this term
-      course.crns.forEach(crn => {
-        if (crn) {
-          sectionsCollection.delete(crn);
-        }
-      });
-
+      await Promise.all(course.eventIds.filter(Boolean).map(id => deletePlanEvent(id)))
+      await Promise.all(course.crns.filter(Boolean).map(crn => deleteSection(crn)))
       toaster.create({
         title: 'Course removed',
         description: `${course.courseNumber} has been removed from ${currentTerm} ${currentYear}`,
-        type: 'success',
-        duration: 3000,
-      });
+        type: 'success', duration: 3000,
+      })
     } catch (error) {
-      console.error('Error removing course:', error);
-      toaster.create({
-        title: 'Error',
-        description: 'Failed to remove course',
-        type: 'error',
-        duration: 3000,
-      });
+      console.error('Error removing course:', error)
+      toaster.create({ title: 'Error', description: 'Failed to remove course', type: 'error', duration: 3000 })
     }
-  };
+  }
 
   return (
     <>
@@ -162,8 +104,7 @@ export const CreditsIndicator = ({ currentTerm, currentYear }: CreditsIndicatorP
         <HoverCard.Trigger asChild>
           <Button
             colorPalette={isOverloaded ? 'red' : 'blue'}
-            variant="subtle"
-            size="xs"
+            variant="subtle" size="xs"
             onClick={() => setDialogOpen(true)}
           >
             <Icon as={GraduationCapIcon} />
@@ -176,29 +117,17 @@ export const CreditsIndicator = ({ currentTerm, currentYear }: CreditsIndicatorP
               <HoverCard.Arrow />
               <VStack align="stretch" gap={2} p={3}>
                 <HStack justify="space-between">
-                  <Text fontWeight="semibold" fontSize="sm">
-                    {currentTerm} {currentYear}
-                  </Text>
-                  <Text fontSize="xs" color="fg.muted">
-                    Click for details
-                  </Text>
+                  <Text fontWeight="semibold" fontSize="sm">{currentTerm} {currentYear}</Text>
+                  <Text fontSize="xs" color="fg.muted">Click for details</Text>
                 </HStack>
                 <VStack align="stretch" gap={1.5}>
                   <HStack justify="space-between">
-                    <Text fontSize="xs" color="fg.muted">
-                      Total Credits
-                    </Text>
-                    <Badge size="sm" colorPalette={isOverloaded ? 'red' : 'blue'}>
-                      {totalCredits} / 20
-                    </Badge>
+                    <Text fontSize="xs" color="fg.muted">Total Credits</Text>
+                    <Badge size="sm" colorPalette={isOverloaded ? 'red' : 'blue'}>{totalCredits} / 20</Badge>
                   </HStack>
                   <HStack justify="space-between">
-                    <Text fontSize="xs" color="fg.muted">
-                      Courses
-                    </Text>
-                    <Badge size="sm" colorPalette="gray">
-                      {courses.length}
-                    </Badge>
+                    <Text fontSize="xs" color="fg.muted">Courses</Text>
+                    <Badge size="sm" colorPalette="gray">{courses.length}</Badge>
                   </HStack>
                 </VStack>
               </VStack>
@@ -207,12 +136,7 @@ export const CreditsIndicator = ({ currentTerm, currentYear }: CreditsIndicatorP
         </Portal>
       </HoverCard.Root>
 
-      {/* Detailed Dialog */}
-      <Dialog.Root
-        open={dialogOpen}
-        onOpenChange={(e) => setDialogOpen(e.open)}
-        size="lg"
-      >
+      <Dialog.Root open={dialogOpen} onOpenChange={(e) => setDialogOpen(e.open)} size="lg">
         <Portal>
           <Dialog.Backdrop />
           <Dialog.Positioner>
@@ -222,9 +146,7 @@ export const CreditsIndicator = ({ currentTerm, currentYear }: CreditsIndicatorP
                   <HStack>
                     <Icon as={GraduationCapIcon} color={isOverloaded ? 'red.500' : 'blue.500'} />
                     <Text>Scheduled Courses - {currentTerm} {currentYear}</Text>
-                    <Badge colorPalette={isOverloaded ? 'red' : 'blue'}>
-                      {totalCredits} / 20 Credits
-                    </Badge>
+                    <Badge colorPalette={isOverloaded ? 'red' : 'blue'}>{totalCredits} / 20 Credits</Badge>
                   </HStack>
                 </Dialog.Title>
               </Dialog.Header>
@@ -232,62 +154,34 @@ export const CreditsIndicator = ({ currentTerm, currentYear }: CreditsIndicatorP
                 <ScrollArea.Root maxH="500px" variant="hover">
                   <ScrollArea.Viewport>
                     <ScrollArea.Content>
-                      {courses.length === 0 ? (
-                        <VStack p={8} gap={2}>
-                          <Text color="fg.muted" fontSize="sm">
-                            No courses scheduled for this term
-                          </Text>
-                        </VStack>
-                      ) : (
-                        <VStack align="stretch" gap={3}>
-                          {courses.map((course) => (
-                            <HStack
-                              key={course.courseId}
-                              justify="space-between"
-                              p={4}
-                              borderWidth="1px"
-                              borderRadius="md"
-                              bg="bg.subtle"
-                            >
-                              <VStack align="stretch" gap={1}>
-                                <Text fontSize="md" fontWeight="bold">
-                                  {course.courseNumber}
-                                </Text>
-                                <Text fontSize="sm" color="fg.muted">
-                                  {course.courseName}
-                                </Text>
-                                <HStack gap={2}>
-                                  <Badge size="sm" colorPalette="blue">
-                                    {course.credits} Credits
-                                  </Badge>
-                                  <Badge size="sm" variant="subtle">
-                                    {course.crns.length} Section{course.crns.length > 1 ? 's' : ''}
-                                  </Badge>
-                                  {course.eventIds.length === 0 && (
-                                    <Badge size="sm" colorPalette="purple" variant="subtle">
-                                      No Calendar
-                                    </Badge>
-                                  )}
-                                </HStack>
-                              </VStack>
-                              <Button
-                                variant="ghost"
-                                size="sm"
-                                colorPalette="red"
-                                onClick={() => handleRemoveCourse(course)}
-                              >
-                                <Icon as={DeleteIcon} />
-                                Remove
-                              </Button>
-                            </HStack>
-                          ))}
-                        </VStack>
-                      )}
+                      {courses.length === 0
+                        ? <VStack p={8} gap={2}><Text color="fg.muted" fontSize="sm">No courses scheduled for this term</Text></VStack>
+                        : (
+                          <VStack align="stretch" gap={3}>
+                            {courses.map((course) => (
+                              <HStack key={course.courseId} justify="space-between" p={4} borderWidth="1px" borderRadius="md" bg="bg.subtle">
+                                <VStack align="stretch" gap={1}>
+                                  <Text fontSize="md" fontWeight="bold">{course.courseNumber}</Text>
+                                  <Text fontSize="sm" color="fg.muted">{course.courseName}</Text>
+                                  <HStack gap={2}>
+                                    <Badge size="sm" colorPalette="blue">{course.credits} Credits</Badge>
+                                    <Badge size="sm" variant="subtle">{course.crns.length} Section{course.crns.length > 1 ? 's' : ''}</Badge>
+                                    {course.eventIds.length === 0 && (
+                                      <Badge size="sm" colorPalette="purple" variant="subtle">No Calendar</Badge>
+                                    )}
+                                  </HStack>
+                                </VStack>
+                                <Button variant="ghost" size="sm" colorPalette="red" onClick={() => handleRemoveCourse(course)}>
+                                  <Icon as={DeleteIcon} />
+                                  Remove
+                                </Button>
+                              </HStack>
+                            ))}
+                          </VStack>
+                        )}
                     </ScrollArea.Content>
                   </ScrollArea.Viewport>
-                  <ScrollArea.Scrollbar>
-                    <ScrollArea.Thumb />
-                  </ScrollArea.Scrollbar>
+                  <ScrollArea.Scrollbar><ScrollArea.Thumb /></ScrollArea.Scrollbar>
                 </ScrollArea.Root>
               </Dialog.Body>
               <Dialog.Footer>
@@ -303,4 +197,3 @@ export const CreditsIndicator = ({ currentTerm, currentYear }: CreditsIndicatorP
     </>
   )
 }
-

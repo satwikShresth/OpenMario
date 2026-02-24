@@ -1,5 +1,4 @@
-import { Store } from '@tanstack/store';
-import { useStore } from '@tanstack/react-store';
+import { Store, useStore } from '@tanstack/react-store';
 import type { ProfessorProfile, Section } from './types';
 
 export type ProfessorDetailState = {

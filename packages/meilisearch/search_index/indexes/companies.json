@@ -1,0 +1,58 @@
+{
+   "primaryKey": "company_id",
+   "settings": {
+      "searchableAttributes": ["company_name", "positions"],
+      "filterableAttributes": [
+         "omega_score",
+         "total_reviews",
+         "positions_reviewed",
+         "total_submissions",
+         "pct_would_recommend",
+         "pct_overtime_required",
+         "avg_days_per_week",
+         "first_review_year",
+         "last_review_year",
+         "avg_compensation"
+      ],
+      "sortableAttributes": [
+         "company_name",
+         "omega_score",
+         "total_reviews",
+         "avg_compensation",
+         "pct_would_recommend",
+         "avg_rating_overall"
+      ],
+      "displayedAttributes": [
+         "company_id",
+         "company_name",
+         "positions",
+         "total_reviews",
+         "positions_reviewed",
+         "total_submissions",
+         "omega_score",
+         "satisfaction_score",
+         "trust_score",
+         "integrity_score",
+         "growth_score",
+         "work_life_score",
+         "avg_rating_overall",
+         "avg_compensation",
+         "median_compensation",
+         "pct_would_recommend",
+         "pct_description_accurate",
+         "avg_days_per_week",
+         "pct_overtime_required",
+         "first_review_year",
+         "last_review_year"
+      ],
+      "rankingRules": [
+         "words",
+         "typo",
+         "proximity",
+         "attribute",
+         "sort",
+         "exactness",
+         "omega_score:desc"
+      ]
+   }
+}

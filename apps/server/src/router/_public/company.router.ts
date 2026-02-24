@@ -1,5 +1,5 @@
 import { os } from '@/router/helpers';
-import { db, company } from '@/db';
+import { db, company } from '@openmario/db';
 
 /**
  * Create a new company

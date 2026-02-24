@@ -1,14 +1,20 @@
 import type { z } from 'zod';
 import type {
    ProfessorSectionSchema,
-   ProfessorListItemSchema,
-   ProfessorListQuerySchema,
+   ProfessorDetailSchema,
 } from '@openmario/contracts';
+import type { ProfessorDocument } from '@openmario/meilisearch';
 
 export type Section = z.infer<typeof ProfessorSectionSchema>;
-export type ProfessorProfile = z.infer<typeof ProfessorListItemSchema>;
-export type ProfessorListItem = z.infer<typeof ProfessorListItemSchema>;
-export type SortBy = z.infer<typeof ProfessorListQuerySchema>['sort_by'];
+export type ProfessorProfile = z.infer<typeof ProfessorDetailSchema>;
+export type ProfessorListItem = ProfessorDocument;
+export type SortBy =
+   | 'avg_rating'
+   | 'avg_difficulty'
+   | 'num_ratings'
+   | 'total_sections_taught'
+   | 'weighted_score'
+   | 'name';
 
 export const currentTermId = (): number => {
    const now = new Date();

@@ -1,9 +1,7 @@
 import { Root } from './Root';
 import { PageHeader } from './PageHeader';
-import { Toolbar } from './Toolbar';
 import { ProfessorCard } from './Card';
-import { List } from './List';
-import { InfiniteScrollSentinel } from './InfiniteScrollSentinel';
+import { Cards } from './Cards';
 import { ProfessorBreadcrumb } from './Breadcrumb';
 import { Header } from './Header';
 import { StatsGrid } from './StatsGrid';
@@ -15,10 +13,8 @@ import { SectionsTab } from './SectionsTab';
 export const Professor = {
    Root,
    PageHeader,
-   Toolbar,
    Card: ProfessorCard,
-   List,
-   InfiniteScrollSentinel,
+   Cards,
    Breadcrumb: ProfessorBreadcrumb,
    Header,
    StatsGrid,
@@ -29,5 +25,4 @@ export const Professor = {
 };
 
 export * from './types';
-export { professorListStore } from './listStore';
 export { professorDetailStore } from './detailStore';

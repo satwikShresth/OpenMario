@@ -9,11 +9,7 @@ import { routeTree } from '@/routeTree.gen';
 import ReactDOM from 'react-dom/client';
 import { parse, stringify } from 'jsurl2';
 import { StrictMode } from 'react';
-import { client } from './db';
-import { PGliteProvider } from "@electric-sql/pglite-react"
 import './styles.css';
-import { MigrationProvider } from './contexts/MigrationContext';
-
 const router = createRouter({
    routeTree,
    context: TanStackQueryProvider.getContext(),
@@ -48,16 +44,12 @@ if (rootElement && !rootElement.innerHTML) {
 
    root.render(
       <StrictMode>
-         <PGliteProvider db={client}>
-            <MigrationProvider>
-               <Provider>
-                  <Toaster />
-                  <TanStackQueryProvider.Provider>
-                     <RouterProvider router={router} />
-                  </TanStackQueryProvider.Provider>
-               </Provider>
-            </MigrationProvider>
-         </PGliteProvider>
+         <Provider>
+            <Toaster />
+            <TanStackQueryProvider.Provider>
+               <RouterProvider router={router} />
+            </TanStackQueryProvider.Provider>
+         </Provider>
       </StrictMode>
    );
 }

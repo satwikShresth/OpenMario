@@ -5,7 +5,6 @@ import {
   createListCollection,
   Flex,
   Icon,
-  Switch,
   Text,
   useDisclosure,
 } from '@chakra-ui/react';
@@ -21,9 +20,7 @@ import { FilterIcon, HeartFilledIcon, HeartIcon } from '@/components/icons';
 import { Outlet } from '@tanstack/react-router';
 import { Configure } from 'react-instantsearch';
 import z from 'zod';
-import { sectionsCollection } from '@/helpers';
-import { useLiveQuery } from '@tanstack/react-db';
-import { eq } from '@tanstack/react-db';
+import { useLikedSections } from '@/db/stores/sections';
 
 const sortBy = createListCollection({
   items: [
@@ -162,15 +159,11 @@ export const Route = createFileRoute('/_search/courses/explore')({
 
 const ToggleFav = () => {
   const navigate = Route.useNavigate();
-  const showFavorites = Route.useSearch({ select: (s) => s?.showFavorites! === true });
+  const showFavorites = Route.useSearch({ select: (s) => s?.showFavorites === true });
 
-  const { data: likedSections } = useLiveQuery((q) =>
-    q.from({ sections: sectionsCollection })
-      .select(({ sections }) => ({ crn: sections.crn }))
-      .where(({ sections }) => eq(sections.liked, true))
-  )
+  const likedSections = useLikedSections()
 
-  const favoritesFilter = likedSections?.map(({ crn }) => `crn = ${crn}`).join(' OR ');
+  const favoritesFilter = likedSections.map(({ crn }) => `crn = ${crn}`).join(' OR ');
   const handleToggle = (checked: boolean) => {
     navigate({
       search: (prev) => ({
@@ -183,25 +176,17 @@ const ToggleFav = () => {
   return (
     <>
       {showFavorites && likedSections?.length > 0 && <Configure filters={favoritesFilter} page={0} />}
-      <Switch.Root
+      <Button
+        variant={showFavorites ? 'solid' : 'outline'}
         colorPalette='pink'
-        size='md'
-        disabled={likedSections?.length < 1}
-        checked={showFavorites}
-        onCheckedChange={({ checked }) => {
-          handleToggle(checked);
-        }}
+        size='sm'
+        disabled={likedSections.length < 1}
+        onClick={() => handleToggle(!showFavorites)}
+        flexShrink={0}
       >
-        <Switch.Label>Show liked courses ({likedSections?.length})</Switch.Label>
-        <Switch.HiddenInput />
-        <Switch.Control>
-          <Switch.Thumb>
-            <Switch.ThumbIndicator fallback={<Icon as={HeartIcon} />}>
-              <Icon as={HeartFilledIcon} />
-            </Switch.ThumbIndicator>
-          </Switch.Thumb>
-        </Switch.Control>
-      </Switch.Root>
+        <Icon as={showFavorites ? HeartFilledIcon : HeartIcon} />
+        Liked ({likedSections.length})
+      </Button>
     </>
   );
 };

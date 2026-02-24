@@ -7,36 +7,23 @@ import { z } from 'zod';
  */
 
 // ============================================================================
-// GET /professors
+// GET /professors/{professor_id}
 // ============================================================================
 
-export const ProfessorListQuerySchema = z.object({
-   search: z.string().min(1).max(200).optional(),
-   department: z.string().min(1).max(100).optional(),
-   sort_by: z
-      .enum([
-         'avg_rating',
-         'avg_difficulty',
-         'num_ratings',
-         'total_sections_taught',
-         'instructor_name'
-      ])
-      .optional()
-      .default('num_ratings'),
-   order: z.enum(['asc', 'desc']).optional().default('desc'),
-   pageIndex: z.coerce.number().nonnegative().min(1).optional().default(1),
-   pageSize: z.coerce.number().nonnegative().max(100).optional().default(20)
+export const ProfessorIdParamSchema = z.object({
+   professor_id: z.coerce.number().int().positive()
 });
 
-export const ProfessorListItemSchema = z.object({
-   instructor_id: z.coerce.number(),
-   instructor_name: z.string(),
+export const ProfessorDetailSchema = z.object({
+   id: z.coerce.number(),
+   name: z.string(),
    department: z.string().nullable(),
    avg_rating: z.coerce.number().nullable(),
    avg_difficulty: z.coerce.number().nullable(),
    num_ratings: z.coerce.number().nullable(),
    rmp_id: z.string().nullable(),
-   legacy_rmp_id: z.coerce.number().nullable(),
+   rmp_legacy_id: z.coerce.number().nullable(),
+   weighted_score: z.coerce.number().nullable(),
    total_sections_taught: z.coerce.number(),
    total_courses_taught: z.coerce.number(),
    total_terms_active: z.coerce.number(),
@@ -48,34 +35,15 @@ export const ProfessorListItemSchema = z.object({
    instruction_methods: z
       .array(z.string().nullable())
       .nullable()
-      .transform(arr => arr?.filter((s): s is string => s !== null) ?? null)
-});
-
-export const ProfessorListResponseSchema = z.object({
-   pageIndex: z.number(),
-   pageSize: z.number(),
-   count: z.number(),
-   data: z.array(ProfessorListItemSchema)
-});
-
-export const listProfessorsContract = oc
-   .route({
-      method: 'GET',
-      path: '/professors',
-      summary: 'List professors',
-      description:
-         'Retrieve instructors with profile stats and teaching history',
-      tags: ['Professors']
-   })
-   .input(ProfessorListQuerySchema)
-   .output(ProfessorListResponseSchema);
-
-// ============================================================================
-// GET /professors/{professor_id}
-// ============================================================================
-
-export const ProfessorIdParamSchema = z.object({
-   professor_id: z.coerce.number().int().positive()
+      .transform(arr => arr?.filter((s): s is string => s !== null) ?? null),
+   courses_taught: z
+      .array(
+         z.object({
+            code: z.string(),
+            title: z.string()
+         })
+      )
+      .default([])
 });
 
 export const getProfessorContract = oc
@@ -88,7 +56,7 @@ export const getProfessorContract = oc
       inputStructure: 'detailed'
    })
    .input(z.object({ params: ProfessorIdParamSchema }))
-   .output(ProfessorListItemSchema);
+   .output(ProfessorDetailSchema);
 
 // ============================================================================
 // GET /professors/{professor_id}/sections
@@ -123,7 +91,6 @@ export const getProfessorSectionsContract = oc
 // ============================================================================
 
 export const professorContract = {
-   list: listProfessorsContract,
    get: getProfessorContract,
    sections: getProfessorSectionsContract
 };

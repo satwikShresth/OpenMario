@@ -19,32 +19,42 @@ import { Link, linkOptions, useMatch } from '@tanstack/react-router';
 import { getDifficultyColor, getRatingColor, weekItems } from './helpers';
 import { formatTime, orpc } from '@/helpers';
 import { useInfiniteHits } from 'react-instantsearch';
-import { useEffect, useRef } from 'react';
-import { Spinner } from '@chakra-ui/react';
+import { useCallback, useRef } from 'react';
 import { useMobile } from '@/hooks';
 import Req from './Req.tsx';
 import { useQuery } from '@tanstack/react-query';
 import Availabilites from './Availabilites.tsx';
-import { sectionsCollection, termsCollection, coursesCollection } from '@/helpers/collections';
-import { eq, and, useLiveQuery } from '@tanstack/react-db';
+import { upsertTerm, upsertCourse, upsertSection, updateSection } from '@/db/mutations';
+import { useSectionData } from '@/db/stores/sections';
 import { toaster } from '@/components/ui/toaster';
 
 export const Cards = () => {
    const { items, showMore, isLastPage } = useInfiniteHits<Section>();
-   const sentinelRef = useRef<HTMLDivElement>(null);
 
-   useEffect(() => {
-      const el = sentinelRef.current;
-      if (!el) return;
-      const observer = new IntersectionObserver(
-         entries => {
-            if (entries[0]!.isIntersecting && !isLastPage) showMore();
-         },
-         { threshold: 0.1 }
-      );
-      observer.observe(el);
-      return () => observer.disconnect();
-   }, [isLastPage, showMore]);
+   // Mirror lastRenderArgs from the Algolia docs — refs always hold latest values
+   const showMoreRef = useRef(showMore);
+   const isLastPageRef = useRef(isLastPage);
+   showMoreRef.current = showMore;
+   isLastPageRef.current = isLastPage;
+
+   const observerRef = useRef<IntersectionObserver | null>(null);
+
+   // Callback ref = isFirstRender equivalent: fires once when the element mounts
+   const sentinelCallbackRef = useCallback((el: HTMLDivElement | null) => {
+      if (el) {
+         observerRef.current = new IntersectionObserver(entries => {
+            entries.forEach(entry => {
+               if (entry.isIntersecting && !isLastPageRef.current) {
+                  showMoreRef.current();
+               }
+            });
+         });
+         observerRef.current.observe(el);
+      } else {
+         observerRef.current?.disconnect();
+         observerRef.current = null;
+      }
+   }, []);
 
    return (
       <Flex direction='column' gap={5} width='full'>
@@ -56,9 +66,7 @@ export const Cards = () => {
                />
             )}
          </For>
-         <Box ref={sentinelRef} py={3} display='flex' justifyContent='center'>
-            {!isLastPage && items.length > 0 && <Spinner size='sm' color='fg.muted' />}
-         </Box>
+         <Box ref={sentinelCallbackRef} />
       </Flex>
    );
 };
@@ -66,6 +74,8 @@ export const Cards = () => {
 export const Card = ({ section }: { section: Section }) => {
    const isMobile = useMobile();
    const match = useMatch({ strict: false });
+   const { termName: sectionTermName, year: sectionYear } = parseDrexelTerm(section.term);
+   const termLabel = sectionTermName && sectionYear ? `${sectionTermName} ${sectionYear}` : section.term;
    const { data: courseRaw } = useQuery(
       orpc.course.course.queryOptions({ input: { params: { course_id: section.course_id } } })
    );
@@ -99,7 +109,7 @@ export const Card = ({ section }: { section: Section }) => {
                      >
                         <Link
                            to={`${(match.fullPath) as '/courses/explore'}/$course_id`}
-                           params={{ course_id: section?.course_id! }}
+                           params={{ course_id: section?.course_id ?? '' }}
                            reloadDocument={false}
                            resetScroll={false}
                            replace={true}
@@ -205,7 +215,7 @@ export const Card = ({ section }: { section: Section }) => {
                   gap={{ base: 2, md: 3 }}
                >
                   <Tag size='xl'>
-                     Term: {section.term}
+                     Term: {termLabel}
                   </Tag>
                   <Tag size={{ base: 'lg', md: 'xl' }}>
                      Section: {section.section}
@@ -325,120 +335,68 @@ export const Card = ({ section }: { section: Section }) => {
    );
 };
 
+/** Drexel term codes: YYYYTT where TT ∈ {15=Fall, 25=Winter, 35=Spring, 45=Summer} */
+const TERM_CODE_MAP: Record<string, string> = {
+   '15': 'Fall',
+   '25': 'Winter',
+   '35': 'Spring',
+   '45': 'Summer',
+};
+
+/** Parse a raw Drexel term id string (e.g. "202515") into { termName, year }. */
+function parseDrexelTerm(raw: string): { termName: string; year: number | null } {
+   if (raw.length < 3) return { termName: '', year: null };
+   const code = raw.slice(-2);          // "15"
+   const yearStr = raw.slice(0, -2);    // "2025"
+   const year = Number.parseInt(yearStr, 10);
+   const termName = TERM_CODE_MAP[code] ?? '';
+   return { termName, year: Number.isFinite(year) && termName ? year : null };
+}
+
 const CardButtons = (
    { section, noSection = false }: { section: Section; noSection?: boolean },
 ) => {
    const isMobile = useMobile();
 
-   // Parse term and year from section.term (e.g., "Fall 2024")
-   const [termName = '', yearStr = ''] = section.term.split(' ');
-   const year = Number.parseInt(yearStr);
+   const { termName, year: validYear } = parseDrexelTerm(section.term);
 
-   // Query for the term
-   const { data: termData } = useLiveQuery(
-      (q) => q
-         .from({ term: termsCollection })
-         .select(({ term }) => ({ ...term }))
-         .where(({ term }) =>
-            and(
-               eq(term.term, termName),
-               eq(term.year, year)
-            )
-         )
-         .findOne(),
-      [termName, year]
-   )
 
-   // Query for the section with a join to terms to filter by term/year
-   const { data: likedSection } = useLiveQuery(
-      (q) => q
-         .from({ sec: sectionsCollection })
-         .innerJoin({ term: termsCollection }, ({ sec, term }) => eq(sec.termId, term.id))
-         .select(({ sec }) => ({ ...sec }))
-         .where(({ sec, term }) =>
-            and(
-               eq(sec.crn, section.crn.toString()),
-               eq(term.term, termName),
-               eq(term.year, year)
-            )
-         )
-         .findOne(),
-      [section.crn, termName, year]
-   )
+   const sectionData = useSectionData(section.crn.toString());
+   const liked = sectionData?.liked ?? false;
 
-   const toggleFavorite = () => {
+   const toggleFavorite = async () => {
+      if (!validYear) {
+         console.error('[CardButtons] Could not parse term year from section.term:', JSON.stringify(section.term));
+         toaster.create({ title: 'Error', description: 'Could not parse term year', type: 'error', duration: 3000 });
+         return;
+      }
       try {
-         // Get or create term
-         let termId = termData?.id
-         if (!termId) {
-            termId = crypto.randomUUID()
-            termsCollection.insert({
-               id: termId,
-               term: termName,
-               year: year,
-               isActive: false,
-               createdAt: new Date(),
-               updatedAt: new Date()
-            })
-         }
-
-         // Get or create course
-         const existingCourse = coursesCollection.get(section.course_id)
-         if (!existingCourse) {
-            coursesCollection.insert({
-               id: section.course_id,
-               course: section.course,
-               title: section.title,
-               completed: false,
-               credits: section.credits || null,
-               createdAt: new Date(),
-               updatedAt: new Date()
-            })
-         }
-
-         // Toggle section like
-         const existingSection = sectionsCollection.get(section.crn.toString())
-         if (existingSection) {
-            // Section exists, toggle the liked status
-            sectionsCollection.update(section.crn.toString(), (draft) => {
-               draft.liked = !draft.liked
-               draft.updatedAt = new Date()
-            })
-
+         const credits = section.credits != null ? Math.round(Number(section.credits)) : null;
+         const crn = section.crn.toString();
+         const termId = await upsertTerm(termName, validYear);
+         await upsertCourse({ id: section.course_id, course: section.course, title: section.title, credits });
+         const existing = sectionData;
+         if (existing) {
+            const nowLiked = !existing.liked;
+            await updateSection(crn, { liked: nowLiked });
             toaster.create({
-               title: existingSection.liked ? 'Removed from favorites' : 'Added to favorites',
-               type: 'success',
-               duration: 2000,
-            })
+               title: nowLiked ? 'Added to favorites' : 'Removed from favorites',
+               type: 'success', duration: 2000,
+            });
          } else {
-            // Section doesn't exist, create it with liked = true
-            sectionsCollection.insert({
-               crn: section.crn.toString(),
-               termId,
-               courseId: section.course_id,
-               status: null,
-               liked: true,
-               grade: null,
-               createdAt: new Date(),
-               updatedAt: new Date()
-            })
-
-            toaster.create({
-               title: 'Added to favorites',
-               type: 'success',
-               duration: 2000,
-            })
+            await upsertSection({ crn, term_id: termId, course_id: section.course_id, liked: true });
+            toaster.create({ title: 'Added to favorites', type: 'success', duration: 2000 });
          }
       } catch (error) {
-         console.error('Error toggling favorite:', error)
+         console.error('Error toggling favorite:', error);
          toaster.create({
             title: 'Error',
             description: 'Failed to toggle favorite',
             type: 'error',
             duration: 3000,
-         })
+         });
       }
-   }
+   };
 
    return (
       <Stack
@@ -471,13 +429,13 @@ const CardButtons = (
             variant='surface'
             size='sm'
             onClick={toggleFavorite}
-            color={likedSection?.liked ? 'pink.500' : 'gray.500'}
+            color={liked ? 'pink.500' : 'gray.500'}
             _hover={{
-               color: likedSection?.liked ? 'pink.600' : 'pink.400',
-               borderColor: likedSection?.liked ? 'pink.600' : 'pink.400',
+               color: liked ? 'pink.600' : 'pink.400',
+               borderColor: liked ? 'pink.600' : 'pink.400',
             }}
          >
-            <Icon as={likedSection?.liked ? HeartFilledIcon : HeartIcon} size='lg' />
+            <Icon as={liked ? HeartFilledIcon : HeartIcon} size='lg' />
          </IconButton>
          <Clipboard.Root
             value={globalThis.location.origin + globalThis.location.pathname +

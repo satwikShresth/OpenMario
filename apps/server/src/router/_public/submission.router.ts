@@ -6,7 +6,7 @@ import {
    location,
    submission,
    submissionMView
-} from '@/db';
+} from '@openmario/db';
 import {
    and,
    eq,

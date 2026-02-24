@@ -6,13 +6,8 @@ import { Plan } from '@/components/Search/Plan'
 import { ConflictsIndicator } from '@/components/Search/Plan/ConflictsIndicator'
 import { CreditsIndicator } from '@/components/Search/Plan/CreditsIndicator'
 import { Toaster } from '@/components/ui/toaster'
-import { LoadingComponent } from '@/components/common'
-import { useMigration } from '@/contexts/MigrationContext'
-import { useLiveQuery, eq } from '@tanstack/react-db'
-import { termsCollection } from '@/helpers/collections'
-import { db } from '@/db'
-import { terms } from '@/db/schema'
-import { eq as drizzleEq } from 'drizzle-orm'
+import { db } from '@/db/dexie'
+import { useTermById } from '@/db/stores/terms'
 import { z } from 'zod'
 
 const SPLITTER_KEY = 'plan-splitter-sizes'
@@ -39,11 +34,8 @@ function getSavedSizes(): number[] {
 export const Route = createFileRoute('/_search/courses/plan/$term_id')({
   beforeLoad: ({ params }) => ({
     getLabel: () =>
-      db
-        .select({ term: terms.term, year: terms.year })
-        .from(terms)
-        .where(drizzleEq(terms.id, params.term_id))
-        .then(rows => (rows[0] ? `${rows[0].term} ${rows[0].year}` : 'Plan'))
+      db.terms.get(params.term_id)
+        .then(row => row ? `${row.term} ${row.year}` : 'Plan')
         .catch(() => 'Plan'),
   }),
   validateSearch: z.object({
@@ -54,7 +46,6 @@ export const Route = createFileRoute('/_search/courses/plan/$term_id')({
 
 function PlanTermPage() {
   const { term_id } = Route.useParams()
-  const { status } = useMigration()
   const [sizes, setSizes] = useState<number[]>(getSavedSizes)
 
   const orientation = useBreakpointValue<'horizontal' | 'vertical'>({
@@ -62,35 +53,14 @@ function PlanTermPage() {
     lg: 'horizontal',
   })
 
-  const { data: termRow } = useLiveQuery(
-    q => q
-      .from({ t: termsCollection })
-      .select(({ t }) => ({ id: t.id, term: t.term, year: t.year }))
-      .where(({ t }) => eq(t.id, term_id)),
-    [term_id]
-  )
+  const termRow = useTermById(term_id)
 
-  const currentTerm = termRow?.[0]?.term as "Fall" | "Winter" | "Spring" | "Summer" ?? 'Fall'
-  const currentYear = termRow?.[0]?.year ?? 0
+  const currentTerm = termRow?.term as "Fall" | "Winter" | "Spring" | "Summer" ?? 'Fall'
+  const currentYear = termRow?.year ?? 0
   const termColor = TERM_COLORS[currentTerm] ?? 'gray'
-
-  if (status === 'pending' || status === 'initializing') {
-    return (
-      <LoadingComponent
-        title="Initializing Database"
-        message="Setting up your local database and running migrations. This may take a moment..."
-        variant="processing"
-      />
-    )
-  }
-
-  if (status === 'error') {
-    return <Text color="red.500">Failed to initialize database. Please refresh the page.</Text>
-  }
 
   return (
     <>
-      {/* Escape root box padding to use the full viewport height below the page header */}
       <Box
         mt={-6}
         mx={{ base: -4, md: -6 }}
@@ -100,7 +70,6 @@ function PlanTermPage() {
         flexDirection="column"
         overflow="hidden"
       >
-        {/* Toolbar */}
         <Flex
           align="center"
           justify="space-between"
@@ -134,7 +103,6 @@ function PlanTermPage() {
           </HStack>
         </Flex>
 
-        {/* Minimum-width guard for horizontal layout */}
         {orientation === 'horizontal' && (
           <Alert.Root
             status="warning"
@@ -152,7 +120,6 @@ function PlanTermPage() {
           </Alert.Root>
         )}
 
-        {/* Resizable panels */}
         <Splitter.Root
           panels={[
             { id: 'courses', minSize: 28, maxSize: 55 },

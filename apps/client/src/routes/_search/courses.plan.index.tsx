@@ -15,13 +15,10 @@ import {
    VStack,
 } from '@chakra-ui/react'
 import { createFileRoute, Link, useNavigate } from '@tanstack/react-router'
-import { useLiveQuery, eq } from '@tanstack/react-db'
-import {
-   planEventsCollection,
-   sectionsCollection,
-   termsCollection,
-   coursesCollection,
-} from '@/helpers/collections'
+import { useStore } from '@tanstack/react-store'
+import { termsStore, useAllTerms } from '@/db/stores/terms'
+import { sectionsStore } from '@/db/stores/sections'
+import { coursesStore } from '@/db/stores/courses'
 import { useState } from 'react'
 import { CalendarPlusIcon, ChevronRightIcon, BookOpenIcon, GraduationCapIcon } from '@/components/icons'
 
@@ -39,19 +36,14 @@ export const Route = createFileRoute('/_search/courses/plan/')({
    component: PlanIndexPage,
 })
 
-// ─── new plan dialog ──────────────────────────────────────────────────────────
-
 function NewPlanButton() {
    const navigate = useNavigate()
    const [open, setOpen] = useState(false)
    const [selectedTermId, setSelectedTermId] = useState<string>('')
 
-   const { data: allTerms } = useLiveQuery(
-      q => q.from({ t: termsCollection }).select(({ t }) => ({ id: t.id, term: t.term, year: t.year })),
-      []
-   )
+   const allTerms = useAllTerms()
 
-   const sortedTerms = (allTerms ?? []).sort((a, b) => {
+   const sortedTerms = [...allTerms].sort((a, b) => {
       if (b.year !== a.year) return b.year - a.year
       return TERM_ORDER.indexOf(a.term as TermName) - TERM_ORDER.indexOf(b.term as TermName)
    })
@@ -127,14 +119,8 @@ function NewPlanButton() {
    )
 }
 
-// ─── plan summary card ────────────────────────────────────────────────────────
-
 type PlanSummary = {
-   termId: string
-   term: string
-   year: number
-   courseCount: number
-   totalCredits: number
+   termId: string; term: string; year: number; courseCount: number; totalCredits: number
 }
 
 function PlanCard({ plan }: { plan: PlanSummary }) {
@@ -156,20 +142,12 @@ function PlanCard({ plan }: { plan: PlanSummary }) {
             transition='all 0.15s'
             overflow='hidden'
          >
-            {/* Color accent bar */}
             <Box h='3px' bg={`${termColor}.400`} flexShrink={0} />
-
             <Card.Body py={5} px={5}>
                <VStack align='stretch' gap={4}>
                   <Flex justify='space-between' align='flex-start'>
                      <VStack align='flex-start' gap={1}>
-                        <Badge
-                           colorPalette={termColor}
-                           variant='subtle'
-                           px={2.5}
-                           py={0.5}
-                           fontSize='xs'
-                        >
+                        <Badge colorPalette={termColor} variant='subtle' px={2.5} py={0.5} fontSize='xs'>
                            {plan.term}
                         </Badge>
                         <Text fontWeight='bold' fontSize='2xl' lineHeight='1.1'>
@@ -187,11 +165,8 @@ function PlanCard({ plan }: { plan: PlanSummary }) {
                               Courses
                            </Text>
                         </HStack>
-                        <Text fontWeight='semibold' fontSize='xl'>
-                           {plan.courseCount}
-                        </Text>
+                        <Text fontWeight='semibold' fontSize='xl'>{plan.courseCount}</Text>
                      </VStack>
-
                      <VStack align='flex-start' gap={0.5}>
                         <HStack gap={1}>
                            <Icon as={GraduationCapIcon} boxSize={3} color='fg.muted' />
@@ -199,9 +174,7 @@ function PlanCard({ plan }: { plan: PlanSummary }) {
                               Credits
                            </Text>
                         </HStack>
-                        <Text fontWeight='semibold' fontSize='xl'>
-                           {plan.totalCredits}
-                        </Text>
+                        <Text fontWeight='semibold' fontSize='xl'>{plan.totalCredits}</Text>
                      </VStack>
                   </Grid>
                </VStack>
@@ -211,52 +184,32 @@ function PlanCard({ plan }: { plan: PlanSummary }) {
    )
 }
 
-// ─── page ─────────────────────────────────────────────────────────────────────
-
 function PlanIndexPage() {
-   const { data: termsWithPlans } = useLiveQuery(
-      q =>
-         q
-            .from({ events: planEventsCollection })
-            .innerJoin({ t: termsCollection }, ({ events, t }) =>
-               eq(events.termId, t.id)
-            )
-            .leftJoin({ s: sectionsCollection }, ({ events, s }) =>
-               eq(events.crn, s.crn)
-            )
-            .leftJoin({ c: coursesCollection }, ({ s, c }) =>
-               eq(s!.courseId, c.id)
-            )
-            .select(({ events, t, c }) => ({
-               termId: t.id,
-               term: t.term,
-               year: t.year,
-               eventId: events.id,
-               credits: c?.credits ?? 0,
-               courseId: c?.id,
-            })),
-      []
-   )
+   const allSections = useStore(sectionsStore)
+   const allCourses = useStore(coursesStore)
+   const allTerms = useStore(termsStore)
 
+   // Build plan summaries from sections (not events) so online/async courses aren't missed.
+   // Use plan_events only to discover which term_ids have active plans.
    const deduped = new Map<string, PlanSummary>()
    const seenCourses = new Map<string, Set<string>>()
-   for (const row of termsWithPlans ?? []) {
-      if (!deduped.has(row.termId)) {
-         deduped.set(row.termId, {
-            termId: row.termId,
-            term: row.term,
-            year: row.year,
-            courseCount: 0,
-            totalCredits: 0,
-         })
-         seenCourses.set(row.termId, new Set())
+
+   // Seed term entries from sections with a term_id
+   for (const s of allSections.values()) {
+      if (!s.term_id) continue
+      const term = allTerms.get(s.term_id)
+      if (!term) continue
+      if (!deduped.has(s.term_id)) {
+         deduped.set(s.term_id, { termId: s.term_id, term: term.term, year: term.year, courseCount: 0, totalCredits: 0 })
+         seenCourses.set(s.term_id, new Set())
       }
-      const plan = deduped.get(row.termId)!
-      const seen = seenCourses.get(row.termId)!
-      if (row.courseId && !seen.has(row.courseId)) {
-         seen.add(row.courseId)
+      const plan = deduped.get(s.term_id)!
+      const seen = seenCourses.get(s.term_id)!
+      const course = allCourses.get(s.course_id)
+      if (course && !seen.has(course.id)) {
+         seen.add(course.id)
          plan.courseCount += 1
-         plan.totalCredits += row.credits ?? 0
+         plan.totalCredits += Number(course.credits) || 0
       }
    }
 
@@ -266,7 +219,7 @@ function PlanIndexPage() {
          : TERM_ORDER.indexOf(a.term as TermName) - TERM_ORDER.indexOf(b.term as TermName)
    )
 
-   const totalCredits = plans.reduce((sum, p) => sum + p.totalCredits, 0)
+   const totalCredits = plans.reduce((sum, p) => sum + (Number(p.totalCredits) || 0), 0)
 
    return (
       <VStack align='stretch' gap={4}>

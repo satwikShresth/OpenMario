@@ -88,8 +88,8 @@ function DrexelShaftVideo({ onDrop, onStop }: { onDrop: () => void; onStop: () =
                   e.target.setVolume(0);
                   e.target.unMute();
                   e.target.playVideo();
-                  const DROP       = 37.1;
-                  const VOL_START  = 10;   // volume ramp starts
+                  const DROP = 37.1;
+                  const VOL_START = 10;   // volume ramp starts
                   const SLOW_START = 25;   // speed ramp starts
                   const poll = setInterval(() => {
                      if (!playerRef.current?.getCurrentTime) return;
@@ -148,8 +148,8 @@ function DrexelShaftVideo({ onDrop, onStop }: { onDrop: () => void; onStop: () =
 
 const TOOLS = [
    { emoji: '🏢', label: 'co-op reviews', to: '/companies' },
-   { emoji: '📚', label: 'courses',        to: '/courses/explore' },
-   { emoji: '👨‍🏫', label: 'professors',     to: '/professors' },
+   { emoji: '📚', label: 'courses', to: '/courses/explore' },
+   { emoji: '👨‍🏫', label: 'professors', to: '/professors' },
 ];
 
 type Phase = 'before' | 'impact' | 'after';
@@ -157,14 +157,14 @@ type Phase = 'before' | 'impact' | 'after';
 const SHAFT_KEY = 'shaft-seen';
 
 export function Landing() {
-   const navigate                     = useNavigate();
-   const [phase, setPhase]            = useState<Phase>('before');
-   const [showTitle,   setShowTitle]  = useState(false);
-   const [showQuote,   setShowQuote]  = useState(false);
-   const [showTools,   setShowTools]  = useState(false);
-   const [showNav,     setShowNav]    = useState(false);
+   const navigate = useNavigate();
+   const [phase, setPhase] = useState<Phase>('before');
+   const [showTitle, setShowTitle] = useState(false);
+   const [showQuote, setShowQuote] = useState(false);
+   const [showTools, setShowTools] = useState(false);
+   const [showNav, setShowNav] = useState(false);
 
-   const [glitch, setGlitch]          = useState(false);
+   const [glitch, setGlitch] = useState(false);
 
    useEffect(() => {
       if (localStorage.getItem(SHAFT_KEY)) {
@@ -194,17 +194,17 @@ export function Landing() {
    const handleDrop = useCallback(() => {
       localStorage.setItem(SHAFT_KEY, '1');
       setPhase('impact');
-      setTimeout(() => setPhase('after'),  900);
+      setTimeout(() => setPhase('after'), 900);
       setTimeout(() => setShowTitle(true), 1000);
       setTimeout(() => setShowQuote(true), 1600);
       setTimeout(() => setShowTools(true), 2200);
-      setTimeout(() => setShowNav(true),   2800);
+      setTimeout(() => setShowNav(true), 2800);
    }, []);
 
-   const handleStop = useCallback(() => {}, []);
+   const handleStop = useCallback(() => { }, []);
 
 
-   const isAfter  = phase === 'after';
+   const isAfter = phase === 'after';
    const isImpact = phase === 'impact';
 
    return (

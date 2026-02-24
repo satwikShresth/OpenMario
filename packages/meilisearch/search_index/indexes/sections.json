@@ -14,6 +14,7 @@
          "course",
          "title",
          "description",
+         "restrictions",
          "subject_id",
          "subject_name",
          "college_id",
@@ -34,6 +35,9 @@
          "college_id",
          "college_name",
          "course",
+         "course_number",
+         "writing_intensive",
+         "max_enroll",
          "instructors.name",
          "instructors.department"
       ],
@@ -43,6 +47,7 @@
          "credits",
          "start_time",
          "end_time",
+         "max_enroll",
          "instructors.avg_rating"
       ],
       "rankingRules": [
@@ -58,9 +63,11 @@
       "displayedAttributes": [
          "crn",
          "section",
+         "course_number",
          "instruction_type",
          "instruction_method",
          "credits",
+         "max_enroll",
          "start_time",
          "end_time",
          "days",
@@ -69,6 +76,9 @@
          "course",
          "title",
          "description",
+         "restrictions",
+         "repeat_status",
+         "writing_intensive",
          "subject_id",
          "subject_name",
          "college_id",

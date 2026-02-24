@@ -1,71 +1,87 @@
-import { Separator } from '@chakra-ui/react';
-import { useInfiniteQuery } from '@tanstack/react-query';
 import { createFileRoute } from '@tanstack/react-router';
-import { useLayoutEffect } from 'react';
-import { z } from 'zod';
-import { orpc } from '@/helpers/rpc.ts';
-import { Professor, professorListStore, type ProfessorListItem } from '@/components/Professor';
+import { Box, createListCollection, Flex } from '@chakra-ui/react';
+import { instantMeiliSearch } from '@meilisearch/instant-meilisearch';
+import { useSuspenseQuery } from '@tanstack/react-query';
+import { Suspense } from 'react';
+import { Configure, Index, InstantSearch } from 'react-instantsearch';
+import { SearchBox, SortSelect, Stats } from '@/components/Search';
+import { Professor } from '@/components/Professor';
+import { orpc } from '@/helpers';
+import { env } from '@env';
+import { INDEX_NAMES } from '@openmario/meilisearch';
 
-const professorsSearchSchema = z.object({
-   search: z.string().optional().catch(undefined),
-   department: z.string().optional().catch(undefined),
-   sort_by: z
-      .enum(['avg_rating', 'avg_difficulty', 'num_ratings', 'total_sections_taught', 'instructor_name'])
-      .optional()
-      .catch('num_ratings'),
-   order: z.enum(['asc', 'desc']).optional().catch('desc'),
+const sortByCollection = createListCollection({
+   items: [
+      { label: 'Most Relevant', value: INDEX_NAMES.professors },
+      { label: 'Avg Rating', value: `${INDEX_NAMES.professors}:avg_rating:desc` },
+      { label: 'Most Rated', value: `${INDEX_NAMES.professors}:num_ratings:desc` },
+      { label: 'Most Sections', value: `${INDEX_NAMES.professors}:total_sections_taught:desc` },
+      { label: 'Difficulty (Hard)', value: `${INDEX_NAMES.professors}:avg_difficulty:desc` },
+      { label: 'Difficulty (Easy)', value: `${INDEX_NAMES.professors}:avg_difficulty:asc` },
+      { label: 'Name A→Z', value: `${INDEX_NAMES.professors}:name:asc` },
+   ],
 });
 
 export const Route = createFileRoute('/professors/')({
-   validateSearch: professorsSearchSchema,
    component: ProfessorsPage,
 });
 
-const PAGE_SIZE = 20;
+function ProfessorsSearch() {
+   return (
+      <Index indexName={INDEX_NAMES.professors}>
+         <Configure hitsPerPage={20} />
+         <Flex direction='column' gap={4}>
+            <Flex
+               direction={{ base: 'column', sm: 'row' }}
+               align={{ base: 'stretch', sm: 'center' }}
+               gap={{ base: 3, sm: 4 }}
+            >
+               <Box flex='1' minWidth='0'>
+                  <SearchBox />
+               </Box>
+               <Box flexShrink={0}>
+                  <SortSelect sortBy={sortByCollection} />
+               </Box>
+            </Flex>
+
+            <Flex justify='space-between' align='center'>
+               <Stats />
+            </Flex>
+
+            <Professor.Cards />
+         </Flex>
+      </Index>
+   );
+}
 
 function ProfessorsPage() {
-   const { search, department, sort_by, order } = Route.useSearch();
-   const sortBy = sort_by ?? 'num_ratings';
-   const sortOrder = order ?? 'desc';
+   const refetchInterval = 1000 * 60 * 10;
+   const { data } = useSuspenseQuery(
+      orpc.auth.getSearchToken.queryOptions({
+         staleTime: refetchInterval - 1000,
+         gcTime: refetchInterval - 1000,
+         refetchInterval,
+         refetchIntervalInBackground: true,
+      })
+   );
 
-   const { data, isLoading, isFetchingNextPage, fetchNextPage, hasNextPage } =
-      useInfiniteQuery(
-         orpc.professor.list.infiniteOptions({
-            input: (pageParam: number) => ({
-               search,
-               department,
-               sort_by: sortBy,
-               order: sortOrder,
-               pageIndex: pageParam,
-               pageSize: PAGE_SIZE,
-            }),
-            initialPageParam: 1,
-            getNextPageParam: lastPage => {
-               const totalPages = Math.ceil(lastPage.count / lastPage.pageSize);
-               return lastPage.pageIndex < totalPages ? lastPage.pageIndex + 1 : undefined;
-            },
-            staleTime: 30_000,
-         })
-      );
-
-   useLayoutEffect(() => {
-      professorListStore.setState(() => ({
-         professors: (data?.pages.flatMap(p => (p as any).data) ?? []) as ProfessorListItem[],
-         totalCount: (data?.pages[0] as any)?.count ?? 0,
-         isLoading,
-         isFetchingNextPage,
-         hasNextPage: !!hasNextPage,
-         fetchNextPage,
-      }));
-   }, [data, isLoading, isFetchingNextPage, hasNextPage, fetchNextPage]);
+   const { searchClient } = instantMeiliSearch(
+      env.VITE_MEILI_HOST,
+      () => (data as { token: string }).token
+   );
 
    return (
-      <Professor.Root>
-         <Professor.PageHeader />
-         <Separator />
-         <Professor.Toolbar />
-         <Professor.List />
-         <Professor.InfiniteScrollSentinel />
-      </Professor.Root>
+      <Suspense>
+         <Professor.Root>
+            <Professor.PageHeader />
+            {/* @ts-ignore: shupp */}
+            <InstantSearch
+               searchClient={searchClient}
+               future={{ preserveSharedStateOnUnmount: true }}
+            >
+               <ProfessorsSearch />
+            </InstantSearch>
+         </Professor.Root>
+      </Suspense>
    );
 }

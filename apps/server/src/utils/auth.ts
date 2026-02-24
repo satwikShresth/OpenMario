@@ -1,6 +1,6 @@
 import { betterAuth } from 'better-auth';
 import { drizzleAdapter } from 'better-auth/adapters/drizzle';
-import { db, schema } from '@/db';
+import { db, schema } from '@openmario/db';
 import { anonymous, openAPI, emailOTP } from 'better-auth/plugins';
 
 import { env } from '@env';

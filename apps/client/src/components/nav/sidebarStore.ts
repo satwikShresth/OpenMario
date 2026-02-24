@@ -1,5 +1,4 @@
-import { Store } from '@tanstack/store';
-import { useStore } from '@tanstack/react-store';
+import { Store, useStore } from '@tanstack/react-store';
 
 export type MenuState = 'open' | 'minimized';
 
@@ -13,14 +12,15 @@ const sidebarStore = new Store<SidebarState>({
       window.innerWidth < 768
          ? 'open'
          : ((sessionStorage.getItem('om_menu_state') as MenuState) ?? 'open'),
-   drawerOpen: false,
+   drawerOpen: false
 });
 
 export const useSidebarStore = () => ({
    menuState: useStore(sidebarStore, s => s.menuState),
    isMinimized: useStore(sidebarStore, s => s.menuState === 'minimized'),
    drawerOpen: useStore(sidebarStore, s => s.drawerOpen),
-   setDrawerOpen: (open: boolean) => sidebarStore.setState(s => ({ ...s, drawerOpen: open })),
+   setDrawerOpen: (open: boolean) =>
+      sidebarStore.setState(s => ({ ...s, drawerOpen: open })),
    setMenuState: (state: MenuState) => {
       sessionStorage.setItem('om_menu_state', state);
       sidebarStore.setState(s => ({ ...s, menuState: state }));
@@ -33,9 +33,13 @@ export const useSidebarStore = () => ({
             return { ...s, menuState: next };
          });
       if ('startViewTransition' in document) {
-         (document as Document & { startViewTransition: (cb: () => void) => void }).startViewTransition(doToggle);
+         (
+            document as Document & {
+               startViewTransition: (cb: () => void) => void;
+            }
+         ).startViewTransition(doToggle);
       } else {
          doToggle();
       }
-   },
+   }
 });

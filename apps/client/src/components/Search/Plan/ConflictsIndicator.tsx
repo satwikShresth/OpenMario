@@ -2,9 +2,9 @@ import { Button, Icon, HoverCard as ChakraHoverCard, Dialog as ChakraDialog, Por
 import { WarningIcon, ExternalLinkIcon, CheckCircleIcon } from '@/components/icons'
 import { useRefinementList } from 'react-instantsearch'
 import { useConflicts } from '@/hooks/useConflicts'
-import { coursesCollection } from '@/helpers/collections'
 import { useState } from 'react'
 import { toaster } from '@/components/ui/toaster'
+import { upsertCourse } from '@/db/mutations'
 
 export type ConflictType =
   | 'duplicate'
@@ -119,28 +119,8 @@ export const ConflictsIndicator = ({ currentTerm, currentYear }: ConflictsIndica
     }
 
     try {
-      // Get or create course, then mark as completed
-      const existingCourse = coursesCollection.get(courseId)
-
-      if (existingCourse) {
-        // Course exists, just mark as completed
-        coursesCollection.update(courseId, (draft) => {
-          draft.completed = true
-          draft.updatedAt = new Date()
-        })
-      } else {
-        // Create course and mark as completed
-        coursesCollection.insert({
-          id: courseId,
-          course: courseNumber,
-          title: courseTitle,
-          credits: courseCredits || null,
-          completed: true,
-          createdAt: new Date(),
-          updatedAt: new Date()
-        })
-      }
-
+      await upsertCourse({ id: courseId, course: courseNumber, title: courseTitle,
+        credits: courseCredits ?? null, completed: true })
       toaster.create({
         title: 'Course marked as taken',
         description: `${courseNumber} has been added to your completed courses`,

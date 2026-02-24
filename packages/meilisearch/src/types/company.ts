@@ -1,0 +1,23 @@
+export type CompanyDocument = {
+   company_id: string;
+   company_name: string;
+   positions: string[];
+   total_reviews: number;
+   positions_reviewed: number;
+   total_submissions: number;
+   omega_score: number | null;
+   satisfaction_score: number | null;
+   trust_score: number | null;
+   integrity_score: number | null;
+   growth_score: number | null;
+   work_life_score: number | null;
+   avg_rating_overall: number | null;
+   avg_compensation: number | null;
+   median_compensation: number | null;
+   pct_would_recommend: number | null;
+   pct_description_accurate: number | null;
+   avg_days_per_week: number | null;
+   pct_overtime_required: number | null;
+   first_review_year: number | null;
+   last_review_year: number | null;
+};
