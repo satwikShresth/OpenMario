@@ -16,6 +16,7 @@ import {
 } from '@chakra-ui/react'
 import { createFileRoute, Link, useNavigate } from '@tanstack/react-router'
 import { useStore } from '@tanstack/react-store'
+import { Courses } from '@/components/Courses'
 import { termsStore, useAllTerms } from '@/db/stores/terms'
 import { sectionsStore } from '@/db/stores/sections'
 import { coursesStore } from '@/db/stores/courses'
@@ -32,7 +33,7 @@ const TERM_COLORS: Record<string, string> = {
    Summer: 'yellow',
 }
 
-export const Route = createFileRoute('/_search/courses/plan/')({
+export const Route = createFileRoute('/courses/plan/')({
    component: PlanIndexPage,
 })
 
@@ -189,12 +190,9 @@ function PlanIndexPage() {
    const allCourses = useStore(coursesStore)
    const allTerms = useStore(termsStore)
 
-   // Build plan summaries from sections (not events) so online/async courses aren't missed.
-   // Use plan_events only to discover which term_ids have active plans.
    const deduped = new Map<string, PlanSummary>()
    const seenCourses = new Map<string, Set<string>>()
 
-   // Seed term entries from sections with a term_id
    for (const s of allSections.values()) {
       if (!s.term_id) continue
       const term = allTerms.get(s.term_id)
@@ -222,9 +220,9 @@ function PlanIndexPage() {
    const totalCredits = plans.reduce((sum, p) => sum + (Number(p.totalCredits) || 0), 0)
 
    return (
-      <VStack align='stretch' gap={4}>
+      <Courses.Root>
          <Flex justify='space-between' align='center' wrap='wrap' gap={3}>
-            <Text fontSize='2xl' fontWeight='bold'>Course Plans</Text>
+            <Courses.PageHeader title='Course Plans' />
             <HStack gap={3}>
                {plans.length > 0 && (
                   <>
@@ -257,6 +255,6 @@ function PlanIndexPage() {
                No plans yet — create your first one above.
             </Text>
          )}
-      </VStack>
+      </Courses.Root>
    )
 }

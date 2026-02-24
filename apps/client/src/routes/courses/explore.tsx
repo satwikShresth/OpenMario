@@ -15,6 +15,7 @@ import {
   SortSelect,
   Stats,
 } from '@/components/Search';
+import { Courses } from '@/components/Courses';
 import { useMobile } from '@/hooks';
 import { FilterIcon, HeartFilledIcon, HeartIcon } from '@/components/icons';
 import { Outlet } from '@tanstack/react-router';
@@ -56,7 +57,7 @@ const sortBy = createListCollection({
   ],
 });
 
-export const Route = createFileRoute('/_search/courses/explore')({
+export const Route = createFileRoute('/courses/explore')({
   beforeLoad: () => ({ getLabel: () => 'Explore Courses' }),
   validateSearch: z.object({
     showFavorites: z.catch(z.optional(z.boolean()), false)
@@ -66,94 +67,90 @@ export const Route = createFileRoute('/_search/courses/explore')({
     const isMobile = useMobile();
 
     return (
-      <Flex
-        gap={{ base: 3, md: 4 }}
-        direction='column'
-        minHeight='0'
-        width='full'
-        flex='1'
-      >
-        <Text fontSize='2xl' fontWeight='bold'>Explore Courses</Text>
-        {/* Search Header */}
+      <Courses.Root>
+        <Courses.PageHeader title='Explore Courses' />
         <Flex
-          direction={{ base: 'column', sm: 'row' }}
-          align={{ base: 'stretch', sm: 'center' }}
-          gap={{ base: 3, sm: 4, md: 5 }}
-          width='full'
-        >
-          <Box flex='1' minWidth='0'>
-            <SearchBox />
-          </Box>
-          <Box flexShrink={0} width={{ base: 'full', sm: 'auto' }}>
-            <RefinementSelect attribute='term' size={{ base: 'md', md: 'lg' }} />
-          </Box>
-        </Flex>
-
-        {/* Mobile Filter and Sort Controls */}
-        {isMobile && (
-          <Flex direction='row' width='full' gap={3} justify='space-between'>
-            {/* Filter Button */}
-            <Button onClick={openFilter} variant='outline' size='md'>
-              <Icon as={FilterIcon} />
-              <Text>Filters</Text>
-            </Button>
-
-            {/* Sort Select */}
-            <SortSelect sortBy={sortBy} />
-          </Flex>
-        )}
-
-        {/* Main Content Area */}
-        <Flex
-          direction={{ base: 'column', lg: 'row' }}
-          flex='1'
-          width='full'
+          gap={{ base: 3, md: 4 }}
+          direction='column'
           minHeight='0'
-          gap={{ base: 4, md: 5 }}
-          align='stretch'
+          width='full'
+          flex='1'
         >
-          {/* Desktop Filters Sidebar - Only show on desktop */}
-          {!isMobile && (
-            <Box width='280px' flexShrink={0}>
-              <Search.Courses.Filters open={isFilterOpen} onClose={closeFilter} />
+          {/* Search Header */}
+          <Flex
+            direction={{ base: 'column', sm: 'row' }}
+            align={{ base: 'stretch', sm: 'center' }}
+            gap={{ base: 3, sm: 4, md: 5 }}
+            width='full'
+          >
+            <Box flex='1' minWidth='0'>
+              <SearchBox />
             </Box>
+            <Box flexShrink={0} width={{ base: 'full', sm: 'auto' }}>
+              <RefinementSelect attribute='term' size={{ base: 'md', md: 'lg' }} />
+            </Box>
+          </Flex>
+
+          {/* Mobile Filter and Sort Controls */}
+          {isMobile && (
+            <Flex direction='row' width='full' gap={3} align='center' flexWrap='wrap'>
+              <Button onClick={openFilter} variant='outline' size='md'>
+                <Icon as={FilterIcon} />
+                <Text>Filters</Text>
+              </Button>
+              <ToggleFav />
+              <Box flex='1' minW={0} />
+              <SortSelect sortBy={sortBy} />
+            </Flex>
           )}
 
-          {/* Results Area */}
-          <Flex direction='column' flex='1' minWidth='0' gap={{ base: 3, md: 4 }}>
-            {/* Desktop Stats and Sort Controls - Only show on desktop */}
-            {!isMobile
-              ? (
+          {/* Main Content Area */}
+          <Flex
+            direction={{ base: 'column', lg: 'row' }}
+            flex='1'
+            width='full'
+            minHeight='0'
+            gap={{ base: 4, md: 5 }}
+            align='stretch'
+          >
+            {!isMobile && (
+              <Box width='280px' flexShrink={0}>
+                <Search.Courses.Filters open={isFilterOpen} onClose={closeFilter} />
+              </Box>
+            )}
+
+            <Flex direction='column' flex='1' minWidth='0' gap={{ base: 3, md: 4 }}>
+              {!isMobile && (
                 <Flex justify='space-between' align='center' gap={3}>
                   <Box flex='1' minWidth='0'>
                     <Stats />
                   </Box>
-                  <ToggleFav />
+                  <Box flexShrink={0}>
+                    <ToggleFav />
+                  </Box>
                   <Box flexShrink={0}>
                     <SortSelect sortBy={sortBy} />
                   </Box>
                 </Flex>
-              )
-              : <ToggleFav />}
+              )}
 
-            {/* Cards */}
-            {isMobile && <Stats />}
-            <Box flex='1' minHeight='0' overflowY='auto'>
-              <Configure hitsPerPage={10} />
-              <Search.Courses.Cards />
-            </Box>
+              {isMobile && <Stats />}
+              <Box flex='1' minHeight='0' overflowY='auto'>
+                <Configure hitsPerPage={10} />
+                <Search.Courses.Cards />
+              </Box>
+            </Flex>
           </Flex>
-        </Flex>
 
-        <Outlet />
-        {/* Mobile Filter Modal/Drawer */}
-        {isMobile && (
-          <Search.Courses.Filters
-            open={isFilterOpen}
-            onClose={closeFilter}
-          />
-        )}
-      </Flex>
+          <Outlet />
+          {isMobile && (
+            <Search.Courses.Filters
+              open={isFilterOpen}
+              onClose={closeFilter}
+            />
+          )}
+        </Flex>
+      </Courses.Root>
     );
   },
 });
@@ -191,4 +188,3 @@ const ToggleFav = () => {
     </>
   );
 };
-

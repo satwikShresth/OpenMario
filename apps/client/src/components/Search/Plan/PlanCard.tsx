@@ -27,7 +27,7 @@ type PlanCardProps = {
 }
 
 export const PlanCard = ({ section, currentTerm, currentYear }: PlanCardProps) => {
-  const match = useMatch({ from: '/_search/courses/plan' });
+  const match = useMatch({ from: '/courses/plan' });
 
   const planEvent = usePlanEventByCrn(section.crn.toString())
   const isAlreadyAdded = planEvent !== null

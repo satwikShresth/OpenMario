@@ -81,7 +81,6 @@ export function CourseDialogPage() {
 
                   <Dialog.Body py={4}>
                      <VStack align='stretch' gap={4}>
-                        {/* Description */}
                         <Box
                            borderRadius='lg'
                            borderWidth='thin'
@@ -105,7 +104,6 @@ export function CourseDialogPage() {
 
                         <Search.Courses.Availabilites course_id={course_id} />
 
-                        {/* Course Details */}
                         <Flex
                            width='full'
                            borderRadius='lg'
@@ -138,7 +136,6 @@ export function CourseDialogPage() {
                            </Flex>
                         </Flex>
 
-                        {/* Prerequisites */}
                         <Search.Courses.Req course_id={course_id} />
                      </VStack>
                   </Dialog.Body>

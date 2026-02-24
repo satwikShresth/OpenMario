@@ -12,7 +12,6 @@ import {
   Portal,
   Button,
   Kbd,
-  VStack,
   Separator,
   Badge,
   HStack,
@@ -29,8 +28,9 @@ import { AddIcon, CheckCircleIcon, LightbulbIcon } from '@/components/icons';
 import { useInstantSearch, Configure } from 'react-instantsearch';
 import { toaster } from '@/components/ui/toaster';
 import { useSearchContext } from '@/components/Search';
+import { Courses } from '@/components/Courses';
 
-export const Route = createFileRoute('/_search/courses/profile')({
+export const Route = createFileRoute('/courses/profile')({
   beforeLoad: () => ({ getLabel: () => 'Profile' }),
   component: RouteComponent,
 });
@@ -86,7 +86,7 @@ function CourseSearchPopover({
             <Popover.Arrow />
             <Popover.Header><Text fontWeight="semibold">Add Course</Text></Popover.Header>
             <Popover.Body>
-              <VStack align="stretch" gap={3}>
+              <Flex direction="column" gap={3}>
                 <Input placeholder="Search courses..." value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)} autoFocus />
                 {status === 'loading' && (
@@ -99,15 +99,15 @@ function CourseSearchPopover({
                   <Text fontSize="sm" color="fg.muted" textAlign="center" p={4}>No courses found</Text>
                 )}
                 {courses.length > 0 && (
-                  <VStack align="stretch" gap={2} maxH="400px" overflowY="auto">
+                  <Flex direction="column" gap={2} maxH="400px" overflowY="auto">
                     {courses.map((course: any) => (
                       <HStack key={course.id} justify="space-between" p={3}
                         borderWidth="1px" borderRadius="md" _hover={{ bg: 'bg.muted' }}>
-                        <VStack align="stretch" gap={1} flex={1}>
+                        <Flex direction="column" gap={1} flex={1}>
                           <Text fontSize="sm" fontWeight="bold">{course.course}</Text>
                           <Text fontSize="xs" color="fg.muted" lineClamp={1}>{course.title}</Text>
                           {course.credits && <Badge size="xs" width="fit-content">{course.credits} Credits</Badge>}
-                        </VStack>
+                        </Flex>
                         <HStack gap={1}>
                           <Button size="xs" colorPalette="green" variant="outline"
                             onClick={() => handleAddCourse(course, 'taken')}>
@@ -120,9 +120,9 @@ function CourseSearchPopover({
                         </HStack>
                       </HStack>
                     ))}
-                  </VStack>
+                  </Flex>
                 )}
-              </VStack>
+              </Flex>
             </Popover.Body>
             <Popover.CloseTrigger />
           </Popover.Content>
@@ -142,7 +142,6 @@ function RouteComponent() {
   const allTermsMap = useStore(termsStore);
   const allEventsMap = useStore(planEventsStore);
 
-  // Enrich sections with a computed term_label (e.g. "Fall 2025")
   const allSections = rawSections.map(s => ({
     ...s,
     term_label: s.term_id
@@ -150,7 +149,6 @@ function RouteComponent() {
       : null,
   }));
 
-  // Flatten plan events with term info for use in bulk-delete
   const allPlanEvents = Array.from(allEventsMap.values()).map(e => ({
     id: e.id,
     crn: e.crn,
@@ -271,10 +269,10 @@ function RouteComponent() {
 
   return (
     <>
-      <VStack align="stretch" gap={4} maxW='5xl' mx='auto' w='full'>
+      <Courses.Root maxW='5xl'>
         <Flex justify='space-between' align='center' wrap='wrap' gap={3}>
           <HStack gap={3}>
-            <Text fontSize='2xl' fontWeight='bold'>Course Profile</Text>
+            <Courses.PageHeader title='Course Profile' />
             <CourseSearchPopover onAddCourse={handleAddCourse} existingCourseIds={existingCourseIds} />
           </HStack>
           <HStack gap={2}>
@@ -370,7 +368,7 @@ function RouteComponent() {
             </ActionBar.Positioner>
           </Portal>
         </ActionBar.Root>
-      </VStack>
+      </Courses.Root>
       <Outlet />
     </>
   );

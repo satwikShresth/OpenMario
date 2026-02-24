@@ -31,7 +31,7 @@ function getSavedSizes(): number[] {
   return DEFAULT_SIZES
 }
 
-export const Route = createFileRoute('/_search/courses/plan/$term_id')({
+export const Route = createFileRoute('/courses/plan/$term_id')({
   beforeLoad: ({ params }) => ({
     getLabel: () =>
       db.terms.get(params.term_id)

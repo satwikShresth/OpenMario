@@ -39,7 +39,7 @@ export function Header() {
       <Flex justify='space-between' align='flex-start' wrap='wrap' gap={4}>
          <Box>
             <Text fontSize={{ base: '2xl', md: '3xl' }} fontWeight='bold' lineHeight='1.2'>
-               {prof.instructor_name}
+               {prof.name}
             </Text>
             <Text fontSize='md' color='fg.muted' mt={1}>{prof.department ?? 'Unknown Department'}</Text>
             <HStack gap={2} mt={3} flexWrap='wrap'>
@@ -56,9 +56,9 @@ export function Header() {
                      Difficulty: {prof.avg_difficulty} / 5
                   </Badge>
                )}
-               {prof.legacy_rmp_id != null && (
+               {prof.rmp_legacy_id != null && (
                   <a
-                     href={`https://www.ratemyprofessors.com/professor/${prof.legacy_rmp_id}`}
+                     href={`https://www.ratemyprofessors.com/professor/${prof.rmp_legacy_id}`}
                      target='_blank'
                      rel='noopener noreferrer'
                      style={{ textDecoration: 'none' }}
