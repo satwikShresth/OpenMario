@@ -27,8 +27,11 @@ export async function upsertTerm(term: string, year: number): Promise<string> {
 // ── Courses ───────────────────────────────────────────────────────────────────
 
 export async function upsertCourse(course: {
-   id: string; course: string; title: string;
-   credits?: number | string | null; completed?: boolean;
+   id: string;
+   course: string;
+   title: string;
+   credits?: number | string | null;
+   completed?: boolean;
 }): Promise<void> {
    const existing = coursesStore.state.get(course.id);
    const rawCredits = course.credits ?? existing?.credits ?? null;
@@ -38,7 +41,7 @@ export async function upsertCourse(course: {
       course: course.course,
       title: course.title,
       credits: Number.isFinite(credits) ? credits : null,
-      completed: course.completed ?? existing?.completed ?? false,
+      completed: course.completed ?? existing?.completed ?? false
    };
    coursesStore.setState(s => new Map(s).set(course.id, record));
    await db.courses.put(record);
@@ -46,7 +49,7 @@ export async function upsertCourse(course: {
 
 export async function updateCourse(
    id: string,
-   updates: Partial<{ completed: boolean; credits: number | null }>,
+   updates: Partial<{ completed: boolean; credits: number | null }>
 ): Promise<void> {
    const existing = coursesStore.state.get(id);
    if (!existing) return;
@@ -56,15 +59,23 @@ export async function updateCourse(
 }
 
 export async function deleteCourse(id: string): Promise<void> {
-   coursesStore.setState(s => { const n = new Map(s); n.delete(id); return n; });
+   coursesStore.setState(s => {
+      const n = new Map(s);
+      n.delete(id);
+      return n;
+   });
    await db.courses.delete(id);
 }
 
 // ── Sections ──────────────────────────────────────────────────────────────────
 
 export async function upsertSection(section: {
-   crn: string; term_id: string; course_id: string;
-   status?: string | null; liked?: boolean; grade?: string | null;
+   crn: string;
+   term_id: string;
+   course_id: string;
+   status?: string | null;
+   liked?: boolean;
+   grade?: string | null;
 }): Promise<void> {
    const existing = sectionsStore.state.get(section.crn);
    const record = {
@@ -73,7 +84,7 @@ export async function upsertSection(section: {
       course_id: section.course_id,
       status: section.status ?? existing?.status ?? null,
       liked: section.liked ?? existing?.liked ?? false,
-      grade: section.grade ?? existing?.grade ?? null,
+      grade: section.grade ?? existing?.grade ?? null
    };
    sectionsStore.setState(s => new Map(s).set(section.crn, record));
    await db.sections.put(record);
@@ -81,7 +92,12 @@ export async function upsertSection(section: {
 
 export async function updateSection(
    crn: string,
-   updates: Partial<Pick<{ liked: boolean; status: string | null; grade: string | null }, 'liked' | 'status' | 'grade'>>,
+   updates: Partial<
+      Pick<
+         { liked: boolean; status: string | null; grade: string | null },
+         'liked' | 'status' | 'grade'
+      >
+   >
 ): Promise<void> {
    const existing = sectionsStore.state.get(crn);
    if (!existing) return;
@@ -91,19 +107,34 @@ export async function updateSection(
 }
 
 export async function deleteSection(crn: string): Promise<void> {
-   sectionsStore.setState(s => { const n = new Map(s); n.delete(crn); return n; });
+   sectionsStore.setState(s => {
+      const n = new Map(s);
+      n.delete(crn);
+      return n;
+   });
    await db.sections.delete(crn);
 }
 
 // ── Plan Events ───────────────────────────────────────────────────────────────
 
 export async function insertPlanEvent(event: {
-   type: string; title?: string | null;
-   start: string; end: string; term_id: string; crn?: string | null;
+   type: string;
+   title?: string | null;
+   start: string;
+   end: string;
+   term_id: string;
+   crn?: string | null;
 }): Promise<string> {
    const id = crypto.randomUUID();
-   const record = { id, type: event.type, title: event.title ?? null,
-      start: event.start, end: event.end, term_id: event.term_id, crn: event.crn ?? null };
+   const record = {
+      id,
+      type: event.type,
+      title: event.title ?? null,
+      start: event.start,
+      end: event.end,
+      term_id: event.term_id,
+      crn: event.crn ?? null
+   };
    planEventsStore.setState(s => new Map(s).set(id, record));
    await db.plan_events.add(record);
    return id;
@@ -111,7 +142,12 @@ export async function insertPlanEvent(event: {
 
 export async function updatePlanEvent(
    id: string,
-   updates: Partial<Pick<{ start: string; end: string; title: string | null }, 'start' | 'end' | 'title'>>,
+   updates: Partial<
+      Pick<
+         { start: string; end: string; title: string | null },
+         'start' | 'end' | 'title'
+      >
+   >
 ): Promise<void> {
    const existing = planEventsStore.state.get(id);
    if (!existing) return;
@@ -121,13 +157,18 @@ export async function updatePlanEvent(
 }
 
 export async function deletePlanEvent(id: string): Promise<void> {
-   planEventsStore.setState(s => { const n = new Map(s); n.delete(id); return n; });
+   planEventsStore.setState(s => {
+      const n = new Map(s);
+      n.delete(id);
+      return n;
+   });
    await db.plan_events.delete(id);
 }
 
 export async function deletePlanEventsByCrn(crn: string): Promise<void> {
    const ids = Array.from(planEventsStore.state.values())
-      .filter(e => e.crn === crn).map(e => e.id);
+      .filter(e => e.crn === crn)
+      .map(e => e.id);
    planEventsStore.setState(s => {
       const n = new Map(s);
       ids.forEach(id => n.delete(id));
@@ -145,11 +186,11 @@ export async function upsertSubmission(sub: SubmissionRecord): Promise<void> {
 
 export async function updateSubmission(
    id: string,
-   updates: Partial<SubmissionRecord>,
+   updates: Partial<SubmissionRecord>
 ): Promise<void> {
    const existing = submissionsStore.state.get(id);
    if (!existing) return;
    const record = { ...existing, ...updates };
    submissionsStore.setState(s => new Map(s).set(id, record));
-   await db.submissions.put(record);
+   await db.submissions.put(record as any);
 }
