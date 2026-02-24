@@ -1,7 +1,6 @@
 import {
    Badge,
    Box,
-   Container,
    Flex,
    Grid,
    HStack,
@@ -160,8 +159,8 @@ function PositionReviewsPage() {
    ] : [];
 
    return (
-      <Container maxW='4xl' py={10}>
-         <VStack align='stretch' gap={8}>
+      <Box maxW={{ base: 'full', md: '5xl', xl: '6xl', '2xl': '7xl' }} w='full' mx='auto' py={{ base: 6, md: 10, xl: 12 }}>
+         <VStack align='stretch' gap={{ base: 8, md: 10, xl: 12 }}>
 
             {/* Header */}
             {companyLoading || !position ? (
@@ -202,7 +201,7 @@ function PositionReviewsPage() {
 
             {/* Stats */}
             {!companyLoading && position && (
-               <Grid templateColumns={{ base: 'repeat(2,1fr)', md: 'repeat(3,1fr)', lg: 'repeat(5,1fr)' }} gap={4}>
+               <Grid templateColumns={{ base: 'repeat(2,1fr)', md: 'repeat(3,1fr)', lg: 'repeat(5,1fr)' }} gap={{ base: 4, md: 5, xl: 6 }}>
                   {[
                      { label: 'Reviews', value: position.total_reviews },
                      { label: 'Salary Submissions', value: position.total_submissions },
@@ -225,7 +224,7 @@ function PositionReviewsPage() {
                            : 'N/A',
                      },
                   ].map(({ label, value }) => (
-                     <Box key={label} borderWidth='thin' borderRadius='xl' p={5}>
+                     <Box key={label} borderWidth='thin' borderRadius='xl' p={{ base: 5, md: 6 }}>
                         <Stat.Root>
                            <Stat.Label fontSize='sm' color='fg.muted'>{label}</Stat.Label>
                            <Stat.ValueText fontSize='xl' fontWeight='bold' mt={1}>{value}</Stat.ValueText>
@@ -237,10 +236,10 @@ function PositionReviewsPage() {
 
             {/* Charts */}
             {!companyLoading && position && (
-               <Grid templateColumns={{ base: '1fr', md: '1fr 1fr' }} gap={6}>
+               <Grid templateColumns={{ base: '1fr', md: '1fr 1fr' }} gap={{ base: 6, md: 8, xl: 10 }}>
 
                   {/* Score Breakdown */}
-                  <Box borderWidth='thin' borderRadius='xl' p={5}>
+                  <Box borderWidth='thin' borderRadius='xl' p={{ base: 5, md: 6, xl: 8 }}>
                      <Flex align='center' gap={2} mb={4}>
                         <Image src='/omegascore-logo.png' alt='OMΩ' h='20px' />
                         <Text fontWeight='semibold'>Score Breakdown</Text>
@@ -273,7 +272,7 @@ function PositionReviewsPage() {
                   </Box>
 
                   {/* Rating Breakdown */}
-                  <Box borderWidth='thin' borderRadius='xl' p={5}>
+                  <Box borderWidth='thin' borderRadius='xl' p={{ base: 5, md: 6, xl: 8 }}>
                      <Text fontWeight='semibold' mb={5}>Rating Breakdown (out of 4)</Text>
                      <VStack gap={4} align='stretch'>
                         {ratingsData.map(({ name, value }) => {
@@ -305,7 +304,7 @@ function PositionReviewsPage() {
 
                   {/* Salary Chart */}
                   {hasSalary && salaryBarData.length > 0 && (
-                     <Box borderWidth='thin' borderRadius='xl' p={5} gridColumn={{ md: 'span 2' }}>
+                     <Box borderWidth='thin' borderRadius='xl' p={{ base: 5, md: 6, xl: 8 }} gridColumn={{ md: 'span 2' }}>
                         <Text fontWeight='semibold' mb={5}>Compensation</Text>
                         <ResponsiveContainer width='100%' height={160}>
                            <BarChart data={salaryBarData} margin={{ left: 16, right: 24, top: 4, bottom: 4 }} barSize={40}>
@@ -386,6 +385,6 @@ function PositionReviewsPage() {
                </Box>
             </Box>
          </VStack>
-      </Container>
+      </Box>
    );
 }

@@ -4,11 +4,11 @@ import type { ReactNode } from 'react';
 export function Root({
    children,
    maxW = '4xl',
-   gap = 4,
+   gap = 6,
 }: {
    children: ReactNode;
-   maxW?: string;
-   gap?: number;
+   maxW?: string | Record<string, string>;
+   gap?: number | Record<string, number>;
 }) {
    return (
       <Box maxW={maxW} w='full' mx='auto'>

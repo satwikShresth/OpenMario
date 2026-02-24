@@ -62,9 +62,9 @@ export function Charts() {
    if (sectionsPerYear.length <= 1 && sectionsPerSubject.length === 0) return null;
 
    return (
-      <Grid templateColumns={{ base: '1fr', md: '1fr 1fr' }} gap={6}>
+      <Grid templateColumns={{ base: '1fr', md: '1fr 1fr' }} gap={{ base: 6, md: 8, xl: 10 }}>
          {sectionsPerYear.length > 1 && (
-            <Box borderWidth='thin' borderRadius='xl' p={4}>
+            <Box borderWidth='thin' borderRadius='xl' p={{ base: 4, md: 5, xl: 6 }}>
                <Text fontWeight='semibold' mb={4}>Sections per Year</Text>
                <ResponsiveContainer width='100%' height={220}>
                   <BarChart data={sectionsPerYear} margin={{ left: -10 }}>
@@ -78,7 +78,7 @@ export function Charts() {
             </Box>
          )}
          {sectionsPerSubject.length > 0 && (
-            <Box borderWidth='thin' borderRadius='xl' p={4}>
+            <Box borderWidth='thin' borderRadius='xl' p={{ base: 4, md: 5, xl: 6 }}>
                <Text fontWeight='semibold' mb={4}>Sections by Subject</Text>
                <ResponsiveContainer width='100%' height={220}>
                   <BarChart data={sectionsPerSubject} layout='vertical' margin={{ left: 0, right: 16 }}>

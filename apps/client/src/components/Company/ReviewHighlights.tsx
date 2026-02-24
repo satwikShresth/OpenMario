@@ -56,7 +56,7 @@ export function ReviewHighlights() {
                </Button>
             </Link>
          </Flex>
-         <Grid templateColumns={{ base: '1fr', md: 'repeat(3,1fr)' }} gap={4}>
+         <Grid templateColumns={{ base: '1fr', md: 'repeat(3,1fr)' }} gap={{ base: 4, md: 5, xl: 6 }}>
             <HighlightReview sort='rating_desc' label='⭐ TOP RATED' />
             <HighlightReview sort='year_desc' label='🕐 MOST RECENT' />
             <HighlightReview sort='rating_asc' label='⚡ MOST CRITICAL' />

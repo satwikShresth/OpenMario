@@ -7,7 +7,7 @@ export function StatsGrid() {
 
    if (isLoading || !company) {
       return (
-         <Grid templateColumns={{ base: 'repeat(2,1fr)', md: 'repeat(3,1fr)', lg: 'repeat(6,1fr)' }} gap={4}>
+         <Grid templateColumns={{ base: 'repeat(2,1fr)', md: 'repeat(3,1fr)', lg: 'repeat(6,1fr)' }} gap={{ base: 4, md: 5, xl: 6 }}>
             {Array.from({ length: 6 }).map((_, i) => (
                <Skeleton key={i} height='96px' borderRadius='xl' />
             ))}
@@ -44,9 +44,9 @@ export function StatsGrid() {
       },
    ];
    return (
-      <Grid templateColumns={{ base: 'repeat(2,1fr)', md: 'repeat(3,1fr)', lg: 'repeat(6,1fr)' }} gap={4}>
+      <Grid templateColumns={{ base: 'repeat(2,1fr)', md: 'repeat(3,1fr)', lg: 'repeat(6,1fr)' }} gap={{ base: 4, md: 5, xl: 6 }}>
          {stats.map(({ label, value }) => (
-            <Box key={label} borderWidth='2px' borderColor='border' borderRadius='xl' p={4} boxShadow='xs'>
+            <Box key={label} borderWidth='2px' borderColor='border' borderRadius='xl' p={{ base: 4, md: 5, xl: 6 }} boxShadow='xs'>
                <Stat.Root>
                   <Stat.Label fontSize='sm' color='fg.muted'>{label}</Stat.Label>
                   <Stat.ValueText fontSize='2xl' fontWeight='bold' mt={1}>{value}</Stat.ValueText>

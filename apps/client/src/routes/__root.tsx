@@ -30,9 +30,9 @@ function RootComponent() {
                <PageHeader />
                <Box
                   flex='1'
-                  px={{ base: 4, md: 6 }}
-                  py={6}
-                  pb={{ base: '72px', sm: 6 }}
+                  px={{ base: 4, md: 6, xl: 8, '2xl': 12 }}
+                  py={{ base: 6, md: 8, xl: 10 }}
+                  pb={{ base: '72px', sm: 6, md: 8, xl: 10 }}
                >
                   <Outlet />
                </Box>
