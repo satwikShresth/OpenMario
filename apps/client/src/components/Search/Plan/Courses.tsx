@@ -1,4 +1,4 @@
-import { Box, Flex, Text, ScrollArea, HStack, Icon, Button, Dialog, VStack, Switch as ChakraSwitch } from '@chakra-ui/react'
+import { Box, Flex, Text, ScrollArea, HStack, Icon, Button, Dialog, VStack } from '@chakra-ui/react'
 import { SearchBox, RefinementSelectInDialog as RefinementSelect } from '@/components/Search'
 import { Configure, useInfiniteHits, useCurrentRefinements } from 'react-instantsearch'
 import { useTermByNameYear } from '@/db/stores/terms'
@@ -90,22 +90,17 @@ export const PlanCourses = ({ currentTerm, currentYear }: { currentTerm: "Fall" 
             <Text fontSize="sm" color="fg.muted">{currentTerm} {currentYear}</Text>
           </VStack>
           <HStack gap={3}>
-            <ChakraSwitch.Root
-              colorPalette="pink" size="sm"
+            <Button
+              variant={showOnlyLiked ? 'solid' : 'outline'}
+              colorPalette="pink"
+              size="sm"
               disabled={likedCRNs.length < 1}
-              checked={showOnlyLiked}
-              onCheckedChange={(e: any) => setShowOnlyLiked(e.checked)}
+              onClick={() => setShowOnlyLiked(!showOnlyLiked)}
+              flexShrink={0}
             >
-              <ChakraSwitch.Label>Show liked ({likedCRNs.length})</ChakraSwitch.Label>
-              <ChakraSwitch.HiddenInput />
-              <ChakraSwitch.Control>
-                <ChakraSwitch.Thumb>
-                  <ChakraSwitch.ThumbIndicator fallback={<Icon as={HeartIcon} />}>
-                    <Icon as={HeartFilledIcon} />
-                  </ChakraSwitch.ThumbIndicator>
-                </ChakraSwitch.Thumb>
-              </ChakraSwitch.Control>
-            </ChakraSwitch.Root>
+              <Icon as={showOnlyLiked ? HeartFilledIcon : HeartIcon} />
+              Liked ({likedCRNs.length})
+            </Button>
             <Button size="sm" variant="outline" onClick={() => setFiltersOpen(true)}>
               <Icon as={FilterIcon} />Filters
             </Button>
