@@ -3,12 +3,12 @@ import { contracts } from '@openmario/contracts';
 import type { ContractRouterClient } from '@orpc/contract';
 import { OpenAPILink } from '@orpc/openapi-client/fetch';
 import { createTanstackQueryUtils } from '@orpc/tanstack-query';
+import { env } from '@env';
 
 const link = new OpenAPILink(contracts, {
-   url: `${window.location.origin}/api`,
+   url: env.VITE_SERVER_URL,
    interceptors: [
-      onError((error: unknown) => {
-         // Ignore AbortError - it's expected when queries are cancelled during navigation
+      onError(error => {
          if (error instanceof Error && error.name === 'AbortError') {
             return;
          }
@@ -17,7 +17,8 @@ const link = new OpenAPILink(contracts, {
    ]
 });
 
-const openapiClient: ContractRouterClient<typeof contracts> = createORPCClient(link);
+const openapiClient: ContractRouterClient<typeof contracts> =
+   createORPCClient(link);
 export const orpc = createTanstackQueryUtils(openapiClient);
 
 // Export types for convenience

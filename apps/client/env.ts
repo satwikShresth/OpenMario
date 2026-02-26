@@ -14,9 +14,9 @@ export const env = createEnv({
 
    client: {
       VITE_APP_TITLE: z.string().min(1).optional(),
-      VITE_LR_APP_ID: z.string(),
       VITE_MEILI_HOST: z.url(),
-      VITE_DISCORD_WEBHOOK: z.url()
+      VITE_DISCORD_WEBHOOK: z.url(),
+      VITE_SERVER_URL: z.url()
    },
 
    /**

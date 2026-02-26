@@ -14,6 +14,9 @@
    "private": "true",
    "scripts": {
       "dev": "bun run --env-file=.env turbo run dev",
+      "client:build": "bun run --filter '@openmario/client' build",
+      "server:build": "bun run --filter '@openmario/server' build",
+      "server:start": "bun run --filter '@openmario/server' start",
       "build": "bun x turbo run build --ui stream",
       "kill": "lsof -ti:3000 | xargs kill -9 2>/dev/null || true; lsof -ti:4000 | xargs kill -9 2>/dev/null || true; lsof -ti:5173 | xargs kill -9 2>/dev/null || true; lsof -ti:8080 | xargs kill -9 2>/dev/null || true",
       "clean": "rm bun.lock && find . -name 'node_modules' -type d -prune -exec rm -rf '{}' +",

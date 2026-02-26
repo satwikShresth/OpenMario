@@ -32,9 +32,9 @@ services:
       target: production-client
       args:
         - VITE_APP_TITLE=${VITE_APP_TITLE}
-        - VITE_LR_APP_ID=${VITE_LR_APP_ID}
         - VITE_MEILI_HOST=${VITE_MEILI_HOST}
         - VITE_DISCORD_WEBHOOK=${VITE_DISCORD_WEBHOOK}
+        - VITE_SERVER_URL=${VITE_SERVER_URL}
     restart: unless-stopped
     env_file:
      - .env

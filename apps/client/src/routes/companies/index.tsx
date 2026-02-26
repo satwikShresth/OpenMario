@@ -1,13 +1,10 @@
 import { createFileRoute } from '@tanstack/react-router';
 import { Box, Button, createListCollection, Flex, Icon, Text, useDisclosure } from '@chakra-ui/react';
-import { instantMeiliSearch } from '@meilisearch/instant-meilisearch';
-import { useSuspenseQuery } from '@tanstack/react-query';
 import { Suspense } from 'react';
 import { Configure, Index, InstantSearch } from 'react-instantsearch';
 import { SearchBox, SortSelect, Stats } from '@/components/Search';
 import { Company } from '@/components/Company';
-import { orpc } from '@/helpers';
-import { env } from '@env';
+import { useSearchClient } from '@/helpers';
 import { INDEX_NAMES } from '@openmario/meilisearch';
 import { useMobile } from '@/hooks';
 import { FilterIcon } from '@/components/icons';
@@ -100,20 +97,7 @@ function CompaniesSearch() {
 }
 
 function CompaniesPage() {
-   const refetchInterval = 1000 * 60 * 10;
-   const { data } = useSuspenseQuery(
-      orpc.auth.getSearchToken.queryOptions({
-         staleTime: refetchInterval - 1000,
-         gcTime: refetchInterval - 1000,
-         refetchInterval,
-         refetchIntervalInBackground: true,
-      })
-   );
-
-   const { searchClient } = instantMeiliSearch(
-      env.VITE_MEILI_HOST,
-      () => (data as { token: string }).token
-   );
+   const { searchClient } = useSearchClient();
 
    return (
       <Suspense>
