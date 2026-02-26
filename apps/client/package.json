@@ -43,7 +43,6 @@
     "@tanstack/router": "^0.0.1-beta.53",
     "@tanstack/router-plugin": "^1.162.9",
     "@tanstack/store": "^0.9.1",
-    "@types/logrocket-react": "^3.0.3",
     "chakra-react-select": "^6.1.1",
     "dexie": "^4.3.0",
     "immer": "^11.1.4",

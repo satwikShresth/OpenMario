@@ -15,17 +15,16 @@ FROM install AS build-stage
 
 # Build args for client environment variables
 ARG VITE_APP_TITLE
-ARG VITE_LR_APP_ID
 ARG VITE_MEILI_HOST
 ARG VITE_DISCORD_WEBHOOK
-
+ARG VITE_SERVER_URL
 
 # Set environment variables for Vite build
 ENV NODE_ENV=production
 ENV VITE_APP_TITLE=${VITE_APP_TITLE}
-ENV VITE_LR_APP_ID=${VITE_LR_APP_ID}
 ENV VITE_MEILI_HOST=${VITE_MEILI_HOST}
 ENV VITE_DISCORD_WEBHOOK=${VITE_DISCORD_WEBHOOK}
+ENV VITE_SERVER_URL=${VITE_SERVER_URL}
 
 # Build the application
 RUN bun run build

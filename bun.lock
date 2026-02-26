@@ -55,7 +55,6 @@
         "@tanstack/router": "^0.0.1-beta.53",
         "@tanstack/router-plugin": "^1.162.9",
         "@tanstack/store": "^0.9.1",
-        "@types/logrocket-react": "^3.0.3",
         "chakra-react-select": "^6.1.1",
         "dexie": "^4.3.0",
         "immer": "^11.1.4",
@@ -758,8 +757,6 @@
 
     "@types/json-schema": ["@types/json-schema@7.0.15", "", {}, "sha512-5+fP8P8MFNC+AyZCDxrB2pkZFPGzqQWUzpSeuuVLvm8VMcorNYavBqoFcxK8bQz4Qsbn4oUEEem4wDLfcysGHA=="],
 
-    "@types/logrocket-react": ["@types/logrocket-react@3.0.3", "", { "dependencies": { "logrocket": "1.0.1" } }, "sha512-fGpJV4ccwfWAL0293EQx5HrS4PGMvXBpTQOXpA/SLXSCm7fC2O19w7Y3CcgWDmyawQnqbzd8faKAL12VhPdZKA=="],
-
     "@types/node": ["@types/node@25.3.0", "", { "dependencies": { "undici-types": "~7.18.0" } }, "sha512-4K3bqJpXpqfg2XKGK9bpDTc6xO/xoUP/RBWS7AtRMug6zZFaRekiLzjVtAoZMquxoAbzBvy5nxQ7veS5eYzf8A=="],
 
     "@types/offscreencanvas": ["@types/offscreencanvas@2019.7.3", "", {}, "sha512-ieXiYmgSRXUDeOntE1InxjWyvEelZGP63M+cGuquuRLuIKKT1osnkXjxev9B7d1nXSug5vpunx+gNlbVxMlC9A=="],
@@ -1405,8 +1402,6 @@
     "lightningcss-win32-x64-msvc": ["lightningcss-win32-x64-msvc@1.31.1", "", { "os": "win32", "cpu": "x64" }, "sha512-I9aiFrbd7oYHwlnQDqr1Roz+fTz61oDDJX7n9tYF9FJymH1cIN1DtKw3iYt6b8WZgEjoNwVSncwF4wx/ZedMhw=="],
 
     "lines-and-columns": ["lines-and-columns@1.2.4", "", {}, "sha512-7ylylesZQ/PV29jhEDl3Ufjo6ZX7gCqJr5F7PKrqc93v7fzSymt1BpwEU8nAUXs8qzzvqhbjhK5QZg6Mt/HkBg=="],
-
-    "logrocket": ["logrocket@1.0.1", "", {}, "sha512-oPA0c5GzMKsWp/6p19OaujZQMzttluqVOI+989uHeciPAljPZvGEpZRbNO3Rr+jC/8jVLJdlMP9IHuyhKsASGA=="],
 
     "loose-envify": ["loose-envify@1.4.0", "", { "dependencies": { "js-tokens": "^3.0.0 || ^4.0.0" }, "bin": { "loose-envify": "cli.js" } }, "sha512-lyuxPGr/Wfhrlem2CL/UcnUc1zcqKAImBDzukY7Y5F/yQiNdko6+fRLevlw1HgMySw7f611UIY408EtxRSoK3Q=="],
 
