@@ -47,7 +47,7 @@ const sendFeedbackToDiscord = async (data: FeedbackData) => {
       }
    };
 
-   const response = await fetch(env.VITE_DISCORD_WEBHOOK, {
+   const response = await fetch(env.VITE_DISCORD_WEBHOOK!, {
       method: 'POST',
       headers: {
          'Content-Type': 'application/json',
