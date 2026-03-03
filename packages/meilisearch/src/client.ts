@@ -6,10 +6,13 @@ export type MeilisearchService = {
    getTenantToken: (tenantId?: string) => Promise<string>;
 };
 
+let _instance: MeilisearchService | undefined;
+
 export async function createMeilisearchService(
    host: string,
    masterKey: string
 ): Promise<MeilisearchService> {
+   if (_instance) return _instance;
    const client = new MeiliSearch({ host, apiKey: masterKey });
 
    let apiKey: Key | null = null;
@@ -29,7 +32,7 @@ export async function createMeilisearchService(
 
    await getOrCreateApiKey();
 
-   return {
+   _instance = {
       client,
       getTenantToken: async (_tenantId = 'default') => {
          const key = await getOrCreateApiKey();
@@ -45,4 +48,6 @@ export async function createMeilisearchService(
          });
       }
    };
+
+   return _instance;
 }

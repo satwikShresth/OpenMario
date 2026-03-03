@@ -8,6 +8,9 @@ config({ path: join(dirname(dirname(__dirname)), '.env') });
 export const env = createEnv({
    server: {
       PORT: z.coerce.number().optional().default(3001),
+      NODE_ENV: z
+         .enum(['development', 'staging', 'production'])
+         .default('development'),
       DATABASE_URL: z.url(),
       MEILI_HOST: z.url(),
       MEILI_MASTER_KEY: z.string(),

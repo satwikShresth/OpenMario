@@ -15,11 +15,10 @@
       "noFallthroughCasesInSwitch": true,
       "baseUrl": ".",
       "paths": {
-         "@/*": ["./src/*"],
-         "@env": ["./env.ts"]
+         "@/*": ["./src/*"]
       }
    },
-   "include": ["./**/*", "env.ts"],
+   "include": ["./**/*"],
    "exclude": ["node_modules", "dist", "**/*.test.ts", "**/*.spec.ts"]
 }
 

@@ -1,8 +1,9 @@
 import { betterAuth } from 'better-auth';
 import { drizzleAdapter } from 'better-auth/adapters/drizzle';
-import { db, schema } from '@openmario/db';
+import { schema } from '@openmario/db';
+import { db } from './db';
+import { dash } from '@better-auth/infra';
 import { anonymous, openAPI, emailOTP } from 'better-auth/plugins';
-
 import { env } from '@env';
 
 export const auth = betterAuth({
@@ -12,11 +13,6 @@ export const auth = betterAuth({
    emailAndPassword: {
       enabled: true
    },
-   // user: {
-   //   changeEmail: {
-   //     enabled: true
-   //   }
-   // },
    database: drizzleAdapter(db, {
       schema,
       provider: 'pg'
@@ -27,7 +23,6 @@ export const auth = betterAuth({
       }
    },
    plugins: [
-      openAPI(),
       anonymous(),
       emailOTP({
          async sendVerificationOTP({ email, otp, type }) {
@@ -40,7 +35,9 @@ export const auth = betterAuth({
                // Send the OTP for password reset
             }
          }
-      })
+      }),
+      dash(),
+      openAPI()
    ]
 });
 

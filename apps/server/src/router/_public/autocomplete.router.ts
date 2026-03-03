@@ -1,5 +1,5 @@
 import { querySQL, orderSQL, os } from '@/router/helpers';
-import { db, company, position, location } from '@openmario/db';
+import { company, position, location } from '@openmario/db';
 import { and, eq, or, sql } from 'drizzle-orm';
 
 const LIMIT = 100;
@@ -8,7 +8,7 @@ const LIMIT = 100;
  * Search for companies by name with fuzzy matching
  */
 export const searchCompany = os.autocomplete.company.handler(
-   async ({ input: { comp } }) => {
+   async ({ input: { comp }, context: { db } }) => {
       const query = querySQL(company.name, comp)!;
       const order = orderSQL(company.name, comp)!;
 
@@ -30,7 +30,7 @@ export const searchCompany = os.autocomplete.company.handler(
  * Search for positions within a specific company
  */
 export const searchPosition = os.autocomplete.position.handler(
-   async ({ input: { comp, pos } }) => {
+   async ({ input: { comp, pos }, context: { db } }) => {
       const queries = [
          comp !== '*' ? eq(company.name, comp.trim()) : undefined,
          querySQL(position.name, pos)
@@ -69,7 +69,7 @@ export const searchPosition = os.autocomplete.position.handler(
  * Search for locations with fuzzy matching across city, state, and state code
  */
 export const searchLocation = os.autocomplete.location.handler(
-   async ({ input: { loc } }) => {
+   async ({ input: { loc }, context: { db } }) => {
       const queries = [
          querySQL(location.city, loc),
          querySQL(location.state, loc),

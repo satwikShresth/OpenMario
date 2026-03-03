@@ -1,11 +1,11 @@
 import { os } from '@/router/helpers';
-import { db, company } from '@openmario/db';
+import { company } from '@openmario/db';
 
 /**
  * Create a new company
  */
 export const createCompany = os.company.create.handler(
-   async ({ input: { name: company_name } }) => {
+   async ({ input: { name: company_name }, context: { db } }) => {
       return await db
          .transaction(
             async tx =>
