@@ -3,11 +3,14 @@ import { config } from '@dotenvx/dotenvx';
 import { join, dirname } from 'node:path';
 import { z } from 'zod';
 
-config({ path: join(dirname(dirname(__dirname)), '.env') });
+config({ path: join(dirname(dirname(__dirname)), '.env'), quiet: true });
 
 export const env = createEnv({
    server: {
       PORT: z.coerce.number().optional().default(3001),
+      NODE_ENV: z
+         .enum(['development', 'staging', 'production'])
+         .default('development'),
       DATABASE_URL: z.url(),
       MEILI_HOST: z.url(),
       MEILI_MASTER_KEY: z.string(),

@@ -1,10 +1,33 @@
 import { type Column, type SQL, sql } from 'drizzle-orm';
 import { contracts } from '@openmario/contracts';
 import { implement } from '@orpc/server';
+import type { DbClient } from '@openmario/db';
+import type { MeilisearchService } from '@openmario/meilisearch';
 
-export const os = implement(contracts).$context<{
-   headers: Headers;
-}>();
+import type {
+   RequestHeadersPluginContext,
+   ResponseHeadersPluginContext
+} from '@orpc/server/plugins';
+import { db, meilisearch } from '@/utils';
+
+export interface ORPCContext
+   extends RequestHeadersPluginContext,
+      ResponseHeadersPluginContext {
+   db?: DbClient;
+   meilisearch?: MeilisearchService;
+}
+
+export const os = implement(contracts)
+   .$context<ORPCContext>()
+   .use(({ next, context }) =>
+      next({
+         context: {
+            ...context,
+            db: context?.db ?? db,
+            meilisearch: context?.meilisearch ?? meilisearch
+         }
+      })
+   );
 
 /**
  * Helper function to create fuzzy search SQL queries

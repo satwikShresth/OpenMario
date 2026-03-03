@@ -1,5 +1,5 @@
 import { os } from '@/router/helpers';
-import { db, meiliProfessorsIdx, instructorSectionsMView } from '@openmario/db';
+import { meiliProfessorsIdx, instructorSectionsMView } from '@openmario/db';
 import { eq, desc } from 'drizzle-orm';
 
 // ============================================================================
@@ -10,7 +10,8 @@ export const getProfessor = os.professor.get.handler(
    async ({
       input: {
          params: { professor_id }
-      }
+      },
+      context: { db }
    }) => {
       const [row] = await db
          .select()
@@ -32,7 +33,8 @@ export const getProfessorSections = os.professor.sections.handler(
    async ({
       input: {
          params: { professor_id }
-      }
+      },
+      context: { db }
    }) => {
       const result = await db
          .select()

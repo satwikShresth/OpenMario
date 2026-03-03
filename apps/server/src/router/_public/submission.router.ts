@@ -1,6 +1,6 @@
 import { os } from '@/router/helpers';
+import type { DbClient } from '@openmario/db';
 import {
-   db,
    company,
    position,
    location,
@@ -24,7 +24,11 @@ import type { SubmissionQuery } from '@openmario/contracts';
 /**
  * Helper function to get position ID by company and position name
  */
-const getPositionCTE = (companyName: string, positionName: string) =>
+const getPositionCTE = (
+   db: DbClient,
+   companyName: string,
+   positionName: string
+) =>
    db.$with('position_cte').as(
       db
          .select({ position_id: position.id })
@@ -39,7 +43,7 @@ const getPositionCTE = (companyName: string, positionName: string) =>
 /**
  * Helper function to get location ID by city and state code
  */
-const getLocationCTE = (locationStr: string) => {
+const getLocationCTE = (db: DbClient, locationStr: string) => {
    const [city, state_code] = locationStr.split(',').map(s => s.trim());
 
    return db.$with('location_cte').as(
@@ -126,80 +130,84 @@ const getSortColumn = (field: SubmissionQuery['sortField']): SQL<unknown> => {
 /**
  * Retrieve co-op submission records with pagination and filtering
  */
-export const listSubmissions = os.submission.list.handler(async ({ input }) => {
-   const { pageIndex, pageSize, distinct, sort, sortField } = input;
-   const sortColumn = getSortColumn(sortField);
-   const order = sort === 'ASC' ? asc(sortColumn) : desc(sortColumn);
+export const listSubmissions = os.submission.list.handler(
+   async ({ input, context: { db } }) => {
+      const { pageIndex, pageSize, distinct, sort, sortField } = input;
+      const sortColumn = getSortColumn(sortField);
+      const order = sort === 'ASC' ? asc(sortColumn) : desc(sortColumn);
 
-   const whereClause = buildWhereClause(input);
+      const whereClause = buildWhereClause(input);
 
-   const subQuerySelect = <TSelection extends SelectedFields<any, any>>(
-      distinct: boolean,
-      fields: TSelection
-   ) =>
-      distinct
-         ? db.selectDistinctOn(
-              [
-                 submissionMView.company_name,
-                 submissionMView.position_name,
-                 submissionMView.compensation,
-                 submissionMView.program_level
-              ],
-              fields
-           )
-         : db.select(fields);
+      const subQuerySelect = <TSelection extends SelectedFields<any, any>>(
+         distinct: boolean,
+         fields: TSelection
+      ) =>
+         distinct
+            ? db.selectDistinctOn(
+                 [
+                    submissionMView.company_name,
+                    submissionMView.position_name,
+                    submissionMView.compensation,
+                    submissionMView.program_level
+                 ],
+                 fields
+              )
+            : db.select(fields);
 
-   const subQuery = subQuerySelect(!!distinct, {
-      id: submissionMView.id,
-      year: submissionMView.year,
-      coop_year: submissionMView.coop_year,
-      coop_cycle: submissionMView.coop_cycle,
-      program_level: submissionMView.program_level,
-      work_hours: submissionMView.work_hours,
-      compensation: submissionMView.compensation,
-      other_compensation: submissionMView.other_compensation,
-      details: submissionMView.details,
-      company: submissionMView.company_name,
-      company_id: submissionMView.company_id,
-      position: submissionMView.position_name,
-      position_id: submissionMView.position_id,
-      location_city: submissionMView.city,
-      location_state: submissionMView.state,
-      location_state_code: submissionMView.state_code,
-      rank: sql`paradedb.score(id)`.as('rank')
-   })
-      .from(submissionMView)
-      .where(whereClause)
-      .as('sub_query');
+      const subQuery = subQuerySelect(!!distinct, {
+         id: submissionMView.id,
+         year: submissionMView.year,
+         coop_year: submissionMView.coop_year,
+         coop_cycle: submissionMView.coop_cycle,
+         program_level: submissionMView.program_level,
+         work_hours: submissionMView.work_hours,
+         compensation: submissionMView.compensation,
+         other_compensation: submissionMView.other_compensation,
+         details: submissionMView.details,
+         company: submissionMView.company_name,
+         company_id: submissionMView.company_id,
+         position: submissionMView.position_name,
+         position_id: submissionMView.position_id,
+         location_city: submissionMView.city,
+         location_state: submissionMView.state,
+         location_state_code: submissionMView.state_code,
+         rank: input?.search
+            ? sql`paradedb.score(id)`.as('rank')
+            : sql`0`.as('rank')
+      })
+         .from(submissionMView)
+         .where(whereClause)
+         .as('sub_query');
 
-   return await Promise.all([
-      db.$count(subQuery),
-      db
-         .select()
-         .from(subQuery)
-         .orderBy(desc(sql`rank`), order)
-         .offset((pageIndex - 1) * pageSize)
-         .limit(pageSize)
-   ])
-      .then(([count, data]) => ({
-         pageIndex,
-         pageSize,
-         count,
-         data: data as any
-      }))
-      .catch(error => {
-         console.error('Error listing submissions:', error);
-         throw new Error(error.message || 'Failed to list submissions');
-      });
-});
+      return await Promise.all([
+         db.$count(subQuery),
+         db
+            .select()
+            .from(subQuery)
+            .orderBy(desc(sql`rank`), order)
+            .offset((pageIndex - 1) * pageSize)
+            .limit(pageSize)
+      ])
+         .then(([count, data]) => ({
+            pageIndex,
+            pageSize,
+            count,
+            data: data as any
+         }))
+         .catch(error => {
+            console.error('Error listing submissions:', error);
+            throw new Error(error.message || 'Failed to list submissions');
+         });
+   }
+);
 
 /**
  * Create new co-op submission
  */
 export const createSubmission = os.submission.create.handler(
-   async ({ input }) => {
-      const positionCTE = getPositionCTE(input.company, input.position);
-      const locationCTE = getLocationCTE(input.location);
+   async ({ input, context: { db } }) => {
+      const positionCTE = getPositionCTE(db, input.company, input.position);
+      const locationCTE = getLocationCTE(db, input.location);
 
       return await db
          .with(positionCTE, locationCTE)
@@ -218,11 +226,14 @@ export const createSubmission = os.submission.create.handler(
             owner_id: null
          })
          .returning({ id: submission.id, owner_id: submission.owner_id })
-         .then(([result]) => ({
-            id: result!.id,
-            owner_id: result!.owner_id,
-            message: 'Added position successfully'
-         }))
+         .then(([result]) => {
+            db.refreshMaterializedView(submissionMView).concurrently();
+            return {
+               id: result!.id,
+               owner_id: result!.owner_id,
+               message: 'Added position successfully'
+            };
+         })
          .catch(error => {
             console.error('Error creating submission:', error);
             throw new Error(error.message || 'Failed to create submission');
@@ -234,13 +245,13 @@ export const createSubmission = os.submission.create.handler(
  * Update an existing co-op submission
  */
 export const updateSubmission = os.submission.update.handler(
-   async ({ input }) => {
+   async ({ input, context: { db } }) => {
       if (!input.id) {
          throw new Error('Submission ID is required for update');
       }
 
-      const positionCTE = getPositionCTE(input.company, input.position);
-      const locationCTE = getLocationCTE(input.location);
+      const positionCTE = getPositionCTE(db, input.company, input.position);
+      const locationCTE = getLocationCTE(db, input.location);
 
       return await db
          .with(positionCTE, locationCTE)
@@ -265,6 +276,7 @@ export const updateSubmission = os.submission.update.handler(
                   'Submission not found or you do not have permission to update it'
                );
             }
+            db.refreshMaterializedView(submissionMView).concurrently();
             return {
                id: value.id,
                message: 'Updated position successfully'

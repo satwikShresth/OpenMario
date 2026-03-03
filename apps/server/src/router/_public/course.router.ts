@@ -1,5 +1,4 @@
 import { os } from '@/router/helpers';
-import { db } from '@openmario/db';
 import { eq } from 'drizzle-orm';
 import {
    course,
@@ -18,7 +17,8 @@ export const getCourse = os.course.course.handler(
    async ({
       input: {
          params: { course_id }
-      }
+      },
+      context: { db }
    }) => {
       const rows = await db
          .select({
@@ -59,7 +59,8 @@ export const getCoursePrerequisites = os.course.prerequisites.handler(
    async ({
       input: {
          params: { course_id }
-      }
+      },
+      context: { db }
    }) => {
       const [courseRow] = await db
          .select({
@@ -122,7 +123,8 @@ export const getCourseCorequistes = os.course.corequisites.handler(
    async ({
       input: {
          params: { course_id }
-      }
+      },
+      context: { db }
    }) => {
       const [courseRow] = await db
          .select({
@@ -164,7 +166,8 @@ export const getCourseAvailabilities = os.course.availabilities.handler(
    async ({
       input: {
          params: { course_id }
-      }
+      },
+      context: { db }
    }) => {
       const rows = await db
          .select({

@@ -1,12 +1,15 @@
 import { os } from '@/router/helpers';
-import { db, company, position } from '@openmario/db';
+import { company, position } from '@openmario/db';
 import { eq } from 'drizzle-orm';
 
 /**
  * Create a new position for an existing company
  */
 export const createPosition = os.position.create.handler(
-   async ({ input: { name: position_name, company: company_name } }) => {
+   async ({
+      input: { name: position_name, company: company_name },
+      context: { db }
+   }) => {
       return await db
          .transaction(async tx => {
             // First, find the company by name

@@ -18,9 +18,9 @@ function Logo({ minimized }: { minimized: boolean }) {
          <Image
             src='/openmario.png'
             alt='OpenMario'
-            h={minimized ? '28px' : '44px'}
+            h={minimized ? '32px' : '56px'}
             w='auto'
-            maxW={minimized ? '46px' : '160px'}
+            maxW={minimized ? '52px' : '190px'}
             fit='contain'
             flexShrink={0}
             style={{ viewTransitionName: 'sidebar-logo' }}
@@ -126,30 +126,49 @@ export function Sidebar() {
             {/* Header */}
             <Flex
                align='center'
-               justify='center'
+               flexDirection='column'
                px={isMinimized ? 0 : 3}
-               py={4}
+               pt={4}
+               pb={isMinimized ? 2 : 4}
+               gap={isMinimized ? 2 : 0}
                flexShrink={0}
                borderBottomWidth='1px'
                borderColor={borderColor}
                position='relative'
             >
-               <Logo minimized={isMinimized} />
+               <Flex align='center' justify='space-between' w='full'>
+                  {/* Invisible spacer to balance the collapse button */}
+                  {!isMinimized && <Box w='24px' flexShrink={0} />}
 
-               {!isMinimized && (
+                  <Logo minimized={isMinimized} />
+
+                  {!isMinimized && (
+                     <IconButton
+                        aria-label='Minimize sidebar'
+                        variant='ghost'
+                        size='xs'
+                        borderRadius='lg'
+                        onClick={toggle}
+                        color='fg.muted'
+                        _hover={{ color: 'fg', bg: 'bg.muted' }}
+                        flexShrink={0}
+                     >
+                        <Icon as={SidebarCollapseIcon} boxSize={4} />
+                     </IconButton>
+                  )}
+               </Flex>
+
+               {isMinimized && (
                   <IconButton
-                     aria-label='Minimize sidebar'
+                     aria-label='Expand sidebar'
                      variant='ghost'
                      size='xs'
                      borderRadius='lg'
                      onClick={toggle}
                      color='fg.muted'
                      _hover={{ color: 'fg', bg: 'bg.muted' }}
-                     flexShrink={0}
-                     position='absolute'
-                     right={2}
                   >
-                     <Icon as={SidebarCollapseIcon} boxSize={4} />
+                     <Icon as={SidebarExpandIcon} boxSize={4} />
                   </IconButton>
                )}
             </Flex>
@@ -170,29 +189,6 @@ export function Sidebar() {
             >
                <SidebarItems minimized={isMinimized} />
             </Box>
-
-            {/* Footer — expand button when minimized */}
-            {isMinimized && (
-               <Flex
-                  justify='center'
-                  py={3}
-                  flexShrink={0}
-                  borderTopWidth='1px'
-                  borderColor={borderColor}
-               >
-                  <IconButton
-                     aria-label='Expand sidebar'
-                     variant='ghost'
-                     size='xs'
-                     borderRadius='lg'
-                     onClick={toggle}
-                     color='fg.muted'
-                     _hover={{ color: 'fg', bg: 'bg.muted' }}
-                  >
-                     <Icon as={SidebarExpandIcon} boxSize={4} />
-                  </IconButton>
-               </Flex>
-            )}
          </Box>
       </>
    );

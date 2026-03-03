@@ -1,11 +1,10 @@
-import { meilisearchService } from '@/services/meilisearch.service';
 import { os } from '@/router/helpers';
 
 /**
  * Get Meilisearch tenant token for search operations
  */
-export const getSearchToken = os.auth.getSearchToken.handler(async () => {
-   return await meilisearchService
+export const getSearchToken = os.auth.getSearchToken.handler(async ({ context: { meilisearch } }) => {
+   return await meilisearch!
       .getTenantToken()
       .then(token => {
          if (!token) {

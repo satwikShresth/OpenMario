@@ -1,0 +1,24 @@
+{
+  "name": "@openmario/scraper",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "bun run src/index.ts"
+  },
+  "dependencies": {
+    "@dotenvx/dotenvx": "^1.52.0",
+    "@openmario/db": "workspace:*",
+    "@orpc/contract": "^1.13.6",
+    "@orpc/server": "^1.13.6",
+    "@orpc/zod": "^1.13.6",
+    "drizzle-orm": "^0.45.1",
+    "playwright": "1.58.2",
+    "trpc-cli": "^0.12.4",
+    "zod": "^4.3.6"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.2",
+    "typescript": "^5.7.2"
+  }
+}
