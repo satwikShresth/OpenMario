@@ -1,13 +1,11 @@
-import { Pool } from '@neondatabase/serverless';
-import { drizzle } from 'drizzle-orm/neon-serverless';
+import { drizzle } from 'drizzle-orm/node-postgres';
 import * as schema from './schema';
 
 let _instance: DbClient | undefined;
 
 export function connectDb(connectionString: string): DbClient {
    if (!_instance) {
-      const pool = new Pool({ connectionString });
-      _instance = drizzle({ schema, client: pool });
+      _instance = drizzle(connectionString, { schema });
    }
    return _instance;
 }

@@ -4,15 +4,10 @@
       "command": "npx",
       "args": ["-y", "@chakra-ui/react-mcp"]
     },
-    "mpc-memgraph": {
-      "command": "uv",
+    "playwright": {
+      "command": "npx",
       "args": [
-        "run",
-        "--with",
-        "mcp-memgraph",
-        "--python",
-        "3.13",
-        "mcp-memgraph"
+        "@playwright/mcp@latest"
       ]
     }
   }

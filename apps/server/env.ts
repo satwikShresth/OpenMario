@@ -3,7 +3,7 @@ import { config } from '@dotenvx/dotenvx';
 import { join, dirname } from 'node:path';
 import { z } from 'zod';
 
-config({ path: join(dirname(dirname(__dirname)), '.env') });
+config({ path: join(dirname(dirname(__dirname)), '.env'), quiet: true });
 
 export const env = createEnv({
    server: {

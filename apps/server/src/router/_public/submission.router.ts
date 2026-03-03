@@ -171,7 +171,9 @@ export const listSubmissions = os.submission.list.handler(
          location_city: submissionMView.city,
          location_state: submissionMView.state,
          location_state_code: submissionMView.state_code,
-         rank: sql`paradedb.score(id)`.as('rank')
+         rank: input?.search
+            ? sql`paradedb.score(id)`.as('rank')
+            : sql`0`.as('rank')
       })
          .from(submissionMView)
          .where(whereClause)
