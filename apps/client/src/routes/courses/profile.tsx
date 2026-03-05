@@ -1,4 +1,4 @@
-import { createFileRoute, useNavigate, Outlet } from '@tanstack/react-router';
+import { createFileRoute, useNavigate, Outlet, useMatch } from '@tanstack/react-router';
 import { useStore } from '@tanstack/react-store';
 import { termsStore } from '@/db/stores/terms';
 import { useAllSections } from '@/db/stores/sections';
@@ -136,6 +136,11 @@ function CourseSearchPopover({
 function RouteComponent() {
   const [selection, setSelection] = useState<string[]>([]);
   const navigate = useNavigate();
+  const isCourseDetail = useMatch({ from: '/courses/profile/$course_id', shouldThrow: false });
+
+  if (isCourseDetail) {
+    return <Outlet />;
+  }
 
   const allCourses = useAllCourses();
   const rawSections = useAllSections();
@@ -369,7 +374,6 @@ function RouteComponent() {
           </Portal>
         </ActionBar.Root>
       </Courses.Root>
-      <Outlet />
     </>
   );
 }

@@ -40,10 +40,10 @@ export const ErrorComponent: React.FC<ErrorComponentProps> = ({
                   <Card.Body>
                      <VStack textAlign='center' gap='4'>
                         <EmptyState.Title>
-                           <Text fontSize='xl' fontWeight='semibold'>{title}</Text>
+                           <Text as="span" fontSize='xl' fontWeight='semibold'>{title}</Text>
                         </EmptyState.Title>
                         <EmptyState.Description>
-                           <Text>{message}</Text>
+                           <Text as="span">{message}</Text>
                         </EmptyState.Description>
                      </VStack>
                   </Card.Body>

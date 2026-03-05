@@ -1,13 +1,10 @@
-import { For, HoverCard, Portal, Table, Text, VStack } from '@chakra-ui/react';
+import { For, Table, Text } from '@chakra-ui/react';
 import { useQuery } from '@tanstack/react-query';
-import { Tag } from '@/components/ui';
 import { orpc } from '@/helpers';
-import type { Instructor } from '@openmario/contracts';
 
 type AvailabilitesProps = {
    course_id: string;
 };
-
 export default ({ course_id }: AvailabilitesProps) => {
    const { data: availabilityTableData, isLoading } = useQuery(
       orpc.course.availabilities.queryOptions({
@@ -120,112 +117,16 @@ export default ({ course_id }: AvailabilitesProps) => {
                            const sections = yearData[termSuffix] || [];
 
                            return (
-                              <Table.Cell
-                                 textJustify='left'
-                                 width='25%'
-                              >
+                              <Table.Cell width='25%' textAlign='center'>
                                  {sections.length > 0
                                     ? (
-                                       <VStack align='start' gap={2}>
-                                          <For each={sections}>
-                                             {(section: Section) => (
-                                                <HoverCard.Root>
-                                                   <HoverCard.Trigger asChild>
-                                                      <Tag
-                                                         size='sm'
-                                                         cursor='pointer'
-                                                         maxW='100%'
-                                                         truncate
-                                                      >
-                                                         {section.name}
-                                                         {section.crn.length > 1 && (
-                                                            <Text as='span' color='fg.muted' ml={1} fontSize='xs'>
-                                                               +{section.crn.length - 1}
-                                                            </Text>
-                                                         )}
-                                                      </Tag>
-                                                   </HoverCard.Trigger>
-
-                                                   <Portal>
-                                                      <HoverCard.Positioner>
-                                                         <HoverCard.Content maxWidth='280px'>
-                                                            <HoverCard.Arrow />
-                                                            <VStack
-                                                               align='start'
-                                                               gap={2}
-                                                            >
-                                                               <Text
-                                                                  fontWeight='semibold'
-                                                                  fontSize='sm'
-                                                               >
-                                                                  {section
-                                                                     .instructor
-                                                                     ? section
-                                                                        .instructor
-                                                                        .name
-                                                                     : 'TBA'}
-                                                               </Text>
-
-                                                               <VStack
-                                                                  align='start'
-                                                                  gap={1}
-                                                               >
-                                                                  <Text fontSize='sm'>
-                                                                     CRN{section.crn.length > 1
-                                                                        ? 's'
-                                                                        : ''}:{' '}
-                                                                     {section.crn.join(', ')}
-                                                                  </Text>
-
-                                                                  {section
-                                                                     .instructor
-                                                                     ? (
-                                                                        <>
-                                                                           <Text fontSize='sm'>
-                                                                              Rating:{' '}
-                                                                              {section.instructor
-                                                                                 .avg_rating}
-                                                                              <Text
-                                                                                 as='span'
-                                                                                 color='gray.500'
-                                                                                 ml={1}
-                                                                              >
-                                                                                 ({section
-                                                                                    .instructor
-                                                                                    .num_ratings}
-                                                                                 {' '}
-                                                                                 reviews)
-                                                                              </Text>
-                                                                           </Text>
-                                                                           <Text fontSize='sm'>
-                                                                              Difficulty: {section
-                                                                                 .instructor
-                                                                                 .avg_difficulty}
-                                                                           </Text>
-                                                                        </>
-                                                                     )
-                                                                     : (
-                                                                        <Text
-                                                                           fontSize='sm'
-                                                                           color='gray.500'
-                                                                        >
-                                                                           Instructor not yet
-                                                                           assigned
-                                                                        </Text>
-                                                                     )}
-                                                               </VStack>
-                                                            </VStack>
-                                                         </HoverCard.Content>
-                                                      </HoverCard.Positioner>
-                                                   </Portal>
-                                                </HoverCard.Root>
-                                             )}
-                                          </For>
-                                       </VStack>
+                                       <Text fontSize='lg' lineHeight='1'>
+                                          ✓
+                                       </Text>
                                     )
                                     : (
-                                       <Text color='gray.400'>
-                                          No sections
+                                       <Text color='gray.300' fontSize='lg' lineHeight='1'>
+                                          –
                                        </Text>
                                     )}
                               </Table.Cell>
@@ -240,4 +141,3 @@ export default ({ course_id }: AvailabilitesProps) => {
    );
 };
 
-type Section = { name: string; crn: string[]; instructor?: Instructor | null };
