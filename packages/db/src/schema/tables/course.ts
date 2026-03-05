@@ -174,5 +174,32 @@ export const course_corequisites = pgTable(
          .notNull()
          .references(() => course.id, { onDelete: 'cascade' })
    },
-   table => [primaryKey({ columns: [table.course_id, table.corequisite_course_id] })]
+   table => [
+      primaryKey({ columns: [table.course_id, table.corequisite_course_id] })
+   ]
+);
+
+export const academic_year_term = pgEnum('academic_year_term', [
+   'fall',
+   'winter',
+   'spring',
+   'summer'
+]);
+
+export const course_history = pgTable(
+   'course_history',
+   {
+      course_id: uuid()
+         .notNull()
+         .references(() => course.id, { onDelete: 'cascade' }),
+      academic_year: text().notNull(),
+      term: academic_year_term().notNull()
+   },
+   table => [
+      primaryKey({
+         columns: [table.course_id, table.academic_year, table.term]
+      }),
+      index().on(table.academic_year),
+      index().on(table.term)
+   ]
 );

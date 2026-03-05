@@ -79,6 +79,7 @@ export const LoadingComponent: React.FC<LoadingComponentProps> = ({
                      <VStack textAlign='center' gap={size === 'sm' ? '3' : '5'}>
                         <EmptyState.Title>
                            <Text
+                              as="span"
                               fontSize={size === 'sm' ? 'lg' : 'xl'}
                               fontWeight='semibold'
                               color='gray.800'

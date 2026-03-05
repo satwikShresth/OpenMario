@@ -8,6 +8,13 @@
       "when": 1771959321849,
       "tag": "0000_daily_nightmare",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1772000000000,
+      "tag": "0001_course_history",
+      "breakpoints": true
     }
   ]
 }

@@ -1,4 +1,4 @@
-import { createFileRoute } from '@tanstack/react-router';
+import { createFileRoute, useMatch } from '@tanstack/react-router';
 import {
   Box,
   Button,
@@ -65,6 +65,11 @@ export const Route = createFileRoute('/courses/explore')({
   component: () => {
     const { open: isFilterOpen, onOpen: openFilter, onClose: closeFilter } = useDisclosure();
     const isMobile = useMobile();
+    const isCourseDetail = useMatch({ from: '/courses/explore/$course_id', shouldThrow: false });
+
+    if (isCourseDetail) {
+      return <Outlet />;
+    }
 
     return (
       <Courses.Root>

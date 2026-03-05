@@ -54,10 +54,10 @@ export const NotFoundComponent: React.FC<NotFoundComponentProps> = ({
                   <Card.Body>
                      <VStack textAlign='center' gap='4'>
                         <EmptyState.Title>
-                           <Text>{title}</Text>
+                           <Text as="span">{title}</Text>
                         </EmptyState.Title>
                         <EmptyState.Description>
-                           <Text>{message}</Text>
+                           <Text as="span">{message}</Text>
                         </EmptyState.Description>
 
                         <VStack gap='2' w='full'>

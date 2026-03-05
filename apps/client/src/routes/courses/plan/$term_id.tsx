@@ -1,6 +1,6 @@
 import { Alert, Badge, Box, Flex, HStack, Icon, Splitter, Text, useBreakpointValue } from '@chakra-ui/react'
 import { MonitorOffIcon } from '@/components/icons'
-import { createFileRoute, Outlet } from '@tanstack/react-router'
+import { createFileRoute, Outlet, useMatch } from '@tanstack/react-router'
 import { useState } from 'react'
 import { Plan } from '@/components/Search/Plan'
 import { ConflictsIndicator } from '@/components/Search/Plan/ConflictsIndicator'
@@ -47,6 +47,7 @@ export const Route = createFileRoute('/courses/plan/$term_id')({
 function PlanTermPage() {
   const { term_id } = Route.useParams()
   const [sizes, setSizes] = useState<number[]>(getSavedSizes)
+  const isCourseDetail = useMatch({ from: '/courses/plan/$term_id/$course_id', shouldThrow: false })
 
   const orientation = useBreakpointValue<'horizontal' | 'vertical'>({
     base: 'vertical',
@@ -54,6 +55,10 @@ function PlanTermPage() {
   })
 
   const termRow = useTermById(term_id)
+
+  if (isCourseDetail) {
+    return <Outlet />
+  }
 
   const currentTerm = termRow?.term as "Fall" | "Winter" | "Spring" | "Summer" ?? 'Fall'
   const currentYear = termRow?.year ?? 0
@@ -172,7 +177,6 @@ function PlanTermPage() {
       </Box>
 
       <Toaster />
-      <Outlet />
     </>
   )
 }
