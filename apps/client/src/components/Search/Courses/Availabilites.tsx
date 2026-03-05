@@ -1,5 +1,6 @@
 import { For, Table, Text } from '@chakra-ui/react';
 import { useQuery } from '@tanstack/react-query';
+import type { Instructor } from '@openmario/contracts';
 import { orpc } from '@/helpers';
 
 type AvailabilitesProps = {
