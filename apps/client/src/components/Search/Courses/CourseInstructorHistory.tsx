@@ -6,7 +6,6 @@
 import {
    Badge,
    Box,
-   Flex,
    For,
    HStack,
    Separator,

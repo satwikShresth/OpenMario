@@ -32,7 +32,7 @@ export function Landing() {
                </VStack>
 
                <Box borderRadius='lg' overflow='hidden' borderWidth='1px' borderColor='#1a1a1a' aspectRatio='16/9'>
-                  <Box as='iframe'
+                  <iframe
                      width='100%' height='100%'
                      src='https://www.youtube.com/embed/GzKJCVJHcbk?autoplay=0&rel=0&modestbranding=1'
                      allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture'
