@@ -10,7 +10,7 @@ export const CORS_OPTIONS = {
       env.NODE_ENV as 'staging' | 'production'
    )
       ? ALLOWED_ORIGINS[env.NODE_ENV as keyof typeof ALLOWED_ORIGINS]
-      : ['http://localhost:5173'],
+      : ['http://localhost:5173', 'http://localhost:3001'],
    credentials: true,
    allowMethods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
    allowHeaders: ['Content-Type', 'Authorization'],

@@ -2,6 +2,7 @@
   "extends": "../../tsconfig.json",
   "include": ["**/*.ts", "**/*.tsx"],
   "compilerOptions": {
+    "ignoreDeprecations": "6.0",
     "target": "ESNEXT",
     "jsx": "react-jsx",
     "module": "ESNext",

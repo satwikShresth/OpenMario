@@ -1,7 +1,6 @@
 import {
    Badge,
    Box,
-   Container,
    Flex,
    Input,
    Skeleton,
@@ -86,7 +85,7 @@ function AllPositionsPage() {
    );
 
    return (
-      <Container maxW='5xl' py={10}>
+      <Box w='full' maxW='full' py={{ base: 6, md: 10 }}>
          <VStack align='stretch' gap={8}>
 
             <Flex justify='space-between' align='center' wrap='wrap' gap={4}>
@@ -196,6 +195,6 @@ function AllPositionsPage() {
                </Box>
             )}
          </VStack>
-      </Container>
+      </Box>
    );
 }

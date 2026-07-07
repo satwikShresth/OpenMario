@@ -1,6 +1,5 @@
 import {
    Box,
-   Container,
    Flex,
    Select,
    Skeleton,
@@ -75,7 +74,7 @@ function CompanyReviewsPage() {
    const total = data?.pages[0]?.count ?? 0;
 
    return (
-      <Container maxW='4xl' py={10}>
+      <Box w='full' maxW='full' py={{ base: 6, md: 10 }}>
          <VStack align='stretch' gap={8}>
 
             <Flex justify='space-between' align='center' wrap='wrap' gap={4}>
@@ -136,6 +135,6 @@ function CompanyReviewsPage() {
                )}
             </Box>
          </VStack>
-      </Container>
+      </Box>
    );
 }

@@ -1,0 +1,26 @@
+/**
+ * Route-aware page width — search surfaces get a wider cap than detail pages,
+ * but nothing runs full-bleed (avoids cards stretching edge-to-edge).
+ */
+export function normalizePathname(pathname: string): string {
+   return pathname.replace(/\/+$/, '') || '/';
+}
+
+/** Faceted search / dense table routes — wider than detail, still capped. */
+export function isSearchRoute(pathname: string): boolean {
+   const path = normalizePathname(pathname);
+
+   return (
+      path === '/professors' ||
+      path === '/companies' ||
+      path === '/courses/explore' ||
+      path === '/salary'
+   );
+}
+
+/** Detail, profile, and form pages — reading width. */
+export type PageMaxWidth = '5xl' | '7xl';
+
+export function getPageMaxWidth(pathname: string): PageMaxWidth {
+   return isSearchRoute(pathname) ? '7xl' : '5xl';
+}

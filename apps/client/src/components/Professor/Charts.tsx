@@ -24,10 +24,14 @@ function ChartTooltip({
 }) {
    if (!active || !payload?.length) return null;
    return (
-      <Box bg='bg' borderWidth='thin' borderRadius='lg' px={3} py={2} shadow='md' minW='100px'>
-         <Text fontSize='xs' color='fg.muted' mb={1}>{labelKey ?? 'Year'}: {label}</Text>
+      <Box bg='bg' borderWidth='thin' borderRadius='lg' px={3} py={2.5} shadow='md' minW='110px'>
+         <Text fontSize='sm' color='fg.muted' mb={1}>
+            {labelKey ?? 'Year'}: {label}
+         </Text>
          {payload.map((entry, i) => (
-            <Text key={i} fontSize='sm' fontWeight='semibold'>{entry.value} Sections</Text>
+            <Text key={i} fontSize='md' fontWeight='semibold'>
+               {entry.value} Sections
+            </Text>
          ))}
       </Box>
    );
@@ -62,15 +66,17 @@ export function Charts() {
    if (sectionsPerYear.length <= 1 && sectionsPerSubject.length === 0) return null;
 
    return (
-      <Grid templateColumns={{ base: '1fr', md: '1fr 1fr' }} gap={6}>
+      <Grid templateColumns={{ base: '1fr', md: '1fr 1fr' }} gap={{ base: 5, md: 6 }}>
          {sectionsPerYear.length > 1 && (
-            <Box borderWidth='thin' borderRadius='xl' p={4}>
-               <Text fontWeight='semibold' mb={4}>Sections per Year</Text>
-               <ResponsiveContainer width='100%' height={220}>
+            <Box borderWidth='thin' borderRadius='xl' p={{ base: 4, md: 5 }}>
+               <Text fontWeight='semibold' fontSize={{ base: 'md', md: 'lg' }} mb={4}>
+                  Sections per Year
+               </Text>
+               <ResponsiveContainer width='100%' height={240}>
                   <BarChart data={sectionsPerYear} margin={{ left: -10 }}>
                      <CartesianGrid strokeDasharray='3 3' vertical={false} />
-                     <XAxis dataKey='year' tick={{ fontSize: 11 }} />
-                     <YAxis tick={{ fontSize: 11 }} allowDecimals={false} />
+                     <XAxis dataKey='year' tick={{ fontSize: 12 }} />
+                     <YAxis tick={{ fontSize: 12 }} allowDecimals={false} />
                      <Tooltip content={<ChartTooltip labelKey='Year' />} />
                      <Bar dataKey='count' fill='#3B82F6' radius={[4, 4, 0, 0]} maxBarSize={40} />
                   </BarChart>
@@ -78,13 +84,15 @@ export function Charts() {
             </Box>
          )}
          {sectionsPerSubject.length > 0 && (
-            <Box borderWidth='thin' borderRadius='xl' p={4}>
-               <Text fontWeight='semibold' mb={4}>Sections by Subject</Text>
-               <ResponsiveContainer width='100%' height={220}>
+            <Box borderWidth='thin' borderRadius='xl' p={{ base: 4, md: 5 }}>
+               <Text fontWeight='semibold' fontSize={{ base: 'md', md: 'lg' }} mb={4}>
+                  Sections by Subject
+               </Text>
+               <ResponsiveContainer width='100%' height={240}>
                   <BarChart data={sectionsPerSubject} layout='vertical' margin={{ left: 0, right: 16 }}>
                      <CartesianGrid strokeDasharray='3 3' horizontal={false} />
-                     <XAxis type='number' tick={{ fontSize: 11 }} allowDecimals={false} />
-                     <YAxis type='category' dataKey='subject' width={60} tick={{ fontSize: 11 }} />
+                     <XAxis type='number' tick={{ fontSize: 12 }} allowDecimals={false} />
+                     <YAxis type='category' dataKey='subject' width={68} tick={{ fontSize: 12 }} />
                      <Tooltip content={<ChartTooltip labelKey='Subject' />} />
                      <Bar
                         dataKey='count'

@@ -1,7 +1,6 @@
 import {
    Badge,
    Box,
-   Container,
    Flex,
    Grid,
    HStack,
@@ -160,7 +159,7 @@ function PositionReviewsPage() {
    ] : [];
 
    return (
-      <Container maxW='4xl' py={10}>
+      <Box w='full' maxW='full' py={{ base: 6, md: 10 }}>
          <VStack align='stretch' gap={8}>
 
             {/* Header */}
@@ -386,6 +385,6 @@ function PositionReviewsPage() {
                </Box>
             </Box>
          </VStack>
-      </Container>
+      </Box>
    );
 }

@@ -24,9 +24,9 @@ interface NavButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement | 
 
 const NavButton = forwardRef<HTMLButtonElement, NavButtonProps>(
    ({ icon: IconComp, label, minimized, isActive = false, badge, ...props }, ref) => {
-      const activeBg = useColorModeValue('rgba(0,0,0,0.06)', 'rgba(255,255,255,0.08)');
-      const activeBorder = useColorModeValue('rgba(0,0,0,0.12)', 'rgba(255,255,255,0.12)');
-      const hoverBg = useColorModeValue('rgba(0,0,0,0.04)', 'rgba(255,255,255,0.05)');
+      /** Inset sidebar nav — same visual language as shadcn `SidebarMenuButton` size `xs`. */
+      const accentBg = useColorModeValue('blackAlpha.100', 'whiteAlpha.100');
+      const hoverBg = useColorModeValue('blackAlpha.50', 'whiteAlpha.80');
 
       return (
          <Flex
@@ -35,17 +35,23 @@ const NavButton = forwardRef<HTMLButtonElement, NavButtonProps>(
             w='full'
             align='center'
             justify={minimized ? 'center' : 'flex-start'}
-            gap={2.5}
-            px={minimized ? 0 : 3}
-            py={2}
+            gap={2}
+            minH='32px'
+            h={minimized ? '32px' : 'auto'}
+            px={minimized ? 2 : 2.5}
+            py={minimized ? 0 : 1.5}
             borderRadius='lg'
-            borderWidth='1px'
-            borderColor={isActive ? activeBorder : 'transparent'}
-            bg={isActive ? activeBg : 'transparent'}
+            borderWidth={0}
+            bg={isActive ? accentBg : 'transparent'}
             color={isActive ? 'fg' : 'fg.muted'}
-            fontWeight={isActive ? 'semibold' : 'medium'}
-            _hover={{ bg: isActive ? activeBg : hoverBg, color: 'fg', borderColor: isActive ? activeBorder : 'transparent' }}
-            transition='all 0.15s ease'
+            fontWeight={isActive ? 'medium' : 'normal'}
+            fontSize='sm'
+            lineHeight='snug'
+            _hover={{
+               bg: isActive ? accentBg : hoverBg,
+               color: 'fg',
+            }}
+            transition='background 0.15s ease, color 0.15s ease'
             cursor='pointer'
             textAlign='left'
             outline='none'
@@ -55,7 +61,7 @@ const NavButton = forwardRef<HTMLButtonElement, NavButtonProps>(
             <Icon
                as={IconComp}
                boxSize={4}
-               color={isActive ? 'blue.500' : 'fg.muted'}
+               color={isActive ? 'fg' : 'fg.muted'}
                flexShrink={0}
             />
             {!minimized && (
@@ -175,21 +181,22 @@ export function SidebarItems({ onClose, minimized }: SidebarItemsProps) {
       });
 
    return (
-      <Flex direction='column' h='full' justify='space-between' px={minimized ? 1.5 : 3} py={1}>
-         {/* Primary nav — Co-op & Academics */}
-         <Flex direction='column' gap={1}>
+      <Flex direction='column' h='full' minH={0} flex={1} px={minimized ? 1 : 2} py={1}>
+         {/* Scrolls when needed — Co-op & Academics only */}
+         <Flex direction='column' flex={1} minH={0} overflowY='auto' gap={1}>
             {primaryGroups.map((group, groupIdx) => (
                <Box key={group.id}>
                   {groupIdx > 0 && <Separator my={1.5} />}
                   {!minimized && (
                      <Text
-                        fontSize='2xs'
-                        fontWeight='semibold'
-                        letterSpacing='wider'
+                        fontSize='xs'
+                        fontWeight='medium'
+                        letterSpacing='wide'
                         textTransform='uppercase'
-                        color='fg.subtle'
-                        px={3}
-                        pb={0.5}
+                        color='fg.muted'
+                        px={2.5}
+                        pb={1}
+                        pt={groupIdx > 0 ? 1 : 0}
                      >
                         {group.label}
                      </Text>
@@ -201,20 +208,21 @@ export function SidebarItems({ onClose, minimized }: SidebarItemsProps) {
             ))}
          </Flex>
 
-         {/* Bottom — Profile + utilities */}
-         <Flex direction='column' gap={0.5} pb={2}>
+         {/* Pinned to bottom of the sidebar column (viewport on desktop) */}
+         <Flex direction='column' flexShrink={0} gap={0.5} pb={2} pt={3}>
             {bottomGroups.map(group => (
                <Box key={group.id}>
                   <Separator mb={1.5} mt={1} />
                   {!minimized && (
                      <Text
-                        fontSize='2xs'
-                        fontWeight='semibold'
-                        letterSpacing='wider'
+                        fontSize='xs'
+                        fontWeight='medium'
+                        letterSpacing='wide'
                         textTransform='uppercase'
-                        color='fg.subtle'
-                        px={3}
-                        pb={0.5}
+                        color='fg.muted'
+                        px={2.5}
+                        pb={1}
+                        pt={1}
                      >
                         {group.label}
                      </Text>

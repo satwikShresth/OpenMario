@@ -69,11 +69,11 @@ export default function CourseInstructorHistory({ course_id }: Props) {
 
    if (isLoading) {
       return (
-         <VStack align='stretch' gap={3}>
-            <Skeleton height='6' width='40%' />
-            <Skeleton height='32' />
-            <Skeleton height='6' width='40%' />
-            <Skeleton height='48' />
+         <VStack align='stretch' gap={4}>
+            <Skeleton height='8' width='45%' borderRadius='md' />
+            <Skeleton height='36' borderRadius='lg' />
+            <Skeleton height='8' width='45%' borderRadius='md' />
+            <Skeleton height='56' borderRadius='lg' />
          </VStack>
       );
    }
@@ -132,12 +132,14 @@ export default function CourseInstructorHistory({ course_id }: Props) {
    }
 
    return (
-      <VStack align='stretch' gap={6}>
+      <VStack align='stretch' gap={{ base: 6, md: 8 }}>
 
          {/* ── 1. Offering History ── */}
          <Box>
-            <Text fontSize='md' fontWeight='semibold' mb={3}>Offering History</Text>
-            <Table.Root size='sm' showColumnBorder variant='outline'>
+            <Text fontSize={{ base: 'lg', md: 'xl' }} fontWeight='semibold' mb={4}>
+               Offering History
+            </Text>
+            <Table.Root size='md' showColumnBorder variant='outline'>
                <Table.Header>
                   <Table.Row>
                      <Table.ColumnHeader>Year</Table.ColumnHeader>
@@ -161,8 +163,8 @@ export default function CourseInstructorHistory({ course_id }: Props) {
                                  {(s: string) => (
                                     <Table.Cell key={s} textAlign='center'>
                                        {group[s]!.length > 0
-                                          ? <Text color='green.500' fontWeight='bold'>✓</Text>
-                                          : <Text color='gray.300'>–</Text>}
+                                          ? <Text color='green.500' fontWeight='bold' fontSize='md'>✓</Text>
+                                          : <Text color='gray.300' fontSize='md'>–</Text>}
                                     </Table.Cell>
                                  )}
                               </For>
@@ -178,8 +180,10 @@ export default function CourseInstructorHistory({ course_id }: Props) {
 
          {/* ── 2. Instructor / Section Breakdown ── */}
          <Box>
-            <Text fontSize='md' fontWeight='semibold' mb={3}>Instructors by Term</Text>
-            <Table.Root size='sm' variant='outline' showColumnBorder>
+            <Text fontSize={{ base: 'lg', md: 'xl' }} fontWeight='semibold' mb={4}>
+               Instructors by Term
+            </Text>
+            <Table.Root size='md' variant='outline' showColumnBorder>
                <Table.Header>
                   <Table.Row>
                      <Table.ColumnHeader>Instructor</Table.ColumnHeader>
@@ -201,46 +205,46 @@ export default function CourseInstructorHistory({ course_id }: Props) {
                            </Table.Cell>
                            <Table.Cell whiteSpace='nowrap'>
                               <HStack gap={1}>
-                                 <Badge size='sm' variant='subtle'>{r.termLabel}</Badge>
-                                 <Text fontSize='xs' color='gray.500'>{r.year}</Text>
+                                 <Badge size='md' variant='subtle'>{r.termLabel}</Badge>
+                                 <Text fontSize='sm' color='gray.500'>{r.year}</Text>
                               </HStack>
                            </Table.Cell>
-                           <Table.Cell whiteSpace='nowrap' fontSize='xs' color='gray.600'>
+                           <Table.Cell whiteSpace='nowrap' fontSize='sm' color='gray.600'>
                               {r.start_time
                                  ? `${formatTime(r.start_time)} – ${formatTime(r.end_time)}`
                                  : '—'}
                            </Table.Cell>
-                           <Table.Cell fontSize='xs' color='gray.600'>
+                           <Table.Cell fontSize='sm' color='gray.600'>
                               {r.crns.join(', ')}
                            </Table.Cell>
                            <Table.Cell>
                               {r.instructor?.avg_rating != null
                                  ? (
                                     <Tag
-                                       size='sm'
+                                       size='md'
                                        colorPalette={getRatingColor(r.instructor.avg_rating)}
                                     >
                                        {r.instructor.avg_rating.toFixed(1)}
                                        {r.instructor.num_ratings != null && (
-                                          <Text as='span' color='fg.muted' ml={1} fontSize='xs'>
+                                          <Text as='span' color='fg.muted' ml={1} fontSize='sm'>
                                              ({r.instructor.num_ratings})
                                           </Text>
                                        )}
                                     </Tag>
                                  )
-                                 : <Text color='gray.300' fontSize='xs'>—</Text>}
+                                 : <Text color='gray.300' fontSize='sm'>—</Text>}
                            </Table.Cell>
                            <Table.Cell>
                               {r.instructor?.avg_difficulty != null
                                  ? (
                                     <Tag
-                                       size='sm'
+                                       size='md'
                                        colorPalette={getDifficultyColor(r.instructor.avg_difficulty)}
                                     >
                                        {r.instructor.avg_difficulty.toFixed(1)}
                                     </Tag>
                                  )
-                                 : <Text color='gray.300' fontSize='xs'>—</Text>}
+                                 : <Text color='gray.300' fontSize='sm'>—</Text>}
                            </Table.Cell>
                         </Table.Row>
                      )}

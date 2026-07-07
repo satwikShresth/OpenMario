@@ -5,14 +5,16 @@ import { useProfessorDetail } from './detailStore';
 function SectionsTable({ sections, emptyMsg }: { sections: Section[]; emptyMsg: string }) {
    if (sections.length === 0) {
       return (
-         <Box textAlign='center' py={8}>
-            <Text color='fg.muted'>{emptyMsg}</Text>
+         <Box textAlign='center' py={10}>
+            <Text color='fg.muted' fontSize='md'>
+               {emptyMsg}
+            </Text>
          </Box>
       );
    }
    return (
-      <Box overflowX='auto' maxH='400px' overflowY='auto'>
-         <Table.Root size='sm'>
+      <Box overflowX='auto' maxH='440px' overflowY='auto'>
+         <Table.Root size='md'>
             <Table.Header position='sticky' top={0} bg='bg' zIndex={1}>
                <Table.Row>
                   <Table.ColumnHeader>Term</Table.ColumnHeader>
@@ -28,7 +30,9 @@ function SectionsTable({ sections, emptyMsg }: { sections: Section[]; emptyMsg: 
                      <Table.Cell whiteSpace='nowrap'>{termLabel(s.term_id)}</Table.Cell>
                      <Table.Cell whiteSpace='nowrap'>{s.subject_code} {s.course_number}</Table.Cell>
                      <Table.Cell maxW='220px'>
-                        <Text lineClamp={2} title={s.course_title} fontSize='sm'>{s.course_title}</Text>
+                        <Text lineClamp={2} title={s.course_title} fontSize='md'>
+                           {s.course_title}
+                        </Text>
                      </Table.Cell>
                      <Table.Cell>{s.section_code}</Table.Cell>
                      <Table.Cell>
@@ -54,7 +58,9 @@ export function SectionsTab() {
    if (isLoading) return null;
    return (
       <Box>
-         <Text fontWeight='semibold' fontSize='lg' mb={3}>Sections</Text>
+         <Text fontWeight='semibold' fontSize={{ base: 'xl', md: '2xl' }} mb={4}>
+            Sections
+         </Text>
          <Tabs.Root defaultValue='upcoming' variant='line'>
             <Tabs.List>
                <Tabs.Trigger value='upcoming'>

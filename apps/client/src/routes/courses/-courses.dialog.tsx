@@ -17,26 +17,30 @@ export function CourseDialogPage() {
    );
 
    return (
-      <Box maxW='4xl' mx='auto' py={4}>
+      <Box maxW='5xl' mx='auto' py={{ base: 6, md: 8 }} px={{ base: 3, md: 4 }}>
          {isLoading || !courseInfo
             ? (
-               <VStack align='stretch' gap={4}>
-                  <Skeleton height='10' />
-                  <Skeleton height='6' width='60%' />
-                  <Skeleton height='40' />
+               <VStack align='stretch' gap={5}>
+                  <Skeleton height='12' borderRadius='md' />
+                  <Skeleton height='8' width='65%' borderRadius='md' />
+                  <Skeleton height='48' borderRadius='lg' />
                </VStack>
             )
             : (
-               <VStack align='stretch' gap={5}>
-                  {/* Header */}
+               <VStack align='stretch' gap={{ base: 6, md: 8 }}>
                   <Box>
-                     <Text fontSize='sm' color='gray.500' mb={1}>
+                     <Text fontSize={{ base: 'md', md: 'lg' }} color='gray.500' mb={2}>
                         {courseInfo.subject_id} {courseInfo.course_number}
                      </Text>
-                     <Text fontSize={{ base: 'xl', md: '2xl' }} fontWeight='semibold' lineHeight='1.3' mb={3}>
+                     <Text
+                        fontSize={{ base: '2xl', md: '3xl' }}
+                        fontWeight='semibold'
+                        lineHeight='1.25'
+                        mb={4}
+                     >
                         {courseInfo.title}
                      </Text>
-                     <Flex wrap='wrap' gap={2}>
+                     <Flex wrap='wrap' gap={3}>
                         <Tag size={{ base: 'md', md: 'lg' }}>Credits: {courseInfo.credits}</Tag>
                         {courseInfo.instruction_method && (
                            <Tag size={{ base: 'md', md: 'lg' }}>{courseInfo.instruction_method}</Tag>
@@ -55,22 +59,21 @@ export function CourseDialogPage() {
 
                   <Separator />
 
-                  {/* Description */}
                   {courseInfo.description && (
                      <Box>
-                        <Text fontSize='md' fontWeight='semibold' mb={2}>Description</Text>
-                        <Text fontSize='sm' lineHeight='1.7' color='gray.600'>
+                        <Text fontSize={{ base: 'lg', md: 'xl' }} fontWeight='semibold' mb={3}>
+                           Description
+                        </Text>
+                        <Text fontSize={{ base: 'md', md: 'lg' }} lineHeight='1.75' color='gray.600'>
                            {courseInfo.description}
                         </Text>
                      </Box>
                   )}
 
-                  {/* Prereqs / Coreqs */}
                   <Search.Courses.Req course_id={course_id} />
 
                   <Separator />
 
-                  {/* Offering history + instructor breakdown */}
                   <CourseInstructorHistory course_id={course_id} />
                </VStack>
             )}

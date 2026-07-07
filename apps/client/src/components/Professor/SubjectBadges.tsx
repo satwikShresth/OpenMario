@@ -8,7 +8,9 @@ export function SubjectBadges() {
    if (isLoading || !subjects || subjects.length === 0) return null;
    return (
       <Box>
-         <Text fontSize='sm' color='fg.muted' mb={2}>Subjects Taught</Text>
+         <Text fontSize={{ base: 'md', md: 'lg' }} fontWeight='semibold' color='fg.muted' mb={3}>
+            Subjects Taught
+         </Text>
          <HStack gap={2} wrap='wrap'>
             {subjects.map(s => (
                <Badge key={s} variant='surface' colorPalette='blue'>{s}</Badge>
