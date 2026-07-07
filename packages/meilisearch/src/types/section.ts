@@ -6,6 +6,7 @@ export type SectionInstructor = {
    avg_difficulty: number | null;
    num_ratings: number | null;
    rmp_id: string | null;
+   rmp_legacy_id: number | null;
    weighted_score: number | null;
 };
 

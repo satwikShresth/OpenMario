@@ -323,13 +323,13 @@ export const Card = ({ section }: { section: Section }) => {
                                        </Tag>
                                     )}
 
-                                    {instructor.rmp_id && (
+                                    {instructor.rmp_legacy_id != null && (
                                        <Tag
                                           colorPalette='blue'
                                           as={Link}
                                           {...linkOptions({
                                              //@ts-ignore: shuuup
-                                             to: `https://www.ratemyprofessors.com/professor/${instructor.id}`,
+                                             to: `https://www.ratemyprofessors.com/professor/${instructor.rmp_legacy_id}`,
                                           })}
                                           size={{ base: 'md', md: 'lg' }}
                                           cursor='pointer'

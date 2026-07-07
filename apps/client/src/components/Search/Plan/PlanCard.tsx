@@ -201,10 +201,10 @@ export const PlanCard = ({ section, currentTerm, currentYear }: PlanCardProps) =
                         {instructor.num_ratings && ` (${instructor.num_ratings})`}
                       </Tag>
                     )}
-                    {instructor.rmp_id && (
+                    {instructor.rmp_legacy_id != null && (
                       <Link
                         //@ts-ignore: shuuup
-                        to={`https://www.ratemyprofessors.com/professor/${instructor.rmp_id}`}
+                        to={`https://www.ratemyprofessors.com/professor/${instructor.rmp_legacy_id}`}
                         onClick={(e) => e.stopPropagation()}
                       >
                         <Tag colorPalette="blue" size="sm" cursor="pointer" _hover={{ opacity: 0.8 }}>

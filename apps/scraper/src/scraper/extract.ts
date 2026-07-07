@@ -1,5 +1,5 @@
 import type { Page } from 'playwright';
-import type { CleanSection, DayOfWeek, RawSection } from './types';
+import type { CleanCourse, CleanSection, DayOfWeek, RawSection } from './types';
 
 const DAY_MAP: Record<string, DayOfWeek> = {
    M: 'Monday',
@@ -59,6 +59,110 @@ function cleanSection(raw: RawSection): CleanSection {
          : [],
       offeringHistory: raw.offeringHistory
    };
+}
+
+function parseCredits(raw: string | undefined): {
+   credits: string | null;
+   creditRange: string | null;
+} {
+   const value = raw?.trim();
+   if (!value) return { credits: null, creditRange: null };
+   if (value.includes('-')) return { credits: null, creditRange: value };
+   const num = Number.parseFloat(value);
+   return Number.isFinite(num)
+      ? { credits: num.toFixed(1), creditRange: null }
+      : { credits: null, creditRange: value };
+}
+
+export function parseCourseDetails(
+   detailsText: string,
+   sched: { title?: string; credits?: string; subjectCode?: string; courseNumber?: string }
+): CleanCourse | null {
+   const subjectCode = sched.subjectCode?.trim() ?? '';
+   const courseNumber = sched.courseNumber?.trim() ?? '';
+   const title = sched.title?.trim() ?? '';
+   if (!subjectCode || !courseNumber || !title) return null;
+
+   const description =
+      detailsText
+         .match(
+            /Course Description:\s*\n?([\s\S]*?)(?=\nCredits:|\nCollege:|\nDepartment:|\nRestrictions:|\nRepeat Status:|$)/
+         )?.[1]
+         ?.trim() ?? null;
+
+   const restrictions =
+      detailsText
+         .match(
+            /Restrictions:\s*\n([\s\S]*?)(?=\nSpecial Approval:|\nCo-Requisites:|\nPre-Requisites:|\nCrosslisted|\nRepeat Status:|$)/
+         )?.[1]
+         ?.replace(/\n{3,}/g, '\n')
+         .trim() || null;
+
+   const repeatStatus =
+      detailsText.match(/Repeat Status:\s*(.+)/)?.[1]?.trim() ?? null;
+
+   const creditsFromDetails = detailsText.match(/Credits:\s*([\d.]+\s*-\s*[\d.]+|[\d.]+)/)?.[1]?.trim();
+   const { credits, creditRange } = parseCredits(sched.credits ?? creditsFromDetails);
+
+   return {
+      subjectCode,
+      courseNumber,
+      title,
+      credits,
+      creditRange,
+      description,
+      restrictions,
+      repeatStatus,
+      writingIntensive: /writing intensive/i.test(detailsText)
+   };
+}
+
+async function readCoursePage(page: Page) {
+   return page.evaluate(() => {
+      const sched: Record<string, string> = {};
+      document.querySelectorAll('td.tableHeader').forEach(h => {
+         const key = h.textContent?.trim() ?? '';
+         const val = h.nextElementSibling?.textContent?.trim() ?? '';
+         if (key) sched[key] = val;
+      });
+
+      const body = document.body.innerText;
+      const start = body.indexOf('Additional Section Details');
+      const end = body.indexOf('Course Offering History');
+      const detailsText =
+         start === -1
+            ? ''
+            : body.slice(start, end === -1 ? undefined : end);
+
+      return { sched, detailsText };
+   });
+}
+
+/** Extract course catalog metadata from a loaded /courseDetails page. */
+export async function extractCourse(page: Page): Promise<CleanCourse | null> {
+   const title = await page.title();
+   if (/429|too many requests/i.test(title)) return null;
+
+   const { sched, detailsText } = await readCoursePage(page);
+   return parseCourseDetails(detailsText, {
+      title: sched['Title'],
+      credits: sched['Credits'],
+      subjectCode: sched['Subject Code'],
+      courseNumber: sched['Course Number']
+   });
+}
+
+/**
+ * Extracts section + course data from a /courseDetails page.
+ */
+export async function extractSectionAndCourse(
+   page: Page
+): Promise<{ section: CleanSection; course: CleanCourse } | null> {
+   const section = await extractSection(page);
+   if (!section) return null;
+   const course = await extractCourse(page);
+   if (!course) return null;
+   return { section, course };
 }
 
 /**

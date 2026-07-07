@@ -1,6 +1,6 @@
 import { orpc, withAuth, withBrowser } from './helpers';
 import { type Page } from 'playwright';
-import { extractSection } from '@/scraper/extract';
+import { extractSectionAndCourse } from '@/scraper/extract';
 import { BASE_URL, withRetry } from '@/scraper/utils';
 import { appendSection } from '@/db/store';
 
@@ -60,10 +60,10 @@ async function scrapeWithPage(
    for (const url of detailUrls) {
       const scraped = await withRetry(async () => {
          await page.goto(url, { waitUntil: 'domcontentloaded' });
-         return extractSection(page);
+         return extractSectionAndCourse(page);
       });
-      if (scraped && scraped.crn > 0) {
-         appendSection(scraped);
+      if (scraped && scraped.section.crn > 0) {
+         appendSection(scraped.section, scraped.course);
          count++;
       }
    }
