@@ -105,7 +105,7 @@ export const Card = ({ section }: { section: Section }) => {
                justify='space-between'
             >
                <Box>
-                  <Text fontSize={{ base: 'sm', md: 'md' }} color='gray.600' mb={1}>
+                  <Text fontSize={{ base: 'sm', md: 'md' }} color='fg.muted' mb={1}>
                      {section.college_name} ({section.subject_name})
                   </Text>
                   <VStack align='start' gap={2}>

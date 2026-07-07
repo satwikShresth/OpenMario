@@ -33,9 +33,9 @@ function Breadcrumbs() {
    const [crumbs, setCrumbs] = useState<Crumb[]>([]);
    const [loading, setLoading] = useState(true);
 
-   const separatorColor = useColorModeValue('gray.300', 'gray.600');
-   const activeColor = useColorModeValue('gray.800', 'gray.100');
-   const mutedColor = useColorModeValue('gray.400', 'gray.500');
+   const separatorColor = 'fg.muted';
+   const activeColor = 'fg';
+   const mutedColor = 'fg';
 
    useEffect(() => {
       let cancelled = false;

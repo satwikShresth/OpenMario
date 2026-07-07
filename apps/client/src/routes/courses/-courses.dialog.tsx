@@ -29,7 +29,7 @@ export function CourseDialogPage() {
             : (
                <VStack align='stretch' gap={{ base: 6, md: 8 }}>
                   <Box>
-                     <Text fontSize={{ base: 'md', md: 'lg' }} color='gray.500' mb={2}>
+                     <Text fontSize={{ base: 'md', md: 'lg' }} color='fg' mb={2}>
                         {courseInfo.subject_id} {courseInfo.course_number}
                      </Text>
                      <Text
@@ -64,7 +64,7 @@ export function CourseDialogPage() {
                         <Text fontSize={{ base: 'lg', md: 'xl' }} fontWeight='semibold' mb={3}>
                            Description
                         </Text>
-                        <Text fontSize={{ base: 'md', md: 'lg' }} lineHeight='1.75' color='gray.600'>
+                        <Text fontSize={{ base: 'md', md: 'lg' }} lineHeight='1.75' color='fg'>
                            {courseInfo.description}
                         </Text>
                      </Box>
