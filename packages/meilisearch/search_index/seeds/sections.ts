@@ -11,7 +11,9 @@ export default async function seedSections(
    indexName: string
 ): Promise<void> {
    console.log(`[sections] Fetching rows from meili_sections_idx view...`);
+   console.log(`[sections] Refreshing meili_sections_m_idx materialized view...`);
    await db.refreshMaterializedView(meiliSectionsIdx);
+   console.log(`[sections] Materialized view refreshed.`);
 
    const allRows = await db.select().from(meiliSectionsIdx);
    const rows = allRows.filter(row => !isTerm2025(row.term));

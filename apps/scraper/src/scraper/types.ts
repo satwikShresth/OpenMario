@@ -10,6 +10,19 @@ export interface OfferingHistoryEntry {
    summer: boolean;
 }
 
+/** Course catalog fields scraped once per (subjectCode, courseNumber) */
+export interface CleanCourse {
+   subjectCode: string;
+   courseNumber: string;
+   title: string;
+   credits: string | null;
+   creditRange: string | null;
+   description: string | null;
+   restrictions: string | null;
+   repeatStatus: string | null;
+   writingIntensive: boolean;
+}
+
 /** Shape written to sections.jsonl — maps directly to the section table + related tables */
 export interface CleanSection {
    // identity

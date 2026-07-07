@@ -8,16 +8,28 @@
 import { appendFileSync, mkdirSync, existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { env } from '@env';
-import type { CleanSection } from '@/scraper/types';
+import type { CleanCourse, CleanSection } from '@/scraper/types';
 
-export type { CleanSection };
+export type { CleanSection, CleanCourse };
 
-const DATA_DIR = env.DATA_DIR;
-const SECTIONS_FILE = join(DATA_DIR, 'sections.jsonl');
-const HISTORY_FILE = join(DATA_DIR, 'offering_history.jsonl');
+function dataDir() {
+   return process.env.DATA_DIR ?? env.DATA_DIR;
+}
+
+function sectionsFile() {
+   return join(dataDir(), 'sections.jsonl');
+}
+
+function historyFile() {
+   return join(dataDir(), 'offering_history.jsonl');
+}
+
+function coursesFile() {
+   return join(dataDir(), 'courses.jsonl');
+}
 
 function ensureDir() {
-   mkdirSync(DATA_DIR, { recursive: true });
+   mkdirSync(dataDir(), { recursive: true });
 }
 
 /** Keys already written to offering_history.jsonl — loaded once, updated in memory */
@@ -27,8 +39,8 @@ let historyKeysLoaded = false;
 function loadHistoryKeys() {
    if (historyKeysLoaded) return;
    historyKeysLoaded = true;
-   if (!existsSync(HISTORY_FILE)) return;
-   for (const line of readFileSync(HISTORY_FILE, 'utf8').split('\n')) {
+   if (!existsSync(historyFile())) return;
+   for (const line of readFileSync(historyFile(), 'utf8').split('\n')) {
       if (!line.trim()) continue;
       try {
          const { subjectCode, courseNumber } = JSON.parse(line) as {
@@ -40,18 +52,51 @@ function loadHistoryKeys() {
    }
 }
 
-export function appendSection(section: CleanSection): void {
+/** Keys already written to courses.jsonl — loaded once, updated in memory */
+const writtenCourseKeys = new Set<string>();
+let courseKeysLoaded = false;
+
+function loadCourseKeys() {
+   if (courseKeysLoaded) return;
+   courseKeysLoaded = true;
+   if (!existsSync(coursesFile())) return;
+   for (const line of readFileSync(coursesFile(), 'utf8').split('\n')) {
+      if (!line.trim()) continue;
+      try {
+         const { subjectCode, courseNumber } = JSON.parse(line) as {
+            subjectCode: string;
+            courseNumber: string;
+         };
+         writtenCourseKeys.add(`${subjectCode}:${courseNumber}`);
+      } catch {}
+   }
+}
+
+export function appendCourse(course: CleanCourse): void {
+   ensureDir();
+   loadCourseKeys();
+
+   const key = `${course.subjectCode}:${course.courseNumber}`;
+   if (writtenCourseKeys.has(key)) return;
+
+   appendFileSync(coursesFile(), JSON.stringify(course) + '\n');
+   writtenCourseKeys.add(key);
+}
+
+export function appendSection(section: CleanSection, course?: CleanCourse): void {
    ensureDir();
    loadHistoryKeys();
 
    const { offeringHistory, ...sectionRow } = section;
 
-   appendFileSync(SECTIONS_FILE, JSON.stringify(sectionRow) + '\n');
+   appendFileSync(sectionsFile(), JSON.stringify(sectionRow) + '\n');
+
+   if (course) appendCourse(course);
 
    const historyKey = `${section.subjectCode}:${section.courseNumber}`;
    if (!writtenHistoryKeys.has(historyKey) && offeringHistory.length > 0) {
       appendFileSync(
-         HISTORY_FILE,
+         historyFile(),
          JSON.stringify({
             subjectCode: section.subjectCode,
             courseNumber: section.courseNumber,

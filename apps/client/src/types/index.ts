@@ -1,12 +1,13 @@
 export interface Instructor {
    id: number;
    name: string;
-   rmp_id: number;
-   avg_rating: number;
-   department: string;
-   num_ratings: number;
-   avg_difficulty: number;
-   weighted_score: number;
+   rmp_id: string | null;
+   rmp_legacy_id: number | null;
+   avg_rating: number | null;
+   department: string | null;
+   num_ratings: number | null;
+   avg_difficulty: number | null;
+   weighted_score: number | null;
 }
 
 export interface Section {

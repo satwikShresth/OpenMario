@@ -303,6 +303,7 @@ export const meiliSectionsIdx = pgMaterializedView('meili_sections_m_idx').as(
                   avg_difficulty: number | null;
                   num_ratings: number | null;
                   rmp_id: string | null;
+                  rmp_legacy_id: number | null;
                   weighted_score: number | null;
                }[]
             >`coalesce(
@@ -315,6 +316,7 @@ export const meiliSectionsIdx = pgMaterializedView('meili_sections_m_idx').as(
                   'avg_difficulty', ${instructor.avg_difficulty}::float,
                   'num_ratings',    ${instructor.num_ratings},
                   'rmp_id',         ${instructor.rmp_id},
+                  'rmp_legacy_id',  ${instructor.rmp_legacy_id},
                   'weighted_score', (${instructor.num_ratings} * ${instructor.avg_rating}::float)
                )
             ) filter (where ${instructor.id} is not null),

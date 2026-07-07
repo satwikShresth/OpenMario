@@ -5,9 +5,11 @@
   "type": "module",
   "scripts": {
     "start": "bun run src/index.ts",
+    "push:courses": "bun run src/db/push.courses.ts",
     "push:sections": "bun run src/db/push.sections.ts",
     "update:sections": "bun run src/db/update.sections.ts",
-    "push:course-history": "bun run src/db/push.course_history.ts"
+    "push:course-history": "bun run src/db/push.course_history.ts",
+    "backfill:courses": "bun run scripts/backfill-missing-courses.ts"
   },
   "dependencies": {
     "@dotenvx/dotenvx": "^1.52.0",
