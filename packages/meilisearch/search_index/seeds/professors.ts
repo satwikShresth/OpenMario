@@ -1,5 +1,6 @@
 import type { MeiliSearch } from 'meilisearch';
-import { db, meiliProfessorsIdx } from '@openmario/db';
+import { meiliProfessorsIdx } from '@openmario/db';
+import { db } from '../db';
 import type { ProfessorDocument } from '@/types';
 
 const BATCH_SIZE = 500;
