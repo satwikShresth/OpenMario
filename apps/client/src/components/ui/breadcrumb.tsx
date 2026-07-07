@@ -13,7 +13,7 @@ interface BreadcrumbProps<TPrams> {
 
 export function Breadcrumb<TPrams>({ items }: BreadcrumbProps<TPrams>) {
    return (
-      <HStack gap={1.5} fontSize='sm' color='fg.muted' flexWrap='wrap'>
+      <HStack gap={1.5} fontSize='sm' color='fg' flexWrap='wrap'>
          {items.map((item, i) => (
             <HStack key={i} gap={1.5}>
                {i > 0 && <ChevronRightIcon size={13} />}
@@ -21,8 +21,8 @@ export function Breadcrumb<TPrams>({ items }: BreadcrumbProps<TPrams>) {
                   <Link to={item.to} params={item.params!}>
                      <Text
                         fontSize='sm'
-                        color='fg.muted'
-                        _hover={{ color: 'fg', textDecoration: 'underline' }}
+                        color='fg'
+                        _hover={{ textDecoration: 'underline' }}
                         transition='color 0.15s'
                      >
                         {item.label}

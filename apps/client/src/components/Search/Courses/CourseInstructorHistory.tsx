@@ -4,10 +4,8 @@
  *  2. Instructor roster — one row per (instructor, term), with time, CRN, and RMP stats
  */
 import {
-   Badge,
    Box,
    For,
-   HStack,
    Separator,
    Skeleton,
    Table,
@@ -18,6 +16,7 @@ import { useQuery } from '@tanstack/react-query';
 import { Link } from '@tanstack/react-router';
 import { orpc } from '@/helpers';
 import { Tag } from '@/components/ui';
+import { termLabel } from '@/components/Professor/types';
 import { getDifficultyColor, getRatingColor } from './helpers';
 import type { Instructor } from '@openmario/contracts';
 
@@ -32,6 +31,17 @@ const TERM_SUFFIX_LABEL: Record<string, string> = {
    '45': 'Summer',
 };
 const TERM_ORDER = ['15', '25', '35', '45'];
+
+const TERM_COLOR: Record<string, string> = {
+   '15': 'orange',
+   '25': 'cyan',
+   '35': 'green',
+   '45': 'yellow',
+};
+
+function termIdFromParts(year: string, suffix: string): number {
+   return Number(`${year}${suffix}`);
+}
 
 function parseTerm(code: string | number): { year: string; suffix: string; label: string } {
    const s = String(code);
@@ -216,10 +226,12 @@ export default function CourseInstructorHistory({ course_id }: Props) {
                               )}
                            </Table.Cell>
                            <Table.Cell whiteSpace='nowrap'>
-                              <HStack gap={1}>
-                                 <Badge size='md' variant='subtle'>{r.termLabel}</Badge>
-                                 <Text fontSize='sm' color='gray.500'>{r.year}</Text>
-                              </HStack>
+                              <Tag
+                                 size='md'
+                                 colorPalette={TERM_COLOR[r.termSuffix] ?? 'gray'}
+                              >
+                                 {termLabel(termIdFromParts(r.year, r.termSuffix))}
+                              </Tag>
                            </Table.Cell>
                            <Table.Cell whiteSpace='nowrap' fontSize='sm' color='gray.600'>
                               {r.start_time
