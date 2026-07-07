@@ -56,7 +56,7 @@ export const Cards = () => {
    }, []);
 
    return (
-      <Flex direction='column' gap={5} width='full'>
+      <Flex direction='column' gap={2} width='full'>
          <For each={items}>
             {(section) => (
                <Card
@@ -82,21 +82,30 @@ export const Card = ({ section }: { section: Section }) => {
 
    return (
       <CCard.Root
-         flex='1'
-         p={{ base: 0, md: 3 }}
+         variant='outline'
+         borderColor='border.subtle'
+         borderRadius='md'
+         cursor='default'
+         p={{ base: 0, md: 0 }}
          width='full'
-         maxWidth='full'
+         boxShadow='none'
          overflow='hidden'
+         _hover={{
+            borderColor: 'border.emphasized',
+            transform: 'none',
+            boxShadow: 'none',
+         }}
+         transition='border-color 120ms ease'
       >
-         <CCard.Header pb={3}>
+         <CCard.Header pb={{ base: 3, md: 4 }} px={{ base: 5, md: 6 }} pt={{ base: 4, md: 5 }}>
             <Stack
                direction={{ base: 'column', sm: 'row' }}
                width='full'
-               gap={4}
+               gap={{ base: 4, md: 5 }}
                justify='space-between'
             >
                <Box>
-                  <Text fontSize={{ base: 'xs', md: 'sm' }} color='gray.600' mb={1}>
+                  <Text fontSize={{ base: 'sm', md: 'md' }} color='gray.600' mb={1}>
                      {section.college_name} ({section.subject_name})
                   </Text>
                   <VStack align='start' gap={2}>
@@ -115,7 +124,7 @@ export const Card = ({ section }: { section: Section }) => {
                         >
                            <Text
                               _hover={{ textDecoration: 'underline' }}
-                              fontSize={{ base: 'lg', md: 'xl' }}
+                              fontSize={{ base: 'xl', md: '2xl' }}
                               fontWeight='semibold'
                               lineHeight='1.2'
                            >
@@ -185,7 +194,7 @@ export const Card = ({ section }: { section: Section }) => {
 
                                  {section?.start_time
                                     ? (
-                                       <Text fontSize='sm'>
+                                       <Text fontSize='md'>
                                           {`${formatTime(section?.start_time)} - ${formatTime(section?.end_time)
                                              }`}
                                        </Text>
@@ -201,11 +210,11 @@ export const Card = ({ section }: { section: Section }) => {
             </Stack>
          </CCard.Header>
 
-         <CCard.Body py={3} gap={3}>
+         <CCard.Body py={{ base: 3, md: 4 }} gap={3} px={{ base: 5, md: 6 }}>
             <Box
                borderRadius='lg'
                borderWidth='thin'
-               p={{ base: 2, md: 3 }}
+               p={{ base: 3, md: 4 }}
                overflow='hidden'
             >
                <Flex
@@ -228,16 +237,16 @@ export const Card = ({ section }: { section: Section }) => {
             <Req course_id={section.course_id} />
          </CCard.Body>
 
-         <CCard.Footer pt={3}>
+         <CCard.Footer pt={{ base: 3, md: 4 }} pb={{ base: 4, md: 5 }} px={{ base: 5, md: 6 }}>
             <Box width='full'>
                <Text
-                  fontSize={{ base: 'md', md: 'lg' }}
+                  fontSize={{ base: 'lg', md: 'xl' }}
                   fontWeight='semibold'
-                  mb={2}
+                  mb={3}
                >
                   Instructors
                </Text>
-               <Separator width='full' mb={3} />
+               <Separator width='full' mb={4} />
 
                {section?.instructors?.length > 0
                   ? (
@@ -256,7 +265,7 @@ export const Card = ({ section }: { section: Section }) => {
                                  p={isMobile ? 2 : undefined}
                               >
                                  <Text
-                                    fontSize='md'
+                                    fontSize={{ base: 'lg', md: 'xl' }}
                                     fontWeight='medium'
                                     p={1}
                                     mb={{ base: 2, md: 0 }}
@@ -276,7 +285,7 @@ export const Card = ({ section }: { section: Section }) => {
                                              instructor.avg_difficulty,
                                           )}
                                        >
-                                          <Text fontSize={{ base: 'xs', md: 'sm' }}>
+                                          <Text fontSize={{ base: 'sm', md: 'md' }}>
                                              Difficulty: {instructor.avg_difficulty.toFixed(1)}
                                           </Text>
                                        </Tag>
@@ -289,7 +298,7 @@ export const Card = ({ section }: { section: Section }) => {
                                              instructor.avg_rating,
                                           )}
                                        >
-                                          <Text fontSize={{ base: 'xs', md: 'sm' }}>
+                                          <Text fontSize={{ base: 'sm', md: 'md' }}>
                                              Rating: {instructor.avg_rating.toFixed(1)}
                                              {instructor.num_ratings &&
                                                 ` (${instructor.num_ratings})`}
@@ -303,17 +312,17 @@ export const Card = ({ section }: { section: Section }) => {
                                           as={Link}
                                           {...linkOptions({
                                              //@ts-ignore: shuuup
-                                             to: `https://www.ratemyprofessors.com/professor/${instructor.rmp_id}`,
+                                             to: `https://www.ratemyprofessors.com/professor/${instructor.id}`,
                                           })}
                                           size={{ base: 'md', md: 'lg' }}
                                           cursor='pointer'
                                           _hover={{ opacity: 0.8 }}
                                        >
                                           <HStack gap={1}>
-                                             <Text fontSize={{ base: 'xs', md: 'sm' }}>
+                                             <Text fontSize={{ base: 'sm', md: 'md' }}>
                                                 RMP
                                              </Text>
-                                             <ExternalLinkIcon size={14} />
+                                             <ExternalLinkIcon size={16} />
                                           </HStack>
                                        </Tag>
                                     )}
@@ -324,7 +333,7 @@ export const Card = ({ section }: { section: Section }) => {
                      </VStack>
                   )
                   : (
-                     <Text fontSize={{ base: 'sm', md: 'md' }} color='gray.500'>
+                     <Text fontSize={{ base: 'md', md: 'lg' }} color='gray.500'>
                         TBD
                      </Text>
                   )}

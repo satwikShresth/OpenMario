@@ -1,18 +1,17 @@
-import { Box, VStack } from '@chakra-ui/react';
+import { VStack } from '@chakra-ui/react';
 import type { ReactNode } from 'react';
 
+/** Vertical page stack; width is capped by the app shell (`__root.tsx`). */
 export function Root({
    children,
-   maxW = '4xl',
    gap = 4,
 }: {
    children: ReactNode;
-   maxW?: string;
    gap?: number;
 }) {
    return (
-      <Box maxW={maxW} w='full' mx='auto'>
-         <VStack align='stretch' gap={gap}>{children}</VStack>
-      </Box>
+      <VStack align='stretch' gap={gap} w='full' minW={0}>
+         {children}
+      </VStack>
    );
 }

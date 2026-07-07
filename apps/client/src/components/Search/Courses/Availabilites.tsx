@@ -86,7 +86,7 @@ export default ({ course_id }: AvailabilitesProps) => {
 
    return (
       <Table.Root
-         size='sm'
+         size='md'
          showColumnBorder
          variant='outline'
          colorPalette='bg'

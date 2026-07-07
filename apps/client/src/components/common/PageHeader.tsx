@@ -1,4 +1,5 @@
 import { Flex, Icon, IconButton, Image, Skeleton, Text } from '@chakra-ui/react';
+import { PanelLeft } from 'lucide-react';
 import { Link, useMatches, useNavigate } from '@tanstack/react-router';
 import { ChevronRightIcon, MenuIcon, MoonIcon, SunIcon } from '@/components/icons';
 import { useState, useEffect } from 'react';
@@ -140,7 +141,7 @@ function Breadcrumbs() {
 
 export function PageHeader() {
    const { colorMode, toggleColorMode } = useColorMode();
-   const { setDrawerOpen } = useSidebarStore();
+   const { setDrawerOpen, toggle: toggleSidebar } = useSidebarStore();
    const borderColor = useColorModeValue('rgba(0,0,0,0.08)', 'rgba(255,255,255,0.08)');
    const bg = useColorModeValue('rgba(255,255,255,0.85)', 'rgba(9,9,11,0.85)');
 
@@ -162,7 +163,7 @@ export function PageHeader() {
          css={{ backdropFilter: 'blur(12px)' }}
       >
          <Flex align='center' gap={2} minW={0} flex={1} overflow='hidden'>
-            {/* Tablet-only hamburger — lives here so it never overlaps the logo */}
+            {/* Tablet — open drawer (`Sheet`-style menu). */}
             <IconButton
                aria-label='Open menu'
                variant='ghost'
@@ -175,6 +176,20 @@ export function PageHeader() {
                onClick={() => setDrawerOpen(true)}
             >
                <MenuIcon size={16} />
+            </IconButton>
+            {/* Desktop — same role as shadcn `SidebarTrigger` (insights `SiteHeader`). */}
+            <IconButton
+               aria-label='Toggle sidebar'
+               variant='ghost'
+               size='sm'
+               borderRadius='lg'
+               display={{ base: 'none', md: 'flex' }}
+               color='fg.muted'
+               _hover={{ color: 'fg', bg: 'bg.muted' }}
+               flexShrink={0}
+               onClick={toggleSidebar}
+            >
+               <Icon as={PanelLeft} boxSize={4} />
             </IconButton>
             <Breadcrumbs />
          </Flex>

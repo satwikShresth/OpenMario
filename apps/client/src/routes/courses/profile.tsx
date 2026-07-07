@@ -274,7 +274,7 @@ function RouteComponent() {
 
   return (
     <>
-      <Courses.Root maxW='5xl'>
+      <Courses.Root>
         <Flex justify='space-between' align='center' wrap='wrap' gap={3}>
           <HStack gap={3}>
             <Courses.PageHeader title='Course Profile' />

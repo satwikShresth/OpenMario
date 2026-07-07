@@ -29,7 +29,7 @@ export default ({ course_id }: PreReqProps) => {
    if (prereqPending || coreqPending) return null;
 
    return (
-      <VStack width='full' gap={4} align='stretch'>
+      <VStack width='full' gap={{ base: 4, md: 5 }} align='stretch'>
          {/* Prerequisites Section */}
          {(prereqData?.prerequisites?.length! > 0)
             ? (
@@ -37,12 +37,12 @@ export default ({ course_id }: PreReqProps) => {
                   width='full'
                   borderRadius='lg'
                   borderWidth='thin'
-                  p={{ base: 2, md: 3 }}
+                  p={{ base: 3, md: 4 }}
                   align='center'
                   gap={3}
                >
                   <Text
-                     fontSize={{ base: 'md', md: 'lg' }}
+                     fontSize={{ base: 'lg', md: 'xl' }}
                      fontWeight='medium'
                   >
                      Prerequisite:
@@ -96,7 +96,7 @@ export default ({ course_id }: PreReqProps) => {
                                                       <VStack align='start' gap={2}>
                                                          <Text
                                                             fontWeight='semibold'
-                                                            fontSize='sm'
+                                                            fontSize='md'
                                                          >
                                                             {`${preReq.subjectId} ${preReq.courseNumber}: ${preReq.name}`}
                                                          </Text>
@@ -137,12 +137,12 @@ export default ({ course_id }: PreReqProps) => {
                   width='full'
                   borderRadius='lg'
                   borderWidth='thin'
-                  p={{ base: 2, md: 3 }}
+                  p={{ base: 3, md: 4 }}
                   align='center'
                   gap={3}
                >
                   <Text
-                     fontSize={{ base: 'md', md: 'lg' }}
+                     fontSize={{ base: 'lg', md: 'xl' }}
                      fontWeight='medium'
                   >
                      Corequisite:

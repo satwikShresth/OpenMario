@@ -1,4 +1,4 @@
-import { Image, Box, Card as CCard, Flex, Text } from '@chakra-ui/react';
+import { Box, Card as CCard, Flex, Grid, Text } from '@chakra-ui/react';
 import { Tooltip } from '@/components/ui/tooltip';
 import { WarningIcon } from '@/components/icons';
 import type { CompanyListItem } from './types';
@@ -10,75 +10,124 @@ const omegaMeta = (score: number | null) => {
    return { color: 'red.500', label: `${score}` };
 };
 
-function ScorePill({ label, value }: { label: string; value: number | null }) {
-   return (
-      <Box textAlign='center'>
-         <Text fontSize={{ base: 'md', md: 'sm' }} fontWeight='semibold' color={value == null ? 'fg.subtle' : 'fg'}>
-            {value != null ? `${value}%` : '—'}
-         </Text>
-         <Text fontSize={{ base: 'sm', md: 'xs' }} color='fg.muted' whiteSpace='nowrap'>{label}</Text>
-      </Box>
-   );
+const DIMENSIONS: {
+   key: keyof Pick<
+      CompanyListItem,
+      | 'satisfaction_score'
+      | 'trust_score'
+      | 'integrity_score'
+      | 'growth_score'
+      | 'work_life_score'
+   >;
+   label: string;
+}[] = [
+   { key: 'satisfaction_score', label: 'Satisfaction' },
+   { key: 'trust_score', label: 'Trust' },
+   { key: 'integrity_score', label: 'Integrity' },
+   { key: 'growth_score', label: 'Growth' },
+   { key: 'work_life_score', label: 'Work-life' },
+];
+
+function fmtPct(v: number | null) {
+   return v != null ? `${v}%` : '—';
 }
 
 export function Card({ company, onClick }: { company: CompanyListItem; onClick: () => void }) {
    const omega = omegaMeta(company.omega_score);
+
    return (
       <CCard.Root
          variant='outline'
-         borderRadius='xl'
+         borderRadius='md'
          cursor='pointer'
          onClick={onClick}
-         _hover={{ boxShadow: 'lg', borderColor: 'border.emphasized', transform: 'translate(-2px, -2px)' }}
-         transition='transform 120ms ease, box-shadow 120ms ease, border-color 120ms ease'
+         borderColor='border.subtle'
+         w='full'
+         boxShadow='none'
+         _hover={{
+            borderColor: 'border.emphasized',
+            transform: 'none',
+            boxShadow: 'none',
+         }}
+         transition='border-color 120ms ease'
       >
-         <CCard.Body py={4} px={5}>
-            <Flex align='center' gap={5}>
-               {/* Omega score */}
+         <CCard.Body
+            py={{ base: 4, md: 5 }}
+            pl={{ base: 7, md: 9 }}
+            pr={{ base: 5, md: 6 }}
+         >
+            <Flex align='center' gap={{ base: 4, md: 5 }} minH={{ base: 'auto', md: '56px' }}>
+               {/* Ω score */}
                <Flex
                   direction='column'
                   align='center'
                   justify='center'
                   flexShrink={0}
-                  gap={0.5}
+                  w={{ base: '44px', sm: '52px' }}
                   position='relative'
-                  w={{ base: '72px', md: '56px' }}
                >
-                  <Text fontSize={{ base: '3xl', md: 'xl' }} fontWeight='bold' color={omega.color} lineHeight='1'>
+                  <Text
+                     fontSize={{ base: '2xl', md: '3xl' }}
+                     fontWeight='bold'
+                     color={omega.color}
+                     lineHeight='1'
+                     fontVariantNumeric='tabular-nums'
+                  >
                      {omega.label}
                   </Text>
-                  <Image src='/omegascore-logo.png' alt='OMΩ' h={{ base: '18px', md: '14px' }} />
+                  <Text fontSize='xs' color='fg.muted' mt={0.5} letterSpacing='0.08em'>
+                     OMΩ
+                  </Text>
                   {company.total_reviews < 5 && (
                      <Tooltip content='Limited data — omΩ score is based on fewer than 5 reviews and may not be representative'>
-                        <Box position='absolute' top='-6px' right='-8px' color='orange.400' cursor='help'>
-                           <WarningIcon size={12} />
+                        <Box position='absolute' top='-4px' right='-6px' color='orange.400' cursor='help'>
+                           <WarningIcon size={10} />
                         </Box>
                      </Tooltip>
                   )}
                </Flex>
 
-               {/* Main content */}
-               <Flex direction='column' flex={1} minW={0} gap={2}>
-                  {/* Name + meta */}
-                  <Flex align='baseline' gap={3} wrap='wrap'>
-                     <Text fontSize={{ base: 'xl', md: 'md' }} fontWeight='semibold' lineClamp={1} minW={0}>
+               <Box borderLeftWidth='1px' borderColor='border.subtle' alignSelf='stretch' flexShrink={0} />
+
+               <Flex direction='column' flex={1} minW={0} gap={3}>
+                  <Box minW={0}>
+                     <Text fontSize={{ base: 'md', md: 'lg' }} fontWeight='semibold' lineClamp={1}>
                         {company.company_name}
                      </Text>
-                     <Text fontSize={{ base: 'md', md: 'xs' }} color='fg.muted' flexShrink={0}>
-                        {company.total_reviews} {company.total_reviews === 1 ? 'review' : 'reviews'}
-                        {' · '}
-                        {company.positions_reviewed} {company.positions_reviewed === 1 ? 'position' : 'positions'}
+                     <Text fontSize='xs' color='fg.muted'>
+                        {company.total_reviews} reviews · {company.positions_reviewed} positions
                      </Text>
-                  </Flex>
+                  </Box>
 
-                  {/* Score pills */}
-                  <Flex gap={{ base: 5, md: 4 }} align='center' wrap='wrap'>
-                     <ScorePill label='Satisfaction' value={company.satisfaction_score} />
-                     <ScorePill label='Trust' value={company.trust_score} />
-                     <ScorePill label='Integrity' value={company.integrity_score} />
-                     <ScorePill label='Growth' value={company.growth_score} />
-                     <ScorePill label='Work-Life' value={company.work_life_score} />
-                  </Flex>
+                  <Grid
+                     as='ul'
+                     templateColumns={{ base: 'repeat(2, minmax(0, 1fr))', sm: 'repeat(3, minmax(0, 1fr))', md: 'repeat(5, minmax(0, 1fr))' }}
+                     gap={{ base: 3, md: 4 }}
+                     listStyleType='none'
+                     m={0}
+                     p={0}
+                     w='full'
+                  >
+                     {DIMENSIONS.map(({ key, label }) => {
+                        const value = company[key];
+                        return (
+                           <Flex key={key} as='li' direction='column' minW={0}>
+                              <Text fontSize='xs' color='fg.subtle' fontWeight='medium' lineClamp={1}>
+                                 {label}
+                              </Text>
+                              <Text
+                                 fontSize='sm'
+                                 fontWeight='semibold'
+                                 color={value == null ? 'fg.subtle' : 'fg'}
+                                 fontVariantNumeric='tabular-nums'
+                                 lineHeight='1.3'
+                              >
+                                 {fmtPct(value)}
+                              </Text>
+                           </Flex>
+                        );
+                     })}
+                  </Grid>
                </Flex>
             </Flex>
          </CCard.Body>

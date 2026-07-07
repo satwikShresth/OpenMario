@@ -16,6 +16,8 @@
       "dev": "bun run --env-file=.env turbo run dev",
       "client:build": "bun run --filter '@openmario/client' build",
       "client:dev": "bun run --filter '@openmario/client' dev",
+      "client-new:build": "bun run --filter '@openmario/client-new' build",
+      "client-new:dev": "bun run --filter '@openmario/client-new' dev",
       "server:build": "bun run --filter '@openmario/server' build",
       "server:start": "bun run --filter '@openmario/server' start",
       "build": "bun x turbo run build --ui stream",

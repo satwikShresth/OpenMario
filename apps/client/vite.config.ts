@@ -1,38 +1,30 @@
-import { defineConfig } from 'vite';
-import viteReact from '@vitejs/plugin-react';
+import babel from '@rolldown/plugin-babel';
+import { devtools } from '@tanstack/devtools-vite';
 import tailwindcss from '@tailwindcss/vite';
-import tsconfigPaths from 'vite-tsconfig-paths';
+import viteReact, { reactCompilerPreset } from '@vitejs/plugin-react';
+import { defineConfig } from 'vite';
 
 import { tanstackRouter } from '@tanstack/router-plugin/vite';
-import { fileURLToPath, URL } from 'node:url';
-import { fastRefreshPolyfill } from './plugins';
 
 // https://vitejs.dev/config/
 export default defineConfig({
+   server: {
+    port: 5173,
+   },
    plugins: [
-      fastRefreshPolyfill(),
-      // devtools(),
+      devtools(),
+      tailwindcss(),
       tanstackRouter({
          target: 'react',
          autoCodeSplitting: true
       }),
-      viteReact({
-         jsxRuntime: 'automatic',
-         babel: {
-            plugins: [
-               ['babel-plugin-react-compiler', {}],
-               '@babel/plugin-transform-react-display-name'
-            ]
-         }
+      viteReact(),
+      babel({
+         presets: [reactCompilerPreset()],
+         plugins: ['@babel/plugin-transform-react-display-name']
       }),
-      tsconfigPaths({
-         projects: ['./tsconfig.json']
-      }),
-      tailwindcss()
    ],
    resolve: {
-      alias: {
-         '@': fileURLToPath(new URL('./src', import.meta.url))
-      }
+      tsconfigPaths: true
    }
 });

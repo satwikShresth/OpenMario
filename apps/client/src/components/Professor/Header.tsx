@@ -30,8 +30,8 @@ export function Header() {
    if (isLoading || !prof) {
       return (
          <VStack align='stretch' gap={3}>
-            <Skeleton height='36px' width='300px' />
-            <Skeleton height='20px' width='200px' />
+            <Skeleton height='44px' width='min(100%, 320px)' />
+            <Skeleton height='24px' width='220px' />
          </VStack>
       );
    }
@@ -41,19 +41,21 @@ export function Header() {
             <Text fontSize={{ base: '2xl', md: '3xl' }} fontWeight='bold' lineHeight='1.2'>
                {prof.name}
             </Text>
-            <Text fontSize='md' color='fg.muted' mt={1}>{prof.department ?? 'Unknown Department'}</Text>
+            <Text fontSize={{ base: 'md', md: 'lg' }} color='fg.muted' mt={1}>
+               {prof.department ?? 'Unknown Department'}
+            </Text>
             <HStack gap={2} mt={3} flexWrap='wrap'>
                {prof.avg_rating != null && (
-                  <Badge colorPalette={ratingColor(prof.avg_rating)} variant='subtle' px={3} py={1}>
+                  <Badge colorPalette={ratingColor(prof.avg_rating)} variant='subtle' px={3} py={1.5}>
                      <HStack gap={1}>
-                        <StarIcon size={13} />
-                        <Text>{prof.avg_rating} / 5 rating</Text>
+                        <StarIcon size={14} />
+                        <Text fontSize='sm'>{prof.avg_rating} / 5 rating</Text>
                      </HStack>
                   </Badge>
                )}
                {prof.avg_difficulty != null && (
-                  <Badge colorPalette={difficultyColor(prof.avg_difficulty)} variant='subtle' px={3} py={1}>
-                     Difficulty: {prof.avg_difficulty} / 5
+                  <Badge colorPalette={difficultyColor(prof.avg_difficulty)} variant='subtle' px={3} py={1.5}>
+                     <Text fontSize='sm'>Difficulty: {prof.avg_difficulty} / 5</Text>
                   </Badge>
                )}
                {prof.rmp_legacy_id != null && (
@@ -63,10 +65,10 @@ export function Header() {
                      rel='noopener noreferrer'
                      style={{ textDecoration: 'none' }}
                   >
-                     <Badge variant='outline' px={3} py={1} cursor='pointer'>
+                     <Badge variant='outline' px={3} py={1.5} cursor='pointer'>
                         <HStack gap={1}>
-                           <Text>Rate My Professors</Text>
-                           <ExternalLinkIcon size={12} />
+                           <Text fontSize='sm'>Rate My Professors</Text>
+                           <ExternalLinkIcon size={13} />
                         </HStack>
                      </Badge>
                   </a>
@@ -74,11 +76,27 @@ export function Header() {
             </HStack>
          </Box>
          {prof.avg_rating != null && (
-            <Box textAlign='center' p={4} borderRadius='xl' borderWidth='2px' borderColor='border' minW='100px' boxShadow='sm'>
-               <Text fontSize='3xl' fontWeight='extrabold' color={ratingHex(prof.avg_rating)} lineHeight='1'>
+            <Box
+               textAlign='center'
+               p={{ base: 4, md: 5 }}
+               borderRadius='xl'
+               borderWidth='2px'
+               borderColor='border'
+               minW='112px'
+               boxShadow='sm'
+            >
+               <Text
+                  fontSize={{ base: '3xl', md: '4xl' }}
+                  fontWeight='extrabold'
+                  color={ratingHex(prof.avg_rating)}
+                  lineHeight='1'
+                  fontVariantNumeric='tabular-nums'
+               >
                   {prof.avg_rating}
                </Text>
-               <Text fontSize='xs' color='fg.muted' letterSpacing='widest' mt={1}>/ 5 RATING</Text>
+               <Text fontSize='sm' color='fg.muted' letterSpacing='widest' mt={1.5}>
+                  / 5 RATING
+               </Text>
             </Box>
          )}
       </Flex>

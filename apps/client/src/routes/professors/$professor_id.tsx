@@ -41,7 +41,7 @@ function ProfessorPage() {
    }, [profileQuery.data, allSections, isLoading, cutoff]);
 
    return (
-      <Professor.Root maxW='5xl'>
+      <Professor.Root gap={8}>
          <Professor.Header />
          <Separator />
          <Professor.StatsGrid />

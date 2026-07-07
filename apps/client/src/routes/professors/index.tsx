@@ -32,7 +32,7 @@ function ProfessorsSearch() {
    return (
       <Index indexName={INDEX_NAMES.professors}>
          <Configure hitsPerPage={20} />
-         <Flex direction='column' gap={4}>
+         <Flex direction='column' gap={4} w='full' minW={0}>
             {/* Search header */}
             <Flex
                direction={{ base: 'column', sm: 'row' }}
@@ -58,8 +58,8 @@ function ProfessorsSearch() {
             {/* Main content */}
             <Flex
                direction={{ base: 'column', lg: 'row' }}
-               flex='1'
-               width='full'
+               w='full'
+               minW={0}
                gap={{ base: 4, md: 5 }}
                align='stretch'
             >

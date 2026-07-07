@@ -33,7 +33,7 @@ export function Cards() {
    }, []);
 
    return (
-      <VStack gap={3} align='stretch'>
+      <VStack gap={2} align='stretch'>
          {items.map(prof => (
             <ProfessorCard
                key={prof.id}

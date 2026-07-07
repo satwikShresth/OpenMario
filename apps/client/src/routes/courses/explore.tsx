@@ -77,9 +77,8 @@ export const Route = createFileRoute('/courses/explore')({
         <Flex
           gap={{ base: 3, md: 4 }}
           direction='column'
-          minHeight='0'
-          width='full'
-          flex='1'
+          w='full'
+          minW={0}
         >
           {/* Search Header */}
           <Flex
@@ -112,9 +111,8 @@ export const Route = createFileRoute('/courses/explore')({
           {/* Main Content Area */}
           <Flex
             direction={{ base: 'column', lg: 'row' }}
-            flex='1'
-            width='full'
-            minHeight='0'
+            w='full'
+            minW={0}
             gap={{ base: 4, md: 5 }}
             align='stretch'
           >
@@ -140,7 +138,7 @@ export const Route = createFileRoute('/courses/explore')({
               )}
 
               {isMobile && <Stats />}
-              <Box flex='1' minHeight='0' overflowY='auto'>
+              <Box width='full'>
                 <Configure hitsPerPage={10} />
                 <Search.Courses.Cards />
               </Box>
@@ -182,7 +180,7 @@ const ToggleFav = () => {
       <Button
         variant={showFavorites ? 'solid' : 'outline'}
         colorPalette='pink'
-        size='sm'
+        size='md'
         disabled={likedSections.length < 1}
         onClick={() => handleToggle(!showFavorites)}
         flexShrink={0}

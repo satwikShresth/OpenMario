@@ -20,14 +20,20 @@ export function InstructionMethods() {
    if (methodBreakdown.length <= 1) return null;
 
    return (
-      <Box borderWidth='thin' borderRadius='xl' p={4}>
-         <Text fontWeight='semibold' mb={3}>Instruction Methods</Text>
+      <Box borderWidth='thin' borderRadius='xl' p={{ base: 4, md: 5 }}>
+         <Text fontWeight='semibold' fontSize={{ base: 'md', md: 'lg' }} mb={4}>
+            Instruction Methods
+         </Text>
          <HStack gap={3} wrap='wrap'>
             {methodBreakdown.map(({ method, count }) => (
-               <Card.Root key={method} variant='outline' size='sm' borderRadius='lg' minW='120px'>
-                  <Card.Body p={3} textAlign='center'>
-                     <Text fontWeight='semibold' fontSize='lg'>{count}</Text>
-                     <Text fontSize='xs' color='fg.muted'>{method}</Text>
+               <Card.Root key={method} variant='outline' size='sm' borderRadius='lg' minW='128px'>
+                  <Card.Body p={4} textAlign='center'>
+                     <Text fontWeight='semibold' fontSize='xl'>
+                        {count}
+                     </Text>
+                     <Text fontSize='sm' color='fg.muted' lineClamp={2}>
+                        {method}
+                     </Text>
                   </Card.Body>
                </Card.Root>
             ))}
