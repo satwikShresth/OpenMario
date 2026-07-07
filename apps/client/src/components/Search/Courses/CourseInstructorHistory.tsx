@@ -15,6 +15,7 @@ import {
    VStack,
 } from '@chakra-ui/react';
 import { useQuery } from '@tanstack/react-query';
+import { Link } from '@tanstack/react-router';
 import { orpc } from '@/helpers';
 import { Tag } from '@/components/ui';
 import { getDifficultyColor, getRatingColor } from './helpers';
@@ -199,7 +200,18 @@ export default function CourseInstructorHistory({ course_id }: Props) {
                      {(r: InstructorRow) => (
                         <Table.Row key={`${r.year}-${r.termSuffix}-${r.instructor?.id ?? 'tba'}`}>
                            <Table.Cell fontWeight='medium' maxW='36' truncate>
-                              {r.instructor?.name ?? (
+                              {r.instructor?.id ? (
+                                 <Link
+                                    to='/professors/$professor_id'
+                                    params={{ professor_id: String(r.instructor.id) }}
+                                 >
+                                    <Text _hover={{ textDecoration: 'underline' }}>
+                                       {r.instructor.name}
+                                    </Text>
+                                 </Link>
+                              ) : r.instructor?.name ? (
+                                 <Text>{r.instructor.name}</Text>
+                              ) : (
                                  <Text color='gray.400' fontStyle='italic'>TBA</Text>
                               )}
                            </Table.Cell>

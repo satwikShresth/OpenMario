@@ -1,5 +1,6 @@
 import type { MeiliSearch } from 'meilisearch';
-import { db, meiliCompaniesIdx } from '@openmario/db';
+import { meiliCompaniesIdx } from '@openmario/db';
+import { db } from '../db';
 import type { CompanyDocument } from '@/types';
 
 const BATCH_SIZE = 500;

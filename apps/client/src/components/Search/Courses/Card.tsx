@@ -264,14 +264,31 @@ export const Card = ({ section }: { section: Section }) => {
                                  height='fit-content'
                                  p={isMobile ? 2 : undefined}
                               >
-                                 <Text
-                                    fontSize={{ base: 'lg', md: 'xl' }}
-                                    fontWeight='medium'
-                                    p={1}
-                                    mb={{ base: 2, md: 0 }}
-                                 >
-                                    {instructor.name}
-                                 </Text>
+                                 {instructor.id ? (
+                                    <Link
+                                       to='/professors/$professor_id'
+                                       params={{ professor_id: String(instructor.id) }}
+                                    >
+                                       <Text
+                                          _hover={{ textDecoration: 'underline' }}
+                                          fontSize={{ base: 'lg', md: 'xl' }}
+                                          fontWeight='medium'
+                                          p={1}
+                                          mb={{ base: 2, md: 0 }}
+                                       >
+                                          {instructor.name}
+                                       </Text>
+                                    </Link>
+                                 ) : (
+                                    <Text
+                                       fontSize={{ base: 'lg', md: 'xl' }}
+                                       fontWeight='medium'
+                                       p={1}
+                                       mb={{ base: 2, md: 0 }}
+                                    >
+                                       {instructor.name}
+                                    </Text>
+                                 )}
 
                                  <Flex
                                     wrap='wrap'

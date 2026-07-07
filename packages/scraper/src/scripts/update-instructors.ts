@@ -6,9 +6,11 @@
  */
 
 import { eq } from 'drizzle-orm';
-import { db, instructor } from '@openmario/db';
+import { connectDb, instructor } from '@openmario/db';
 import { env } from '@env';
 import { searchSchools, getProfessorRating } from '../rmp';
+
+const db = connectDb(env.DATABASE_URL);
 
 const RMP_SCHOOL_NAME = env.RMP_SCHOOL_NAME;
 const RMP_DELAY_MS = env.RMP_DELAY_MS;
