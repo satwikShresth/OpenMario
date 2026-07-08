@@ -1,6 +1,7 @@
 import companies from './seeds/companies.ts';
 import professors from './seeds/professors.ts';
 import sections from './seeds/sections.ts';
+import submissions from './seeds/submissions.ts';
 import { join } from 'node:path';
 import { migrateAndSeed } from './lib/migrate-and-seed.ts';
 import { meilisearchService } from './services/meilisearch.service.ts';
@@ -24,6 +25,11 @@ const indexes = {
       name: 'sections',
       config: join(root, 'indexes/sections.json'),
       seeder: sections
+   },
+   submissions: {
+      name: 'submissions',
+      config: join(root, 'indexes/submissions.json'),
+      seeder: submissions
    }
 } as const;
 
@@ -36,7 +42,7 @@ const runs =
 
 if (runs.length === 0) {
    throw new Error(
-      `Unknown seed mode "${mode}". Use: all | courses | companies | professors | sections`
+      `Unknown seed mode "${mode}". Use: all | courses | companies | professors | sections | submissions`
    );
 }
 

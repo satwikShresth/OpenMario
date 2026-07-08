@@ -1,5 +1,5 @@
 {
-  "id": "c0ce0779-9874-4e6f-b072-fe2d8160ccea",
+  "id": "50f0796a-81a7-436e-a253-8384d5fcc080",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -2091,19 +2091,19 @@
           "primaryKey": false,
           "notNull": true
         },
-        "section_crn": {
-          "name": "section_crn",
-          "type": "integer",
+        "section_id": {
+          "name": "section_id",
+          "type": "uuid",
           "primaryKey": false,
           "notNull": true
         }
       },
       "indexes": {
-        "instructor_sections_section_crn_index": {
-          "name": "instructor_sections_section_crn_index",
+        "instructor_sections_section_id_index": {
+          "name": "instructor_sections_section_id_index",
           "columns": [
             {
-              "expression": "section_crn",
+              "expression": "section_id",
               "isExpression": false,
               "asc": true,
               "nulls": "last"
@@ -2129,26 +2129,26 @@
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
-        "instructor_sections_section_crn_section_crn_fk": {
-          "name": "instructor_sections_section_crn_section_crn_fk",
+        "instructor_sections_section_id_section_id_fk": {
+          "name": "instructor_sections_section_id_section_id_fk",
           "tableFrom": "instructor_sections",
           "tableTo": "section",
           "columnsFrom": [
-            "section_crn"
+            "section_id"
           ],
           "columnsTo": [
-            "crn"
+            "id"
           ],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
       },
       "compositePrimaryKeys": {
-        "instructor_sections_instructor_id_section_crn_pk": {
-          "name": "instructor_sections_instructor_id_section_crn_pk",
+        "instructor_sections_instructor_id_section_id_pk": {
+          "name": "instructor_sections_instructor_id_section_id_pk",
           "columns": [
             "instructor_id",
-            "section_crn"
+            "section_id"
           ]
         }
       },
@@ -2161,10 +2161,17 @@
       "name": "section",
       "schema": "",
       "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
         "crn": {
           "name": "crn",
           "type": "integer",
-          "primaryKey": true,
+          "primaryKey": false,
           "notNull": true
         },
         "course_id": {
@@ -2229,6 +2236,21 @@
         }
       },
       "indexes": {
+        "section_crn_index": {
+          "name": "section_crn_index",
+          "columns": [
+            {
+              "expression": "crn",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
         "section_course_id_index": {
           "name": "section_course_id_index",
           "columns": [
@@ -2317,7 +2339,16 @@
         }
       },
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
+      "uniqueConstraints": {
+        "section_crn_term_id_unique": {
+          "name": "section_crn_term_id_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "crn",
+            "term_id"
+          ]
+        }
+      },
       "policies": {},
       "checkConstraints": {},
       "isRLSEnabled": false
@@ -2326,9 +2357,9 @@
       "name": "section_days",
       "schema": "",
       "columns": {
-        "section_crn": {
-          "name": "section_crn",
-          "type": "integer",
+        "section_id": {
+          "name": "section_id",
+          "type": "uuid",
           "primaryKey": false,
           "notNull": true
         },
@@ -2342,25 +2373,25 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "section_days_section_crn_section_crn_fk": {
-          "name": "section_days_section_crn_section_crn_fk",
+        "section_days_section_id_section_id_fk": {
+          "name": "section_days_section_id_section_id_fk",
           "tableFrom": "section_days",
           "tableTo": "section",
           "columnsFrom": [
-            "section_crn"
+            "section_id"
           ],
           "columnsTo": [
-            "crn"
+            "id"
           ],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
       },
       "compositePrimaryKeys": {
-        "section_days_section_crn_day_pk": {
-          "name": "section_days_section_crn_day_pk",
+        "section_days_section_id_day_pk": {
+          "name": "section_days_section_id_day_pk",
           "columns": [
-            "section_crn",
+            "section_id",
             "day"
           ]
         }
@@ -2649,7 +2680,7 @@
     },
     "public.instructor_sections_m_view": {
       "columns": {},
-      "definition": "select \"instructor\".\"id\" as \"instructor_id\", \"instructor\".\"name\" as \"instructor_name\", \"section\".\"crn\" as \"section_crn\", \"section\".\"term_id\" as \"term_id\", \"section\".\"subject_code\" as \"subject_code\", \"section\".\"course_number\" as \"course_number\", \"course\".\"title\" as \"course_title\", \"section\".\"section\" as \"section_code\", \"section\".\"instruction_method\" as \"instruction_method\", \"section\".\"instruction_type\" as \"instruction_type\" from \"instructor\" inner join \"instructor_sections\" on \"instructor_sections\".\"instructor_id\" = \"instructor\".\"id\" inner join \"section\" on \"section\".\"crn\" = \"instructor_sections\".\"section_crn\" inner join \"course\" on \"course\".\"id\" = \"section\".\"course_id\" inner join \"subject\" on \"subject\".\"id\" = \"section\".\"subject_code\"",
+      "definition": "select \"instructor\".\"id\" as \"instructor_id\", \"instructor\".\"name\" as \"instructor_name\", \"section\".\"crn\" as \"section_crn\", \"section\".\"term_id\" as \"term_id\", \"section\".\"subject_code\" as \"subject_code\", \"section\".\"course_number\" as \"course_number\", \"course\".\"title\" as \"course_title\", \"section\".\"section\" as \"section_code\", \"section\".\"instruction_method\" as \"instruction_method\", \"section\".\"instruction_type\" as \"instruction_type\" from \"instructor\" inner join \"instructor_sections\" on \"instructor_sections\".\"instructor_id\" = \"instructor\".\"id\" inner join \"section\" on \"section\".\"id\" = \"instructor_sections\".\"section_id\" inner join \"course\" on \"course\".\"id\" = \"section\".\"course_id\" inner join \"subject\" on \"subject\".\"id\" = \"section\".\"subject_code\"",
       "name": "instructor_sections_m_view",
       "schema": "public",
       "isExisting": false,
@@ -2802,7 +2833,7 @@
     },
     "public.meili_professors_m_idx": {
       "columns": {},
-      "definition": "select \"instructor\".\"id\" as \"id\", \"instructor\".\"name\" as \"name\", \"instructor\".\"department\" as \"department\", \"instructor\".\"avg_rating\" as \"avg_rating\", \"instructor\".\"avg_difficulty\" as \"avg_difficulty\", \"instructor\".\"num_ratings\" as \"num_ratings\", \"instructor\".\"rmp_id\" as \"rmp_id\", \"instructor\".\"rmp_legacy_id\" as \"rmp_legacy_id\", \"instructor\".\"num_ratings\" * \"instructor\".\"avg_rating\" as \"weighted_score\", count(distinct \"section\".\"crn\") as \"total_sections_taught\", count(distinct \"course\".\"id\") as \"total_courses_taught\", count(distinct \"section\".\"term_id\") as \"total_terms_active\", max(\"section\".\"term_id\") as \"most_recent_term\", array_agg(distinct \"subject\".\"id\") as \"subjects_taught\", array_agg(distinct \"section\".\"instruction_method\") as \"instruction_methods\", coalesce(\n            json_agg(distinct jsonb_build_object(\n               'code', \"subject\".\"id\" || ' ' || \"section\".\"course_number\",\n               'title', \"course\".\"title\"\n            )) filter (where \"course\".\"id\" is not null),\n            '[]'\n         ) as \"courses_taught\" from \"instructor\" left join \"instructor_sections\" on \"instructor_sections\".\"instructor_id\" = \"instructor\".\"id\" left join \"section\" on \"section\".\"crn\" = \"instructor_sections\".\"section_crn\" left join \"course\" on \"course\".\"id\" = \"section\".\"course_id\" left join \"subject\" on \"subject\".\"id\" = \"section\".\"subject_code\" group by \"instructor\".\"id\", \"instructor\".\"name\", \"instructor\".\"department\", \"instructor\".\"avg_rating\", \"instructor\".\"avg_difficulty\", \"instructor\".\"num_ratings\", \"instructor\".\"rmp_id\", \"instructor\".\"rmp_legacy_id\"",
+      "definition": "select \"instructor\".\"id\" as \"id\", \"instructor\".\"name\" as \"name\", \"instructor\".\"department\" as \"department\", \"instructor\".\"avg_rating\" as \"avg_rating\", \"instructor\".\"avg_difficulty\" as \"avg_difficulty\", \"instructor\".\"num_ratings\" as \"num_ratings\", \"instructor\".\"rmp_id\" as \"rmp_id\", \"instructor\".\"rmp_legacy_id\" as \"rmp_legacy_id\", \"instructor\".\"num_ratings\" * \"instructor\".\"avg_rating\" as \"weighted_score\", count(distinct \"section\".\"crn\") as \"total_sections_taught\", count(distinct \"course\".\"id\") as \"total_courses_taught\", count(distinct \"section\".\"term_id\") as \"total_terms_active\", max(\"section\".\"term_id\") as \"most_recent_term\", array_agg(distinct \"subject\".\"id\") as \"subjects_taught\", array_agg(distinct \"section\".\"instruction_method\") as \"instruction_methods\", coalesce(\n            json_agg(distinct jsonb_build_object(\n               'code', \"subject\".\"id\" || ' ' || \"section\".\"course_number\",\n               'title', \"course\".\"title\"\n            )) filter (where \"course\".\"id\" is not null),\n            '[]'\n         ) as \"courses_taught\" from \"instructor\" left join \"instructor_sections\" on \"instructor_sections\".\"instructor_id\" = \"instructor\".\"id\" left join \"section\" on \"section\".\"id\" = \"instructor_sections\".\"section_id\" left join \"course\" on \"course\".\"id\" = \"section\".\"course_id\" left join \"subject\" on \"subject\".\"id\" = \"section\".\"subject_code\" group by \"instructor\".\"id\", \"instructor\".\"name\", \"instructor\".\"department\", \"instructor\".\"avg_rating\", \"instructor\".\"avg_difficulty\", \"instructor\".\"num_ratings\", \"instructor\".\"rmp_id\", \"instructor\".\"rmp_legacy_id\"",
       "name": "meili_professors_m_idx",
       "schema": "public",
       "isExisting": false,
@@ -2810,7 +2841,7 @@
     },
     "public.meili_sections_m_idx": {
       "columns": {},
-      "definition": "select \"section\".\"crn\" as \"crn\", \"section\".\"section\" as \"section\", \"section\".\"course_number\" as \"course_number\", \"section\".\"instruction_type\" as \"instruction_type\", \"section\".\"instruction_method\" as \"instruction_method\", \"course\".\"credits\" as \"credits\", \"section\".\"max_enroll\" as \"max_enroll\", \"section\".\"start_time\" as \"start_time\", \"section\".\"end_time\" as \"end_time\", coalesce(\n            array_agg(distinct \"section_days\".\"day\"::text) filter (where \"section_days\".\"day\" is not null),\n            '{}'\n         ) as \"days\", \"section\".\"term_id\"::text as \"term\", \"subject\".\"id\" || ' ' || \"section\".\"course_number\" as \"course\", \"course\".\"title\" as \"title\", \"course\".\"description\" as \"description\", \"course\".\"restrictions\" as \"restrictions\", \"course\".\"repeat_status\" as \"repeat_status\", \"course\".\"writing_intensive\" as \"writing_intensive\", \"subject\".\"id\" as \"subject_id\", \"subject\".\"name\" as \"subject_name\", \"college\".\"id\" as \"college_id\", \"college\".\"name\" as \"college_name\", \"course\".\"id\" as \"course_id\", coalesce(\n            json_agg(\n               distinct jsonb_build_object(\n                  'id',             \"instructor\".\"id\",\n                  'name',           \"instructor\".\"name\",\n                  'department',     \"instructor\".\"department\",\n                  'avg_rating',     \"instructor\".\"avg_rating\"::float,\n                  'avg_difficulty', \"instructor\".\"avg_difficulty\"::float,\n                  'num_ratings',    \"instructor\".\"num_ratings\",\n                  'rmp_id',         \"instructor\".\"rmp_id\",\n                  'rmp_legacy_id',  \"instructor\".\"rmp_legacy_id\",\n                  'weighted_score', (\"instructor\".\"num_ratings\" * \"instructor\".\"avg_rating\"::float)\n               )\n            ) filter (where \"instructor\".\"id\" is not null),\n            '[]'\n         ) as \"instructors\" from \"section\" inner join \"course\" on \"course\".\"id\" = \"section\".\"course_id\" inner join \"subject\" on \"subject\".\"id\" = \"section\".\"subject_code\" inner join \"college\" on \"college\".\"id\" = \"subject\".\"college_id\" inner join \"term\" on \"term\".\"id\" = \"section\".\"term_id\" left join \"section_days\" on \"section_days\".\"section_crn\" = \"section\".\"crn\" left join \"instructor_sections\" on \"instructor_sections\".\"section_crn\" = \"section\".\"crn\" left join \"instructor\" on \"instructor\".\"id\" = \"instructor_sections\".\"instructor_id\" group by \"section\".\"crn\", \"section\".\"section\", \"section\".\"course_number\", \"section\".\"instruction_type\", \"section\".\"instruction_method\", \"section\".\"max_enroll\", \"section\".\"start_time\", \"section\".\"end_time\", \"section\".\"term_id\", \"course\".\"id\", \"course\".\"title\", \"course\".\"description\", \"course\".\"credits\", \"course\".\"restrictions\", \"course\".\"repeat_status\", \"course\".\"writing_intensive\", \"subject\".\"id\", \"subject\".\"name\", \"college\".\"id\", \"college\".\"name\"",
+      "definition": "select \"section\".\"crn\" as \"crn\", \"section\".\"section\" as \"section\", \"section\".\"course_number\" as \"course_number\", \"section\".\"instruction_type\" as \"instruction_type\", \"section\".\"instruction_method\" as \"instruction_method\", \"course\".\"credits\" as \"credits\", \"section\".\"max_enroll\" as \"max_enroll\", \"section\".\"start_time\" as \"start_time\", \"section\".\"end_time\" as \"end_time\", coalesce(\n            array_agg(distinct \"section_days\".\"day\"::text) filter (where \"section_days\".\"day\" is not null),\n            '{}'\n         ) as \"days\", \"section\".\"term_id\"::text as \"term\", \"subject\".\"id\" || ' ' || \"section\".\"course_number\" as \"course\", \"course\".\"title\" as \"title\", \"course\".\"description\" as \"description\", \"course\".\"restrictions\" as \"restrictions\", \"course\".\"repeat_status\" as \"repeat_status\", \"course\".\"writing_intensive\" as \"writing_intensive\", \"subject\".\"id\" as \"subject_id\", \"subject\".\"name\" as \"subject_name\", \"college\".\"id\" as \"college_id\", \"college\".\"name\" as \"college_name\", \"course\".\"id\" as \"course_id\", coalesce(\n            json_agg(\n               distinct jsonb_build_object(\n                  'id',             \"instructor\".\"id\",\n                  'name',           \"instructor\".\"name\",\n                  'department',     \"instructor\".\"department\",\n                  'avg_rating',     \"instructor\".\"avg_rating\"::float,\n                  'avg_difficulty', \"instructor\".\"avg_difficulty\"::float,\n                  'num_ratings',    \"instructor\".\"num_ratings\",\n                  'rmp_id',         \"instructor\".\"rmp_id\",\n                  'rmp_legacy_id',  \"instructor\".\"rmp_legacy_id\",\n                  'weighted_score', (\"instructor\".\"num_ratings\" * \"instructor\".\"avg_rating\"::float)\n               )\n            ) filter (where \"instructor\".\"id\" is not null),\n            '[]'\n         ) as \"instructors\" from \"section\" inner join \"course\" on \"course\".\"id\" = \"section\".\"course_id\" inner join \"subject\" on \"subject\".\"id\" = \"section\".\"subject_code\" inner join \"college\" on \"college\".\"id\" = \"subject\".\"college_id\" inner join \"term\" on \"term\".\"id\" = \"section\".\"term_id\" left join \"section_days\" on \"section_days\".\"section_id\" = \"section\".\"id\" left join \"instructor_sections\" on \"instructor_sections\".\"section_id\" = \"section\".\"id\" left join \"instructor\" on \"instructor\".\"id\" = \"instructor_sections\".\"instructor_id\" group by \"section\".\"crn\", \"section\".\"section\", \"section\".\"course_number\", \"section\".\"instruction_type\", \"section\".\"instruction_method\", \"section\".\"max_enroll\", \"section\".\"start_time\", \"section\".\"end_time\", \"section\".\"term_id\", \"course\".\"id\", \"course\".\"title\", \"course\".\"description\", \"course\".\"credits\", \"course\".\"restrictions\", \"course\".\"repeat_status\", \"course\".\"writing_intensive\", \"subject\".\"id\", \"subject\".\"name\", \"college\".\"id\", \"college\".\"name\"",
       "name": "meili_sections_m_idx",
       "schema": "public",
       "isExisting": false,

@@ -34,8 +34,8 @@ export async function migrateAndSeed(
       ignoreAlreadyExists: !options?.recreate
    });
 
-   await seeder(meilisearch, index);
-
    const settingsTask = await meilisearch.index(index).updateSettings(config.settings);
    await waitForTask(meilisearch, settingsTask.taskUid, { timeOutMs: 120_000 });
+
+   await seeder(meilisearch, index);
 }

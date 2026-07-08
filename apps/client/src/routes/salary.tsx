@@ -2,85 +2,82 @@ import {
    Box,
    Button,
    Clipboard,
+   createListCollection,
    Flex,
    HStack,
    Icon,
    IconButton,
    Separator,
-   Spinner,
    Text,
    useDisclosure,
 } from '@chakra-ui/react';
+import { Suspense } from 'react';
+import { createFileRoute, Outlet } from '@tanstack/react-router';
+import { Index, InstantSearch } from 'react-instantsearch';
 import { FilterIcon } from '@/components/icons';
 import { Salary } from '@/components/Salary';
-import { useInfiniteQuery } from '@tanstack/react-query';
-import { createFileRoute, Outlet } from '@tanstack/react-router';
+import { SearchBox, SortSelect, Stats } from '@/components/Search';
 import { salarySearchSchema } from './-validator.ts';
 import { useMobile } from '@/hooks';
-import { orpc } from '@/helpers/rpc.ts';
+import { useSearchClient } from '@/helpers';
+import { INDEX_NAMES } from '@openmario/meilisearch';
 import z from 'zod';
-import { useEffect, useRef } from 'react';
+import { SalaryMeiliConfigure } from '@/components/Salary/MeiliConfigure';
+import MeiliBody from '@/components/Salary/DataTable/MeiliBody';
 
-const PAGE_SIZE = 20;
+const sortByCollection = createListCollection({
+   items: [
+      { label: 'Most Relevant', value: INDEX_NAMES.submissions },
+      {
+         label: 'Salary (High)',
+         value: `${INDEX_NAMES.submissions}:compensation:desc`
+      },
+      {
+         label: 'Salary (Low)',
+         value: `${INDEX_NAMES.submissions}:compensation:asc`
+      },
+      { label: 'Year', value: `${INDEX_NAMES.submissions}:year:desc` },
+      {
+         label: 'Company A→Z',
+         value: `${INDEX_NAMES.submissions}:company_name:asc`
+      },
+      {
+         label: 'Position A→Z',
+         value: `${INDEX_NAMES.submissions}:position_name:asc`
+      },
+      { label: 'Location', value: `${INDEX_NAMES.submissions}:city:asc` },
+      {
+         label: 'Co-op Year',
+         value: `${INDEX_NAMES.submissions}:coop_year:asc`
+      }
+   ]
+});
 
 export const Route = createFileRoute('/salary')({
    beforeLoad: () => ({ getLabel: () => 'Salary' }),
    validateSearch: z.optional(salarySearchSchema),
-   component: () => {
-      const query = Route.useSearch();
-      const isMobile = useMobile();
-      const { open: isFilterOpen, onOpen: openFilter, onClose: closeFilter } = useDisclosure();
-      const sentinelRef = useRef<HTMLDivElement>(null);
+   component: SalaryPage
+});
 
-      const { data, isFetchingNextPage, fetchNextPage, hasNextPage } = useInfiniteQuery(
-         orpc.submission.list.infiniteOptions({
-            input: (pageParam: number) => ({
-               ...query!,
-               pageIndex: pageParam,
-               pageSize: PAGE_SIZE,
-            }),
-            initialPageParam: 1,
-            getNextPageParam: lastPage => {
-               const totalPages = Math.ceil(lastPage.count / lastPage.pageSize);
-               return lastPage.pageIndex < totalPages ? lastPage.pageIndex + 1 : undefined;
-            },
-            staleTime: 3000,
-            refetchOnWindowFocus: true,
-         })
-      );
+function SalarySearch() {
+   const query = Route.useSearch() ?? salarySearchSchema.parse({});
+   const isMobile = useMobile();
+   const { open: isFilterOpen, onOpen: openFilter, onClose: closeFilter } = useDisclosure();
 
-      const rows = data?.pages.flatMap(p => p.data) ?? [];
-      const totalCount = data?.pages[0]?.count ?? 0;
-
-      useEffect(() => {
-         const el = sentinelRef.current;
-         if (!el) return;
-         const observer = new IntersectionObserver(
-            entries => {
-               if (entries[0]?.isIntersecting && hasNextPage && !isFetchingNextPage)
-                  fetchNextPage();
-            },
-            { threshold: 0.1 }
-         );
-         observer.observe(el);
-         return () => observer.disconnect();
-      }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
-
-      return (
-         <Salary.Root>
-            <Flex justify='space-between' align='center' mb={4} pt={4}>
-               {isMobile
-                  ? (
-                     <Button onClick={openFilter} variant='solid' size='sm'>
-                        <Icon as={FilterIcon} />
-                        <Text>Filters</Text>
-                     </Button>
-                  )
-                  : <Text fontSize='2xl' fontWeight='bold'>Self Reported Salaries</Text>}
-
-               <HStack>
-                  <Salary.ReportSalaryMenu />
-                  {!isMobile && (
+   return (
+      <Index indexName={INDEX_NAMES.submissions}>
+         <SalaryMeiliConfigure
+            query={query}
+            sortItems={sortByCollection.items}
+         />
+         <Flex direction='column' gap={4} w='full' minW={0}>
+            {!isMobile && (
+               <Flex justify='space-between' align='center' pt={4}>
+                  <Text fontSize='2xl' fontWeight='bold'>
+                     Self Reported Salaries
+                  </Text>
+                  <HStack>
+                     <Salary.ReportSalaryMenu />
                      <Clipboard.Root value={globalThis.location.href} timeout={1000}>
                         <Clipboard.Trigger asChild>
                            <IconButton variant='solid' size='sm'>
@@ -88,32 +85,71 @@ export const Route = createFileRoute('/salary')({
                            </IconButton>
                         </Clipboard.Trigger>
                      </Clipboard.Root>
-                  )}
-               </HStack>
-            </Flex>
+                  </HStack>
+               </Flex>
+            )}
 
-            {!isMobile && <Separator mb={4} />}
+            {isMobile && (
+               <Flex justify='space-between' align='center' pt={4}>
+                  <Button onClick={openFilter} variant='solid' size='sm'>
+                     <Icon as={FilterIcon} />
+                     <Text>Filters</Text>
+                  </Button>
+                  <Salary.ReportSalaryMenu />
+               </Flex>
+            )}
 
-            <Salary.DataTable.Filters open={isFilterOpen} onClose={closeFilter} />
+            {!isMobile && <Separator />}
 
-            <Salary.DataTable.Footer />
-
-            <Box overflowX='auto'>
-               <Salary.DataTable.Body data={rows} count={rows.length} />
+            <Box flex='1' minWidth='0'>
+               <SearchBox />
             </Box>
 
-            <Flex ref={sentinelRef} justify='center' py={4}>
-               {isFetchingNextPage && <Spinner size='sm' color='fg.muted' />}
-               {!hasNextPage && rows.length > 0 && (
-                  <Text fontSize='sm' color='fg.subtle'>
-                     All {totalCount} entries loaded
-                  </Text>
-               )}
-            </Flex>
+            {isMobile && (
+               <Flex direction='row' width='full' gap={3} justify='space-between'>
+                  <SortSelect sortBy={sortByCollection} />
+               </Flex>
+            )}
+
+            <Salary.DataTable.Filters open={isFilterOpen} onClose={closeFilter} />
+            <Salary.DataTable.Footer />
+
+            {!isMobile && (
+               <Flex justify='space-between' align='center' gap={3}>
+                  <Box flex='1' minWidth='0'>
+                     <Stats />
+                  </Box>
+                  <Box flexShrink={0}>
+                     <SortSelect sortBy={sortByCollection} />
+                  </Box>
+               </Flex>
+            )}
+
+            {isMobile && <Stats />}
+
+            <MeiliBody />
+         </Flex>
+      </Index>
+   );
+}
+
+function SalaryPage() {
+   const { searchClient } = useSearchClient();
+
+   return (
+      <Suspense>
+         <Salary.Root>
+            {/* @ts-ignore: shupp */}
+            <InstantSearch
+               searchClient={searchClient}
+               future={{ preserveSharedStateOnUnmount: true }}
+            >
+               <SalarySearch />
+            </InstantSearch>
             <Outlet />
          </Salary.Root>
-      );
-   },
-});
+      </Suspense>
+   );
+}
 
 export type SalaryRoute = typeof Route;

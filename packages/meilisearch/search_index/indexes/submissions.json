@@ -1,0 +1,49 @@
+{
+   "primaryKey": "id",
+   "settings": {
+      "searchableAttributes": [
+         "company_name",
+         "position_name",
+         "city",
+         "state",
+         "state_code",
+         "details",
+         "other_compensation"
+      ],
+      "filterableAttributes": [
+         "year",
+         "coop_year",
+         "coop_cycle",
+         "program_level",
+         "compensation",
+         "company_id",
+         "position_id"
+      ],
+      "sortableAttributes": [
+         "compensation",
+         "year",
+         "coop_year",
+         "company_name",
+         "position_name",
+         "city"
+      ],
+      "displayedAttributes": [
+         "id",
+         "year",
+         "coop_year",
+         "coop_cycle",
+         "program_level",
+         "work_hours",
+         "compensation",
+         "other_compensation",
+         "details",
+         "company_id",
+         "company_name",
+         "position_id",
+         "position_name",
+         "city",
+         "state",
+         "state_code"
+      ]
+   }
+}

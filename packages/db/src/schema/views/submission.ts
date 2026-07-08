@@ -24,16 +24,7 @@ export const submissionMView = pgMaterializedView('submissions_m_view')
             position_name: sql`${position.name}`.as('position_name'),
             city: sql`${location.city}`.as('city'),
             state: sql`${location.state}`.as('state'),
-            state_code: sql`${location.state_code}`.as('state_code'),
-            search_text: sql<string>`
-          coalesce(${company.name}, '')                  || ' ' ||
-          coalesce(${position.name}, '')                 || ' ' ||
-          coalesce(${location.city}, '')                 || ' ' ||
-          coalesce(${location.state}, '')                || ' ' ||
-          coalesce(${location.state_code}, '')           || ' ' ||
-          coalesce(${submission.details}, '')            || ' ' ||
-          coalesce(${submission.other_compensation}, '')
-        `.as('search_text')
+            state_code: sql`${location.state_code}`.as('state_code')
          })
          .from(submission)
          .leftJoin(position, eq(submission.position_id, position.id))

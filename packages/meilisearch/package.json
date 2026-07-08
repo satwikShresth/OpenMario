@@ -9,7 +9,8 @@
    },
    "scripts": {
       "seed": "bun run --env-file=../../.env search_index/index.ts",
-      "seed:courses": "bun run --env-file=../../.env search_index/index.ts courses"
+      "seed:courses": "bun run --env-file=../../.env search_index/index.ts courses",
+      "seed:submissions": "bun run --env-file=../../.env search_index/index.ts submissions"
    },
    "dependencies": {
       "@openmario/db": "workspace:*",
