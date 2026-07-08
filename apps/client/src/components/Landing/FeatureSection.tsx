@@ -315,7 +315,7 @@ export function WeekGrid() {
                      overflow='hidden'
                   >
                      {slot && (
-                        <Text fontSize='2xs' fontWeight='bold' color={slot.color} isTruncated px={1}>
+                        <Text fontSize='2xs' fontWeight='bold' color={slot.color} truncate px={1}>
                            {slot.label}
                         </Text>
                      )}

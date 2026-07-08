@@ -15,7 +15,6 @@ import {
    ArrowRightIcon,
    AutoFillIcon,
    BriefcaseIcon,
-   CalendarIcon,
    SalaryIcon,
    SearchIcon,
    ShaftIcon,
