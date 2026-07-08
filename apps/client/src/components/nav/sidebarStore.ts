@@ -1,4 +1,5 @@
 import { Store, useStore } from '@tanstack/react-store';
+import { withViewTransition } from '@/lib/viewTransition';
 
 export type MenuState = 'open' | 'minimized';
 
@@ -22,24 +23,18 @@ export const useSidebarStore = () => ({
    setDrawerOpen: (open: boolean) =>
       sidebarStore.setState(s => ({ ...s, drawerOpen: open })),
    setMenuState: (state: MenuState) => {
-      sessionStorage.setItem('om_menu_state', state);
-      sidebarStore.setState(s => ({ ...s, menuState: state }));
+      withViewTransition(() => {
+         sessionStorage.setItem('om_menu_state', state);
+         sidebarStore.setState(s => ({ ...s, menuState: state }));
+      });
    },
    toggle: () => {
-      const doToggle = () =>
+      withViewTransition(() => {
          sidebarStore.setState(s => {
             const next = s.menuState === 'open' ? 'minimized' : 'open';
             sessionStorage.setItem('om_menu_state', next);
             return { ...s, menuState: next };
          });
-      if ('startViewTransition' in document) {
-         (
-            document as Document & {
-               startViewTransition: (cb: () => void) => void;
-            }
-         ).startViewTransition(doToggle);
-      } else {
-         doToggle();
-      }
+      });
    }
 });

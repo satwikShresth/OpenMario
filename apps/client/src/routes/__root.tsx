@@ -29,7 +29,9 @@ function RootComponent() {
       <>
          {pathname === '/' ? (
             <>
-               <Outlet />
+               <Box style={{ viewTransitionName: 'page-content' }}>
+                  <Outlet />
+               </Box>
                <TanStackQueryLayout />
             </>
          ) : (
@@ -65,9 +67,9 @@ function RootComponent() {
                         bg='bg'
                         borderRadius={{ base: 'none', md: 'xl' }}
                         borderWidth={{ base: '0', md: '1px' }}
-                        borderColor='border.subtle'
-                        boxShadow={{ md: 'sm' }}
+                        borderColor='border'
                         overflow='hidden'
+                        style={{ viewTransitionName: 'main-panel' }}
                      >
                         <PageHeader />
                         <Box
@@ -85,6 +87,7 @@ function RootComponent() {
                               w='full'
                               mx='auto'
                               minW={0}
+                              style={{ viewTransitionName: 'page-content' }}
                            >
                               <Outlet />
                            </Box>
