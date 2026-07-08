@@ -73,7 +73,7 @@ export const RefinementSelect = ({
       [refinements.refine],
    );
 
-   const { collection, set, filter } = useListCollection<RefinementItem>({
+   const { collection, set } = useListCollection<RefinementItem>({
       initialItems: displayItems,
       itemToString: (item) => item.label,
       itemToValue: (item) => item.value,
@@ -100,8 +100,11 @@ export const RefinementSelect = ({
       openOnClick: true,
       onInputValueChange: ({ inputValue }) => {
          if (formatLabel) {
-            filter((item) =>
-               item.label.toLowerCase().includes(inputValue.trim().toLowerCase())
+            const query = inputValue.trim().toLowerCase();
+            set(
+               displayItems.filter((item) =>
+                  !query || item.label.toLowerCase().includes(query)
+               )
             );
             return;
          }
