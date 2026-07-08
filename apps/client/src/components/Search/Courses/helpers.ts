@@ -5,6 +5,42 @@ import {
    SquareFIcon, SquareFFilledIcon,
 } from '@/components/icons';
 
+/** Drexel term codes: YYYYTT where TT ∈ {15=Fall, 25=Winter, 35=Spring, 45=Summer} */
+const TERM_CODE_MAP: Record<string, string> = {
+   '15': 'Fall',
+   '25': 'Winter',
+   '35': 'Spring',
+   '45': 'Summer',
+};
+
+const TERM_TO_CODE: Record<string, string> = {
+   Fall: '15',
+   Winter: '25',
+   Spring: '35',
+   Summer: '45',
+};
+
+/** Parse a raw Drexel term id string (e.g. "202515") into { termName, year }. */
+export function parseDrexelTerm(raw: string): { termName: string; year: number | null } {
+   if (raw.length < 3) return { termName: '', year: null };
+   const code = raw.slice(-2);
+   const yearStr = raw.slice(0, -2);
+   const year = Number.parseInt(yearStr, 10);
+   const termName = TERM_CODE_MAP[code] ?? '';
+   return { termName, year: Number.isFinite(year) && termName ? year : null };
+}
+
+/** Format a Drexel term id for display (e.g. "202515" → "Fall 2025"). */
+export function formatDrexelTerm(raw: string): string {
+   const { termName, year } = parseDrexelTerm(raw);
+   return termName && year ? `${termName} ${year}` : raw;
+}
+
+/** Convert (termName, year) → Drexel numeric id e.g. "202515". */
+export function toDrexelTermId(term: string, year: number): string {
+   return `${year}${TERM_TO_CODE[term] ?? '15'}`;
+}
+
 export const weekItems = [
    {
       label: 'M',

@@ -12,10 +12,7 @@ import type { Section } from '@/types'
 import { Switch, Tooltip } from '@/components/ui'
 import { WarningIcon, FilterIcon, HeartFilledIcon, HeartIcon } from '@/components/icons'
 import { Tag } from '@/components/ui'
-
-/** Reverse of parseDrexelTerm — convert (termName, year) → Drexel numeric ID e.g. "202515" */
-const TERM_TO_CODE: Record<string, string> = { Fall: '15', Winter: '25', Spring: '35', Summer: '45' }
-const toTermId = (term: string, year: number): string => `${year}${TERM_TO_CODE[term] ?? '15'}`
+import { toDrexelTermId } from '@/components/Search/Courses/helpers'
 
 const timeRangesOverlap = (start1: string, end1: string, start2: string, end2: string): boolean => {
   const parseTime = (t: string) => { const [h, m] = t.split(':').map(Number); return h! * 60 + m! }
@@ -69,7 +66,7 @@ export const PlanCourses = ({ currentTerm, currentYear }: { currentTerm: "Fall" 
     ? likedCRNs.map(crn => `crn = "${crn}"`).join(' OR ')
     : null
 
-  const meiliTermId = toTermId(currentTerm, currentYear)
+  const meiliTermId = toDrexelTermId(currentTerm, currentYear)
   let filters = `term = "${meiliTermId}"`
   if (showOnlyLiked && favoritesFilter) {
     filters = `${filters} AND (${favoritesFilter})`

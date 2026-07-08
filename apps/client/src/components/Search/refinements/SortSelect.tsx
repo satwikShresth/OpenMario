@@ -1,4 +1,5 @@
 import { type ListCollection, Portal, Select } from '@chakra-ui/react';
+import { useEffect } from 'react';
 import { useSortBy } from 'react-instantsearch';
 
 type SortSelectProps = {
@@ -6,9 +7,16 @@ type SortSelectProps = {
       label: string;
       value: string;
    }>;
+   syncIndex?: string;
 };
-export const SortSelect = ({ sortBy }: SortSelectProps) => {
+export const SortSelect = ({ sortBy, syncIndex }: SortSelectProps) => {
    const sort = useSortBy({ items: sortBy.items });
+
+   useEffect(() => {
+      if (syncIndex && sort.currentRefinement !== syncIndex) {
+         sort.refine(syncIndex);
+      }
+   }, [syncIndex]);
 
    return (
       <Select.Root

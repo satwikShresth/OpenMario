@@ -14,13 +14,37 @@ import {
 } from '@chakra-ui/react';
 import { capitalizeWords } from '@/helpers';
 
-export const RefinementSelect = (
-   { attribute, ...props }: { attribute: string } & Partial<ComboboxRootProviderProps>,
-) => {
+type RefinementItem = {
+   label: string;
+   value: string;
+   count: number;
+   isRefined: boolean;
+   highlighted?: string;
+};
+
+type RefinementSelectProps = {
+   attribute: string;
+   formatLabel?: (value: string) => string;
+} & Partial<ComboboxRootProviderProps>;
+
+export const RefinementSelect = ({
+   attribute,
+   formatLabel,
+   ...props
+}: RefinementSelectProps) => {
    const refinements = useRefinementList({ attribute, limit: 25 });
 
+   const displayItems = useMemo<RefinementItem[]>(
+      () =>
+         refinements.items.map((item) => ({
+            ...item,
+            label: formatLabel?.(item.value) ?? item.label,
+         })),
+      [formatLabel, refinements.items],
+   );
+
    const ComboboxItem = useCallback(
-      ({ item }: { item: typeof refinements.items[number] }) => {
+      ({ item }: { item: RefinementItem }) => {
          const combobox = useComboboxContext();
          return (
             <Combobox.Item
@@ -49,11 +73,16 @@ export const RefinementSelect = (
       [refinements.refine],
    );
 
-   const { collection, set } = useListCollection<typeof refinements.items[number]>({
-      initialItems: refinements.items,
+   const { collection, set } = useListCollection<RefinementItem>({
+      initialItems: displayItems,
+      itemToString: (item) => item.label,
+      itemToValue: (item) => item.value,
    });
 
-   useEffect(() => set(refinements.items), [refinements.items]);
+   useEffect(() => {
+      set(displayItems);
+   }, [displayItems, set]);
+
    const placeholder = capitalizeWords(attribute.replace('_', ' ').replace('.', ' '));
 
    const value = useMemo(
@@ -69,7 +98,18 @@ export const RefinementSelect = (
       placeholder,
       multiple: true,
       openOnClick: true,
-      onInputValueChange: ({ inputValue }) => refinements.searchForItems(inputValue),
+      onInputValueChange: ({ inputValue }) => {
+         if (formatLabel) {
+            const query = inputValue.trim().toLowerCase();
+            set(
+               displayItems.filter((item) =>
+                  !query || item.label.toLowerCase().includes(query)
+               )
+            );
+            return;
+         }
+         refinements.searchForItems(inputValue);
+      },
       value,
       collection,
    });
