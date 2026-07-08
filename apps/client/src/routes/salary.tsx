@@ -24,6 +24,7 @@ import { INDEX_NAMES } from '@openmario/meilisearch';
 import z from 'zod';
 import { SalaryMeiliConfigure } from '@/components/Salary/MeiliConfigure';
 import MeiliBody from '@/components/Salary/DataTable/MeiliBody';
+import { getSubmissionSortIndex } from '@/components/Salary/helpers';
 
 const sortByCollection = createListCollection({
    items: [
@@ -60,16 +61,13 @@ export const Route = createFileRoute('/salary')({
 });
 
 function SalarySearch() {
-   const query = Route.useSearch() ?? salarySearchSchema.parse({});
+   const query = salarySearchSchema.parse(Route.useSearch() ?? {});
    const isMobile = useMobile();
    const { open: isFilterOpen, onOpen: openFilter, onClose: closeFilter } = useDisclosure();
 
    return (
       <Index indexName={INDEX_NAMES.submissions}>
-         <SalaryMeiliConfigure
-            query={query}
-            sortItems={sortByCollection.items}
-         />
+         <SalaryMeiliConfigure query={query} />
          <Flex direction='column' gap={4} w='full' minW={0}>
             {!isMobile && (
                <Flex justify='space-between' align='center' pt={4}>
@@ -107,7 +105,10 @@ function SalarySearch() {
 
             {isMobile && (
                <Flex direction='row' width='full' gap={3} justify='space-between'>
-                  <SortSelect sortBy={sortByCollection} />
+                  <SortSelect
+                     sortBy={sortByCollection}
+                     syncIndex={getSubmissionSortIndex(query)}
+                  />
                </Flex>
             )}
 
@@ -120,7 +121,10 @@ function SalarySearch() {
                      <Stats />
                   </Box>
                   <Box flexShrink={0}>
-                     <SortSelect sortBy={sortByCollection} />
+                     <SortSelect
+                        sortBy={sortByCollection}
+                        syncIndex={getSubmissionSortIndex(query)}
+                     />
                   </Box>
                </Flex>
             )}

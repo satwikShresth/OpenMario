@@ -10,35 +10,35 @@ import {
 import { useForm } from '@tanstack/react-form';
 import { CheckIcon, CloseIcon } from '@/components/icons';
 import { useMobile } from '@/hooks';
-import { capitalizeWords, coopCycle, coopYear, marksMaker, programLevel } from '@/helpers';
+import { capitalizeWords, marksMaker, programLevel } from '@/helpers';
+import { RefinementCheckbox } from '@/components/Search';
 import { useSearch } from '@tanstack/react-router';
 import { useNavigate } from '@tanstack/react-router';
+import { salarySearchSchema } from '@/routes/-validator.ts';
 
 export default () => {
-   const query = useSearch({ from: '/salary' });
+   const query = salarySearchSchema.parse(useSearch({ from: '/salary' }) ?? {});
    const navigate = useNavigate({ from: '/salary' });
-   const min = 2016;
+   const min = 2005;
    const max = new Date().getFullYear();
    const marks = marksMaker(min, max, 3);
 
-   const defaultValues = {
-      year: query?.year ?? [],
-      coop_cycle: query?.coop_cycle ?? [],
-      coop_year: query?.coop_year ?? [],
-      program_level: query?.program_level ?? '',
-      distinct: query?.distinct ?? true,
-   };
-
    const isMobile = useMobile();
    const form = useForm({
-      defaultValues,
+      defaultValues: {
+         year: query.year,
+         program_level: query.program_level,
+         distinct: query.distinct,
+      },
       listeners: {
          onChange: ({ formApi }) => {
             const values = formApi.state.values;
             navigate({
-               search: (prev) => ({
+               search: (prev) => salarySearchSchema.parse({
                   ...prev,
-                  ...values,
+                  year: values.year,
+                  program_level: values.program_level,
+                  distinct: values.distinct,
                }),
                reloadDocument: false,
                resetScroll: false,
@@ -50,7 +50,7 @@ export default () => {
 
    return (
       <form onSubmit={(e) => e.preventDefault()}>
-         <VStack width='full'>
+         <VStack width='full' align='stretch'>
             <Stack
                direction={isMobile ? 'column' : 'row'}
                w='full'
@@ -128,91 +128,10 @@ export default () => {
                      </Slider.Root>
                   )}
                </form.Field>
-               <form.Field name='coop_year'>
-                  {({ state, handleChange, name }) => (
-                     <Select.Root
-                        value={state?.value}
-                        multiple
-                        //@ts-ignore: shut up
-                        onValueChange={({ value }) => handleChange(value)}
-                        collection={coopYearCollection}
-                     >
-                        <Select.HiddenSelect />
-                        <Select.Label>{capitalizeWords(name.replaceAll('_', ' '))}</Select.Label>
-                        <Select.Control>
-                           <Select.Trigger>
-                              <Select.ValueText placeholder='Select coop year' />
-                           </Select.Trigger>
-                           <Select.IndicatorGroup>
-                              <Select.ClearTrigger />
-                              <Select.Indicator />
-                           </Select.IndicatorGroup>
-                        </Select.Control>
-                        <Portal>
-                           <Select.Positioner>
-                              <Select.Content>
-                                 {coopYearCollection
-                                    .items
-                                    .map((level) => (
-                                       <Select.Item
-                                          item={level}
-                                          key={level.value}
-                                       >
-                                          {level.label}
-                                          <Select.ItemIndicator />
-                                       </Select.Item>
-                                    ))}
-                              </Select.Content>
-                           </Select.Positioner>
-                        </Portal>
-                     </Select.Root>
-                  )}
-               </form.Field>
-               <form.Field name='coop_cycle'>
-                  {({ state, handleChange, name }) => (
-                     <Select.Root
-                        value={state?.value}
-                        //@ts-ignore: shut up
-                        onValueChange={({ value }) => handleChange(value)}
-                        collection={coopCycleCollection}
-                        multiple
-                     >
-                        <Select.HiddenSelect />
-                        <Select.Label>{capitalizeWords(name.replaceAll('_', ' '))}</Select.Label>
-                        <Select.Control>
-                           <Select.Trigger>
-                              <Select.ValueText placeholder='Select coop cycle' />
-                           </Select.Trigger>
-                           <Select.IndicatorGroup>
-                              <Select.ClearTrigger />
-                              <Select.Indicator />
-                           </Select.IndicatorGroup>
-                        </Select.Control>
-                        <Portal>
-                           <Select.Positioner>
-                              <Select.Content>
-                                 {coopCycleCollection
-                                    .items
-                                    .map((level) => (
-                                       <Select.Item
-                                          item={level}
-                                          key={level.value}
-                                       >
-                                          {level.label}
-                                          <Select.ItemIndicator />
-                                       </Select.Item>
-                                    ))}
-                              </Select.Content>
-                           </Select.Positioner>
-                        </Portal>
-                     </Select.Root>
-                  )}
-               </form.Field>
-
                <form.Field name='program_level'>
                   {({ state, handleChange, name }) => (
                      <Select.Root
-                        value={[state?.value!]}
+                        value={[state.value]}
                         //@ts-ignore: shut up
                         onValueChange={({ value: [change] }) => handleChange(change!)}
                         collection={programLevelCollection}
@@ -248,18 +167,18 @@ export default () => {
                   )}
                </form.Field>
             </Stack>
+            <Stack
+               direction={isMobile ? 'column' : 'row'}
+               w='full'
+               gap={5}
+            >
+               <RefinementCheckbox attribute='coop_year' />
+               <RefinementCheckbox attribute='coop_cycle' />
+            </Stack>
          </VStack>
       </form>
    );
 };
-
-const coopCycleCollection = createListCollection({
-   items: coopCycle.map((value) => ({ label: value, value })),
-});
-
-const coopYearCollection = createListCollection({
-   items: coopYear.map((value) => ({ label: value, value })),
-});
 
 const programLevelCollection = createListCollection({
    items: programLevel.map((value) => ({ label: value, value })),

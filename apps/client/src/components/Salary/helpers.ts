@@ -34,18 +34,6 @@ export const buildSubmissionMeiliFilter = (query: SalarySearchSchema) => {
       parts.push(`program_level = "${query.program_level}"`);
    }
 
-   if (query.coop_year?.length) {
-      parts.push(
-         `coop_year IN [${query.coop_year.map(year => `"${year}"`).join(', ')}]`
-      );
-   }
-
-   if (query.coop_cycle?.length) {
-      parts.push(
-         `coop_cycle IN [${query.coop_cycle.map(cycle => `"${cycle}"`).join(', ')}]`
-      );
-   }
-
    return parts.length > 0 ? parts.join(' AND ') : undefined;
 };
 
