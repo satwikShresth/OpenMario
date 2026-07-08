@@ -1024,6 +1024,209 @@
       "policies": {},
       "isRLSEnabled": false
     },
+    "public.section": {
+      "name": "section",
+      "schema": "",
+      "columns": {
+        "crn": {
+          "name": "crn",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "course_id": {
+          "name": "course_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "subject_code": {
+          "name": "subject_code",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "course_number": {
+          "name": "course_number",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "term_id": {
+          "name": "term_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "section": {
+          "name": "section",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "max_enroll": {
+          "name": "max_enroll",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "start_time": {
+          "name": "start_time",
+          "type": "time",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "end_time": {
+          "name": "end_time",
+          "type": "time",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "instruction_method": {
+          "name": "instruction_method",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "instruction_type": {
+          "name": "instruction_type",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        }
+      },
+      "indexes": {
+        "section_course_id_index": {
+          "name": "section_course_id_index",
+          "columns": [
+            {
+              "expression": "course_id",
+              "asc": true,
+              "nulls": "last",
+              "opclass": "uuid_ops",
+              "isExpression": false
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "section_crn_index": {
+          "name": "section_crn_index",
+          "columns": [
+            {
+              "expression": "crn",
+              "asc": true,
+              "nulls": "last",
+              "opclass": "int4_ops",
+              "isExpression": false
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "section_subject_code_index": {
+          "name": "section_subject_code_index",
+          "columns": [
+            {
+              "expression": "subject_code",
+              "asc": true,
+              "nulls": "last",
+              "opclass": "text_ops",
+              "isExpression": false
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "section_term_id_index": {
+          "name": "section_term_id_index",
+          "columns": [
+            {
+              "expression": "term_id",
+              "asc": true,
+              "nulls": "last",
+              "opclass": "int4_ops",
+              "isExpression": false
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "section_course_id_course_id_fk": {
+          "name": "section_course_id_course_id_fk",
+          "tableFrom": "section",
+          "tableTo": "course",
+          "schemaTo": "public",
+          "columnsFrom": [
+            "course_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "restrict",
+          "onUpdate": "no action"
+        },
+        "section_subject_code_subject_id_fk": {
+          "name": "section_subject_code_subject_id_fk",
+          "tableFrom": "section",
+          "tableTo": "subject",
+          "schemaTo": "public",
+          "columnsFrom": [
+            "subject_code"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "restrict",
+          "onUpdate": "no action"
+        },
+        "section_term_id_term_id_fk": {
+          "name": "section_term_id_term_id_fk",
+          "tableFrom": "section",
+          "tableTo": "term",
+          "schemaTo": "public",
+          "columnsFrom": [
+            "term_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "restrict",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "section_crn_term_id_unique": {
+          "columns": [
+            "crn",
+            "term_id"
+          ],
+          "nullsNotDistinct": false,
+          "name": "section_crn_term_id_unique"
+        }
+      },
+      "checkConstraints": {},
+      "policies": {},
+      "isRLSEnabled": false
+    },
     "public.subject": {
       "name": "subject",
       "schema": "",
@@ -1142,177 +1345,6 @@
       },
       "indexes": {},
       "foreignKeys": {},
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
-      "checkConstraints": {},
-      "policies": {},
-      "isRLSEnabled": false
-    },
-    "public.section": {
-      "name": "section",
-      "schema": "",
-      "columns": {
-        "crn": {
-          "name": "crn",
-          "type": "integer",
-          "primaryKey": true,
-          "notNull": true
-        },
-        "course_id": {
-          "name": "course_id",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "subject_code": {
-          "name": "subject_code",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "course_number": {
-          "name": "course_number",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "term_id": {
-          "name": "term_id",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "section": {
-          "name": "section",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "max_enroll": {
-          "name": "max_enroll",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "start_time": {
-          "name": "start_time",
-          "type": "time",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "end_time": {
-          "name": "end_time",
-          "type": "time",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "instruction_method": {
-          "name": "instruction_method",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "instruction_type": {
-          "name": "instruction_type",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        }
-      },
-      "indexes": {
-        "section_course_id_index": {
-          "name": "section_course_id_index",
-          "columns": [
-            {
-              "expression": "course_id",
-              "asc": true,
-              "nulls": "last",
-              "opclass": "uuid_ops",
-              "isExpression": false
-            }
-          ],
-          "isUnique": false,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        },
-        "section_subject_code_index": {
-          "name": "section_subject_code_index",
-          "columns": [
-            {
-              "expression": "subject_code",
-              "asc": true,
-              "nulls": "last",
-              "opclass": "text_ops",
-              "isExpression": false
-            }
-          ],
-          "isUnique": false,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        },
-        "section_term_id_index": {
-          "name": "section_term_id_index",
-          "columns": [
-            {
-              "expression": "term_id",
-              "asc": true,
-              "nulls": "last",
-              "opclass": "int4_ops",
-              "isExpression": false
-            }
-          ],
-          "isUnique": false,
-          "concurrently": false,
-          "method": "btree",
-          "with": {}
-        }
-      },
-      "foreignKeys": {
-        "section_course_id_course_id_fk": {
-          "name": "section_course_id_course_id_fk",
-          "tableFrom": "section",
-          "tableTo": "course",
-          "schemaTo": "public",
-          "columnsFrom": [
-            "course_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "restrict",
-          "onUpdate": "no action"
-        },
-        "section_subject_code_subject_id_fk": {
-          "name": "section_subject_code_subject_id_fk",
-          "tableFrom": "section",
-          "tableTo": "subject",
-          "schemaTo": "public",
-          "columnsFrom": [
-            "subject_code"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "restrict",
-          "onUpdate": "no action"
-        },
-        "section_term_id_term_id_fk": {
-          "name": "section_term_id_term_id_fk",
-          "tableFrom": "section",
-          "tableTo": "term",
-          "schemaTo": "public",
-          "columnsFrom": [
-            "term_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "restrict",
-          "onUpdate": "no action"
-        }
-      },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {},
       "checkConstraints": {},
@@ -1799,6 +1831,37 @@
       "policies": {},
       "isRLSEnabled": false
     },
+    "public.__drizzle_migrations": {
+      "name": "__drizzle_migrations",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "hash": {
+          "name": "hash",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {},
+      "policies": {},
+      "isRLSEnabled": false
+    },
     "public.course_corequisites": {
       "name": "course_corequisites",
       "schema": "",
@@ -1871,22 +1934,22 @@
           "primaryKey": false,
           "notNull": true
         },
-        "section_crn": {
-          "name": "section_crn",
-          "type": "integer",
+        "section_id": {
+          "name": "section_id",
+          "type": "uuid",
           "primaryKey": false,
           "notNull": true
         }
       },
       "indexes": {
-        "instructor_sections_section_crn_index": {
-          "name": "instructor_sections_section_crn_index",
+        "instructor_sections_section_id_index": {
+          "name": "instructor_sections_section_id_index",
           "columns": [
             {
-              "expression": "section_crn",
+              "expression": "section_id",
               "asc": true,
               "nulls": "last",
-              "opclass": "int4_ops",
+              "opclass": "uuid_ops",
               "isExpression": false
             }
           ],
@@ -1911,27 +1974,27 @@
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
-        "instructor_sections_section_crn_section_crn_fk": {
-          "name": "instructor_sections_section_crn_section_crn_fk",
+        "instructor_sections_section_id_section_id_fk": {
+          "name": "instructor_sections_section_id_section_id_fk",
           "tableFrom": "instructor_sections",
           "tableTo": "section",
           "schemaTo": "public",
           "columnsFrom": [
-            "section_crn"
+            "section_id"
           ],
           "columnsTo": [
-            "crn"
+            "id"
           ],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
       },
       "compositePrimaryKeys": {
-        "instructor_sections_instructor_id_section_crn_pk": {
-          "name": "instructor_sections_instructor_id_section_crn_pk",
+        "instructor_sections_instructor_id_section_id_pk": {
+          "name": "instructor_sections_instructor_id_section_id_pk",
           "columns": [
             "instructor_id",
-            "section_crn"
+            "section_id"
           ]
         }
       },
@@ -2011,6 +2074,55 @@
           "columns": [
             "instructor_id",
             "course_id"
+          ]
+        }
+      },
+      "uniqueConstraints": {},
+      "checkConstraints": {},
+      "policies": {},
+      "isRLSEnabled": false
+    },
+    "public.section_days": {
+      "name": "section_days",
+      "schema": "",
+      "columns": {
+        "day": {
+          "name": "day",
+          "type": "day_of_week",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "section_id": {
+          "name": "section_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "section_days_section_id_section_id_fk": {
+          "name": "section_days_section_id_section_id_fk",
+          "tableFrom": "section_days",
+          "tableTo": "section",
+          "schemaTo": "public",
+          "columnsFrom": [
+            "section_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "section_days_section_id_day_pk": {
+          "name": "section_days_section_id_day_pk",
+          "columns": [
+            "day",
+            "section_id"
           ]
         }
       },
@@ -2122,55 +2234,6 @@
           "columns": [
             "job_posting_id",
             "major_id"
-          ]
-        }
-      },
-      "uniqueConstraints": {},
-      "checkConstraints": {},
-      "policies": {},
-      "isRLSEnabled": false
-    },
-    "public.section_days": {
-      "name": "section_days",
-      "schema": "",
-      "columns": {
-        "section_crn": {
-          "name": "section_crn",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "day": {
-          "name": "day",
-          "type": "day_of_week",
-          "typeSchema": "public",
-          "primaryKey": false,
-          "notNull": true
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "section_days_section_crn_section_crn_fk": {
-          "name": "section_days_section_crn_section_crn_fk",
-          "tableFrom": "section_days",
-          "tableTo": "section",
-          "schemaTo": "public",
-          "columnsFrom": [
-            "section_crn"
-          ],
-          "columnsTo": [
-            "crn"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {
-        "section_days_section_crn_day_pk": {
-          "name": "section_days_section_crn_day_pk",
-          "columns": [
-            "section_crn",
-            "day"
           ]
         }
       },
@@ -3239,7 +3302,7 @@
         }
       },
       "isExisting": false,
-      "definition": "SELECT instructor.id AS instructor_id, instructor.name AS instructor_name, section.crn AS section_crn, section.term_id, section.subject_code, section.course_number, course.title AS course_title, section.section AS section_code, section.instruction_method, section.instruction_type FROM instructor JOIN instructor_sections ON instructor_sections.instructor_id = instructor.id JOIN section ON section.crn = instructor_sections.section_crn JOIN course ON course.id = section.course_id JOIN subject ON subject.id = section.subject_code",
+      "definition": "SELECT instructor.id AS instructor_id, instructor.name AS instructor_name, section.crn AS section_crn, section.term_id, section.subject_code, section.course_number, course.title AS course_title, section.section AS section_code, section.instruction_method, section.instruction_type FROM instructor JOIN instructor_sections ON instructor_sections.instructor_id = instructor.id JOIN section ON section.id = instructor_sections.section_id JOIN course ON course.id = section.course_id JOIN subject ON subject.id = section.subject_code",
       "materialized": true
     },
     "public.position_review_aggregate_m_view": {
@@ -3635,6 +3698,132 @@
       "definition": "SELECT company.id AS company_id, company.name AS company_name, array_agg(DISTINCT \"position\".name) AS positions, count(DISTINCT position_review.id) AS total_reviews, count(DISTINCT \"position\".id) FILTER (WHERE position_review.id IS NOT NULL) AS positions_reviewed, count(DISTINCT submission.id) AS total_submissions, round(avg(submission.compensation)::numeric, 2) AS avg_compensation, round(percentile_cont(0.5::double precision) WITHIN GROUP (ORDER BY submission.compensation)::numeric, 2) AS median_compensation, round((0.30 * ((avg(position_review.rating_collaboration) + avg(position_review.rating_work_variety) + avg(position_review.rating_relationships) + avg(position_review.rating_supervisor_access) + avg(position_review.rating_training)) / 5.0 / 4.0) + 0.25 * (count(*) FILTER (WHERE position_review.would_recommend = true)::numeric / NULLIF(count(*) FILTER (WHERE position_review.would_recommend IS NOT NULL), 0)::numeric) + 0.15 * (count(*) FILTER (WHERE position_review.description_accurate = true)::numeric / NULLIF(count(*) FILTER (WHERE position_review.description_accurate IS NOT NULL), 0)::numeric) + 0.20 * ((avg(position_review.comp_written_comm) + avg(position_review.comp_verbal_comm) + avg(position_review.comp_comm_style) + avg(position_review.comp_original_ideas) + avg(position_review.comp_problem_solving) + avg(position_review.comp_info_evaluation) + avg(position_review.comp_data_decisions) + avg(position_review.comp_ethical_standards) + avg(position_review.comp_technology_use) + avg(position_review.comp_goal_setting) + avg(position_review.comp_diversity) + avg(position_review.comp_work_habits) + avg(position_review.comp_proactive)) / 13.0 / 4.0) + 0.10 * (1.0 - (0.5 * count(*) FILTER (WHERE position_review.overtime_required = true)::numeric / NULLIF(count(*) FILTER (WHERE position_review.overtime_required IS NOT NULL), 0)::numeric + 0.5 * LEAST(GREATEST(avg(position_review.days_per_week) - 3::numeric, 0::numeric), 2::numeric) / 2.0))) * 100::numeric, 1) AS omega_score, round((avg(position_review.rating_collaboration) + avg(position_review.rating_work_variety) + avg(position_review.rating_relationships) + avg(position_review.rating_supervisor_access) + avg(position_review.rating_training)) / 5.0 / 4.0 * 100::numeric, 1) AS satisfaction_score, round(count(*) FILTER (WHERE position_review.would_recommend = true)::numeric / NULLIF(count(*) FILTER (WHERE position_review.would_recommend IS NOT NULL), 0)::numeric * 100::numeric, 1) AS trust_score, round(count(*) FILTER (WHERE position_review.description_accurate = true)::numeric / NULLIF(count(*) FILTER (WHERE position_review.description_accurate IS NOT NULL), 0)::numeric * 100::numeric, 1) AS integrity_score, round((avg(position_review.comp_written_comm) + avg(position_review.comp_verbal_comm) + avg(position_review.comp_comm_style) + avg(position_review.comp_original_ideas) + avg(position_review.comp_problem_solving) + avg(position_review.comp_info_evaluation) + avg(position_review.comp_data_decisions) + avg(position_review.comp_ethical_standards) + avg(position_review.comp_technology_use) + avg(position_review.comp_goal_setting) + avg(position_review.comp_diversity) + avg(position_review.comp_work_habits) + avg(position_review.comp_proactive)) / 13.0 / 4.0 * 100::numeric, 1) AS growth_score, round((1.0 - (0.5 * count(*) FILTER (WHERE position_review.overtime_required = true)::numeric / NULLIF(count(*) FILTER (WHERE position_review.overtime_required IS NOT NULL), 0)::numeric + 0.5 * LEAST(GREATEST(avg(position_review.days_per_week) - 3::numeric, 0::numeric), 2::numeric) / 2.0)) * 100::numeric, 1) AS work_life_score, round(avg(position_review.rating_overall), 2) AS avg_rating_overall, round(100.0 * count(*) FILTER (WHERE position_review.would_recommend = true)::numeric / NULLIF(count(*) FILTER (WHERE position_review.would_recommend IS NOT NULL), 0)::numeric, 1) AS pct_would_recommend, round(100.0 * count(*) FILTER (WHERE position_review.description_accurate = true)::numeric / NULLIF(count(*) FILTER (WHERE position_review.description_accurate IS NOT NULL), 0)::numeric, 1) AS pct_description_accurate, round(avg(position_review.days_per_week), 1) AS avg_days_per_week, round(100.0 * count(*) FILTER (WHERE position_review.overtime_required = true)::numeric / NULLIF(count(*) FILTER (WHERE position_review.overtime_required IS NOT NULL), 0)::numeric, 1) AS pct_overtime_required, min(position_review.year) AS first_review_year, max(position_review.year) AS last_review_year FROM company JOIN \"position\" ON \"position\".company_id = company.id LEFT JOIN position_review ON position_review.position_id = \"position\".id LEFT JOIN submission ON submission.position_id = \"position\".id GROUP BY company.id, company.name",
       "materialized": true
     },
+    "public.submissions_m_view": {
+      "name": "submissions_m_view",
+      "schema": "public",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "year": {
+          "name": "year",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "coop_year": {
+          "name": "coop_year",
+          "type": "coop_year",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "coop_cycle": {
+          "name": "coop_cycle",
+          "type": "coop_cycle",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "program_level": {
+          "name": "program_level",
+          "type": "program_level",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "work_hours": {
+          "name": "work_hours",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "compensation": {
+          "name": "compensation",
+          "type": "double precision",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "other_compensation": {
+          "name": "other_compensation",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "details": {
+          "name": "details",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "owner_id": {
+          "name": "owner_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "company_id": {
+          "name": "company_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "position_id": {
+          "name": "position_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "company_name": {
+          "name": "company_name",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "position_name": {
+          "name": "position_name",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "city": {
+          "name": "city",
+          "type": "varchar(100)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "state": {
+          "name": "state",
+          "type": "varchar(100)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "state_code": {
+          "name": "state_code",
+          "type": "varchar(3)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "search_text": {
+          "name": "search_text",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "isExisting": false,
+      "definition": "SELECT submission.id, submission.year, submission.coop_year, submission.coop_cycle, submission.program_level, submission.work_hours, submission.compensation, submission.other_compensation, submission.details, submission.owner_id, submission.created_at, company.id AS company_id, \"position\".id AS position_id, company.name AS company_name, \"position\".name AS position_name, location.city, location.state, location.state_code, (((((((((((COALESCE(company.name, ''::character varying)::text || ' '::text) || COALESCE(\"position\".name, ''::character varying)::text) || ' '::text) || COALESCE(location.city, ''::character varying)::text) || ' '::text) || COALESCE(location.state, ''::character varying)::text) || ' '::text) || COALESCE(location.state_code, ''::character varying)::text) || ' '::text) || COALESCE(submission.details, ''::character varying)::text) || ' '::text) || COALESCE(submission.other_compensation, ''::character varying)::text AS search_text FROM submission LEFT JOIN \"position\" ON submission.position_id = \"position\".id LEFT JOIN location ON submission.location_id = location.id LEFT JOIN company ON \"position\".company_id = company.id",
+      "materialized": true,
+      "with": {
+        "fillfactor": 90
+      }
+    },
     "public.meili_sections_m_idx": {
       "name": "meili_sections_m_idx",
       "schema": "public",
@@ -3779,8 +3968,68 @@
         }
       },
       "isExisting": false,
-      "definition": "SELECT section.crn, section.section, section.course_number, section.instruction_type, section.instruction_method, course.credits, section.max_enroll, section.start_time, section.end_time, COALESCE(array_agg(DISTINCT section_days.day::text) FILTER (WHERE section_days.day IS NOT NULL), '{}'::text[]) AS days, section.term_id::text AS term, (subject.id || ' '::text) || section.course_number AS course, course.title, course.description, course.restrictions, course.repeat_status, course.writing_intensive, subject.id AS subject_id, subject.name AS subject_name, college.id AS college_id, college.name AS college_name, course.id AS course_id, COALESCE(json_agg(DISTINCT jsonb_build_object('id', instructor.id, 'name', instructor.name, 'department', instructor.department, 'avg_rating', instructor.avg_rating::double precision, 'avg_difficulty', instructor.avg_difficulty::double precision, 'num_ratings', instructor.num_ratings, 'rmp_id', instructor.rmp_id, 'weighted_score', instructor.num_ratings::double precision * instructor.avg_rating::double precision)) FILTER (WHERE instructor.id IS NOT NULL), '[]'::json) AS instructors FROM section JOIN course ON course.id = section.course_id JOIN subject ON subject.id = section.subject_code JOIN college ON college.id = subject.college_id JOIN term ON term.id = section.term_id LEFT JOIN section_days ON section_days.section_crn = section.crn LEFT JOIN instructor_sections ON instructor_sections.section_crn = section.crn LEFT JOIN instructor ON instructor.id = instructor_sections.instructor_id GROUP BY section.crn, section.section, section.course_number, section.instruction_type, section.instruction_method, section.max_enroll, section.start_time, section.end_time, section.term_id, course.id, course.title, course.description, course.credits, course.restrictions, course.repeat_status, course.writing_intensive, subject.id, subject.name, college.id, college.name",
+      "definition": "SELECT section.crn, section.section, section.course_number, section.instruction_type, section.instruction_method, course.credits, section.max_enroll, section.start_time, section.end_time, COALESCE(array_agg(DISTINCT section_days.day::text) FILTER (WHERE section_days.day IS NOT NULL), '{}'::text[]) AS days, section.term_id::text AS term, (subject.id || ' '::text) || section.course_number AS course, course.title, course.description, course.restrictions, course.repeat_status, course.writing_intensive, subject.id AS subject_id, subject.name AS subject_name, college.id AS college_id, college.name AS college_name, course.id AS course_id, COALESCE(json_agg(DISTINCT jsonb_build_object('id', instructor.id, 'name', instructor.name, 'department', instructor.department, 'avg_rating', instructor.avg_rating::double precision, 'avg_difficulty', instructor.avg_difficulty::double precision, 'num_ratings', instructor.num_ratings, 'rmp_id', instructor.rmp_id, 'rmp_legacy_id', instructor.rmp_legacy_id, 'weighted_score', instructor.num_ratings::double precision * instructor.avg_rating::double precision)) FILTER (WHERE instructor.id IS NOT NULL), '[]'::json) AS instructors FROM section JOIN course ON course.id = section.course_id JOIN subject ON subject.id = section.subject_code JOIN college ON college.id = subject.college_id JOIN term ON term.id = section.term_id LEFT JOIN section_days ON section_days.section_id = section.id LEFT JOIN instructor_sections ON instructor_sections.section_id = section.id LEFT JOIN instructor ON instructor.id = instructor_sections.instructor_id GROUP BY section.crn, section.section, section.course_number, section.instruction_type, section.instruction_method, section.max_enroll, section.start_time, section.end_time, section.term_id, course.id, course.title, course.description, course.credits, course.restrictions, course.repeat_status, course.writing_intensive, subject.id, subject.name, college.id, college.name",
       "materialized": true
+    },
+    "public.corequisites_m_view": {
+      "name": "corequisites_m_view",
+      "schema": "public",
+      "columns": {
+        "course_id": {
+          "name": "course_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "course_title": {
+          "name": "course_title",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "course_subject_id": {
+          "name": "course_subject_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "course_number": {
+          "name": "course_number",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "coreq_id": {
+          "name": "coreq_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "coreq_title": {
+          "name": "coreq_title",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "coreq_subject_id": {
+          "name": "coreq_subject_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "coreq_course_number": {
+          "name": "coreq_course_number",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "isExisting": false,
+      "definition": "SELECT course_corequisites.course_id, course.title AS course_title, course.subject_id AS course_subject_id, course.course_number, coreq_course.id AS coreq_id, coreq_course.title AS coreq_title, coreq_course.subject_id AS coreq_subject_id, coreq_course.course_number AS coreq_course_number FROM course_corequisites JOIN course ON course.id = course_corequisites.course_id JOIN course coreq_course ON coreq_course.id = course_corequisites.corequisite_course_id",
+      "materialized": true,
+      "with": {
+        "fillfactor": 90
+      }
     },
     "public.meili_professors_m_idx": {
       "name": "meili_professors_m_idx",
@@ -3884,194 +4133,8 @@
         }
       },
       "isExisting": false,
-      "definition": "SELECT instructor.id, instructor.name, instructor.department, instructor.avg_rating, instructor.avg_difficulty, instructor.num_ratings, instructor.rmp_id, instructor.rmp_legacy_id, instructor.num_ratings::numeric * instructor.avg_rating AS weighted_score, count(DISTINCT section.crn) AS total_sections_taught, count(DISTINCT course.id) AS total_courses_taught, count(DISTINCT section.term_id) AS total_terms_active, max(section.term_id) AS most_recent_term, array_agg(DISTINCT subject.id) AS subjects_taught, array_agg(DISTINCT section.instruction_method) AS instruction_methods, COALESCE(json_agg(DISTINCT jsonb_build_object('code', (subject.id || ' '::text) || section.course_number, 'title', course.title)) FILTER (WHERE course.id IS NOT NULL), '[]'::json) AS courses_taught FROM instructor LEFT JOIN instructor_sections ON instructor_sections.instructor_id = instructor.id LEFT JOIN section ON section.crn = instructor_sections.section_crn LEFT JOIN course ON course.id = section.course_id LEFT JOIN subject ON subject.id = section.subject_code GROUP BY instructor.id, instructor.name, instructor.department, instructor.avg_rating, instructor.avg_difficulty, instructor.num_ratings, instructor.rmp_id, instructor.rmp_legacy_id",
+      "definition": "SELECT instructor.id, instructor.name, instructor.department, instructor.avg_rating, instructor.avg_difficulty, instructor.num_ratings, instructor.rmp_id, instructor.rmp_legacy_id, instructor.num_ratings::numeric * instructor.avg_rating AS weighted_score, count(DISTINCT section.crn) AS total_sections_taught, count(DISTINCT course.id) AS total_courses_taught, count(DISTINCT section.term_id) AS total_terms_active, max(section.term_id) AS most_recent_term, array_agg(DISTINCT subject.id) AS subjects_taught, array_agg(DISTINCT section.instruction_method) AS instruction_methods, COALESCE(json_agg(DISTINCT jsonb_build_object('code', (subject.id || ' '::text) || section.course_number, 'title', course.title)) FILTER (WHERE course.id IS NOT NULL), '[]'::json) AS courses_taught FROM instructor LEFT JOIN instructor_sections ON instructor_sections.instructor_id = instructor.id LEFT JOIN section ON section.id = instructor_sections.section_id LEFT JOIN course ON course.id = section.course_id LEFT JOIN subject ON subject.id = section.subject_code GROUP BY instructor.id, instructor.name, instructor.department, instructor.avg_rating, instructor.avg_difficulty, instructor.num_ratings, instructor.rmp_id, instructor.rmp_legacy_id",
       "materialized": true
-    },
-    "public.submissions_m_view": {
-      "name": "submissions_m_view",
-      "schema": "public",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "year": {
-          "name": "year",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "coop_year": {
-          "name": "coop_year",
-          "type": "coop_year",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "coop_cycle": {
-          "name": "coop_cycle",
-          "type": "coop_cycle",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "program_level": {
-          "name": "program_level",
-          "type": "program_level",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "work_hours": {
-          "name": "work_hours",
-          "type": "integer",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "compensation": {
-          "name": "compensation",
-          "type": "double precision",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "other_compensation": {
-          "name": "other_compensation",
-          "type": "varchar(255)",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "details": {
-          "name": "details",
-          "type": "varchar(255)",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "owner_id": {
-          "name": "owner_id",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "created_at": {
-          "name": "created_at",
-          "type": "timestamp",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "company_id": {
-          "name": "company_id",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "position_id": {
-          "name": "position_id",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "company_name": {
-          "name": "company_name",
-          "type": "varchar(255)",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "position_name": {
-          "name": "position_name",
-          "type": "varchar(255)",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "city": {
-          "name": "city",
-          "type": "varchar(100)",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "state": {
-          "name": "state",
-          "type": "varchar(100)",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "state_code": {
-          "name": "state_code",
-          "type": "varchar(3)",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "search_text": {
-          "name": "search_text",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        }
-      },
-      "isExisting": false,
-      "definition": "SELECT submission.id, submission.year, submission.coop_year, submission.coop_cycle, submission.program_level, submission.work_hours, submission.compensation, submission.other_compensation, submission.details, submission.owner_id, submission.created_at, company.id AS company_id, \"position\".id AS position_id, company.name AS company_name, \"position\".name AS position_name, location.city, location.state, location.state_code, (((((((((((COALESCE(company.name, ''::character varying)::text || ' '::text) || COALESCE(\"position\".name, ''::character varying)::text) || ' '::text) || COALESCE(location.city, ''::character varying)::text) || ' '::text) || COALESCE(location.state, ''::character varying)::text) || ' '::text) || COALESCE(location.state_code, ''::character varying)::text) || ' '::text) || COALESCE(submission.details, ''::character varying)::text) || ' '::text) || COALESCE(submission.other_compensation, ''::character varying)::text AS search_text FROM submission LEFT JOIN \"position\" ON submission.position_id = \"position\".id LEFT JOIN location ON submission.location_id = location.id LEFT JOIN company ON \"position\".company_id = company.id",
-      "materialized": true,
-      "with": {
-        "fillfactor": 90
-      }
-    },
-    "public.corequisites_m_view": {
-      "name": "corequisites_m_view",
-      "schema": "public",
-      "columns": {
-        "course_id": {
-          "name": "course_id",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "course_title": {
-          "name": "course_title",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "course_subject_id": {
-          "name": "course_subject_id",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "course_number": {
-          "name": "course_number",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "coreq_id": {
-          "name": "coreq_id",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "coreq_title": {
-          "name": "coreq_title",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "coreq_subject_id": {
-          "name": "coreq_subject_id",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "coreq_course_number": {
-          "name": "coreq_course_number",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false
-        }
-      },
-      "isExisting": false,
-      "definition": "SELECT course_corequisites.course_id, course.title AS course_title, course.subject_id AS course_subject_id, course.course_number, coreq_course.id AS coreq_id, coreq_course.title AS coreq_title, coreq_course.subject_id AS coreq_subject_id, coreq_course.course_number AS coreq_course_number FROM course_corequisites JOIN course ON course.id = course_corequisites.course_id JOIN course coreq_course ON coreq_course.id = course_corequisites.corequisite_course_id",
-      "materialized": true,
-      "with": {
-        "fillfactor": 90
-      }
     },
     "public.prerequisites_m_view": {
       "name": "prerequisites_m_view",

@@ -64,7 +64,6 @@ const getLocationCTE = (db: DbClient, locationStr: string) => {
  */
 const buildWhereClause = (params: SubmissionQuery) =>
    and(
-      // BETWEEN is a single range check vs 22 OR equality conditions
       maybe(
          params?.year,
          ([start_year, end_year]: number[]) =>
@@ -111,8 +110,7 @@ const getSortColumn = (field: SubmissionQuery['sortField']): SQL<unknown> => {
       coop: sql`coop_year`,
       location: sql`city`
    };
-   const value = map[field]!;
-   return map[field] ? value : sql`compensation`;
+   return map[field!] ?? sql`compensation`;
 };
 
 /**
