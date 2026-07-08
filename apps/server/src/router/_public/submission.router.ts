@@ -8,9 +8,14 @@ import {
    submissionMView
 } from '@openmario/db';
 import {
+   INDEX_NAMES,
+   type SubmissionDocument,
+   type MeilisearchService
+} from '@openmario/meilisearch';
+import {
    and,
    eq,
-   ilike,
+   inArray,
    or,
    sql,
    asc,
@@ -21,6 +26,10 @@ import {
 } from 'drizzle-orm';
 import { maybe } from '@/utils';
 import type { SubmissionQuery } from '@openmario/contracts';
+import {
+   searchSubmissionIds,
+   searchSubmissions
+} from '@/utils/submission-search';
 
 /**
  * Helper function to get position ID by company and position name
@@ -58,11 +67,53 @@ const getLocationCTE = (db: DbClient, locationStr: string) => {
    );
 };
 
+const toSubmissionDocument = (
+   row: typeof submissionMView.$inferSelect
+): SubmissionDocument => ({
+   id: row.id,
+   year: row.year,
+   coop_year: row.coop_year,
+   coop_cycle: row.coop_cycle,
+   program_level: row.program_level,
+   work_hours: row.work_hours,
+   compensation: row.compensation,
+   other_compensation: row.other_compensation,
+   details: row.details,
+   company_id: row.company_id,
+   company_name: row.company_name,
+   position_id: row.position_id,
+   position_name: row.position_name,
+   city: row.city,
+   state: row.state,
+   state_code: row.state_code
+});
+
+const syncSubmissionToMeili = async (
+   db: DbClient,
+   meilisearch: MeilisearchService,
+   submissionId: string
+) => {
+   const [row] = await db
+      .select()
+      .from(submissionMView)
+      .where(eq(submissionMView.id, submissionId))
+      .limit(1);
+
+   if (!row) return;
+
+   await meilisearch.client
+      .index<SubmissionDocument>(INDEX_NAMES.submissions)
+      .addDocuments([toSubmissionDocument(row)]);
+};
+
 /**
  * Helper function to build where clause from query parameters.
  * All filters target the flat materialized view — no runtime joins needed.
  */
-const buildWhereClause = (params: SubmissionQuery) =>
+const buildWhereClause = (
+   params: SubmissionQuery,
+   submissionIds?: string[]
+) =>
    and(
       maybe(
          params?.year,
@@ -86,16 +137,9 @@ const buildWhereClause = (params: SubmissionQuery) =>
       maybe(params?.program_level, (level: string) =>
          eq(submissionMView.program_level, level as any)
       ),
-      maybe(params?.search, (search: string) => {
-         const terms = search.trim().split(/\s+/).filter(Boolean);
-         if (terms.length === 0) return undefined;
-
-         return and(
-            ...terms.map(term =>
-               ilike(submissionMView.search_text, `%${term}%`)
-            )
-         );
-      })
+      maybe(submissionIds, (ids: string[]) =>
+         ids.length > 0 ? inArray(submissionMView.id, ids) : sql`false`
+      )
    );
 
 /**
@@ -113,74 +157,97 @@ const getSortColumn = (field: SubmissionQuery['sortField']): SQL<unknown> => {
    return map[field!] ?? sql`compensation`;
 };
 
+const listSubmissionsFromPostgres = async (
+   db: DbClient,
+   input: SubmissionQuery & { pageIndex: number; pageSize: number },
+   submissionIds?: string[]
+) => {
+   const { pageIndex, pageSize, distinct, sort, sortField } = input;
+   const sortColumn = getSortColumn(sortField);
+   const order = sort === 'ASC' ? asc(sortColumn) : desc(sortColumn);
+   const whereClause = buildWhereClause(input, submissionIds);
+
+   const subQuerySelect = <TSelection extends SelectedFields<any, any>>(
+      distinct: boolean,
+      fields: TSelection
+   ) =>
+      distinct
+         ? db.selectDistinctOn(
+              [
+                 submissionMView.company_name,
+                 submissionMView.position_name,
+                 submissionMView.compensation,
+                 submissionMView.program_level
+              ],
+              fields
+           )
+         : db.select(fields);
+
+   const subQuery = subQuerySelect(!!distinct, {
+      id: submissionMView.id,
+      year: submissionMView.year,
+      coop_year: submissionMView.coop_year,
+      coop_cycle: submissionMView.coop_cycle,
+      program_level: submissionMView.program_level,
+      work_hours: submissionMView.work_hours,
+      compensation: submissionMView.compensation,
+      other_compensation: submissionMView.other_compensation,
+      details: submissionMView.details,
+      company: submissionMView.company_name,
+      company_id: submissionMView.company_id,
+      position: submissionMView.position_name,
+      position_id: submissionMView.position_id,
+      location_city: submissionMView.city,
+      location_state: submissionMView.state,
+      location_state_code: submissionMView.state_code
+   })
+      .from(submissionMView)
+      .where(whereClause)
+      .as('sub_query');
+
+   const [count, data] = await Promise.all([
+      db.$count(subQuery),
+      db
+         .select()
+         .from(subQuery)
+         .orderBy(order)
+         .offset((pageIndex - 1) * pageSize)
+         .limit(pageSize)
+   ]);
+
+   return {
+      pageIndex,
+      pageSize,
+      count,
+      data: data as any
+   };
+};
+
 /**
  * Retrieve co-op submission records with pagination and filtering
  */
 export const listSubmissions = os.submission.list.handler(
-   async ({ input, context: { db } }) => {
-      const { pageIndex, pageSize, distinct, sort, sortField } = input;
-      const sortColumn = getSortColumn(sortField);
-      const order = sort === 'ASC' ? asc(sortColumn) : desc(sortColumn);
+   async ({ input, context: { db, meilisearch } }) => {
+      const { pageIndex, pageSize } = input;
 
-      const whereClause = buildWhereClause(input);
+      if (input.search?.trim()) {
+         if (!meilisearch) {
+            throw new Error('Search is unavailable');
+         }
 
-      const subQuerySelect = <TSelection extends SelectedFields<any, any>>(
-         distinct: boolean,
-         fields: TSelection
-      ) =>
-         distinct
-            ? db.selectDistinctOn(
-                 [
-                    submissionMView.company_name,
-                    submissionMView.position_name,
-                    submissionMView.compensation,
-                    submissionMView.program_level
-                 ],
-                 fields
-              )
-            : db.select(fields);
+         if (input.distinct) {
+            const submissionIds = await searchSubmissionIds(meilisearch, input);
+            if (submissionIds.length === 0) {
+               return { pageIndex, pageSize, count: 0, data: [] };
+            }
 
-      const subQuery = subQuerySelect(!!distinct, {
-         id: submissionMView.id,
-         year: submissionMView.year,
-         coop_year: submissionMView.coop_year,
-         coop_cycle: submissionMView.coop_cycle,
-         program_level: submissionMView.program_level,
-         work_hours: submissionMView.work_hours,
-         compensation: submissionMView.compensation,
-         other_compensation: submissionMView.other_compensation,
-         details: submissionMView.details,
-         company: submissionMView.company_name,
-         company_id: submissionMView.company_id,
-         position: submissionMView.position_name,
-         position_id: submissionMView.position_id,
-         location_city: submissionMView.city,
-         location_state: submissionMView.state,
-         location_state_code: submissionMView.state_code
-      })
-         .from(submissionMView)
-         .where(whereClause)
-         .as('sub_query');
+            return listSubmissionsFromPostgres(db, input, submissionIds);
+         }
 
-      return await Promise.all([
-         db.$count(subQuery),
-         db
-            .select()
-            .from(subQuery)
-            .orderBy(order)
-            .offset((pageIndex - 1) * pageSize)
-            .limit(pageSize)
-      ])
-         .then(([count, data]) => ({
-            pageIndex,
-            pageSize,
-            count,
-            data: data as any
-         }))
-         .catch(error => {
-            console.error('Error listing submissions:', error);
-            throw new Error(error.message || 'Failed to list submissions');
-         });
+         return searchSubmissions(meilisearch, { ...input, pageIndex, pageSize });
+      }
+
+      return listSubmissionsFromPostgres(db, input);
    }
 );
 
@@ -188,7 +255,7 @@ export const listSubmissions = os.submission.list.handler(
  * Create new co-op submission
  */
 export const createSubmission = os.submission.create.handler(
-   async ({ input, context: { db } }) => {
+   async ({ input, context: { db, meilisearch } }) => {
       const positionCTE = getPositionCTE(db, input.company, input.position);
       const locationCTE = getLocationCTE(db, input.location);
 
@@ -209,8 +276,11 @@ export const createSubmission = os.submission.create.handler(
             owner_id: null
          })
          .returning({ id: submission.id, owner_id: submission.owner_id })
-         .then(([result]) => {
-            db.refreshMaterializedView(submissionMView).concurrently();
+         .then(async ([result]) => {
+            await db.refreshMaterializedView(submissionMView).concurrently();
+            if (meilisearch) {
+               await syncSubmissionToMeili(db, meilisearch, result!.id);
+            }
             return {
                id: result!.id,
                owner_id: result!.owner_id,
@@ -228,7 +298,7 @@ export const createSubmission = os.submission.create.handler(
  * Update an existing co-op submission
  */
 export const updateSubmission = os.submission.update.handler(
-   async ({ input, context: { db } }) => {
+   async ({ input, context: { db, meilisearch } }) => {
       if (!input.id) {
          throw new Error('Submission ID is required for update');
       }
@@ -253,13 +323,16 @@ export const updateSubmission = os.submission.update.handler(
          })
          .where(and(eq(submission.id, input.id), isNull(submission.owner_id)))
          .returning()
-         .then(([value]) => {
+         .then(async ([value]) => {
             if (!value) {
                throw new Error(
                   'Submission not found or you do not have permission to update it'
                );
             }
-            db.refreshMaterializedView(submissionMView).concurrently();
+            await db.refreshMaterializedView(submissionMView).concurrently();
+            if (meilisearch) {
+               await syncSubmissionToMeili(db, meilisearch, value.id);
+            }
             return {
                id: value.id,
                message: 'Updated position successfully'
