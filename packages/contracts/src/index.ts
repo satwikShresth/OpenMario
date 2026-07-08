@@ -104,6 +104,8 @@ import type {
    GetPrerequisitesResponseSchema,
    CorequisiteSchema,
    GetCorequisitesResponseSchema,
+   DependentSchema,
+   GetDependentsResponseSchema,
    InstructorSchema,
    CourseAvailabilitySchema,
    GetCourseAvailabilitiesResponseSchema
@@ -149,6 +151,8 @@ export type Corequisite = z.infer<typeof CorequisiteSchema>;
 export type GetCorequisitesResponse = z.infer<
    typeof GetCorequisitesResponseSchema
 >;
+export type Dependent = z.infer<typeof DependentSchema>;
+export type GetDependentsResponse = z.infer<typeof GetDependentsResponseSchema>;
 export type Instructor = z.infer<typeof InstructorSchema>;
 export type CourseAvailability = z.infer<typeof CourseAvailabilitySchema>;
 export type GetCourseAvailabilitiesResponse = z.infer<

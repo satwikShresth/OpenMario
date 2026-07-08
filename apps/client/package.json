@@ -12,6 +12,7 @@
   "dependencies": {
     "@babel/plugin-transform-react-display-name": "^7.28.0",
     "@chakra-ui/react": "^3.35.0",
+    "@dagrejs/dagre": "^3.0.0",
     "@emotion/react": "^11.14.0",
     "@faker-js/faker": "^10.4.0",
     "@fullcalendar/core": "^6.1.20",
@@ -44,6 +45,7 @@
     "@tanstack/router": "^0.0.1-beta.53",
     "@tanstack/router-plugin": "^1.167.35",
     "@tanstack/store": "^0.11.0",
+    "@xyflow/react": "^12.11.2",
     "chakra-react-select": "^6.1.1",
     "dexie": "^4.4.2",
     "immer": "^11.1.8",
@@ -62,14 +64,15 @@
     "zod": "^4.4.3"
   },
   "devDependencies": {
+    "@rolldown/plugin-babel": "^0.2.0",
     "@tanstack/devtools-vite": "^0.6.0",
     "@testing-library/dom": "^10.4.1",
     "@testing-library/react": "^16.3.2",
+    "@types/dagre": "^0.7.54",
     "@types/node": "^25.6.2",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
     "@types/three": "^0.184.1",
-    "@rolldown/plugin-babel": "^0.2.0",
     "@vitejs/plugin-react": "^6.0.1",
     "babel-plugin-react-compiler": "^1.0.0",
     "jsdom": "^29.1.1",

@@ -159,6 +159,51 @@ export const getCourseCorequistes = os.course.corequisites.handler(
 );
 
 // ---------------------------------------------------------------------------
+// GET /courses/{course_id}/dependents
+// ---------------------------------------------------------------------------
+
+export const getCourseDependents = os.course.dependents.handler(
+   async ({
+      input: {
+         params: { course_id }
+      },
+      context: { db }
+   }) => {
+      const [courseRow] = await db
+         .select({
+            id: course.id,
+            name: course.title,
+            subjectId: course.subject_id,
+            courseNumber: course.course_number
+         })
+         .from(course)
+         .where(eq(course.id, course_id))
+         .limit(1);
+
+      if (!courseRow) throw new Error('Course not found');
+
+      const rows = await db
+         .select({
+            id: prerequisitesMView.course_id,
+            name: prerequisitesMView.course_title,
+            subjectId: prerequisitesMView.course_subject_id,
+            courseNumber: prerequisitesMView.course_number
+         })
+         .from(prerequisitesMView)
+         .where(eq(prerequisitesMView.prereq_id, course_id));
+
+      const seen = new Set<string>();
+      const dependents = rows.filter(row => {
+         if (seen.has(row.id)) return false;
+         seen.add(row.id);
+         return true;
+      });
+
+      return { data: { course: courseRow, dependents } };
+   }
+);
+
+// ---------------------------------------------------------------------------
 // GET /courses/{course_id}/availabilities
 // ---------------------------------------------------------------------------
 

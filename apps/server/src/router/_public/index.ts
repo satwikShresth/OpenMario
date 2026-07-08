@@ -36,6 +36,7 @@ const router = os.router({
       course: course.getCourse,
       prerequisites: course.getCoursePrerequisites,
       corequisites: course.getCourseCorequistes,
+      dependents: course.getCourseDependents,
       availabilities: course.getCourseAvailabilities
    },
    submission: {
