@@ -26,7 +26,7 @@ function BrandBlock({ minimized }: { minimized: boolean }) {
             justify={minimized ? 'center' : 'flex-start'}
             px={minimized ? 0 : 2}
             py={2}
-            borderRadius='md'
+            borderRadius='lg'
             transition='background 0.15s ease'
             _hover={{ bg: brandHoverBg }}
          >
@@ -41,7 +41,7 @@ function BrandBlock({ minimized }: { minimized: boolean }) {
                style={{ viewTransitionName: 'sidebar-logo' }}
             />
             {!minimized && (
-               <Flex direction='column' minW={0} gap={0} lineHeight='short'>
+               <Flex direction='column' minW={0} gap={0.5} lineHeight='short'>
                   <Box
                      as='span'
                      fontWeight='semibold'
@@ -61,6 +61,26 @@ function BrandBlock({ minimized }: { minimized: boolean }) {
    );
 }
 
+function SidebarShell({
+   minimized,
+   onClose,
+}: {
+   minimized: boolean;
+   onClose?: () => void;
+}) {
+   return (
+      <Flex direction='column' h='full' minH={0}>
+         <Box flexShrink={0} px={minimized ? 2 : 3} py={3}>
+            <BrandBlock minimized={minimized} />
+         </Box>
+
+         <Flex flex={1} minH={0} direction='column' overflow='hidden'>
+            <SidebarItems onClose={onClose} minimized={minimized} />
+         </Flex>
+      </Flex>
+   );
+}
+
 export function Sidebar() {
    const { isMinimized, toggle, drawerOpen, setDrawerOpen } = useSidebarStore();
 
@@ -76,8 +96,6 @@ export function Sidebar() {
    }, [toggle]);
 
    const borderColor = useColorModeValue('gray.200', 'whiteAlpha.200');
-   const drawerBg = useColorModeValue('gray.50', 'gray.950');
-
    const desktopWidth = isMinimized ? SIDEBAR_WIDTH_COLLAPSED : SIDEBAR_WIDTH_EXPANDED;
 
    return (
@@ -91,7 +109,7 @@ export function Sidebar() {
 
             <DrawerContent
                maxW='18rem'
-               bg={drawerBg}
+               bg='bg.subtle'
                borderRightWidth='1px'
                borderColor={borderColor}
                p={0}
@@ -99,14 +117,11 @@ export function Sidebar() {
                <DrawerBody p={0} display='flex' flexDirection='column' h='100dvh' maxH='100dvh' overflow='hidden'>
                   <Flex
                      align='center'
-                     justify='space-between'
-                     px={3}
-                     py={3}
+                     justify='flex-end'
+                     px={2}
+                     pt={2}
                      flexShrink={0}
-                     borderBottomWidth='1px'
-                     borderColor={borderColor}
                   >
-                     <BrandBlock minimized={false} />
                      <DrawerCloseTrigger
                         asChild
                         position='static'
@@ -117,7 +132,7 @@ export function Sidebar() {
                         <IconButton
                            aria-label='Close menu'
                            variant='ghost'
-                           size='xs'
+                           size='sm'
                            borderRadius='lg'
                            color='fg.muted'
                            _hover={{ color: 'fg', bg: 'bg.muted' }}
@@ -127,16 +142,19 @@ export function Sidebar() {
                      </DrawerCloseTrigger>
                   </Flex>
 
-                  <Flex flex={1} minH={0} direction='column' overflow='hidden' px={1} py={2}>
-                     <SidebarItems onClose={() => setDrawerOpen(false)} minimized={false} />
+                  <Flex flex={1} minH={0} direction='column' overflow='hidden'>
+                     <SidebarShell
+                        minimized={false}
+                        onClose={() => setDrawerOpen(false)}
+                     />
                   </Flex>
                </DrawerBody>
             </DrawerContent>
          </DrawerRoot>
 
          {/*
-          * Desktop: first column of the app shell (same row as main). Same canvas as `bg.subtle`
-          * on the parent — no fixed overlay, no inner card; inset layout matches insights `_app`.
+          * Desktop: left column of the outer shell — same `bg.subtle` surface as the parent,
+          * not a nested card. Main content is the only inset panel.
           */}
          <Flex
             display={{ base: 'none', md: 'flex' }}
@@ -148,18 +166,14 @@ export function Sidebar() {
             maxH='100dvh'
             minH={0}
             overflow='hidden'
-            transition='width 200ms ease-linear'
             px={2}
             pt={2}
             pb={2}
+            style={{ viewTransitionName: 'sidebar-shell' }}
          >
-            <Box flexShrink={0} px={isMinimized ? 1 : 1} pb={1}>
-               <BrandBlock minimized={isMinimized} />
-            </Box>
-
-            <Flex flex={1} minH={0} direction='column' overflow='hidden'>
-               <SidebarItems minimized={isMinimized} />
-            </Flex>
+            <SidebarShell
+               minimized={isMinimized}
+            />
          </Flex>
       </>
    );

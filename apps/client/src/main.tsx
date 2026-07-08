@@ -2,6 +2,7 @@ import { createRouter, RouterProvider, stringifySearchWith } from '@tanstack/rea
 import * as TanStackQueryProvider from '@/integrations/tanstack-query/root-provider';
 import { parseSearchWith } from '@tanstack/react-router';
 import { ErrorComponent, NotFoundComponent, LoadingComponent } from '@/components/common';
+import { ViewTransitionEnhancer } from '@/components/common/ViewTransitionEnhancer';
 import { Provider } from '@/components/ui/provider';
 import reportWebVitals from '@/reportWebVitals.ts';
 import { Toaster } from '@/components/ui/toaster';
@@ -22,6 +23,12 @@ const router = createRouter({
    defaultErrorComponent: (props) => <ErrorComponent {...props} />,
    defaultNotFoundComponent: (props) => <NotFoundComponent {...props} />,
    defaultPendingComponent: (props) => <LoadingComponent {...props} />,
+   InnerWrap: ({ children }) => (
+      <>
+         {children}
+         <ViewTransitionEnhancer />
+      </>
+   ),
 });
 
 // Register the router instance for type safety
