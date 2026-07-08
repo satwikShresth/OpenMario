@@ -126,6 +126,37 @@ export const getCourseCorequistesContract = oc
    .output(GetCorequisitesResponseSchema);
 
 // ============================================================================
+// GET /courses/{course_id}/dependents
+// ============================================================================
+
+export const DependentSchema = z.object({
+   id: z.string(),
+   name: z.string(),
+   subjectId: z.string(),
+   courseNumber: z.string()
+});
+
+export const GetDependentsResponseSchema = z.object({
+   data: z.object({
+      course: CourseInfoSchema,
+      dependents: z.array(DependentSchema)
+   })
+});
+
+export const getCourseDependentsContract = oc
+   .route({
+      method: 'GET',
+      path: '/courses/{course_id}/dependents',
+      summary: 'Get courses that require this course',
+      description:
+         'Retrieve courses that list this course as a prerequisite (reverse prerequisite lookup)',
+      tags: ['Courses'],
+      inputStructure: 'detailed'
+   })
+   .input(z.object({ params: CourseIdParamSchema }))
+   .output(GetDependentsResponseSchema);
+
+// ============================================================================
 // GET /courses/{course_id}/availabilities
 // ============================================================================
 
@@ -172,5 +203,6 @@ export const courseContract = {
    course: getCourseContract,
    prerequisites: getCoursePrerequisitesContract,
    corequisites: getCourseCorequistesContract,
+   dependents: getCourseDependentsContract,
    availabilities: getCourseAvailabilitiesContract
 };

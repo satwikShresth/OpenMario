@@ -69,7 +69,6 @@ export default ({ course_id }: PreReqProps) => {
                                                       }}
                                                       reloadDocument={false}
                                                       resetScroll={false}
-                                                      replace={true}
                                                    >
 
                                                       <Tag
@@ -158,7 +157,6 @@ export default ({ course_id }: PreReqProps) => {
                                  }}
                                  reloadDocument={false}
                                  resetScroll={false}
-                                 replace={true}
                               >
 
                                  <Tag

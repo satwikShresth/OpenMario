@@ -119,7 +119,6 @@ export const Card = ({ section }: { section: Section }) => {
                            params={{ course_id: section?.course_id ?? '' }}
                            reloadDocument={false}
                            resetScroll={false}
-                           replace={true}
                         >
                            <Text
                               _hover={{ textDecoration: 'underline' }}

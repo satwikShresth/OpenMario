@@ -70,7 +70,7 @@ export function CourseDialogPage() {
                      </Box>
                   )}
 
-                  <Search.Courses.Req course_id={course_id} />
+                  <Search.Courses.ReqSection course_id={course_id} />
 
                   <Separator />
 
