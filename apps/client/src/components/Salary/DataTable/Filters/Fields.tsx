@@ -1,7 +1,5 @@
 import {
    createListCollection,
-   Field,
-   Input,
    Portal,
    Select,
    Slider,
@@ -10,7 +8,6 @@ import {
    VStack,
 } from '@chakra-ui/react';
 import { useForm } from '@tanstack/react-form';
-import { useEffect, useRef, useState } from 'react';
 import { CheckIcon, CloseIcon } from '@/components/icons';
 import { useMobile } from '@/hooks';
 import { capitalizeWords, coopCycle, coopYear, marksMaker, programLevel } from '@/helpers';
@@ -24,35 +21,12 @@ export default () => {
    const max = new Date().getFullYear();
    const marks = marksMaker(min, max, 3);
 
-   // Local state for the search input — decoupled from URL so every keystroke
-   // doesn't re-trigger the route loader (which blanks the screen).
-   const [searchInput, setSearchInput] = useState(query?.search ?? '');
-   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-
-   useEffect(() => {
-      if (debounceRef.current) clearTimeout(debounceRef.current);
-      debounceRef.current = setTimeout(() => {
-         navigate({
-            search: (prev) => ({
-               ...prev,
-               search: searchInput.trim() || undefined,
-            }),
-            reloadDocument: false,
-            resetScroll: false,
-            replace: true,
-         });
-      }, 450);
-      return () => {
-         if (debounceRef.current) clearTimeout(debounceRef.current);
-      };
-   }, [searchInput]);
-
    const defaultValues = {
       year: query?.year ?? [],
       coop_cycle: query?.coop_cycle ?? [],
       coop_year: query?.coop_year ?? [],
       program_level: query?.program_level ?? '',
-      distinct: true,
+      distinct: query?.distinct ?? true,
    };
 
    const isMobile = useMobile();
@@ -83,14 +57,6 @@ export default () => {
                mb={2}
                gap={5}
             >
-               <Field.Root flexGrow={1}>
-                  <Field.Label>Search</Field.Label>
-                  <Input
-                     value={searchInput}
-                     onChange={(e) => setSearchInput(e.target.value)}
-                     placeholder='Search by company, position, location...'
-                  />
-               </Field.Root>
                <form.Field name='distinct'>
                   {({ state, handleChange, name }) => (
                      <Switch.Root

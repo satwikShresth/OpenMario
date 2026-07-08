@@ -6,7 +6,7 @@ export async function waitForTask(
    options?: { ignoreAlreadyExists?: boolean; timeOutMs?: number }
 ) {
    const task = await meilisearch.tasks.waitForTask(taskUid, {
-      timeOutMs: options?.timeOutMs ?? 60_000
+      timeout: options?.timeOutMs ?? 60_000
    });
    if (task.status === 'failed') {
       const message = task.error?.message ?? 'unknown error';
