@@ -15,12 +15,13 @@ import { createReadStream } from 'node:fs';
 import { createInterface } from 'node:readline';
 import { join } from 'node:path';
 import { section, section_days, instructor, instructor_sections } from '@openmario/db';
-import { eq, inArray, sql } from 'drizzle-orm';
+import { eq, inArray, sql, and } from 'drizzle-orm';
 import { getNeonDb } from '@/db/neon';
 import { env } from '@env';
 import type { DayOfWeek } from '@/scraper/types';
 
 const SECTIONS_FILE = join(env.DATA_DIR, 'sections.jsonl');
+const TERM_ID = Number(process.env.TERM_ID);
 
 interface SectionLine {
    crn: number;
@@ -91,10 +92,7 @@ async function resolveInstructorMap(
    return map;
 }
 
-async function updateSection(db: ReturnType<typeof getNeonDb>, line: SectionLine, instrMap: Map<string, number>) {
-   const crn = line.crn;
-
-   // 1. Update the section row and check it existed
+async function updateSection(db: ReturnType<typeof getNeonDb>, line: SectionLine, termId: number, instrMap: Map<string, number>) {
    const result = await db
       .update(section)
       .set({
@@ -104,31 +102,33 @@ async function updateSection(db: ReturnType<typeof getNeonDb>, line: SectionLine
          instruction_type: line.instrType,
          instruction_method: line.instrMethod,
       })
-      .where(eq(section.crn, crn))
-      .returning({ crn: section.crn });
+      .where(and(eq(section.crn, line.crn), eq(section.term_id, termId)))
+      .returning({ id: section.id });
 
    if (result.length === 0) {
-      console.warn(`  CRN ${crn}: not found in section table — skipping`);
+      console.warn(`  CRN ${line.crn} (term ${termId}): not found in section table — skipping`);
       return false;
    }
 
+   const sectionId = result[0]!.id;
+
    // 2. Replace section_days
-   await db.delete(section_days).where(eq(section_days.section_crn, crn));
+   await db.delete(section_days).where(eq(section_days.section_id, sectionId));
    if (line.days.length > 0) {
       await db.insert(section_days).values(
-         line.days.map(day => ({ section_crn: crn, day }))
+         line.days.map(day => ({ section_id: sectionId, day }))
       );
    }
 
    // 3. Replace instructor_sections
-   await db.delete(instructor_sections).where(eq(instructor_sections.section_crn, crn));
+   await db.delete(instructor_sections).where(eq(instructor_sections.section_id, sectionId));
    const instrIds = line.instructors
       .map(name => instrMap.get(name))
       .filter((id): id is number => id !== undefined);
 
    if (instrIds.length > 0) {
       await db.insert(instructor_sections).values(
-         instrIds.map(instructor_id => ({ instructor_id, section_crn: crn }))
+         instrIds.map(instructor_id => ({ instructor_id, section_id: sectionId }))
       );
    }
 
@@ -136,6 +136,10 @@ async function updateSection(db: ReturnType<typeof getNeonDb>, line: SectionLine
 }
 
 async function main() {
+   if (!Number.isInteger(TERM_ID) || TERM_ID <= 0) {
+      throw new Error('TERM_ID env var must be a positive integer (e.g. 202615)');
+   }
+
    const db = getNeonDb();
 
    console.log(`Reading ${SECTIONS_FILE}…`);
@@ -150,7 +154,7 @@ async function main() {
    let updated = 0;
    let skipped = 0;
    for (const line of lines) {
-      const ok = await updateSection(db, line, instrMap);
+      const ok = await updateSection(db, line, TERM_ID, instrMap);
       if (ok) {
          updated++;
          console.log(`  ✓ CRN ${line.crn} — ${line.subjectCode} ${line.courseNumber} §${line.section}`);

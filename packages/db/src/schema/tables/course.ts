@@ -8,6 +8,7 @@ import {
    primaryKey,
    text,
    time,
+   unique,
    uuid
 } from 'drizzle-orm/pg-core';
 
@@ -76,7 +77,8 @@ export const instructor = pgTable('instructor', {
 export const section = pgTable(
    'section',
    {
-      crn: integer().primaryKey(),
+      id: uuid().defaultRandom().primaryKey(),
+      crn: integer().notNull(),
       course_id: uuid()
          .notNull()
          .references(() => course.id, { onDelete: 'restrict' }),
@@ -95,6 +97,8 @@ export const section = pgTable(
       instruction_type: text()
    },
    table => [
+      unique('section_crn_term_id_unique').on(table.crn, table.term_id),
+      index().on(table.crn),
       index().on(table.course_id),
       index().on(table.term_id),
       index().on(table.subject_code)
@@ -104,12 +108,12 @@ export const section = pgTable(
 export const section_days = pgTable(
    'section_days',
    {
-      section_crn: integer()
+      section_id: uuid()
          .notNull()
-         .references(() => section.crn, { onDelete: 'cascade' }),
+         .references(() => section.id, { onDelete: 'cascade' }),
       day: day_of_week_enum().notNull()
    },
-   table => [primaryKey({ columns: [table.section_crn, table.day] })]
+   table => [primaryKey({ columns: [table.section_id, table.day] })]
 );
 
 export const instructor_sections = pgTable(
@@ -118,13 +122,13 @@ export const instructor_sections = pgTable(
       instructor_id: integer()
          .notNull()
          .references(() => instructor.id, { onDelete: 'cascade' }),
-      section_crn: integer()
+      section_id: uuid()
          .notNull()
-         .references(() => section.crn, { onDelete: 'cascade' })
+         .references(() => section.id, { onDelete: 'cascade' })
    },
    table => [
-      primaryKey({ columns: [table.instructor_id, table.section_crn] }),
-      index().on(table.section_crn)
+      primaryKey({ columns: [table.instructor_id, table.section_id] }),
+      index().on(table.section_id)
    ]
 );
 

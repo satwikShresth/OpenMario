@@ -13,6 +13,7 @@
 import { createReadStream } from 'node:fs';
 import { createInterface } from 'node:readline';
 import { join } from 'node:path';
+import { randomUUID } from 'node:crypto';
 import {
    section,
    section_days,
@@ -22,7 +23,7 @@ import {
    subject,
    term
 } from '@openmario/db';
-import { eq, inArray, sql } from 'drizzle-orm';
+import { eq, inArray, sql, and } from 'drizzle-orm';
 import { getNeonDb } from '@/db/neon';
 import { env } from '@env';
 import type { DayOfWeek } from '@/scraper/types';
@@ -122,14 +123,17 @@ async function insertSection(
    instrMap: Map<string, number>
 ): Promise<'inserted' | 'skipped'> {
    const existing = await db
-      .select({ crn: section.crn })
+      .select({ id: section.id })
       .from(section)
-      .where(eq(section.crn, line.crn))
+      .where(and(eq(section.crn, line.crn), eq(section.term_id, termId)))
       .limit(1);
 
    if (existing.length > 0) return 'skipped';
 
+   const sectionId = randomUUID();
+
    await db.insert(section).values({
+      id: sectionId,
       crn: line.crn,
       course_id: courseId,
       subject_code: line.subjectCode,
@@ -145,7 +149,7 @@ async function insertSection(
 
    if (line.days.length > 0) {
       await db.insert(section_days).values(
-         line.days.map(day => ({ section_crn: line.crn, day }))
+         line.days.map(day => ({ section_id: sectionId, day }))
       );
    }
 
@@ -157,7 +161,7 @@ async function insertSection(
       await db.insert(instructor_sections).values(
          instrIds.map(instructor_id => ({
             instructor_id,
-            section_crn: line.crn
+            section_id: sectionId
          }))
       );
    }

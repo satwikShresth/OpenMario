@@ -223,7 +223,7 @@ export const meiliProfessorsIdx = pgMaterializedView(
          instructor_sections,
          eq(instructor_sections.instructor_id, instructor.id)
       )
-      .leftJoin(section, eq(section.crn, instructor_sections.section_crn))
+      .leftJoin(section, eq(section.id, instructor_sections.section_id))
       .leftJoin(course, eq(course.id, section.course_id))
       .leftJoin(subject, eq(subject.id, section.subject_code))
       .groupBy(
@@ -328,10 +328,10 @@ export const meiliSectionsIdx = pgMaterializedView('meili_sections_m_idx').as(
          .innerJoin(subject, eq(subject.id, section.subject_code))
          .innerJoin(college, eq(college.id, subject.college_id))
          .innerJoin(term, eq(term.id, section.term_id))
-         .leftJoin(section_days, eq(section_days.section_crn, section.crn))
+         .leftJoin(section_days, eq(section_days.section_id, section.id))
          .leftJoin(
             instructor_sections,
-            eq(instructor_sections.section_crn, section.crn)
+            eq(instructor_sections.section_id, section.id)
          )
          .leftJoin(
             instructor,

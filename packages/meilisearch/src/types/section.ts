@@ -11,6 +11,7 @@ export type SectionInstructor = {
 };
 
 export type SectionDocument = {
+   id: string;
    crn: number;
    section: string;
    course_number: string;

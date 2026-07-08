@@ -182,7 +182,7 @@ export const getCourseAvailabilities = os.course.availabilities.handler(
          .from(section)
          .leftJoin(
             instructor_sections,
-            eq(instructor_sections.section_crn, section.crn)
+            eq(instructor_sections.section_id, section.id)
          )
          .leftJoin(
             instructor,
