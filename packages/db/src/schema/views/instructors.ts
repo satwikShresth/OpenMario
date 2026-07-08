@@ -37,7 +37,7 @@ export const instructorSectionsMView = pgMaterializedView(
          instructor_sections,
          eq(instructor_sections.instructor_id, instructor.id)
       )
-      .innerJoin(section, eq(section.crn, instructor_sections.section_crn))
+      .innerJoin(section, eq(section.id, instructor_sections.section_id))
       .innerJoin(course, eq(course.id, section.course_id))
       .innerJoin(subject, eq(subject.id, section.subject_code))
 );

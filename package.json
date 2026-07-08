@@ -31,7 +31,9 @@
       "db:generate": "bun run --env-file=.env drizzle-kit generate",
       "db:migrate": "bun run --env-file=.env drizzle-kit migrate",
       "db:push": "bun run --env-file=.env drizzle-kit push",
-      "db:studio": "bun run --env-file=.env drizzle-kit studio"
+      "db:studio": "bun run --env-file=.env drizzle-kit studio",
+      "meili:seed": "bun run --filter @openmario/meilisearch seed",
+      "meili:seed:courses": "bun run --filter @openmario/meilisearch seed:courses"
    },
    "devDependencies": {
       "@types/bun": "^1.3.5",

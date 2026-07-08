@@ -1,5 +1,5 @@
 {
-   "primaryKey": "crn",
+   "primaryKey": "id",
    "settings": {
       "searchableAttributes": [
          "crn",

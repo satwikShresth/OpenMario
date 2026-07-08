@@ -10,6 +10,7 @@ import {
 import {
    and,
    eq,
+   ilike,
    or,
    sql,
    asc,
@@ -87,27 +88,14 @@ const buildWhereClause = (params: SubmissionQuery) =>
          eq(submissionMView.program_level, level as any)
       ),
       maybe(params?.search, (search: string) => {
-         const terms = search.trim().split(/\s+/);
+         const terms = search.trim().split(/\s+/).filter(Boolean);
+         if (terms.length === 0) return undefined;
 
-         const termClauses = terms.map(
-            term => sql`paradedb.boolean(
-            should => ARRAY[
-               -- fuzzy fallback on the concat field catches typos/partials
-               paradedb.fuzzy_term('search_text', ${term}, distance => 2),
-
-               -- prefix match per field with boosts for ranking
-               paradedb.boost(4.0, paradedb.fuzzy_term('company_name',  ${term}, distance => 2, prefix => true)),
-               paradedb.boost(3.0, paradedb.fuzzy_term('position_name', ${term}, distance => 2, prefix => true)),
-               paradedb.boost(2.0, paradedb.fuzzy_term('city',          ${term}, distance => 2, prefix => true)),
-               paradedb.boost(1.5, paradedb.fuzzy_term('state',         ${term}, distance => 2, prefix => true)),
-               paradedb.boost(1.0, paradedb.fuzzy_term('details',       ${term}, distance => 2, prefix => true))
-            ]
-         )`
+         return and(
+            ...terms.map(term =>
+               ilike(submissionMView.search_text, `%${term}%`)
+            )
          );
-
-         return sql`${submissionMView.id} @@@ paradedb.boolean(
-         must => ARRAY[${sql.join(termClauses, sql`, `)}]
-      )`;
       })
    );
 
@@ -170,10 +158,7 @@ export const listSubmissions = os.submission.list.handler(
          position_id: submissionMView.position_id,
          location_city: submissionMView.city,
          location_state: submissionMView.state,
-         location_state_code: submissionMView.state_code,
-         rank: input?.search
-            ? sql`paradedb.score(id)`.as('rank')
-            : sql`0`.as('rank')
+         location_state_code: submissionMView.state_code
       })
          .from(submissionMView)
          .where(whereClause)
@@ -184,7 +169,7 @@ export const listSubmissions = os.submission.list.handler(
          db
             .select()
             .from(subQuery)
-            .orderBy(desc(sql`rank`), order)
+            .orderBy(order)
             .offset((pageIndex - 1) * pageSize)
             .limit(pageSize)
       ])

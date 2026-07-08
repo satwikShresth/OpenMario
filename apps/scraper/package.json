@@ -14,6 +14,7 @@
   "dependencies": {
     "@dotenvx/dotenvx": "^1.52.0",
     "@openmario/db": "workspace:*",
+    "@t3-oss/env-core": "^0.13.11",
     "@orpc/contract": "^1.13.6",
     "@orpc/server": "^1.13.6",
     "@orpc/zod": "^1.13.6",

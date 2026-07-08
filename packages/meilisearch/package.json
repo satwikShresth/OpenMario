@@ -8,7 +8,8 @@
       ".": "./src/index.ts"
    },
    "scripts": {
-      "seed": "bun run --env-file=../../.env search_index/index.ts"
+      "seed": "bun run --env-file=../../.env search_index/index.ts",
+      "seed:courses": "bun run --env-file=../../.env search_index/index.ts courses"
    },
    "dependencies": {
       "@openmario/db": "workspace:*",

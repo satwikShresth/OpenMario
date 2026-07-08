@@ -101,6 +101,7 @@
         "@orpc/contract": "^1.13.6",
         "@orpc/server": "^1.13.6",
         "@orpc/zod": "^1.13.6",
+        "@t3-oss/env-core": "^0.13.11",
         "drizzle-orm": "^0.45.1",
         "playwright": "1.58.2",
         "trpc-cli": "^0.12.4",
