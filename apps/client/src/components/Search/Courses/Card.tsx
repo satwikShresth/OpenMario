@@ -15,7 +15,7 @@ import type { Section } from '@/types';
 import { Tag, Tooltip } from '@/components/ui';
 import { ExternalLinkIcon, HeartFilledIcon, HeartIcon } from '@/components/icons';
 import { Link, linkOptions, useMatch } from '@tanstack/react-router';
-import { getDifficultyColor, getRatingColor, weekItems } from './helpers';
+import { getDifficultyColor, getRatingColor, weekItems, parseDrexelTerm, formatDrexelTerm } from './helpers';
 import { formatTime, orpc } from '@/helpers';
 import { useInfiniteHits } from 'react-instantsearch';
 import { useCallback, useRef } from 'react';
@@ -73,8 +73,7 @@ export const Cards = () => {
 export const Card = ({ section }: { section: Section }) => {
    const isMobile = useMobile();
    const match = useMatch({ strict: false });
-   const { termName: sectionTermName, year: sectionYear } = parseDrexelTerm(section.term);
-   const termLabel = sectionTermName && sectionYear ? `${sectionTermName} ${sectionYear}` : section.term;
+   const termLabel = formatDrexelTerm(section.term);
    const { data: courseRaw } = useQuery(
       orpc.course.course.queryOptions({ input: { params: { course_id: section.course_id } } })
    );
@@ -359,24 +358,6 @@ export const Card = ({ section }: { section: Section }) => {
       </CCard.Root>
    );
 };
-
-/** Drexel term codes: YYYYTT where TT ∈ {15=Fall, 25=Winter, 35=Spring, 45=Summer} */
-const TERM_CODE_MAP: Record<string, string> = {
-   '15': 'Fall',
-   '25': 'Winter',
-   '35': 'Spring',
-   '45': 'Summer',
-};
-
-/** Parse a raw Drexel term id string (e.g. "202515") into { termName, year }. */
-function parseDrexelTerm(raw: string): { termName: string; year: number | null } {
-   if (raw.length < 3) return { termName: '', year: null };
-   const code = raw.slice(-2);          // "15"
-   const yearStr = raw.slice(0, -2);    // "2025"
-   const year = Number.parseInt(yearStr, 10);
-   const termName = TERM_CODE_MAP[code] ?? '';
-   return { termName, year: Number.isFinite(year) && termName ? year : null };
-}
 
 const CardButtons = (
    { section, noSection = false }: { section: Section; noSection?: boolean },

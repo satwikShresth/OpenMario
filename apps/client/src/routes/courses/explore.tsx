@@ -16,6 +16,7 @@ import {
   Stats,
 } from '@/components/Search';
 import { Courses } from '@/components/Courses';
+import { formatDrexelTerm } from '@/components/Search/Courses/helpers';
 import { useMobile } from '@/hooks';
 import { FilterIcon, HeartFilledIcon, HeartIcon } from '@/components/icons';
 import { Outlet } from '@tanstack/react-router';
@@ -91,7 +92,11 @@ export const Route = createFileRoute('/courses/explore')({
               <SearchBox />
             </Box>
             <Box flexShrink={0} width={{ base: 'full', sm: 'auto' }}>
-              <RefinementSelect attribute='term' size={{ base: 'md', md: 'lg' }} />
+              <RefinementSelect
+                attribute='term'
+                formatLabel={formatDrexelTerm}
+                size={{ base: 'md', md: 'lg' }}
+              />
             </Box>
           </Flex>
 
