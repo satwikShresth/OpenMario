@@ -49,7 +49,7 @@ services:
     networks:
       - openmario
 
-  # MCP Streamable HTTP — proxy mcp.openmario.com → this service
+  # MCP Streamable HTTP — proxy mcp.openmario.com → this service (MCP at /)
   mcp:
     build:
       dockerfile: Dockerfile

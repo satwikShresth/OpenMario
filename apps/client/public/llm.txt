@@ -2,7 +2,7 @@
 
 > Transparency for Drexel students — co-op salaries, employer reviews, professors, courses, and an MCP server for AI clients. No paywall. No signups.
 
-OpenMario is a free, student-built toolkit for navigating Drexel University co-ops and academics. Prefer machine-readable access via MCP at `https://mcp.openmario.com/mcp`.
+OpenMario is a free, student-built toolkit for navigating Drexel University co-ops and academics. Prefer machine-readable access via MCP at `https://mcp.openmario.com`.
 
 ## Product
 
@@ -16,7 +16,7 @@ OpenMario is a free, student-built toolkit for navigating Drexel University co-o
 
 ## MCP
 
-- [MCP endpoint](https://mcp.openmario.com/mcp): Streamable HTTP Model Context Protocol server
+- [MCP endpoint](https://mcp.openmario.com/): Streamable HTTP Model Context Protocol server
 - [MCP health](https://mcp.openmario.com/health): Liveness check
 - [MCP install guide](https://openmario.com/mcp): Copy-paste configs for popular AI clients
 

@@ -1,6 +1,6 @@
 # OpenMario MCP Server
 
-Remote Model Context Protocol server for AI clients (Cursor, Claude, etc.) at **`https://mcp.openmario.com/mcp`**.
+Remote Model Context Protocol server for AI clients (Cursor, Claude, ChatGPT, etc.) at **`https://mcp.openmario.com`**.
 
 **Install UI:** [https://openmario.com/mcp](https://openmario.com/mcp)  
 **Agent index:** [https://openmario.com/llms.txt](https://openmario.com/llms.txt) (also `/llm.txt`)
@@ -31,7 +31,7 @@ bun run mcp:start   # runs apps/mcp/dist/index.js
 ```
 
 Health: `http://localhost:3100/health`  
-MCP: `http://localhost:3100/mcp`
+MCP: `http://localhost:3100/`
 
 ### Cursor remote MCP config
 
@@ -39,7 +39,7 @@ MCP: `http://localhost:3100/mcp`
 {
   "mcpServers": {
     "openmario": {
-      "url": "http://localhost:3100/mcp"
+      "url": "http://localhost:3100"
     }
   }
 }
@@ -51,7 +51,7 @@ Production:
 {
   "mcpServers": {
     "openmario": {
-      "url": "https://mcp.openmario.com/mcp"
+      "url": "https://mcp.openmario.com"
     }
   }
 }
@@ -70,7 +70,7 @@ Without embedders, tools automatically fall back to keyword search.
 
 ## Salary write gate
 
-1. `parse_offers_screenshot` — base64 PNG/JPEG/WebP of DrexelOne rankings/offers + coop context  
+1. `request_offers_upload` → PUT screenshot → `parse_offers_screenshot`  
 2. `submit_salaries_from_offers` — `parse_token` (or same screenshot again)
 
 Free-form salary create is intentionally not exposed.
@@ -79,7 +79,7 @@ Free-form salary create is intentionally not exposed.
 
 1. Run `apps/mcp` as its own process (Compose service recommended).
 2. Point DNS `mcp.openmario.com` at your reverse proxy.
-3. Proxy HTTPS → `http://mcp:3100` (path `/mcp` and `/health`).
+3. Proxy HTTPS → `http://mcp:3100` (MCP at `/`, plus `/health` and `/uploads/*`).
 4. Set `MCP_ALLOWED_HOSTS=mcp.openmario.com` and `NODE_ENV=production`.
 
 Example Caddy snippet:
@@ -93,5 +93,5 @@ mcp.openmario.com {
 ## Smoke test
 
 ```bash
-bunx @modelcontextprotocol/inspector http://localhost:3100/mcp
+bunx @modelcontextprotocol/inspector http://localhost:3100
 ```

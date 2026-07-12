@@ -1,8 +1,19 @@
-import { Box, Button, Code, Flex, Heading, Icon, List, Separator, Text } from '@chakra-ui/react';
+import {
+   Box,
+   Button,
+   Code,
+   Flex,
+   Heading,
+   Icon,
+   Image,
+   List,
+   Separator,
+   Text,
+} from '@chakra-ui/react';
 import { useState } from 'react';
 import { CheckIcon, ClipboardIcon } from '@/components/icons';
 
-const MCP_URL = 'https://mcp.openmario.com/mcp';
+const MCP_URL = 'https://mcp.openmario.com';
 
 const CURSOR_JSON = `{
   "mcpServers": {
@@ -65,6 +76,33 @@ function Snippet({ value }: { value: string }) {
    );
 }
 
+function GuideShot({
+   src,
+   alt,
+   caption,
+}: {
+   src: string;
+   alt: string;
+   caption: string;
+}) {
+   return (
+      <Box mt={3} mb={1}>
+         <Box
+            borderWidth='1px'
+            borderColor='border'
+            borderRadius='lg'
+            overflow='hidden'
+            bg='bg.subtle'
+         >
+            <Image src={src} alt={alt} w='full' display='block' />
+         </Box>
+         <Text fontSize='sm' color='fg.muted' mt={2} lineHeight='1.5'>
+            {caption}
+         </Text>
+      </Box>
+   );
+}
+
 export function McpInstallPage() {
    return (
       <Flex
@@ -101,7 +139,6 @@ export function McpInstallPage() {
 
          <Separator />
 
-         {/* Claude web — average joe path first */}
          <Box>
             <Heading as='h2' fontFamily='body' fontSize='lg' fontWeight='semibold' mb={2}>
                Claude on the web (claude.ai)
@@ -115,47 +152,76 @@ export function McpInstallPage() {
             </Text>
             <List.Root as='ol' ps={5} gap={2} fontSize='md' color='fg' lineHeight='1.7'>
                <List.Item>
-                  Open{' '}
-                  <Text as='span' fontWeight='medium'>
-                     Customize → Connectors
-                  </Text>{' '}
-                  (or go to{' '}
-                  <Code fontSize='sm'>claude.ai/customize/connectors</Code>).
-               </List.Item>
-               <List.Item>
-                  Click{' '}
-                  <Text as='span' fontWeight='medium'>
-                     +
-                  </Text>
-                  , then{' '}
-                  <Text as='span' fontWeight='medium'>
-                     Add custom connector
-                  </Text>
-                  .
-               </List.Item>
-               <List.Item>
-                  Paste this URL (no login / OAuth needed):
-                  <Box mt={2}>
-                     <Snippet value={MCP_URL} />
-                  </Box>
-               </List.Item>
-               <List.Item>
-                  Click{' '}
-                  <Text as='span' fontWeight='medium'>
-                     Add
-                  </Text>
-                  .
-               </List.Item>
-               <List.Item>
-                  In a new chat, click the{' '}
+                  In a chat, click the{' '}
                   <Text as='span' fontWeight='medium'>
                      +
                   </Text>{' '}
                   button →{' '}
                   <Text as='span' fontWeight='medium'>
                      Connectors
+                  </Text>{' '}
+                  →{' '}
+                  <Text as='span' fontWeight='medium'>
+                     Add connector
+                  </Text>{' '}
+                  →{' '}
+                  <Text as='span' fontWeight='medium'>
+                     Add custom connector
                   </Text>
-                  , and turn on OpenMario for that conversation.
+                  .
+                  <GuideShot
+                     src='/mcp/claude-add-connector.jpg'
+                     alt='Claude chat + menu showing Connectors → Add connector → Add custom connector'
+                     caption='From the chat composer: + → Connectors → Add connector → Add custom connector.'
+                  />
+               </List.Item>
+               <List.Item>
+                  You can also manage connectors under{' '}
+                  <Text as='span' fontWeight='medium'>
+                     Customize → Connectors
+                  </Text>{' '}
+                  (
+                  <Code fontSize='sm'>claude.ai/customize/connectors</Code>
+                  ).
+               </List.Item>
+               <List.Item>
+                  In the dialog, set{' '}
+                  <Text as='span' fontWeight='medium'>
+                     Name
+                  </Text>{' '}
+                  to OpenMario and{' '}
+                  <Text as='span' fontWeight='medium'>
+                     URL
+                  </Text>{' '}
+                  to:
+                  <Box mt={2}>
+                     <Snippet value={MCP_URL} />
+                  </Box>
+                  Leave OAuth blank (not required). Then click{' '}
+                  <Text as='span' fontWeight='medium'>
+                     Add
+                  </Text>
+                  .
+                  <GuideShot
+                     src='/mcp/claude-custom-connector-url.jpg'
+                     alt='Add custom connector dialog with Name OpenMario and URL https://mcp.openmario.com'
+                     caption='Name: OpenMario · URL: https://mcp.openmario.com (no /mcp path, no OAuth).'
+                  />
+               </List.Item>
+               <List.Item>
+                  Back in chat, open{' '}
+                  <Text as='span' fontWeight='medium'>
+                     +
+                  </Text>{' '}
+                  →{' '}
+                  <Text as='span' fontWeight='medium'>
+                     Connectors
+                  </Text>{' '}
+                  and turn on{' '}
+                  <Text as='span' fontWeight='medium'>
+                     OpenMario
+                  </Text>{' '}
+                  for that conversation.
                </List.Item>
                <List.Item>
                   Ask something concrete, e.g. “Find co-op salaries for technology auditor roles”
