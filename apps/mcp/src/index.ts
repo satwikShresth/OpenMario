@@ -35,6 +35,26 @@ function normalizeMime(raw: string | undefined): string {
    return mime;
 }
 
+async function handleMcp(c: {
+   req: { raw: Request };
+}) {
+   const server = createOpenMarioMcpServer();
+   const transport = new WebStandardStreamableHTTPServerTransport({
+      enableJsonResponse: true,
+      allowedHosts,
+      enableDnsRebindingProtection: env.NODE_ENV === 'production'
+   });
+
+   await server.connect(transport);
+
+   try {
+      return await transport.handleRequest(c.req.raw);
+   } finally {
+      await transport.close().catch(() => undefined);
+      await server.close().catch(() => undefined);
+   }
+}
+
 const app = new Hono({ strict: false })
    .use('*', logger())
    .use(
@@ -57,15 +77,7 @@ const app = new Hono({ strict: false })
          status: 'ok',
          application: 'openmario-mcp',
          transport: 'streamable-http',
-         endpoint: '/mcp'
-      })
-   )
-   .get('/', c =>
-      c.json({
-         status: 'ok',
-         application: 'openmario-mcp',
-         transport: 'streamable-http',
-         endpoint: '/mcp'
+         endpoint: '/'
       })
    )
    .put('/uploads/:upload_id', async c => {
@@ -158,23 +170,9 @@ const app = new Hono({ strict: false })
          );
       }
    })
-   .all('/mcp', async c => {
-      const server = createOpenMarioMcpServer();
-      const transport = new WebStandardStreamableHTTPServerTransport({
-         enableJsonResponse: true,
-         allowedHosts,
-         enableDnsRebindingProtection: env.NODE_ENV === 'production'
-      });
-
-      await server.connect(transport);
-
-      try {
-         return await transport.handleRequest(c.req.raw);
-      } finally {
-         await transport.close().catch(() => undefined);
-         await server.close().catch(() => undefined);
-      }
-   });
+   // Primary endpoint is the host root; /mcp kept as a compatibility alias.
+   .all('/', handleMcp)
+   .all('/mcp', handleMcp);
 
 export default {
    port: env.MCP_PORT,
@@ -182,7 +180,7 @@ export default {
 };
 
 console.log(
-   `OpenMario MCP listening on http://localhost:${env.MCP_PORT}/mcp (health: /health)`
+   `OpenMario MCP listening on http://localhost:${env.MCP_PORT}/ (health: /health)`
 );
 
 process.on('SIGINT', async () => {
