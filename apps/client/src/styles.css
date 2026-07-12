@@ -142,3 +142,17 @@ code {
     animation: none;
   }
 }
+
+.dark .react-flow__controls-button {
+  background-color: var(--chakra-colors-bg);
+  border-bottom: 1px solid var(--chakra-colors-border);
+  color: var(--chakra-colors-fg);
+}
+
+.dark .react-flow__controls-button:hover {
+  background-color: var(--chakra-colors-bg-subtle);
+}
+
+.dark .react-flow__controls-button svg {
+  fill: currentColor;
+}

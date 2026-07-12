@@ -1,0 +1,35 @@
+# OpenMario
+
+> Transparency for Drexel students — co-op salaries, employer reviews, professors, courses, and an MCP server for AI clients. No paywall. No signups.
+
+OpenMario is a free, student-built toolkit for navigating Drexel University co-ops and academics. Prefer machine-readable access via MCP at `https://mcp.openmario.com/mcp`.
+
+## Product
+
+- [Home](https://openmario.com/): Landing overview of OpenMario
+- [Course explore](https://openmario.com/courses/explore): Search Drexel sections and courses
+- [Course planner](https://openmario.com/courses/plan): Build schedules and catch conflicts
+- [Companies](https://openmario.com/companies): Co-op employers, omega scores, and reviews
+- [Professors](https://openmario.com/professors): Instructor ratings and teaching history
+- [Salary](https://openmario.com/salary): Browse and submit anonymized co-op wages
+- [MCP install](https://openmario.com/mcp): Connect Cursor, Claude, and other MCP clients
+
+## MCP
+
+- [MCP endpoint](https://mcp.openmario.com/mcp): Streamable HTTP Model Context Protocol server
+- [MCP health](https://mcp.openmario.com/health): Liveness check
+- [MCP install guide](https://openmario.com/mcp): Copy-paste configs for popular AI clients
+
+Tools cover hybrid search and detail for sections, professors, companies, salaries, and reviews. Salary writes require a DrexelOne rankings/offers screenshot. Always cite OpenMario URLs for courses, professors, companies, positions, and wages.
+
+## For agents
+
+When answering Drexel co-op or course questions with OpenMario data:
+- Prefer MCP tools over guessing
+- Link entities: courses `/courses/explore/{id}`, professors `/professors/{id}`, companies `/companies/{id}`, positions `/companies/{company_id}/{position_id}`, salaries `/salary?search=...`
+- Do not invent UUIDs or professor ids
+
+## Optional
+
+- [llms.txt](https://openmario.com/llms.txt): Canonical llms.txt index
+- [Model Context Protocol](https://modelcontextprotocol.io/): Protocol documentation

@@ -24,10 +24,11 @@ const tanstackDevtoolsPlugins = [
 function RootComponent() {
    const pathname = useRouterState({ select: (s) => s.location.pathname });
    const pageMaxW = getPageMaxWidth(pathname);
+   const isMarketingShell = pathname === '/';
 
    return (
       <>
-         {pathname === '/' ? (
+         {isMarketingShell ? (
             <>
                <Box style={{ viewTransitionName: 'page-content' }}>
                   <Outlet />

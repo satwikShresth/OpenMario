@@ -227,6 +227,40 @@ export function createCorequisiteEdge(sourceId: string, targetId: string): Edge 
    };
 }
 
+export type GraphTheme = {
+   prereq: string;
+   dependent: string;
+   coreq: string;
+   logic: string;
+   label: string;
+   labelBg: string;
+};
+
+export function applyGraphTheme(edges: Edge[], theme: GraphTheme): Edge[] {
+   return edges.map(edge => {
+      const type = edge.data?.edgeType as CourseGraphEdgeType | undefined;
+      const stroke =
+         type === 'dependent'
+            ? theme.dependent
+            : type === 'corequisite'
+              ? theme.coreq
+              : type === 'logic'
+                ? theme.logic
+                : theme.prereq;
+
+      return {
+         ...edge,
+         style: { ...edge.style, stroke },
+         labelStyle: edge.labelStyle ? { ...edge.labelStyle, fill: theme.label } : undefined,
+         labelBgStyle: edge.labelBgStyle ? { ...edge.labelBgStyle, fill: theme.labelBg } : undefined,
+         markerEnd:
+            edge.markerEnd && typeof edge.markerEnd === 'object'
+               ? { ...edge.markerEnd, color: stroke }
+               : edge.markerEnd
+      };
+   });
+}
+
 export function mergeUniqueEdges(existing: Edge[], incoming: Edge[]) {
    const seen = new Set(existing.map(edge => edge.id));
    const merged = [...existing];

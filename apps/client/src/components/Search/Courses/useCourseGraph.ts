@@ -1,9 +1,11 @@
+import { useToken } from '@chakra-ui/react';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useMatch, useNavigate } from '@tanstack/react-router';
 import type { Edge, Node } from '@xyflow/react';
 import { orpc } from '@/helpers';
 import {
+   applyGraphTheme,
    buildPrerequisiteLogicGraph,
    createCorequisiteEdge,
    createCourseNode,
@@ -15,6 +17,7 @@ import {
    type CourseGraphMode,
    type CourseNodeData,
    type CourseSummary,
+   type GraphTheme,
    type LogicNodeData
 } from './prerequisiteGraphUtils';
 import type { Prerequisite } from '@openmario/contracts';
@@ -420,6 +423,26 @@ export function useCourseGraph({ courseId, mode = 'requirements' }: UseCourseGra
    );
 
    const layoutDirection = isVisualizer ? 'LR' : 'TB';
+   const [blue500, blue400, purple500, green500, fgMuted, bg] = useToken('colors', [
+      'blue.500',
+      'blue.400',
+      'purple.500',
+      'green.500',
+      'fg.muted',
+      'bg'
+   ]);
+
+   const graphTheme = useMemo<GraphTheme>(
+      () => ({
+         prereq: blue500 ?? '#3b82f6',
+         dependent: purple500 ?? '#a855f7',
+         coreq: green500 ?? '#22c55e',
+         logic: blue400 ?? '#60a5fa',
+         label: fgMuted ?? '#a1a1aa',
+         labelBg: bg ?? '#09090b'
+      }),
+      [bg, blue400, blue500, fgMuted, green500, purple500]
+   );
 
    const { nodes, edges: layoutedEdges } = useMemo(() => {
       const courseNodes = [...graph.courses.values()].map(course =>
@@ -441,9 +464,14 @@ export function useCourseGraph({ courseId, mode = 'requirements' }: UseCourseGra
       mode
    ]);
 
+   const edges = useMemo(
+      () => applyGraphTheme(layoutedEdges, graphTheme),
+      [graphTheme, layoutedEdges]
+   );
+
    return {
       nodes,
-      edges: layoutedEdges,
+      edges,
       isPending,
       isError,
       mode,

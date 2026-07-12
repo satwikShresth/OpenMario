@@ -8,6 +8,7 @@ import {
    useReactFlow
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
+import { useColorModeValue } from '@/components/ui/color-mode';
 import CourseGraphNode from './CourseGraphNode';
 import LogicGraphNode from './LogicGraphNode';
 import { COURSE_NODE_TYPE, LOGIC_NODE_TYPE, type CourseGraphMode } from './prerequisiteGraphUtils';
@@ -43,6 +44,7 @@ function GraphCanvas({ course_id, mode = 'requirements' }: PrerequisiteGraphProp
       mode
    });
    const isVisualizer = mode === 'visualizer';
+   const backgroundColor = useColorModeValue('#d4d4d8', '#3f3f46');
 
    if (isPending) {
       return (
@@ -179,7 +181,7 @@ function GraphCanvas({ course_id, mode = 'requirements' }: PrerequisiteGraphProp
                style={{ width: '100%', height: '100%' }}
             >
                <FitViewOnChange nodeCount={nodes.length} />
-               <Background gap={20} size={1} />
+               <Background gap={20} size={1} color={backgroundColor} />
                <Controls showInteractive={false} />
             </ReactFlow>
          </Box>

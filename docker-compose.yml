@@ -49,6 +49,33 @@ services:
     networks:
       - openmario
 
+  # MCP Streamable HTTP — proxy mcp.openmario.com → this service
+  mcp:
+    build:
+      dockerfile: Dockerfile
+      target: production-mcp
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      NODE_ENV: production
+      MCP_PORT: ${MCP_PORT:-3100}
+      DATABASE_URL: ${DATABASE_URL?Variable not set}
+      MEILI_HOST: ${MEILI_HOST?Variable not set}
+      MEILI_MASTER_KEY: ${MEILI_MASTER_KEY?Variable not set}
+      MCP_ALLOWED_HOSTS: ${MCP_ALLOWED_HOSTS:-mcp.openmario.com}
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+    ports:
+      - "${MCP_PORT:-3100}:${MCP_PORT:-3100}"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3100/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    networks:
+      - openmario
+
 networks:
   openmario:
 

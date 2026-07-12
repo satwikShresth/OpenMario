@@ -1,5 +1,13 @@
 import type { AppIcon } from '@/components/icons';
-import { SalaryIcon, BriefcaseIcon, UsersIcon, BookOpenIcon, ListIcon, CalendarIcon } from '@/components/icons';
+import {
+   SalaryIcon,
+   BriefcaseIcon,
+   UsersIcon,
+   BookOpenIcon,
+   ListIcon,
+   CalendarIcon,
+   McpIcon,
+} from '@/components/icons';
 
 export interface SubNavItem {
    label: string;
@@ -90,6 +98,16 @@ export const NAV_GROUPS: NavGroup[] = [
             label: 'Profile',
             href: '/courses/profile',
             icon: ListIcon,
+         },
+         {
+            label: 'MCP',
+            href: '/mcp',
+            icon: McpIcon,
+            badge: {
+               text: 'New',
+               colorPalette: 'teal',
+               variant: 'subtle',
+            },
          },
       ],
    },

@@ -10,7 +10,8 @@
    "scripts": {
       "seed": "bun run --env-file=../../.env search_index/index.ts",
       "seed:courses": "bun run --env-file=../../.env search_index/index.ts courses",
-      "seed:submissions": "bun run --env-file=../../.env search_index/index.ts submissions"
+      "seed:submissions": "bun run --env-file=../../.env search_index/index.ts submissions",
+      "configure-embedders": "bun run --env-file=../../.env search_index/configure-embedders.ts"
    },
    "dependencies": {
       "@openmario/db": "workspace:*",
