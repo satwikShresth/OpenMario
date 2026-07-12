@@ -21,6 +21,7 @@
       "server:build": "bun run --filter '@openmario/server' build",
       "server:start": "bun run --filter '@openmario/server' start",
       "mcp:dev": "bun run --filter '@openmario/mcp' dev",
+      "mcp:build": "bun run --filter '@openmario/mcp' build",
       "mcp:start": "bun run --filter '@openmario/mcp' start",
       "meili:configure-embedders": "bun run --env-file=.env packages/meilisearch/search_index/configure-embedders.ts",
       "build": "bun x turbo run build --ui stream",

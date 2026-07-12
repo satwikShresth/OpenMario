@@ -23,6 +23,13 @@ Remote Model Context Protocol server for AI clients (Cursor, Claude, etc.) at **
 bun run mcp:dev
 ```
 
+### Production-style build
+
+```bash
+bun run mcp:build
+bun run mcp:start   # runs apps/mcp/dist/index.js
+```
+
 Health: `http://localhost:3100/health`  
 MCP: `http://localhost:3100/mcp`
 
