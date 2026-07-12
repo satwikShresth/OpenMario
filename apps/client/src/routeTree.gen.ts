@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SalaryRouteImport } from './routes/salary'
 import { Route as ProfessorsRouteImport } from './routes/professors'
+import { Route as McpRouteImport } from './routes/mcp'
 import { Route as CoursesRouteImport } from './routes/courses'
 import { Route as CompaniesRouteImport } from './routes/companies'
 import { Route as IndexRouteImport } from './routes/index'
@@ -47,6 +48,11 @@ const SalaryRoute = SalaryRouteImport.update({
 const ProfessorsRoute = ProfessorsRouteImport.update({
   id: '/professors',
   path: '/professors',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const McpRoute = McpRouteImport.update({
+  id: '/mcp',
+  path: '/mcp',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CoursesRoute = CoursesRouteImport.update({
@@ -194,6 +200,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/companies': typeof CompaniesRouteWithChildren
   '/courses': typeof CoursesRouteWithChildren
+  '/mcp': typeof McpRoute
   '/professors': typeof ProfessorsRouteWithChildren
   '/salary': typeof SalaryDialogFormRouteWithChildren
   '/companies/$company_id': typeof CompaniesCompany_idRouteWithChildren
@@ -222,6 +229,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/courses': typeof CoursesRouteWithChildren
+  '/mcp': typeof McpRoute
   '/salary': typeof SalaryDialogFormRouteWithChildren
   '/courses/explore': typeof CoursesExploreRouteWithChildren
   '/courses/profile': typeof CoursesProfileRouteWithChildren
@@ -249,6 +257,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/companies': typeof CompaniesRouteWithChildren
   '/courses': typeof CoursesRouteWithChildren
+  '/mcp': typeof McpRoute
   '/professors': typeof ProfessorsRouteWithChildren
   '/salary': typeof SalaryRouteWithChildren
   '/companies/$company_id': typeof CompaniesCompany_idRouteWithChildren
@@ -282,6 +291,7 @@ export interface FileRouteTypes {
     | '/'
     | '/companies'
     | '/courses'
+    | '/mcp'
     | '/professors'
     | '/salary'
     | '/companies/$company_id'
@@ -310,6 +320,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/courses'
+    | '/mcp'
     | '/salary'
     | '/courses/explore'
     | '/courses/profile'
@@ -336,6 +347,7 @@ export interface FileRouteTypes {
     | '/'
     | '/companies'
     | '/courses'
+    | '/mcp'
     | '/professors'
     | '/salary'
     | '/companies/$company_id'
@@ -368,6 +380,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   CompaniesRoute: typeof CompaniesRouteWithChildren
   CoursesRoute: typeof CoursesRouteWithChildren
+  McpRoute: typeof McpRoute
   ProfessorsRoute: typeof ProfessorsRouteWithChildren
   SalaryRoute: typeof SalaryRouteWithChildren
 }
@@ -386,6 +399,13 @@ declare module '@tanstack/react-router' {
       path: '/professors'
       fullPath: '/professors'
       preLoaderRoute: typeof ProfessorsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/mcp': {
+      id: '/mcp'
+      path: '/mcp'
+      fullPath: '/mcp'
+      preLoaderRoute: typeof McpRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/courses': {
@@ -750,6 +770,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   CompaniesRoute: CompaniesRouteWithChildren,
   CoursesRoute: CoursesRouteWithChildren,
+  McpRoute: McpRoute,
   ProfessorsRoute: ProfessorsRouteWithChildren,
   SalaryRoute: SalaryRouteWithChildren,
 }

@@ -69,6 +69,8 @@ import {
   X,
   XCircle,
 } from 'lucide-react';
+import { VscMcp } from 'react-icons/vsc';
+import type { IconBaseProps } from 'react-icons';
 
 export type AppIcon = React.ComponentType<LucideProps>;
 
@@ -141,6 +143,19 @@ export const ClockIcon = Clock;
 // ─── Domain — Files / Data ───────────────────────────────────────────────────
 export const FileTextIcon = FileText;
 export const DatabaseIcon = Database;
+/** VS Code MCP glyph — used for the OpenMario MCP install page / nav */
+export const McpIcon = (props: LucideProps) => {
+   const { size = 24, color, className, style, ...rest } = props;
+   return (
+      <VscMcp
+         size={typeof size === 'number' || typeof size === 'string' ? size : 24}
+         color={color}
+         className={className}
+         style={style}
+         {...(rest as IconBaseProps)}
+      />
+   );
+};
 
 // ─── Domain — Communication ──────────────────────────────────────────────────
 export const MessageCircleIcon = MessageCircle;

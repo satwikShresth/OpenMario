@@ -199,6 +199,24 @@ export function Landing() {
                      Submit salary data
                   </Button>
                </Flex>
+               <Text
+                  className='landing-fade-up landing-fade-up-delay-2'
+                  mt={5}
+                  textAlign='center'
+                  fontSize='sm'
+                  color='rgba(255,255,255,0.4)'
+               >
+                  Prefer AI?{' '}
+                  <Box
+                     as='button'
+                     color='#99f6e4'
+                     fontWeight='semibold'
+                     onClick={() => navigate({ to: '/mcp' })}
+                     _hover={{ textDecoration: 'underline' }}
+                  >
+                     Try our MCP with your favorite AI client →
+                  </Box>
+               </Text>
             </Container>
          </Box>
 
@@ -531,12 +549,22 @@ export function Landing() {
          </Box>
 
          {/* ── Footer ── */}
-         <Flex as='footer' justify='center' align='center' gap={4} py={6} borderTopWidth='1px' borderColor='rgba(255,255,255,0.06)'>
+         <Flex as='footer' justify='center' align='center' gap={4} py={6} borderTopWidth='1px' borderColor='rgba(255,255,255,0.06)' flexWrap='wrap'>
             <Text fontSize='xs' color='rgba(255,255,255,0.2)'>Not affiliated with Drexel University</Text>
             <Box w='1px' h='3' bg='rgba(255,255,255,0.1)' />
             <Text fontSize='xs' color='rgba(255,255,255,0.2)'>Open source</Text>
             <Box w='1px' h='3' bg='rgba(255,255,255,0.1)' />
             <Text fontSize='xs' color='rgba(255,255,255,0.2)'>Free forever</Text>
+            <Box w='1px' h='3' bg='rgba(255,255,255,0.1)' />
+            <Link to='/mcp' preload='intent' style={{ textDecoration: 'none' }}>
+               <Text fontSize='xs' color='rgba(255,255,255,0.35)' _hover={{ color: 'rgba(255,255,255,0.6)' }}>
+                  MCP
+               </Text>
+            </Link>
+            <Box w='1px' h='3' bg='rgba(255,255,255,0.1)' />
+            <Text asChild fontSize='xs' color='rgba(255,255,255,0.35)' _hover={{ color: 'rgba(255,255,255,0.6)' }}>
+               <a href='/llms.txt'>llms.txt</a>
+            </Text>
          </Flex>
 
       </Box>

@@ -14,6 +14,7 @@ import {
    YAxis,
 } from 'recharts';
 import { omegaHex, ratingColorHex, ratingLabelShort } from './helpers';
+import { CHART_COLORS, chartTick } from '@/lib/chartTheme';
 import { useCompanyDetail } from './detailStore';
 
 function OmegaTooltip({
@@ -109,9 +110,9 @@ export function Charts() {
                </Flex>
                <ResponsiveContainer width='100%' height={260}>
                   <RadarChart data={radarData}>
-                     <PolarGrid />
-                     <PolarAngleAxis dataKey='subject' tick={{ fontSize: 12 }} />
-                     <PolarRadiusAxis angle={30} domain={[0, 100]} tick={{ fontSize: 10 }} />
+                     <PolarGrid stroke={CHART_COLORS.grid} />
+                     <PolarAngleAxis dataKey='subject' tick={chartTick(12)} />
+                     <PolarRadiusAxis angle={30} domain={[0, 100]} tick={chartTick(10)} />
                      <Radar
                         name='Score'
                         dataKey='value'
@@ -169,11 +170,11 @@ export function Charts() {
                      barCategoryGap='30%'
                      barGap={4}
                   >
-                     <CartesianGrid strokeDasharray='3 3' horizontal={false} stroke='var(--chakra-colors-border)' />
+                     <CartesianGrid strokeDasharray='3 3' horizontal={false} stroke={CHART_COLORS.grid} />
                      <XAxis
                         type='number'
                         tickFormatter={v => `$${(v / 1000).toFixed(0)}k`}
-                        tick={{ fontSize: 11 }}
+                        tick={chartTick(11)}
                         axisLine={false}
                         tickLine={false}
                      />
@@ -181,11 +182,11 @@ export function Charts() {
                         type='category'
                         dataKey='name'
                         width={148}
-                        tick={{ fontSize: 11 }}
+                        tick={chartTick(11)}
                         axisLine={false}
                         tickLine={false}
                      />
-                     <Tooltip content={<SalaryTooltip />} cursor={{ fill: 'var(--chakra-colors-bg-subtle)' }} />
+                     <Tooltip content={<SalaryTooltip />} cursor={{ fill: CHART_COLORS.cursor }} />
                      <Bar dataKey='avg' name='Avg' radius={[0, 4, 4, 0]} fill={accentColor} fillOpacity={0.85} />
                      <Bar dataKey='median' name='Median' radius={[0, 4, 4, 0]} fill={accentColor} fillOpacity={0.4} />
                   </BarChart>

@@ -9,6 +9,7 @@ import {
    XAxis,
    YAxis,
 } from 'recharts';
+import { CHART_COLORS, chartTick } from '@/lib/chartTheme';
 import { useProfessorDetail } from './detailStore';
 
 function ChartTooltip({
@@ -74,11 +75,11 @@ export function Charts() {
                </Text>
                <ResponsiveContainer width='100%' height={240}>
                   <BarChart data={sectionsPerYear} margin={{ left: -10 }}>
-                     <CartesianGrid strokeDasharray='3 3' vertical={false} />
-                     <XAxis dataKey='year' tick={{ fontSize: 12 }} />
-                     <YAxis tick={{ fontSize: 12 }} allowDecimals={false} />
-                     <Tooltip content={<ChartTooltip labelKey='Year' />} />
-                     <Bar dataKey='count' fill='#3B82F6' radius={[4, 4, 0, 0]} maxBarSize={40} />
+                     <CartesianGrid strokeDasharray='3 3' vertical={false} stroke={CHART_COLORS.grid} />
+                     <XAxis dataKey='year' tick={chartTick(12)} axisLine={false} tickLine={false} />
+                     <YAxis tick={chartTick(12)} allowDecimals={false} axisLine={false} tickLine={false} />
+                     <Tooltip content={<ChartTooltip labelKey='Year' />} cursor={{ fill: CHART_COLORS.cursor }} />
+                     <Bar dataKey='count' fill='var(--chakra-colors-blue-500)' radius={[4, 4, 0, 0]} maxBarSize={40} />
                   </BarChart>
                </ResponsiveContainer>
             </Box>
@@ -90,10 +91,10 @@ export function Charts() {
                </Text>
                <ResponsiveContainer width='100%' height={240}>
                   <BarChart data={sectionsPerSubject} layout='vertical' margin={{ left: 0, right: 16 }}>
-                     <CartesianGrid strokeDasharray='3 3' horizontal={false} />
-                     <XAxis type='number' tick={{ fontSize: 12 }} allowDecimals={false} />
-                     <YAxis type='category' dataKey='subject' width={68} tick={{ fontSize: 12 }} />
-                     <Tooltip content={<ChartTooltip labelKey='Subject' />} />
+                     <CartesianGrid strokeDasharray='3 3' horizontal={false} stroke={CHART_COLORS.grid} />
+                     <XAxis type='number' tick={chartTick(12)} allowDecimals={false} axisLine={false} tickLine={false} />
+                     <YAxis type='category' dataKey='subject' width={68} tick={chartTick(12)} axisLine={false} tickLine={false} />
+                     <Tooltip content={<ChartTooltip labelKey='Subject' />} cursor={{ fill: CHART_COLORS.cursor }} />
                      <Bar
                         dataKey='count'
                         maxBarSize={22}

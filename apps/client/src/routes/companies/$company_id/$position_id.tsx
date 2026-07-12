@@ -16,6 +16,7 @@ import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 import { createFileRoute } from '@tanstack/react-router';
 import { orpc } from '@/helpers/rpc.ts';
 import { omegaHex, ratingColorHex, ratingLabelShort, ReviewCard } from '@/components/Company/helpers';
+import { CHART_COLORS, chartTick } from '@/lib/chartTheme';
 import { Tooltip } from '@/components/ui/tooltip';
 import { WarningIcon } from '@/components/icons';
 import { useEffect, useRef } from 'react';
@@ -246,9 +247,9 @@ function PositionReviewsPage() {
                      </Flex>
                      <ResponsiveContainer width='100%' height={240}>
                         <RadarChart data={radarData}>
-                           <PolarGrid />
-                           <PolarAngleAxis dataKey='subject' tick={{ fontSize: 11 }} />
-                           <PolarRadiusAxis angle={30} domain={[0, 100]} tick={{ fontSize: 9 }} />
+                           <PolarGrid stroke={CHART_COLORS.grid} />
+                           <PolarAngleAxis dataKey='subject' tick={chartTick(11)} />
+                           <PolarRadiusAxis angle={30} domain={[0, 100]} tick={chartTick(9)} />
                            <Radar
                               name='Score'
                               dataKey='value'
@@ -308,20 +309,20 @@ function PositionReviewsPage() {
                         <Text fontWeight='semibold' mb={5}>Compensation</Text>
                         <ResponsiveContainer width='100%' height={160}>
                            <BarChart data={salaryBarData} margin={{ left: 16, right: 24, top: 4, bottom: 4 }} barSize={40}>
-                              <CartesianGrid strokeDasharray='3 3' vertical={false} stroke='var(--chakra-colors-border)' />
+                              <CartesianGrid strokeDasharray='3 3' vertical={false} stroke={CHART_COLORS.grid} />
                               <XAxis
                                  dataKey='name'
-                                 tick={{ fontSize: 12 }}
+                                 tick={chartTick(12)}
                                  axisLine={false}
                                  tickLine={false}
                               />
                               <YAxis
                                  tickFormatter={v => `$${(v / 1000).toFixed(0)}k`}
-                                 tick={{ fontSize: 11 }}
+                                 tick={chartTick(11)}
                                  axisLine={false}
                                  tickLine={false}
                               />
-                              <RechartsTooltip content={<SalaryTooltip />} cursor={{ fill: 'var(--chakra-colors-bg-subtle)' }} />
+                              <RechartsTooltip content={<SalaryTooltip />} cursor={{ fill: CHART_COLORS.cursor }} />
                               <Bar
                                  dataKey='value'
                                  name='Amount'
