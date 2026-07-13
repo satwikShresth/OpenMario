@@ -101,17 +101,7 @@ export function PlanGrid() {
 
    return (
       <Stack gap="6" w="full" minW={0}>
-         <Flex
-            gap="3"
-            wrap="wrap"
-            align="center"
-            justify="space-between"
-            p="3"
-            borderWidth="1px"
-            borderColor="border.subtle"
-            borderRadius="l3"
-            bg="bg.panel"
-         >
+         <Flex gap="3" wrap="wrap" align="center" justify="space-between">
                <HStack gap="2" flexWrap="wrap" flex="1" minW="0">
                   <Select.Root
                      size="sm"
