@@ -14,6 +14,8 @@ export function isSearchRoute(pathname: string): boolean {
       path === '/professors' ||
       path === '/companies' ||
       path === '/courses/explore' ||
+      path === '/courses/plan' ||
+      path.startsWith('/courses/plan/') ||
       path === '/salary'
    );
 }

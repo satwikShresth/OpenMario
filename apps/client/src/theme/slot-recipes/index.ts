@@ -49,6 +49,7 @@ import { tooltipSlotRecipe } from "./tooltip"
 import { statusSlotRecipe } from "./status"
 import { timelineSlotRecipe } from "./timeline"
 import { colorPickerSlotRecipe } from "./color-picker"
+import { datePickerSlotRecipe } from "./date-picker"
 import { qrCodeSlotRecipe } from "./qr-code"
 import { treeViewSlotRecipe } from "./tree-view"
 import { marqueeSlotRecipe } from "./marquee"
@@ -105,6 +106,7 @@ export const slotRecipes = {
   status: statusSlotRecipe,
   timeline: timelineSlotRecipe,
   colorPicker: colorPickerSlotRecipe,
+  datePicker: datePickerSlotRecipe,
   qrCode: qrCodeSlotRecipe,
   treeView: treeViewSlotRecipe,
   marquee: marqueeSlotRecipe,

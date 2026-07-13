@@ -1,6 +1,6 @@
-import { Alert, Badge, Box, Flex, HStack, Icon, Splitter, Text, useBreakpointValue } from '@chakra-ui/react'
+import { Alert, Badge, Box, Button, Flex, HStack, Icon, Splitter, Text, useBreakpointValue } from '@chakra-ui/react'
 import { MonitorOffIcon } from '@/components/icons'
-import { createFileRoute, Outlet, useMatch } from '@tanstack/react-router'
+import { createFileRoute, Link, Outlet, useMatch } from '@tanstack/react-router'
 import { useState } from 'react'
 import { Plan } from '@/components/Search/Plan'
 import { ConflictsIndicator } from '@/components/Search/Plan/ConflictsIndicator'
@@ -35,8 +35,8 @@ export const Route = createFileRoute('/courses/plan/$term_id')({
   beforeLoad: ({ params }) => ({
     getLabel: () =>
       db.terms.get(params.term_id)
-        .then(row => row ? `${row.term} ${row.year}` : 'Plan')
-        .catch(() => 'Plan'),
+        .then(row => row ? `${row.term} ${row.year}` : 'Schedule')
+        .catch(() => 'Schedule'),
   }),
   validateSearch: z.object({
     search: z.string().optional(),
@@ -46,6 +46,7 @@ export const Route = createFileRoute('/courses/plan/$term_id')({
 
 function PlanTermPage() {
   const { term_id } = Route.useParams()
+  const { search: searchPrefill } = Route.useSearch()
   const [sizes, setSizes] = useState<number[]>(getSavedSizes)
   const isCourseDetail = useMatch({ from: '/courses/plan/$term_id/$course_id', shouldThrow: false })
 
@@ -87,6 +88,9 @@ function PlanTermPage() {
           gap={3}
         >
           <HStack gap={2.5}>
+            <Button asChild size="xs" variant="ghost">
+              <Link to="/courses/plan">← Plan of Study</Link>
+            </Button>
             <Badge
               colorPalette={termColor}
               variant="subtle"
@@ -95,10 +99,10 @@ function PlanTermPage() {
               fontSize="sm"
               fontWeight="semibold"
             >
-              {currentTerm} {currentYear}
+              Schedule · {currentTerm} {currentYear}
             </Badge>
             <Text fontSize="xs" color="fg.subtle" hideBelow="md">
-              Double-click the divider to reset layout
+              Pick sections for this term
             </Text>
           </HStack>
 
@@ -148,7 +152,11 @@ function PlanTermPage() {
             display="flex"
             flexDirection="column"
           >
-            <Plan.Courses currentTerm={currentTerm} currentYear={currentYear} />
+            <Plan.Courses
+              currentTerm={currentTerm}
+              currentYear={currentYear}
+              initialSearch={searchPrefill}
+            />
           </Splitter.Panel>
 
           <Splitter.Context>

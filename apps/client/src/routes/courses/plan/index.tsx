@@ -1,260 +1,149 @@
+import { createFileRoute, useNavigate } from '@tanstack/react-router'
+import { useEffect, useEffectEvent, useState } from 'react'
+import { useQueryClient } from '@tanstack/react-query'
+import { z } from 'zod'
+import { ImportPlanDialog, PlanGrid } from '@/components/PlanOfStudy'
 import {
-   Badge,
-   Box,
-   Button,
-   Card,
-   Dialog,
-   Flex,
-   Grid,
-   HStack,
-   Icon,
-   NativeSelect,
-   Portal,
-   Separator,
-   Text,
-   VStack,
-} from '@chakra-ui/react'
-import { createFileRoute, Link, useNavigate } from '@tanstack/react-router'
-import { useStore } from '@tanstack/react-store'
-import { Courses } from '@/components/Courses'
-import { termsStore, useAllTerms } from '@/db/stores/terms'
-import { sectionsStore } from '@/db/stores/sections'
-import { coursesStore } from '@/db/stores/courses'
-import { useState } from 'react'
-import { CalendarPlusIcon, ChevronRightIcon, BookOpenIcon, GraduationCapIcon } from '@/components/icons'
+   decodePlan,
+   fromCompactPlan,
+   toCompactPlan,
+   type PlanLinkAction,
+   type PlanOfStudy,
+   type PlannedCourse,
+} from '@/lib/plan-of-study'
+import { toaster } from '@/components/ui/toaster'
+import { orpc } from '@/helpers'
 
-const TERM_ORDER = ['Fall', 'Winter', 'Spring', 'Summer'] as const
-type TermName = typeof TERM_ORDER[number]
-
-const TERM_COLORS: Record<string, string> = {
-   Fall: 'orange',
-   Winter: 'cyan',
-   Spring: 'green',
-   Summer: 'yellow',
-}
-
-export const Route = createFileRoute('/courses/plan/')({
-   component: PlanIndexPage,
+const searchSchema = z.object({
+   plan: z.string().optional(),
+   action: z.enum(['create', 'update', 'replace']).optional(),
+   name: z.string().optional(),
+   id: z.string().optional(),
+   default: z
+      .union([z.literal('1'), z.literal('0'), z.literal('true'), z.literal('false')])
+      .optional(),
 })
 
-function NewPlanButton() {
+export const Route = createFileRoute('/courses/plan/')({
+   // Label comes from parent `/courses/plan` layout — avoid duplicate breadcrumb
+   validateSearch: searchSchema,
+   component: PlanOfStudyPage,
+})
+
+type PendingImport = {
+   plan: PlanOfStudy
+   action: PlanLinkAction
+   name?: string
+   id?: string
+}
+
+function PlanOfStudyPage() {
+   const search = Route.useSearch()
    const navigate = useNavigate()
-   const [open, setOpen] = useState(false)
-   const [selectedTermId, setSelectedTermId] = useState<string>('')
+   const queryClient = useQueryClient()
+   const [pending, setPending] = useState<PendingImport | null>(null)
 
-   const allTerms = useAllTerms()
-
-   const sortedTerms = [...allTerms].sort((a, b) => {
-      if (b.year !== a.year) return b.year - a.year
-      return TERM_ORDER.indexOf(a.term as TermName) - TERM_ORDER.indexOf(b.term as TermName)
+   const clearParams = useEffectEvent(() => {
+      void navigate({
+         to: '.',
+         search: {
+            plan: undefined,
+            action: undefined,
+            name: undefined,
+            id: undefined,
+            default: undefined,
+         },
+         replace: true,
+      })
    })
 
-   const currentId = selectedTermId || sortedTerms[0]?.id || ''
+   useEffect(() => {
+      if (!search.plan) return
 
-   const handleCreate = () => {
-      if (!currentId) return
-      setOpen(false)
-      navigate({ to: '/courses/plan/$term_id', params: { term_id: currentId } })
-   }
+      let cancelled = false
 
-   return (
-      <Dialog.Root open={open} onOpenChange={e => setOpen(e.open)}>
-         <Dialog.Trigger asChild>
-            <Button colorPalette='blue' size='sm'>
-               <Icon as={CalendarPlusIcon} />
-               New Plan
-            </Button>
-         </Dialog.Trigger>
+      ;(async () => {
+         const decoded = decodePlan(search.plan!)
+         if (!decoded) {
+            toaster.create({
+               title: 'Invalid plan link',
+               description: 'Could not read the shared plan.',
+               type: 'error',
+            })
+            clearParams()
+            return
+         }
 
-         <Portal>
-            <Dialog.Backdrop />
-            <Dialog.Positioner>
-               <Dialog.Content maxW='sm'>
-                  <Dialog.Header>
-                     <Dialog.Title>New Course Plan</Dialog.Title>
-                  </Dialog.Header>
+         const hydrated = await hydrateCourseDetails(decoded, queryClient)
+         if (cancelled) return
 
-                  <Dialog.Body>
-                     <VStack align='stretch' gap={4}>
-                        <Text fontSize='sm' color='fg.muted'>
-                           Select a term to create a plan for.
-                        </Text>
-                        <NativeSelect.Root size='md'>
-                           <NativeSelect.Field
-                              value={currentId}
-                              onChange={e => setSelectedTermId(e.target.value)}
-                              borderRadius='lg'
-                           >
-                              {sortedTerms.length === 0 && (
-                                 <option value=''>Loading terms…</option>
-                              )}
-                              {sortedTerms.map(t => (
-                                 <option key={t.id} value={t.id}>{t.term} {t.year}</option>
-                              ))}
-                           </NativeSelect.Field>
-                           <NativeSelect.Indicator />
-                        </NativeSelect.Root>
-                     </VStack>
-                  </Dialog.Body>
+         setPending({
+            plan: hydrated,
+            action: (search.action ?? 'create') as PlanLinkAction,
+            name: search.name,
+            id: search.id,
+         })
+         clearParams()
+      })()
 
-                  <Dialog.Footer>
-                     <Dialog.ActionTrigger asChild>
-                        <Button variant='outline' size='sm'>Cancel</Button>
-                     </Dialog.ActionTrigger>
-                     <Button
-                        colorPalette='blue'
-                        size='sm'
-                        onClick={handleCreate}
-                        disabled={!currentId}
-                     >
-                        Open Plan
-                        <Icon as={ChevronRightIcon} />
-                     </Button>
-                  </Dialog.Footer>
-
-                  <Dialog.CloseTrigger />
-               </Dialog.Content>
-            </Dialog.Positioner>
-         </Portal>
-      </Dialog.Root>
-   )
-}
-
-type PlanSummary = {
-   termId: string; term: string; year: number; courseCount: number; totalCredits: number
-}
-
-function PlanCard({ plan }: { plan: PlanSummary }) {
-   const termColor = TERM_COLORS[plan.term] ?? 'gray'
-
-   return (
-      <Link
-         to='/courses/plan/$term_id'
-         params={{ term_id: plan.termId }}
-         style={{ textDecoration: 'none', display: 'flex', height: '100%' }}
-      >
-         <Card.Root
-            variant='outline'
-            borderRadius='xl'
-            cursor='pointer'
-            w='full'
-            h='full'
-            _hover={{ shadow: 'md', borderColor: `${termColor}.400` }}
-            transition='all 0.15s'
-            overflow='hidden'
-         >
-            <Box h='3px' bg={`${termColor}.400`} flexShrink={0} />
-            <Card.Body py={5} px={5}>
-               <VStack align='stretch' gap={4}>
-                  <Flex justify='space-between' align='flex-start'>
-                     <VStack align='flex-start' gap={1}>
-                        <Badge colorPalette={termColor} variant='subtle' px={2.5} py={0.5} fontSize='xs'>
-                           {plan.term}
-                        </Badge>
-                        <Text fontWeight='bold' fontSize='2xl' lineHeight='1.1'>
-                           {plan.year}
-                        </Text>
-                     </VStack>
-                     <Icon as={ChevronRightIcon} color='fg.muted' boxSize={4} mt={1} />
-                  </Flex>
-
-                  <Grid templateColumns='1fr 1fr' gap={3}>
-                     <VStack align='flex-start' gap={0.5}>
-                        <HStack gap={1}>
-                           <Icon as={BookOpenIcon} boxSize={3} color='fg.muted' />
-                           <Text fontSize='2xs' color='fg.muted' textTransform='uppercase' letterSpacing='wider'>
-                              Courses
-                           </Text>
-                        </HStack>
-                        <Text fontWeight='semibold' fontSize='xl'>{plan.courseCount}</Text>
-                     </VStack>
-                     <VStack align='flex-start' gap={0.5}>
-                        <HStack gap={1}>
-                           <Icon as={GraduationCapIcon} boxSize={3} color='fg.muted' />
-                           <Text fontSize='2xs' color='fg.muted' textTransform='uppercase' letterSpacing='wider'>
-                              Credits
-                           </Text>
-                        </HStack>
-                        <Text fontWeight='semibold' fontSize='xl'>{plan.totalCredits}</Text>
-                     </VStack>
-                  </Grid>
-               </VStack>
-            </Card.Body>
-         </Card.Root>
-      </Link>
-   )
-}
-
-function PlanIndexPage() {
-   const allSections = useStore(sectionsStore)
-   const allCourses = useStore(coursesStore)
-   const allTerms = useStore(termsStore)
-
-   const deduped = new Map<string, PlanSummary>()
-   const seenCourses = new Map<string, Set<string>>()
-
-   for (const s of allSections.values()) {
-      if (!s.term_id) continue
-      const term = allTerms.get(s.term_id)
-      if (!term) continue
-      if (!deduped.has(s.term_id)) {
-         deduped.set(s.term_id, { termId: s.term_id, term: term.term, year: term.year, courseCount: 0, totalCredits: 0 })
-         seenCourses.set(s.term_id, new Set())
+      return () => {
+         cancelled = true
       }
-      const plan = deduped.get(s.term_id)!
-      const seen = seenCourses.get(s.term_id)!
-      const course = allCourses.get(s.course_id)
-      if (course && !seen.has(course.id)) {
-         seen.add(course.id)
-         plan.courseCount += 1
-         plan.totalCredits += Number(course.credits) || 0
+   }, [search.plan, search.action, search.name, search.id, search.default, queryClient])
+
+   return (
+      <>
+         <PlanGrid />
+         <ImportPlanDialog
+            open={pending != null}
+            plan={pending?.plan ?? null}
+            action={pending?.action ?? 'create'}
+            suggestedName={pending?.name}
+            planId={pending?.id}
+            onDismiss={() => setPending(null)}
+         />
+      </>
+   )
+}
+
+async function hydrateCourseDetails(
+   plan: ReturnType<typeof decodePlan> & object,
+   queryClient: ReturnType<typeof useQueryClient>,
+) {
+   if (!plan) return plan
+   const ids = new Set<string>()
+   for (const year of plan.years) {
+      for (const q of year.quarters) {
+         for (const c of q.courses) {
+            if (c.id && (!c.title || c.code === c.id.slice(0, 8))) ids.add(c.id)
+         }
       }
    }
+   if (ids.size === 0) return plan
 
-   const plans = Array.from(deduped.values()).sort((a, b) =>
-      b.year !== a.year
-         ? b.year - a.year
-         : TERM_ORDER.indexOf(a.term as TermName) - TERM_ORDER.indexOf(b.term as TermName)
+   const resolved = new Map<string, PlannedCourse>()
+   await Promise.all(
+      [...ids].map(async id => {
+         try {
+            const res = await queryClient.fetchQuery(
+               orpc.course.course.queryOptions({
+                  input: { params: { course_id: id } },
+               }),
+            )
+            const course = res?.data
+            if (!course) return
+            resolved.set(id, {
+               id,
+               code: `${course.subject_id} ${course.course_number}`,
+               title: course.title ?? '',
+               credits: course.credits != null ? Number(course.credits) : null,
+            })
+         } catch {
+            // keep placeholder
+         }
+      }),
    )
 
-   const totalCredits = plans.reduce((sum, p) => sum + (Number(p.totalCredits) || 0), 0)
-
-   return (
-      <Courses.Root>
-         <Flex justify='space-between' align='center' wrap='wrap' gap={3}>
-            <Courses.PageHeader title='Course Plans' />
-            <HStack gap={3}>
-               {plans.length > 0 && (
-                  <>
-                     <Text fontSize='sm' color='fg.muted'>
-                        {plans.length} {plans.length === 1 ? 'plan' : 'plans'}
-                     </Text>
-                     <Text fontSize='sm' color='fg.muted'>·</Text>
-                     <Text fontSize='sm' color='fg.muted'>
-                        {totalCredits} credits planned
-                     </Text>
-                  </>
-               )}
-               <NewPlanButton />
-            </HStack>
-         </Flex>
-
-         <Separator />
-
-         <Grid
-            templateColumns={{ base: '1fr', sm: 'repeat(2, 1fr)', lg: 'repeat(3, 1fr)', xl: 'repeat(4, 1fr)' }}
-            gap={4}
-         >
-            {plans.map(plan => (
-               <PlanCard key={plan.termId} plan={plan} />
-            ))}
-         </Grid>
-
-         {plans.length === 0 && (
-            <Text fontSize='sm' color='fg.muted' mt={1}>
-               No plans yet — create your first one above.
-            </Text>
-         )}
-      </Courses.Root>
-   )
+   if (resolved.size === 0) return plan
+   return fromCompactPlan(toCompactPlan(plan), id => resolved.get(id))
 }

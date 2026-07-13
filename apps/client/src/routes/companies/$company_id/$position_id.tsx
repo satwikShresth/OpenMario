@@ -160,7 +160,7 @@ function PositionReviewsPage() {
    ] : [];
 
    return (
-      <Box w='full' maxW='full' py={{ base: 6, md: 10 }}>
+      <Box w='full' maxW='full'>
          <VStack align='stretch' gap={8}>
 
             {/* Header */}

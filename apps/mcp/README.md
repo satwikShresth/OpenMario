@@ -9,10 +9,10 @@ Remote Model Context Protocol server for AI clients (Cursor, Claude, ChatGPT, et
 
 | Kind | Capabilities |
 |------|----------------|
-| **Tools (read)** | Hybrid search + detail for sections, professors, companies, salaries, reviews, autocomplete |
-| **Tools (write)** | Salary submit **only** via DrexelOne rankings/offers screenshot OCR |
+| **Tools (read)** | Hybrid search + detail for sections, professors, companies, salaries, reviews, autocomplete; plan-of-study + salary-report link generate/decode; form/plan guides |
+| **Tools (write)** | None — MCP only generates clickable links; users confirm plans/salaries on the website |
 | **Resources** | `openmario://docs/*`, `openmario://course/{id}`, `professor/{id}`, `company/{id}` |
-| **Prompts** | `compare-companies`, `plan-course-path`, `find-coop-by-budget`, `career-elective-advice`, `submit-salary-from-screenshot` — all require OpenMario markdown links for entities |
+| **Prompts** | `compare-companies`, `plan-course-path`, `find-coop-by-budget`, `career-elective-advice`, `build-plan-of-study`, `report-salaries` |
 
 **Hono** + Bun (`export default { fetch }`) + MCP SDK `WebStandardStreamableHTTPServerTransport` (same pattern as the SDK’s Hono example).
 
@@ -68,18 +68,11 @@ bun run meili:configure-embedders
 
 Without embedders, tools automatically fall back to keyword search.
 
-## Salary write gate
-
-1. `request_offers_upload` → PUT screenshot → `parse_offers_screenshot`  
-2. `submit_salaries_from_offers` — `parse_token` (or same screenshot again)
-
-Free-form salary create is intentionally not exposed.
-
 ## Deploy notes
 
 1. Run `apps/mcp` as its own process (Compose service recommended).
 2. Point DNS `mcp.openmario.com` at your reverse proxy.
-3. Proxy HTTPS → `http://mcp:3100` (MCP at `/`, plus `/health` and `/uploads/*`).
+3. Proxy HTTPS → `http://mcp:3100` (MCP at `/`, plus `/health`).
 4. Set `MCP_ALLOWED_HOSTS=mcp.openmario.com` and `NODE_ENV=production`.
 
 Example Caddy snippet:

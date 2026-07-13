@@ -2,7 +2,7 @@ import { defineTokens } from "@chakra-ui/react"
 
 export const fonts = defineTokens.fonts({
   heading: {
-    value: '"Press Start 2P", system-ui, sans-serif',
+    value: 'var(--font-bricolage-grotesque)',
   },
   body: {
     value: 'var(--font-bricolage-grotesque)',

@@ -102,7 +102,6 @@ function CompaniesPage() {
    return (
       <Suspense>
          <Company.Root>
-            <Company.PageHeader />
             {/* @ts-ignore: shupp */}
             <InstantSearch
                searchClient={searchClient}

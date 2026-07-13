@@ -74,7 +74,6 @@ export const Route = createFileRoute('/courses/explore')({
 
     return (
       <Courses.Root>
-        <Courses.PageHeader title='Explore Courses' />
         <Flex
           gap={{ base: 3, md: 4 }}
           direction='column'

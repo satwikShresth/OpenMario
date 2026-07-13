@@ -17,6 +17,7 @@ export default function CourseGraphNode({ data, sourcePosition, targetPosition }
          borderColor={data.isRoot ? 'blue.500' : 'border'}
          borderRadius='lg'
          bg='bg'
+         color='fg'
          boxShadow='sm'
          width='190px'
          minH='80px'
@@ -30,7 +31,7 @@ export default function CourseGraphNode({ data, sourcePosition, targetPosition }
          <Handle type='source' position={source} style={{ opacity: 0.5 }} />
 
          <VStack align='stretch' gap={1}>
-            <Text fontWeight='semibold' fontSize='sm' lineClamp={1}>
+            <Text fontWeight='semibold' fontSize='sm' lineClamp={1} color='fg'>
                {data.label}
             </Text>
             <Text fontSize='xs' color='fg.muted' lineClamp={2} minH='2.5em'>

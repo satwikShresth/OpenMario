@@ -69,12 +69,7 @@ export const NAV_GROUPS: NavGroup[] = [
       label: 'Academics',
       items: [
          {
-            label: 'Professors',
-            href: '/professors',
-            icon: UsersIcon,
-         },
-         {
-            label: 'Explore',
+            label: 'Explore Courses',
             href: '/courses/explore',
             icon: BookOpenIcon,
          },
@@ -87,6 +82,11 @@ export const NAV_GROUPS: NavGroup[] = [
                colorPalette: 'orange',
                variant: 'subtle',
             },
+         },
+         {
+            label: 'Professors',
+            href: '/professors',
+            icon: UsersIcon,
          },
       ],
    },

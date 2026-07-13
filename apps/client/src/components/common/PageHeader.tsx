@@ -58,7 +58,17 @@ function Breadcrumbs() {
          }))
       ).then(resolved => {
          if (!cancelled) {
-            setCrumbs(resolved);
+            // Dedupe consecutive identical titles (e.g. layout + index both "Plan of Study")
+            const deduped: Crumb[] = [];
+            for (const crumb of resolved) {
+               const last = deduped[deduped.length - 1];
+               if (last && last.title === crumb.title) {
+                  last.pathname = crumb.pathname;
+                  continue;
+               }
+               deduped.push(crumb);
+            }
+            setCrumbs(deduped);
             setLoading(false);
          }
       });

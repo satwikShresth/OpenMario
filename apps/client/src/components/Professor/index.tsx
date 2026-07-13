@@ -1,5 +1,4 @@
 import { Root } from './Root';
-import { PageHeader } from './PageHeader';
 import { ProfessorCard } from './Card';
 import { Cards } from './Cards';
 import { ProfessorBreadcrumb } from './Breadcrumb';
@@ -13,7 +12,6 @@ import { Filters } from './Filters';
 
 export const Professor = {
    Root,
-   PageHeader,
    Card: ProfessorCard,
    Cards,
    Breadcrumb: ProfessorBreadcrumb,

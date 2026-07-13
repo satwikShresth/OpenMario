@@ -74,14 +74,13 @@ function CompanyReviewsPage() {
    const total = data?.pages[0]?.count ?? 0;
 
    return (
-      <Box w='full' maxW='full' py={{ base: 6, md: 10 }}>
-         <VStack align='stretch' gap={8}>
+      <Box w='full' maxW='full'>
+         <VStack align='stretch' gap={6}>
 
             <Flex justify='space-between' align='center' wrap='wrap' gap={4}>
                <Box>
-                  <Text fontSize='2xl' fontWeight='bold'>All Reviews</Text>
                   {total > 0 && (
-                     <Text fontSize='sm' color='fg.muted' mt={0.5}>{total} reviews</Text>
+                     <Text fontSize='sm' color='fg.muted'>{total} reviews</Text>
                   )}
                </Box>
                <Select.Root

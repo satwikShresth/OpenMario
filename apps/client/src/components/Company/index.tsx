@@ -1,5 +1,4 @@
 import { Root } from './Root';
-import { PageHeader } from './PageHeader';
 import { Card } from './Card';
 import { Cards } from './Cards';
 import { CompanyBreadcrumb } from './Breadcrumb';
@@ -12,7 +11,6 @@ import { Filters } from './Filters';
 
 export const Company = {
    Root,
-   PageHeader,
    Card,
    Cards,
    Breadcrumb: CompanyBreadcrumb,

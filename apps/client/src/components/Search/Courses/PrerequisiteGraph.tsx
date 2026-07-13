@@ -8,7 +8,7 @@ import {
    useReactFlow
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
-import { useColorModeValue } from '@/components/ui/color-mode';
+import { useColorMode, useColorModeValue } from '@/components/ui/color-mode';
 import CourseGraphNode from './CourseGraphNode';
 import LogicGraphNode from './LogicGraphNode';
 import { COURSE_NODE_TYPE, LOGIC_NODE_TYPE, type CourseGraphMode } from './prerequisiteGraphUtils';
@@ -45,6 +45,7 @@ function GraphCanvas({ course_id, mode = 'requirements' }: PrerequisiteGraphProp
    });
    const isVisualizer = mode === 'visualizer';
    const backgroundColor = useColorModeValue('#d4d4d8', '#3f3f46');
+   const { colorMode } = useColorMode();
 
    if (isPending) {
       return (
@@ -166,6 +167,7 @@ function GraphCanvas({ course_id, mode = 'requirements' }: PrerequisiteGraphProp
                nodes={nodes}
                edges={edges}
                nodeTypes={nodeTypes}
+               colorMode={colorMode === 'dark' ? 'dark' : 'light'}
                fitView
                fitViewOptions={{ padding: 0.2 }}
                minZoom={0.2}

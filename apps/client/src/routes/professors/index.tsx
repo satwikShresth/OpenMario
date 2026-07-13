@@ -103,7 +103,6 @@ function ProfessorsPage() {
    return (
       <Suspense>
          <Professor.Root>
-            <Professor.PageHeader />
             {/* @ts-ignore: shupp */}
             <InstantSearch
                searchClient={searchClient}
