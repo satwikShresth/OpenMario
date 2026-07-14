@@ -28,17 +28,21 @@ import { Route as CompaniesCompany_idIndexRouteImport } from './routes/companies
 import { Route as SalaryDialogSubmissionsRouteImport } from './routes/salary/_dialog/submissions'
 import { Route as SalaryDialogDraftsRouteImport } from './routes/salary/_dialog/drafts'
 import { Route as SalaryDialogAutoFillRouteImport } from './routes/salary/_dialog/auto-fill'
-import { Route as SalaryDialogFormRouteImport } from './routes/salary/_dialog/_form'
 import { Route as CoursesProfileCourse_idRouteImport } from './routes/courses/profile/$course_id'
+import { Route as CoursesPlanScheduleRouteImport } from './routes/courses/plan/schedule'
 import { Route as CoursesPlanTerm_idRouteImport } from './routes/courses/plan/$term_id'
 import { Route as CoursesExploreCourse_idRouteImport } from './routes/courses/explore/$course_id'
 import { Route as CompaniesCompany_idReviewsRouteImport } from './routes/companies/$company_id/reviews'
 import { Route as CompaniesCompany_idPositionsRouteImport } from './routes/companies/$company_id/positions'
 import { Route as CompaniesCompany_idPosition_idRouteImport } from './routes/companies/$company_id/$position_id'
+import { Route as CoursesPlanScheduleIndexRouteImport } from './routes/courses/plan/schedule/index'
 import { Route as SalaryDialogFormReportRouteImport } from './routes/salary/_dialog/_form/report'
+import { Route as SalaryDialogFormFormRouteImport } from './routes/salary/_dialog/_form/_form'
+import { Route as CoursesPlanScheduleTerm_idRouteImport } from './routes/courses/plan/schedule/$term_id'
 import { Route as CoursesPlanTerm_idCourse_idRouteImport } from './routes/courses/plan/$term_id/$course_id'
 import { Route as SalaryDialogFormReportedKeyRouteImport } from './routes/salary/_dialog/_form/reported.$key'
 import { Route as SalaryDialogFormReportChar123IdxChar125RouteImport } from './routes/salary/_dialog/_form/report.{-$idx}'
+import { Route as CoursesPlanScheduleTerm_idCourse_idRouteImport } from './routes/courses/plan/schedule/$term_id/$course_id'
 
 const SalaryRoute = SalaryRouteImport.update({
   id: '/salary',
@@ -135,14 +139,15 @@ const SalaryDialogAutoFillRoute = SalaryDialogAutoFillRouteImport.update({
   path: '/auto-fill',
   getParentRoute: () => SalaryDialogRoute,
 } as any)
-const SalaryDialogFormRoute = SalaryDialogFormRouteImport.update({
-  id: '/_form',
-  getParentRoute: () => SalaryDialogRoute,
-} as any)
 const CoursesProfileCourse_idRoute = CoursesProfileCourse_idRouteImport.update({
   id: '/$course_id',
   path: '/$course_id',
   getParentRoute: () => CoursesProfileRoute,
+} as any)
+const CoursesPlanScheduleRoute = CoursesPlanScheduleRouteImport.update({
+  id: '/schedule',
+  path: '/schedule',
+  getParentRoute: () => CoursesPlanRoute,
 } as any)
 const CoursesPlanTerm_idRoute = CoursesPlanTerm_idRouteImport.update({
   id: '/$term_id',
@@ -172,11 +177,27 @@ const CompaniesCompany_idPosition_idRoute =
     path: '/$position_id',
     getParentRoute: () => CompaniesCompany_idRoute,
   } as any)
+const CoursesPlanScheduleIndexRoute =
+  CoursesPlanScheduleIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => CoursesPlanScheduleRoute,
+  } as any)
 const SalaryDialogFormReportRoute = SalaryDialogFormReportRouteImport.update({
-  id: '/report',
+  id: '/_form/report',
   path: '/report',
-  getParentRoute: () => SalaryDialogFormRoute,
+  getParentRoute: () => SalaryDialogRoute,
 } as any)
+const SalaryDialogFormFormRoute = SalaryDialogFormFormRouteImport.update({
+  id: '/_form/_form',
+  getParentRoute: () => SalaryDialogRoute,
+} as any)
+const CoursesPlanScheduleTerm_idRoute =
+  CoursesPlanScheduleTerm_idRouteImport.update({
+    id: '/$term_id',
+    path: '/$term_id',
+    getParentRoute: () => CoursesPlanScheduleRoute,
+  } as any)
 const CoursesPlanTerm_idCourse_idRoute =
   CoursesPlanTerm_idCourse_idRouteImport.update({
     id: '/$course_id',
@@ -185,15 +206,21 @@ const CoursesPlanTerm_idCourse_idRoute =
   } as any)
 const SalaryDialogFormReportedKeyRoute =
   SalaryDialogFormReportedKeyRouteImport.update({
-    id: '/reported/$key',
+    id: '/_form/reported/$key',
     path: '/reported/$key',
-    getParentRoute: () => SalaryDialogFormRoute,
+    getParentRoute: () => SalaryDialogRoute,
   } as any)
 const SalaryDialogFormReportChar123IdxChar125Route =
   SalaryDialogFormReportChar123IdxChar125RouteImport.update({
     id: '/{-$idx}',
     path: '/{-$idx}',
     getParentRoute: () => SalaryDialogFormReportRoute,
+  } as any)
+const CoursesPlanScheduleTerm_idCourse_idRoute =
+  CoursesPlanScheduleTerm_idCourse_idRouteImport.update({
+    id: '/$course_id',
+    path: '/$course_id',
+    getParentRoute: () => CoursesPlanScheduleTerm_idRoute,
   } as any)
 
 export interface FileRoutesByFullPath {
@@ -202,7 +229,7 @@ export interface FileRoutesByFullPath {
   '/courses': typeof CoursesRouteWithChildren
   '/mcp': typeof McpRoute
   '/professors': typeof ProfessorsRouteWithChildren
-  '/salary': typeof SalaryDialogFormRouteWithChildren
+  '/salary': typeof SalaryDialogFormFormRoute
   '/companies/$company_id': typeof CompaniesCompany_idRouteWithChildren
   '/courses/explore': typeof CoursesExploreRouteWithChildren
   '/courses/plan': typeof CoursesPlanRouteWithChildren
@@ -215,6 +242,7 @@ export interface FileRoutesByFullPath {
   '/companies/$company_id/reviews': typeof CompaniesCompany_idReviewsRoute
   '/courses/explore/$course_id': typeof CoursesExploreCourse_idRoute
   '/courses/plan/$term_id': typeof CoursesPlanTerm_idRouteWithChildren
+  '/courses/plan/schedule': typeof CoursesPlanScheduleRouteWithChildren
   '/courses/profile/$course_id': typeof CoursesProfileCourse_idRoute
   '/salary/auto-fill': typeof SalaryDialogAutoFillRoute
   '/salary/drafts': typeof SalaryDialogDraftsRoute
@@ -222,7 +250,10 @@ export interface FileRoutesByFullPath {
   '/companies/$company_id/': typeof CompaniesCompany_idIndexRoute
   '/courses/plan/': typeof CoursesPlanIndexRoute
   '/courses/plan/$term_id/$course_id': typeof CoursesPlanTerm_idCourse_idRoute
+  '/courses/plan/schedule/$term_id': typeof CoursesPlanScheduleTerm_idRouteWithChildren
   '/salary/report': typeof SalaryDialogFormReportRouteWithChildren
+  '/courses/plan/schedule/': typeof CoursesPlanScheduleIndexRoute
+  '/courses/plan/schedule/$term_id/$course_id': typeof CoursesPlanScheduleTerm_idCourse_idRoute
   '/salary/report/{-$idx}': typeof SalaryDialogFormReportChar123IdxChar125Route
   '/salary/reported/$key': typeof SalaryDialogFormReportedKeyRoute
 }
@@ -230,7 +261,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/courses': typeof CoursesRouteWithChildren
   '/mcp': typeof McpRoute
-  '/salary': typeof SalaryDialogFormRouteWithChildren
+  '/salary': typeof SalaryDialogFormFormRoute
   '/courses/explore': typeof CoursesExploreRouteWithChildren
   '/courses/profile': typeof CoursesProfileRouteWithChildren
   '/professors/$professor_id': typeof ProfessorsProfessor_idRoute
@@ -248,7 +279,10 @@ export interface FileRoutesByTo {
   '/companies/$company_id': typeof CompaniesCompany_idIndexRoute
   '/courses/plan': typeof CoursesPlanIndexRoute
   '/courses/plan/$term_id/$course_id': typeof CoursesPlanTerm_idCourse_idRoute
+  '/courses/plan/schedule/$term_id': typeof CoursesPlanScheduleTerm_idRouteWithChildren
   '/salary/report': typeof SalaryDialogFormReportRouteWithChildren
+  '/courses/plan/schedule': typeof CoursesPlanScheduleIndexRoute
+  '/courses/plan/schedule/$term_id/$course_id': typeof CoursesPlanScheduleTerm_idCourse_idRoute
   '/salary/report/{-$idx}': typeof SalaryDialogFormReportChar123IdxChar125Route
   '/salary/reported/$key': typeof SalaryDialogFormReportedKeyRoute
 }
@@ -273,15 +307,19 @@ export interface FileRoutesById {
   '/companies/$company_id/reviews': typeof CompaniesCompany_idReviewsRoute
   '/courses/explore/$course_id': typeof CoursesExploreCourse_idRoute
   '/courses/plan/$term_id': typeof CoursesPlanTerm_idRouteWithChildren
+  '/courses/plan/schedule': typeof CoursesPlanScheduleRouteWithChildren
   '/courses/profile/$course_id': typeof CoursesProfileCourse_idRoute
-  '/salary/_dialog/_form': typeof SalaryDialogFormRouteWithChildren
   '/salary/_dialog/auto-fill': typeof SalaryDialogAutoFillRoute
   '/salary/_dialog/drafts': typeof SalaryDialogDraftsRoute
   '/salary/_dialog/submissions': typeof SalaryDialogSubmissionsRoute
   '/companies/$company_id/': typeof CompaniesCompany_idIndexRoute
   '/courses/plan/': typeof CoursesPlanIndexRoute
   '/courses/plan/$term_id/$course_id': typeof CoursesPlanTerm_idCourse_idRoute
+  '/courses/plan/schedule/$term_id': typeof CoursesPlanScheduleTerm_idRouteWithChildren
+  '/salary/_dialog/_form/_form': typeof SalaryDialogFormFormRoute
   '/salary/_dialog/_form/report': typeof SalaryDialogFormReportRouteWithChildren
+  '/courses/plan/schedule/': typeof CoursesPlanScheduleIndexRoute
+  '/courses/plan/schedule/$term_id/$course_id': typeof CoursesPlanScheduleTerm_idCourse_idRoute
   '/salary/_dialog/_form/report/{-$idx}': typeof SalaryDialogFormReportChar123IdxChar125Route
   '/salary/_dialog/_form/reported/$key': typeof SalaryDialogFormReportedKeyRoute
 }
@@ -306,6 +344,7 @@ export interface FileRouteTypes {
     | '/companies/$company_id/reviews'
     | '/courses/explore/$course_id'
     | '/courses/plan/$term_id'
+    | '/courses/plan/schedule'
     | '/courses/profile/$course_id'
     | '/salary/auto-fill'
     | '/salary/drafts'
@@ -313,7 +352,10 @@ export interface FileRouteTypes {
     | '/companies/$company_id/'
     | '/courses/plan/'
     | '/courses/plan/$term_id/$course_id'
+    | '/courses/plan/schedule/$term_id'
     | '/salary/report'
+    | '/courses/plan/schedule/'
+    | '/courses/plan/schedule/$term_id/$course_id'
     | '/salary/report/{-$idx}'
     | '/salary/reported/$key'
   fileRoutesByTo: FileRoutesByTo
@@ -339,7 +381,10 @@ export interface FileRouteTypes {
     | '/companies/$company_id'
     | '/courses/plan'
     | '/courses/plan/$term_id/$course_id'
+    | '/courses/plan/schedule/$term_id'
     | '/salary/report'
+    | '/courses/plan/schedule'
+    | '/courses/plan/schedule/$term_id/$course_id'
     | '/salary/report/{-$idx}'
     | '/salary/reported/$key'
   id:
@@ -363,15 +408,19 @@ export interface FileRouteTypes {
     | '/companies/$company_id/reviews'
     | '/courses/explore/$course_id'
     | '/courses/plan/$term_id'
+    | '/courses/plan/schedule'
     | '/courses/profile/$course_id'
-    | '/salary/_dialog/_form'
     | '/salary/_dialog/auto-fill'
     | '/salary/_dialog/drafts'
     | '/salary/_dialog/submissions'
     | '/companies/$company_id/'
     | '/courses/plan/'
     | '/courses/plan/$term_id/$course_id'
+    | '/courses/plan/schedule/$term_id'
+    | '/salary/_dialog/_form/_form'
     | '/salary/_dialog/_form/report'
+    | '/courses/plan/schedule/'
+    | '/courses/plan/schedule/$term_id/$course_id'
     | '/salary/_dialog/_form/report/{-$idx}'
     | '/salary/_dialog/_form/reported/$key'
   fileRoutesById: FileRoutesById
@@ -520,19 +569,19 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SalaryDialogAutoFillRouteImport
       parentRoute: typeof SalaryDialogRoute
     }
-    '/salary/_dialog/_form': {
-      id: '/salary/_dialog/_form'
-      path: ''
-      fullPath: '/salary'
-      preLoaderRoute: typeof SalaryDialogFormRouteImport
-      parentRoute: typeof SalaryDialogRoute
-    }
     '/courses/profile/$course_id': {
       id: '/courses/profile/$course_id'
       path: '/$course_id'
       fullPath: '/courses/profile/$course_id'
       preLoaderRoute: typeof CoursesProfileCourse_idRouteImport
       parentRoute: typeof CoursesProfileRoute
+    }
+    '/courses/plan/schedule': {
+      id: '/courses/plan/schedule'
+      path: '/schedule'
+      fullPath: '/courses/plan/schedule'
+      preLoaderRoute: typeof CoursesPlanScheduleRouteImport
+      parentRoute: typeof CoursesPlanRoute
     }
     '/courses/plan/$term_id': {
       id: '/courses/plan/$term_id'
@@ -569,12 +618,33 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CompaniesCompany_idPosition_idRouteImport
       parentRoute: typeof CompaniesCompany_idRoute
     }
+    '/courses/plan/schedule/': {
+      id: '/courses/plan/schedule/'
+      path: '/'
+      fullPath: '/courses/plan/schedule/'
+      preLoaderRoute: typeof CoursesPlanScheduleIndexRouteImport
+      parentRoute: typeof CoursesPlanScheduleRoute
+    }
     '/salary/_dialog/_form/report': {
       id: '/salary/_dialog/_form/report'
       path: '/report'
       fullPath: '/salary/report'
       preLoaderRoute: typeof SalaryDialogFormReportRouteImport
-      parentRoute: typeof SalaryDialogFormRoute
+      parentRoute: typeof SalaryDialogRoute
+    }
+    '/salary/_dialog/_form/_form': {
+      id: '/salary/_dialog/_form/_form'
+      path: ''
+      fullPath: '/salary'
+      preLoaderRoute: typeof SalaryDialogFormFormRouteImport
+      parentRoute: typeof SalaryDialogRoute
+    }
+    '/courses/plan/schedule/$term_id': {
+      id: '/courses/plan/schedule/$term_id'
+      path: '/$term_id'
+      fullPath: '/courses/plan/schedule/$term_id'
+      preLoaderRoute: typeof CoursesPlanScheduleTerm_idRouteImport
+      parentRoute: typeof CoursesPlanScheduleRoute
     }
     '/courses/plan/$term_id/$course_id': {
       id: '/courses/plan/$term_id/$course_id'
@@ -588,7 +658,7 @@ declare module '@tanstack/react-router' {
       path: '/reported/$key'
       fullPath: '/salary/reported/$key'
       preLoaderRoute: typeof SalaryDialogFormReportedKeyRouteImport
-      parentRoute: typeof SalaryDialogFormRoute
+      parentRoute: typeof SalaryDialogRoute
     }
     '/salary/_dialog/_form/report/{-$idx}': {
       id: '/salary/_dialog/_form/report/{-$idx}'
@@ -596,6 +666,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/salary/report/{-$idx}'
       preLoaderRoute: typeof SalaryDialogFormReportChar123IdxChar125RouteImport
       parentRoute: typeof SalaryDialogFormReportRoute
+    }
+    '/courses/plan/schedule/$term_id/$course_id': {
+      id: '/courses/plan/schedule/$term_id/$course_id'
+      path: '/$course_id'
+      fullPath: '/courses/plan/schedule/$term_id/$course_id'
+      preLoaderRoute: typeof CoursesPlanScheduleTerm_idCourse_idRouteImport
+      parentRoute: typeof CoursesPlanScheduleTerm_idRoute
     }
   }
 }
@@ -654,13 +731,43 @@ const CoursesPlanTerm_idRouteChildren: CoursesPlanTerm_idRouteChildren = {
 const CoursesPlanTerm_idRouteWithChildren =
   CoursesPlanTerm_idRoute._addFileChildren(CoursesPlanTerm_idRouteChildren)
 
+interface CoursesPlanScheduleTerm_idRouteChildren {
+  CoursesPlanScheduleTerm_idCourse_idRoute: typeof CoursesPlanScheduleTerm_idCourse_idRoute
+}
+
+const CoursesPlanScheduleTerm_idRouteChildren: CoursesPlanScheduleTerm_idRouteChildren =
+  {
+    CoursesPlanScheduleTerm_idCourse_idRoute:
+      CoursesPlanScheduleTerm_idCourse_idRoute,
+  }
+
+const CoursesPlanScheduleTerm_idRouteWithChildren =
+  CoursesPlanScheduleTerm_idRoute._addFileChildren(
+    CoursesPlanScheduleTerm_idRouteChildren,
+  )
+
+interface CoursesPlanScheduleRouteChildren {
+  CoursesPlanScheduleTerm_idRoute: typeof CoursesPlanScheduleTerm_idRouteWithChildren
+  CoursesPlanScheduleIndexRoute: typeof CoursesPlanScheduleIndexRoute
+}
+
+const CoursesPlanScheduleRouteChildren: CoursesPlanScheduleRouteChildren = {
+  CoursesPlanScheduleTerm_idRoute: CoursesPlanScheduleTerm_idRouteWithChildren,
+  CoursesPlanScheduleIndexRoute: CoursesPlanScheduleIndexRoute,
+}
+
+const CoursesPlanScheduleRouteWithChildren =
+  CoursesPlanScheduleRoute._addFileChildren(CoursesPlanScheduleRouteChildren)
+
 interface CoursesPlanRouteChildren {
   CoursesPlanTerm_idRoute: typeof CoursesPlanTerm_idRouteWithChildren
+  CoursesPlanScheduleRoute: typeof CoursesPlanScheduleRouteWithChildren
   CoursesPlanIndexRoute: typeof CoursesPlanIndexRoute
 }
 
 const CoursesPlanRouteChildren: CoursesPlanRouteChildren = {
   CoursesPlanTerm_idRoute: CoursesPlanTerm_idRouteWithChildren,
+  CoursesPlanScheduleRoute: CoursesPlanScheduleRouteWithChildren,
   CoursesPlanIndexRoute: CoursesPlanIndexRoute,
 }
 
@@ -724,31 +831,22 @@ const SalaryDialogFormReportRouteWithChildren =
     SalaryDialogFormReportRouteChildren,
   )
 
-interface SalaryDialogFormRouteChildren {
+interface SalaryDialogRouteChildren {
+  SalaryDialogAutoFillRoute: typeof SalaryDialogAutoFillRoute
+  SalaryDialogDraftsRoute: typeof SalaryDialogDraftsRoute
+  SalaryDialogSubmissionsRoute: typeof SalaryDialogSubmissionsRoute
+  SalaryDialogFormFormRoute: typeof SalaryDialogFormFormRoute
   SalaryDialogFormReportRoute: typeof SalaryDialogFormReportRouteWithChildren
   SalaryDialogFormReportedKeyRoute: typeof SalaryDialogFormReportedKeyRoute
 }
 
-const SalaryDialogFormRouteChildren: SalaryDialogFormRouteChildren = {
-  SalaryDialogFormReportRoute: SalaryDialogFormReportRouteWithChildren,
-  SalaryDialogFormReportedKeyRoute: SalaryDialogFormReportedKeyRoute,
-}
-
-const SalaryDialogFormRouteWithChildren =
-  SalaryDialogFormRoute._addFileChildren(SalaryDialogFormRouteChildren)
-
-interface SalaryDialogRouteChildren {
-  SalaryDialogFormRoute: typeof SalaryDialogFormRouteWithChildren
-  SalaryDialogAutoFillRoute: typeof SalaryDialogAutoFillRoute
-  SalaryDialogDraftsRoute: typeof SalaryDialogDraftsRoute
-  SalaryDialogSubmissionsRoute: typeof SalaryDialogSubmissionsRoute
-}
-
 const SalaryDialogRouteChildren: SalaryDialogRouteChildren = {
-  SalaryDialogFormRoute: SalaryDialogFormRouteWithChildren,
   SalaryDialogAutoFillRoute: SalaryDialogAutoFillRoute,
   SalaryDialogDraftsRoute: SalaryDialogDraftsRoute,
   SalaryDialogSubmissionsRoute: SalaryDialogSubmissionsRoute,
+  SalaryDialogFormFormRoute: SalaryDialogFormFormRoute,
+  SalaryDialogFormReportRoute: SalaryDialogFormReportRouteWithChildren,
+  SalaryDialogFormReportedKeyRoute: SalaryDialogFormReportedKeyRoute,
 }
 
 const SalaryDialogRouteWithChildren = SalaryDialogRoute._addFileChildren(

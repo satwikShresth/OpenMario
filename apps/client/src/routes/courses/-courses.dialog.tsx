@@ -17,7 +17,7 @@ export function CourseDialogPage() {
    );
 
    return (
-      <Box maxW='5xl' mx='auto' py={{ base: 6, md: 8 }} px={{ base: 3, md: 4 }}>
+      <Box maxW='5xl' mx='auto'>
          {isLoading || !courseInfo
             ? (
                <VStack align='stretch' gap={5}>

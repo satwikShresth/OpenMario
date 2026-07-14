@@ -1,7 +1,5 @@
-import Steps from './Steps';
-import { Fields } from './Fields';
+import Guide from './Guide'
 
 export default {
-   Steps,
-   Fields,
-};
+   Guide,
+}

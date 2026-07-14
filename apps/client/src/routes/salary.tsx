@@ -1,18 +1,14 @@
 import {
    Box,
    Button,
-   Clipboard,
    createListCollection,
    Flex,
-   HStack,
    Icon,
-   IconButton,
-   Separator,
    Text,
    useDisclosure,
 } from '@chakra-ui/react';
 import { Suspense } from 'react';
-import { createFileRoute, Outlet } from '@tanstack/react-router';
+import { createFileRoute, Outlet, useRouterState } from '@tanstack/react-router';
 import { Index, InstantSearch } from 'react-instantsearch';
 import { FilterIcon } from '@/components/icons';
 import { Salary } from '@/components/Salary';
@@ -69,39 +65,20 @@ function SalarySearch() {
       <Index indexName={INDEX_NAMES.submissions}>
          <SalaryMeiliConfigure query={query} />
          <Flex direction='column' gap={4} w='full' minW={0}>
-            {!isMobile && (
-               <Flex justify='space-between' align='center' pt={4}>
-                  <Text fontSize='2xl' fontWeight='bold'>
-                     Self Reported Salaries
-                  </Text>
-                  <HStack>
-                     <Salary.ReportSalaryMenu />
-                     <Clipboard.Root value={globalThis.location.href} timeout={1000}>
-                        <Clipboard.Trigger asChild>
-                           <IconButton variant='solid' size='sm'>
-                              <Clipboard.Indicator />
-                           </IconButton>
-                        </Clipboard.Trigger>
-                     </Clipboard.Root>
-                  </HStack>
-               </Flex>
-            )}
-
-            {isMobile && (
-               <Flex justify='space-between' align='center' pt={4}>
-                  <Button onClick={openFilter} variant='solid' size='sm'>
+            <Flex align='center' gap={3} w='full' minW={0}>
+               {isMobile && (
+                  <Button onClick={openFilter} variant='solid' size='sm' flexShrink={0}>
                      <Icon as={FilterIcon} />
                      <Text>Filters</Text>
                   </Button>
+               )}
+               <Box flex='1' minWidth='0'>
+                  <SearchBox />
+               </Box>
+               <Box flexShrink={0}>
                   <Salary.ReportSalaryMenu />
-               </Flex>
-            )}
-
-            {!isMobile && <Separator />}
-
-            <Box flex='1' minWidth='0'>
-               <SearchBox />
-            </Box>
+               </Box>
+            </Flex>
 
             {isMobile && (
                <Flex direction='row' width='full' gap={3} justify='space-between'>
@@ -139,18 +116,24 @@ function SalarySearch() {
 
 function SalaryPage() {
    const { searchClient } = useSearchClient();
+   const showNested = useRouterState({
+      select: s => s.matches.some(m => m.routeId.startsWith('/salary/_dialog')),
+   });
 
    return (
       <Suspense>
          <Salary.Root>
-            {/* @ts-ignore: shupp */}
-            <InstantSearch
-               searchClient={searchClient}
-               future={{ preserveSharedStateOnUnmount: true }}
-            >
-               <SalarySearch />
-            </InstantSearch>
-            <Outlet />
+            {showNested ? (
+               <Outlet />
+            ) : (
+               // @ts-ignore: shupp
+               <InstantSearch
+                  searchClient={searchClient}
+                  future={{ preserveSharedStateOnUnmount: true }}
+               >
+                  <SalarySearch />
+               </InstantSearch>
+            )}
          </Salary.Root>
       </Suspense>
    );

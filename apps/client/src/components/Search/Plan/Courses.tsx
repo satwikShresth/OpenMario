@@ -45,9 +45,9 @@ export const checkCourseOverlap = (section: Section, dbEvents: any[]): boolean =
   })
 }
 
-export const PlanCourses = ({ currentTerm, currentYear }: { currentTerm: "Fall" | "Winter" | "Spring" | "Summer"; currentYear: number }) => {
+export const PlanCourses = ({ currentTerm, currentYear, initialSearch }: { currentTerm: "Fall" | "Winter" | "Spring" | "Summer"; currentYear: number; initialSearch?: string }) => {
   const isMobile = useMobile()
-  const [searchQuery, setSearchQuery] = useState<string | undefined>(undefined)
+  const [searchQuery, setSearchQuery] = useState<string | undefined>(initialSearch)
   const [hideCoursesOverlap, setHideCoursesOverlap] = useState(false)
   const [hideUnavailableOverlap, setHideUnavailableOverlap] = useState(false)
   const [showOnlyLiked, setShowOnlyLiked] = useState(false)
@@ -78,7 +78,7 @@ export const PlanCourses = ({ currentTerm, currentYear }: { currentTerm: "Fall" 
   return (
     <Box w="full" h="full" bg="bg" borderRadius="lg" borderWidth="1px" borderColor="border"
       display="flex" flexDirection="column" overflow="hidden">
-      <Configure filters={filters} hitsPerPage={20} />
+      <Configure filters={filters} hitsPerPage={20} query={searchQuery} />
 
       <Flex direction="column" gap={4} p={4} flexShrink={0}>
         <Flex justify="space-between" align="center">

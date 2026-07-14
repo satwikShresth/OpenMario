@@ -1,27 +1,17 @@
-import { Outlet, createFileRoute } from '@tanstack/react-router';
-import { Dialog, Portal } from '@chakra-ui/react';
+import { Outlet, createFileRoute, Link } from '@tanstack/react-router'
+import { Box, Button, Icon } from '@chakra-ui/react'
+import { ArrowLeftIcon } from '@/components/icons'
 
 export const Route = createFileRoute('/salary/_dialog')({
-   component: () => {
-      const navigate = Route.useNavigate();
-      return (
-         <Dialog.Root
-            open
-            onOpenChange={() => navigate({ to: `/salary` })}
-            size='xl'
-            placement='top'
-            closeOnInteractOutside={false}
-            motionPreset='slide-in-bottom'
-         >
-            <Portal>
-               <Dialog.Backdrop />
-               <Dialog.Positioner>
-                  <Dialog.Content p={5}>
-                     <Outlet />
-                  </Dialog.Content>
-               </Dialog.Positioner>
-            </Portal>
-         </Dialog.Root>
-      );
-   },
-});
+   component: () => (
+      <Box w='full' maxW='full' py={{ base: 1, md: 2 }}>
+         <Button asChild variant='ghost' size='sm' w='fit-content' px={1} mb={5} color='fg.muted'>
+            <Link to='/salary'>
+               <Icon as={ArrowLeftIcon} />
+               Back to Salary
+            </Link>
+         </Button>
+         <Outlet />
+      </Box>
+   ),
+})

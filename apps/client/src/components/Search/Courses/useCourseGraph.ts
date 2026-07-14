@@ -147,7 +147,7 @@ function createDefaultNodeData(
 export function useCourseGraph({ courseId, mode = 'requirements' }: UseCourseGraphOptions) {
    const queryClient = useQueryClient();
    const navigate = useNavigate();
-   const planMatch = useMatch({ from: '/courses/plan/$term_id/$course_id', shouldThrow: false });
+   const planMatch = useMatch({ from: '/courses/plan/schedule/$term_id/$course_id', shouldThrow: false });
    const profileMatch = useMatch({ from: '/courses/profile/$course_id', shouldThrow: false });
    const isVisualizer = mode === 'visualizer';
    const [expansion, setExpansion] = useState<ExpansionState>({
@@ -276,7 +276,7 @@ export function useCourseGraph({ courseId, mode = 'requirements' }: UseCourseGra
 
          if (planMatch) {
             navigate({
-               to: '/courses/plan/$term_id/$course_id',
+               to: '/courses/plan/schedule/$term_id/$course_id',
                params: {
                   term_id: planMatch.params.term_id,
                   course_id: selectedCourseId

@@ -1,31 +1,30 @@
-import { forwardRef } from 'react';
-import type React from 'react';
-import { Link, Box, Flex, Icon, Text } from '@chakra-ui/react';
-import { Link as TLink, useNavigate, useRouterState } from '@tanstack/react-router';
-import { GithubIcon, MessageCircleIcon, DatabaseIcon, ShaftIcon } from '@/components/icons';
-import { useColorModeValue } from '@/components/ui/color-mode';
-import { FeedbackDialog } from '@/components/common/Feedback';
-import { DatabaseManagerDialog } from '@/components/common/DatabaseManager';
-import { Tooltip } from '@/components/ui/tooltip';
-import { Tag } from '@/components/ui';
-import { NAV_GROUPS } from './items';
+import { forwardRef } from 'react'
+import type React from 'react'
+import { Link, Box, Flex, Icon, Text } from '@chakra-ui/react'
+import { Link as TLink, useRouterState } from '@tanstack/react-router'
+import { GithubIcon, MessageCircleIcon } from '@/components/icons'
+import { useColorModeValue } from '@/components/ui/color-mode'
+import { FeedbackDialog } from '@/components/common/Feedback'
+import { Tooltip } from '@/components/ui/tooltip'
+import { Tag } from '@/components/ui'
+import { NAV_GROUPS } from './items'
 
 interface SidebarItemsProps {
-   onClose?: () => void;
-   minimized: boolean;
+   onClose?: () => void
+   minimized: boolean
 }
 
 interface NavButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement | HTMLDivElement> {
-   icon: React.ElementType;
-   label: string;
-   minimized: boolean;
-   isActive?: boolean;
-   badge?: string;
+   icon: React.ElementType
+   label: string
+   minimized: boolean
+   isActive?: boolean
+   badge?: string
 }
 
 const NavButton = forwardRef<HTMLButtonElement, NavButtonProps>(
    ({ icon: IconComp, label, minimized, isActive = false, badge, ...props }, ref) => {
-      const hoverBg = useColorModeValue('blackAlpha.50', 'whiteAlpha.80');
+      const hoverBg = useColorModeValue('blackAlpha.50', 'whiteAlpha.80')
 
       return (
          <Flex
@@ -81,34 +80,27 @@ const NavButton = forwardRef<HTMLButtonElement, NavButtonProps>(
                </>
             )}
          </Flex>
-      );
+      )
    },
-);
+)
 
-const PRIMARY_GROUP_IDS = ['coop', 'academics'];
+const PRIMARY_GROUP_IDS = ['coop', 'academics']
 
 export function SidebarItems({ onClose, minimized }: SidebarItemsProps) {
-   const pathname = useRouterState({ select: s => s.location.pathname });
-   const navigate = useNavigate();
+   const pathname = useRouterState({ select: s => s.location.pathname })
 
-   const handleWatchShaft = () => {
-      localStorage.removeItem('shaft-seen');
-      onClose?.();
-      navigate({ to: '/' });
-   };
+   const subActiveBg = useColorModeValue('teal.50', 'whiteAlpha.100')
+   const subHoverBg = useColorModeValue('blackAlpha.50', 'whiteAlpha.80')
 
-   const subActiveBg = useColorModeValue('teal.50', 'whiteAlpha.100');
-   const subHoverBg = useColorModeValue('blackAlpha.50', 'whiteAlpha.80');
+   const primaryGroups = NAV_GROUPS.filter(g => PRIMARY_GROUP_IDS.includes(g.id))
+   const bottomGroups = NAV_GROUPS.filter(g => !PRIMARY_GROUP_IDS.includes(g.id))
 
-   const primaryGroups = NAV_GROUPS.filter(g => PRIMARY_GROUP_IDS.includes(g.id));
-   const bottomGroups = NAV_GROUPS.filter(g => !PRIMARY_GROUP_IDS.includes(g.id));
-
-   const renderGroupItems = (items: typeof NAV_GROUPS[number]['items']) =>
+   const renderGroupItems = (items: (typeof NAV_GROUPS)[number]['items']) =>
       items.map(item => {
          const isActive = item.activeWhen
             ? item.activeWhen(pathname)
-            : pathname.startsWith(item.href);
-         const showChildren = isActive && !minimized && item.children?.length;
+            : pathname.startsWith(item.href)
+         const showChildren = isActive && !minimized && item.children?.length
 
          return (
             <Box key={item.label}>
@@ -133,12 +125,13 @@ export function SidebarItems({ onClose, minimized }: SidebarItemsProps) {
                      {item.children!.map(child => {
                         const childActive = child.isActive
                            ? child.isActive(pathname)
-                           : pathname.startsWith(child.href);
+                           : pathname.startsWith(child.href)
                         return (
                            <TLink
                               key={child.href}
                               to={child.href}
                               onClick={onClose}
+                              activeOptions={{ exact: child.href === '/courses/plan' }}
                               style={{ textDecoration: 'none', display: 'block' }}
                            >
                               <Flex
@@ -159,33 +152,16 @@ export function SidebarItems({ onClose, minimized }: SidebarItemsProps) {
                                  </Text>
                               </Flex>
                            </TLink>
-                        );
+                        )
                      })}
                   </Flex>
                )}
             </Box>
-         );
-      });
+         )
+      })
 
    const utilityItems = (
       <Flex direction='column' gap={0.5}>
-         <Tooltip content='Watch the Shaft' disabled={!minimized}>
-            <NavButton
-               icon={ShaftIcon}
-               label='Watch the Shaft'
-               minimized={minimized}
-               onClick={handleWatchShaft}
-            />
-         </Tooltip>
-
-         <Tooltip content='Database' disabled={!minimized}>
-            <DatabaseManagerDialog
-               trigger={
-                  <NavButton icon={DatabaseIcon} label='Database' minimized={minimized} />
-               }
-            />
-         </Tooltip>
-
          <Tooltip content='Feedback' disabled={!minimized}>
             <FeedbackDialog
                trigger={
@@ -205,7 +181,7 @@ export function SidebarItems({ onClose, minimized }: SidebarItemsProps) {
             </Link>
          </Tooltip>
       </Flex>
-   );
+   )
 
    return (
       <Flex direction='column' h='full' minH={0} flex={1} px={minimized ? 1.5 : 2} py={2}>
@@ -253,5 +229,5 @@ export function SidebarItems({ onClose, minimized }: SidebarItemsProps) {
             {utilityItems}
          </Flex>
       </Flex>
-   );
+   )
 }

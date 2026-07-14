@@ -5,10 +5,9 @@
 
 import { os } from '@/router/helpers';
 
-// Import individual route handlers
-import * as autocomplete from './autocomplete.router';
 import * as company from './company.router';
 import * as position from './position.router';
+import * as location from './location.router';
 import * as auth from './auth.router';
 import * as course from './course.router';
 import * as submission from './submission.router';
@@ -21,16 +20,14 @@ import * as professor from './professor.router';
  */
 const router = os.router({
    auth,
-   autocomplete: {
-      company: autocomplete.searchCompany,
-      position: autocomplete.searchPosition,
-      location: autocomplete.searchLocation
-   },
    company: {
       create: company.createCompany
    },
    position: {
       create: position.createPosition
+   },
+   location: {
+      create: location.createLocation
    },
    course: {
       course: course.getCourse,
@@ -55,7 +52,6 @@ const router = os.router({
    }
 });
 
-// Export the router type for client generation
 export type Router = typeof router;
 
 export { router };

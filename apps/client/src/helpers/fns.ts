@@ -36,36 +36,58 @@ export const zodCheckUnique: CheckFn<(string | number)[]> = ctx => {
 export const capitalizeWords = (str: string) =>
    str.replace(/\b\w/g, char => char.toUpperCase());
 
+type AutocompleteOptions = {
+   value: string;
+   label: string;
+   variant: 'subtle';
+};
+
 export const selectProps = ({
    state,
    name,
    handleChange,
    handleBlur
-}: any) => ({
-   name,
-   required: true,
-   value:
-      state?.value && state.value.length > 0
-         ? { value: state.value, label: state.value, variant: 'subtle' }
-         : null,
-   loadingMessage: () => 'Loading...',
-   placeholder: `Select a ${name}`,
-   components: asyncComponents,
-   onBlur: handleBlur,
-   invalid: !state.meta.isValid,
-   //@ts-ignore: shut up
-   onChange: ({ value }) => handleChange(value),
-   noOptionsMessage: () => 'Keeping typing for autocomplete'
-});
+}: any) => {
+   const option =
+      state?.value && String(state.value).length > 0
+         ? { value: state.value, label: state.value, variant: 'subtle' as const }
+         : null
+
+   return {
+      name,
+      required: true,
+      value: option,
+      // Ensure prefilled string values (link / draft import) render without a prior search.
+      defaultOptions: option ? [option] : true,
+      cacheOptions: true,
+      loadingMessage: () => 'Loading...',
+      placeholder: `Select a ${name}`,
+      components: asyncComponents,
+      onBlur: handleBlur,
+      invalid: !state.meta.isValid,
+      onChange: (
+         next: AutocompleteOptions | null,
+         meta?: { action?: string },
+      ) => {
+         if (!next) {
+            // Ignore mount/sync nulls — only clear when the user clears the control.
+            if (
+               meta?.action === 'clear' ||
+               meta?.action === 'pop-value' ||
+               meta?.action === 'remove-value'
+            ) {
+               handleChange('')
+            }
+            return
+         }
+         handleChange(next.value)
+      },
+      noOptionsMessage: () => 'Keeping typing for autocomplete',
+   }
+}
 
 export const isInvalid = ({ state, field }: any) =>
    state !== undefined ? !state.meta.isValid : !field.state.meta.isValid;
-
-type AutocompleteOptions = {
-   value: string;
-   label: string;
-   variant: string;
-};
 
 export const convertFunc = (
    value: string | { name: string } | undefined
@@ -95,6 +117,9 @@ export const defaultValues: Submission = {
    company: '',
    position: '',
    location: '',
+   company_id: '',
+   position_id: '',
+   location_id: '',
    program_level: 'Undergraduate',
    coop_cycle: 'Fall/Winter',
    coop_year: '1st',

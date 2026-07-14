@@ -42,6 +42,7 @@ export const globalCss = defineGlobalStyles({
   },
   body: {
     overflowX: "hidden",
+    fontFamily: "body",
   },
   "*::placeholder, *[data-placeholder]": {
     color: "fg.muted/80",

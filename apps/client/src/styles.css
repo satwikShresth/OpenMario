@@ -2,9 +2,16 @@
 
 body {
   @apply m-0;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
-    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
-    sans-serif;
+  font-family: var(
+    --font-bricolage-grotesque,
+    "Bricolage Grotesque",
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Helvetica,
+    Arial,
+    sans-serif
+  );
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -155,4 +162,9 @@ code {
 
 .dark .react-flow__controls-button svg {
   fill: currentColor;
+}
+
+/* Course graph nodes: don't inherit xyflow's white text over light Chakra cards */
+.react-flow__node-courseNode {
+  color: var(--chakra-colors-fg);
 }

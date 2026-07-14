@@ -31,7 +31,7 @@ import { useSearchContext } from '@/components/Search';
 import { Courses } from '@/components/Courses';
 
 export const Route = createFileRoute('/courses/profile')({
-  beforeLoad: () => ({ getLabel: () => 'Profile' }),
+  beforeLoad: () => ({ getLabel: () => 'Course Profile' }),
   component: RouteComponent,
 });
 
@@ -276,10 +276,7 @@ function RouteComponent() {
     <>
       <Courses.Root>
         <Flex justify='space-between' align='center' wrap='wrap' gap={3}>
-          <HStack gap={3}>
-            <Courses.PageHeader title='Course Profile' />
-            <CourseSearchPopover onAddCourse={handleAddCourse} existingCourseIds={existingCourseIds} />
-          </HStack>
+          <CourseSearchPopover onAddCourse={handleAddCourse} existingCourseIds={existingCourseIds} />
           <HStack gap={2}>
             <Badge colorPalette="green" variant='subtle'>{takenCredits} credits taken</Badge>
             <Badge colorPalette="blue" variant='subtle'>{activeCredits} credits active</Badge>

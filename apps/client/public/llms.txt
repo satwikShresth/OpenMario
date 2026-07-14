@@ -12,6 +12,7 @@ OpenMario is a free, student-built toolkit for navigating Drexel University co-o
 - [Companies](https://openmario.com/companies): Co-op employers, omega scores, and reviews
 - [Professors](https://openmario.com/professors): Instructor ratings and teaching history
 - [Salary](https://openmario.com/salary): Browse and submit anonymized co-op wages
+- [Salary AutoFill](https://openmario.com/salary/auto-fill): AI prompts (MCP or encode API) for share links
 - [MCP install](https://openmario.com/mcp): Connect Cursor, Claude, and other MCP clients
 
 ## MCP
@@ -20,15 +21,23 @@ OpenMario is a free, student-built toolkit for navigating Drexel University co-o
 - [MCP health](https://mcp.openmario.com/health): Liveness check
 - [MCP install guide](https://openmario.com/mcp): Copy-paste configs for popular AI clients
 
-Tools cover hybrid search and detail for sections, professors, companies, salaries, and reviews. Salary writes require a DrexelOne rankings/offers screenshot. Always cite OpenMario URLs for courses, professors, companies, positions, and wages.
+Tools cover hybrid search and detail for sections, professors, companies, salaries, reviews, plan-of-study links (`generate_plan_of_study_link`), quarter-schedule links (`generate_quarter_schedule_link`), and salary-report links (`generate_salary_report_link`). Guides: `get_salary_form_guide`, `get_plan_of_study_guide`, `get_quarter_schedule_guide`. MCP does not write to the database — it generates clickable links; users confirm on openmario.com (1 salary = prefilled form; 2+ = drafts at `/salary/drafts`). Always cite OpenMario URLs for courses, professors, companies, positions, wages, plans, schedules, and salary-report links.
 
+## HTTP encode (no MCP session)
+
+Same encode logic as the `generate_salary_report_link` tool, exposed as plain HTTP on the MCP host:
+
+- `POST https://mcp.openmario.com/api/salary/report-link`
+- Body: `{ "offers": [ { company, position, location, compensation, year?, coop_year?, coop_cycle?, program_level?, work_hours?, … } ], "common"?: { … } }`
+- Response: `{ "openmario_salary_url", "offer_count", "tip" }`
+- Does not submit salaries — user must open the URL to review
+- Local: `POST http://localhost:3100/api/salary/report-link`
 ## For agents
 
 When answering Drexel co-op or course questions with OpenMario data:
-- Prefer MCP tools over guessing
+- Prefer MCP tools over guessing; without MCP, use the encode API above for salary links
 - Link entities: courses `/courses/explore/{id}`, professors `/professors/{id}`, companies `/companies/{id}`, positions `/companies/{company_id}/{position_id}`, salaries `/salary?search=...`
 - Do not invent UUIDs or professor ids
-
 ## Optional
 
 - [llm.txt](https://openmario.com/llm.txt): Alias of this file

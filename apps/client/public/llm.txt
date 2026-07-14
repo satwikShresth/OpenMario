@@ -20,7 +20,7 @@ OpenMario is a free, student-built toolkit for navigating Drexel University co-o
 - [MCP health](https://mcp.openmario.com/health): Liveness check
 - [MCP install guide](https://openmario.com/mcp): Copy-paste configs for popular AI clients
 
-Tools cover hybrid search and detail for sections, professors, companies, salaries, and reviews. Salary writes require a DrexelOne rankings/offers screenshot. Always cite OpenMario URLs for courses, professors, companies, positions, and wages.
+Tools cover hybrid search and detail for sections, professors, companies, salaries, reviews, plan-of-study links (`generate_plan_of_study_link`), and salary-report links (`generate_salary_report_link`). Guides: `get_salary_form_guide`, `get_plan_of_study_guide`. MCP does not write to the database — it generates clickable links; users confirm plans/salaries on openmario.com (multi-salary = submit one-by-one). Always cite OpenMario URLs for courses, professors, companies, positions, wages, plans, and salary-report links.
 
 ## For agents
 

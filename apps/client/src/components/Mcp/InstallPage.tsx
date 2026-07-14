@@ -111,14 +111,10 @@ export function McpInstallPage() {
          w='full'
          minW={0}
          maxW='3xl'
-         pt={4}
-         pb={10}
+         pb={4}
          fontFamily='body'
       >
          <Box>
-            <Heading as='h1' fontFamily='body' fontSize='2xl' fontWeight='bold' mb={3}>
-               OpenMario MCP
-            </Heading>
             <Text fontSize='md' color='fg.muted' lineHeight='1.75'>
                MCP (Model Context Protocol) lets an AI app call OpenMario the same way you’d
                browse this site — search courses and sections, look up professors, compare
@@ -346,11 +342,7 @@ export function McpInstallPage() {
             <List.Root ps={5} gap={1.5} fontSize='md' color='fg.muted' lineHeight='1.7'>
                <List.Item>Search courses, sections, professors, companies, and salaries</List.Item>
                <List.Item>Pull course prereqs, professor ratings, company reviews, and pay context</List.Item>
-               <List.Item>
-                  Submit salaries from a DrexelOne offers screenshot (server OCR). On Claude.ai the
-                  agent requests an upload URL, sends the image bytes, then parses — it should not
-                  invent base64 from looking at the picture.
-               </List.Item>
+               <List.Item>Generate and decode Plan of Study share links</List.Item>
             </List.Root>
          </Box>
       </Flex>

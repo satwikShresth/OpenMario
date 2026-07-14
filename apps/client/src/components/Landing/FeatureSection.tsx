@@ -5,6 +5,7 @@ import { ArrowRightIcon } from '@/components/icons';
 
 export type LandingRoute =
    | '/salary'
+   | '/salary/auto-fill'
    | '/companies'
    | '/courses/explore'
    | '/professors'

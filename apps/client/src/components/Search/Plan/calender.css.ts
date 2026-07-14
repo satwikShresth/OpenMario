@@ -1,88 +1,80 @@
 export const css = {
-   // Remove ugly borders on scrollgrid table
-   '& .fc-scrollgrid': {
+   '& .fc': {
+      height: '100%',
+      '--fc-border-color': 'var(--chakra-colors-border)',
+      '--fc-page-bg-color': 'var(--chakra-colors-bg)',
+      '--fc-neutral-bg-color': 'var(--chakra-colors-bg-subtle)',
+      '--fc-today-bg-color': 'transparent',
+      '--fc-now-indicator-color': 'var(--chakra-colors-blue-solid)',
+      '--fc-highlight-color': 'color-mix(in srgb, var(--chakra-colors-blue-solid) 12%, transparent)',
+      fontSize: '13px',
+   },
+   '& .fc-view-harness': {
+      height: '100%',
+   },
+   '& .fc-scrollgrid, & .fc-scrollgrid-liquid': {
       border: 'none !important',
-      borderWidth: '0 !important'
+      height: '100%',
    },
-   '& .fc-scrollgrid-liquid': {
-      border: 'none !important'
+   '& .fc-theme-standard td, & .fc-theme-standard th': {
+      borderColor: 'var(--chakra-colors-border)',
    },
-   // Remove today's highlight
-   '& .fc-day-today': {
-      backgroundColor: 'transparent !important'
-   },
-   '& .fc-timegrid-col.fc-day-today': {
-      backgroundColor: 'transparent !important'
+   '& .fc-day-today, & .fc-timegrid-col.fc-day-today': {
+      backgroundColor: 'transparent !important',
    },
    '& .fc-col-header-cell.fc-day-today': {
-      backgroundColor: 'var(--chakra-colors-bg-subtle) !important'
-   },
-   // Reduce slot height for more compact view
-   '& .fc-timegrid-slot': {
-      height: '30px !important',
-      minHeight: '30px !important'
-   },
-   // Let the timegrid body fill the available width
-   '& .fc-timegrid-body': {
-      width: '100% !important'
-   },
-   // Header toolbar spacing
-   '& .fc-header-toolbar': {
-      marginBottom: '10px !important',
-      padding: '5px 0',
-      display: 'none !important' // Hide default toolbar
-   },
-   // Ensure proper table layout
-   '& .fc-timegrid-axis-frame': {
-      justifyContent: 'center',
-      alignItems: 'center',
-      display: 'flex'
-   },
-   // Use Chakra color mode compatible colors
-   '& .fc-theme-standard td': {
-      borderColor: 'var(--chakra-colors-border)'
-   },
-   '& .fc-theme-standard th': {
-      borderColor: 'var(--chakra-colors-border)'
+      backgroundColor: 'var(--chakra-colors-bg-muted) !important',
    },
    '& .fc-col-header-cell': {
       backgroundColor: 'var(--chakra-colors-bg-subtle)',
       color: 'var(--chakra-colors-fg)',
-      padding: '8px 4px !important',
+      padding: '10px 4px !important',
       fontSize: '13px',
-      fontWeight: '600'
+      fontWeight: '600',
+   },
+   '& .fc-col-header-cell-cushion': {
+      color: 'inherit',
+      textDecoration: 'none',
+   },
+   '& .fc-timegrid-slot': {
+      height: '2.35em',
+      borderColor: 'var(--chakra-colors-border) !important',
+   },
+   '& .fc-timegrid-slot-minor': {
+      borderColor: 'color-mix(in srgb, var(--chakra-colors-border) 50%, transparent) !important',
    },
    '& .fc-timegrid-slot-label': {
-      color: 'var(--chakra-colors-fg)',
-      padding: '4px 8px !important',
+      color: 'var(--chakra-colors-fg-muted)',
+      padding: '0 8px !important',
       fontSize: '12px',
       fontWeight: '500',
-      verticalAlign: 'middle'
-   },
-   '& .fc-toolbar-title': {
-      color: 'var(--chakra-colors-fg-emphasized)',
-      display: 'none'
+      verticalAlign: 'middle',
    },
    '& .fc-timegrid-axis': {
-      width: '60px !important',
-      minWidth: '60px !important',
-      visibility: 'visible !important',
-      opacity: '1 !important',
-      backgroundColor: 'var(--chakra-colors-bg-subtle)'
+      width: '56px !important',
+      minWidth: '56px !important',
+      backgroundColor: 'var(--chakra-colors-bg-subtle)',
    },
-   // Style events
+   '& .fc-timegrid-axis-frame': {
+      justifyContent: 'center',
+      alignItems: 'center',
+      display: 'flex',
+   },
+   '& .fc-timegrid-body': {
+      width: '100% !important',
+   },
    '& .fc-event': {
       cursor: 'pointer',
       fontSize: '12px',
       padding: '2px 4px',
-      borderRadius: '4px'
+      borderRadius: '6px',
+      borderWidth: '1px',
+      boxShadow: '0 1px 2px rgba(0,0,0,0.08)',
    },
    '& .fc-event:hover': {
-      opacity: '0.9'
+      opacity: '0.92',
    },
-   // Style selection area
-   '& .fc-highlight': {
-      backgroundColor: 'var(--chakra-colors-blue-100)',
-      opacity: '0.3'
-   }
-};
+   '& .fc-timegrid-now-indicator-line': {
+      borderWidth: '2px',
+   },
+}

@@ -76,11 +76,12 @@ export default ({ dialog, submission }: DataTableDialogProps) => (
                               <Text fontSize='3xl' fontWeight='extrabold' color='green.fg' lineHeight='1'>
                                  {submission?.compensation != null ? formatCurrency(submission.compensation) : '—'}
                               </Text>
-                              {submission?.other_compensation && (
-                                 <Text fontSize='sm' color='fg.muted' mt={2}>
-                                    + {submission.other_compensation}
-                                 </Text>
-                              )}
+                              <Text fontSize='sm' color='fg.muted' mt={2}>
+                                 Other compensation:{' '}
+                                 {submission?.other_compensation?.trim()
+                                    ? submission.other_compensation
+                                    : '—'}
+                              </Text>
                            </Box>
 
                            {/* Stats grid */}
@@ -138,14 +139,12 @@ export default ({ dialog, submission }: DataTableDialogProps) => (
                            </Grid>
 
                            {/* Experience details */}
-                           {submission?.details && (
-                              <Box>
-                                 <Text fontSize='xs' color='fg.muted' mb={2}>Experience</Text>
-                                 <Text fontSize='sm' lineHeight='tall' color='fg'>
-                                    {submission.details}
-                                 </Text>
-                              </Box>
-                           )}
+                           <Box>
+                              <Text fontSize='xs' color='fg.muted' mb={2}>Details</Text>
+                              <Text fontSize='sm' lineHeight='tall' color='fg' whiteSpace='pre-wrap'>
+                                 {submission?.details?.trim() ? submission.details : '—'}
+                              </Text>
+                           </Box>
 
                            {/* Show more information */}
                            {(submission?.company_id || submission?.position_id) && (

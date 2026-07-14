@@ -19,7 +19,7 @@
       "drizzle-orm": "^0.45.2",
       "hono": "^4.12.4",
       "meilisearch": "^0.54.0",
-      "tesseract.js": "^6.0.1",
+      "zipson": "^0.2.12",
       "zod": "^4.3.6"
    },
    "devDependencies": {

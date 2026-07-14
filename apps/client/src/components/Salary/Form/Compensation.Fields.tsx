@@ -56,8 +56,11 @@ export default (withForm: withForm) =>
                                  onBlur={handleBlur}
                                  value={String(state.value)}
                                  //@ts-ignore: shut up
-                                 onValueChange={({ value }) =>
-                                    handleChange(parseInt(value[0]!)!)}
+                                 onValueChange={({ valueAsNumber }) => {
+                                    if (Number.isFinite(valueAsNumber)) {
+                                       handleChange(valueAsNumber);
+                                    }
+                                 }}
                               >
                                  <InputGroup endElement='hrs/week'>
                                     <NumberInput.Input />
@@ -122,8 +125,11 @@ export default (withForm: withForm) =>
                                        defaultValue='15'
                                        value={String(state.value)}
                                        //@ts-ignore: shut up
-                                       onValueChange={({ value }) =>
-                                          handleChange(parseInt(value[0]!))}
+                                       onValueChange={({ valueAsNumber }) => {
+                                          if (Number.isFinite(valueAsNumber)) {
+                                             handleChange(valueAsNumber);
+                                          }
+                                       }}
                                     >
                                        <InputGroup startElement={<DollarSignIcon size={14} />} endElement='/hr'>
                                           <NumberInput.Input />

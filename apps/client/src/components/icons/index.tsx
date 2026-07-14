@@ -29,7 +29,6 @@ import {
   Clipboard,
   ClipboardList,
   Clock,
-  Database,
   Download,
   DollarSign,
   ExternalLink,
@@ -142,7 +141,6 @@ export const ClockIcon = Clock;
 
 // ─── Domain — Files / Data ───────────────────────────────────────────────────
 export const FileTextIcon = FileText;
-export const DatabaseIcon = Database;
 /** VS Code MCP glyph — used for the OpenMario MCP install page / nav */
 export const McpIcon = (props: LucideProps) => {
    const { size = 24, color, className, style, ...rest } = props;

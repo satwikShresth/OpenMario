@@ -1,0 +1,22 @@
+{
+   "primaryKey": "position_id",
+   "settings": {
+      "searchableAttributes": ["position_name", "company_name"],
+      "filterableAttributes": ["company_id", "position_id"],
+      "sortableAttributes": ["position_name", "company_name"],
+      "displayedAttributes": [
+         "position_id",
+         "position_name",
+         "company_id",
+         "company_name"
+      ],
+      "rankingRules": [
+         "words",
+         "typo",
+         "proximity",
+         "attribute",
+         "sort",
+         "exactness"
+      ]
+   }
+}

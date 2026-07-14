@@ -1,0 +1,23 @@
+{
+   "primaryKey": "location_id",
+   "settings": {
+      "searchableAttributes": ["label", "city", "state", "state_code"],
+      "filterableAttributes": ["location_id", "state_code"],
+      "sortableAttributes": ["city", "state", "label"],
+      "displayedAttributes": [
+         "location_id",
+         "city",
+         "state",
+         "state_code",
+         "label"
+      ],
+      "rankingRules": [
+         "words",
+         "typo",
+         "proximity",
+         "attribute",
+         "sort",
+         "exactness"
+      ]
+   }
+}
