@@ -1,23 +1,17 @@
 import { z } from 'zod'
 import type { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js'
 import { textResult, errorResult } from '@/lib/json'
-import { salaryReportUrl } from '@/lib/links'
 import {
+   buildSalaryReportLink,
+   salaryReportCommonSchema,
+   salaryOfferBuildInputSchema,
    COOP_CYCLE,
    COOP_YEAR,
    PROGRAM_LEVEL,
-   decodeSalaryReportLink,
-   encodeSalaryOffers,
-   salaryOfferInputSchema,
-} from '@/lib/salary-encode'
+} from '@/lib/salary-report-link'
+import { decodeSalaryReportLink } from '@/lib/salary-encode'
 
-const commonDefaultsSchema = z.object({
-   year: z.number().int().min(2005).max(2100).optional(),
-   coop_year: z.enum(COOP_YEAR).optional(),
-   coop_cycle: z.enum(COOP_CYCLE).optional(),
-   program_level: z.enum(PROGRAM_LEVEL).optional(),
-   work_hours: z.number().int().min(5).max(60).optional(),
-})
+const REPORT_LINK_HTTP = 'https://mcp.openmario.com/api/salary/report-link'
 
 export function registerSalaryLinkTools(server: McpServer) {
    server.registerTool(
@@ -26,7 +20,9 @@ export function registerSalaryLinkTools(server: McpServer) {
          title: 'Generate salary report link(s)',
          description: `Build a clickable OpenMario salary report URL from JSON offers.
 
-The user reviews each prefilled form and submits one-by-one (no silent MCP write).
+Browser behavior (no silent MCP write):
+• 1 offer → opens Report Salary with the form prefilled
+• 2+ offers → all saved as local drafts; user reviews at /salary/drafts
 
 REQUIRED WORKFLOW before calling:
 1. autocomplete_company / search_companies → exact company name
@@ -35,14 +31,18 @@ REQUIRED WORKFLOW before calling:
 4. Fill enums: coop_year, coop_cycle, program_level
 5. Call this tool with the JSON offers array
 
-ALWAYS present openmario_salary_url as a markdown link.`,
+Note: the browser form resolves IDs via Meilisearch; the link only carries names. Users may still need to pick/add entities if names do not match.
+
+ALWAYS present openmario_salary_url as a markdown link.
+
+HTTP equivalent (no MCP): POST ${REPORT_LINK_HTTP}`,
          inputSchema: {
             offers: z
-               .array(salaryOfferInputSchema)
+               .array(salaryOfferBuildInputSchema)
                .min(1)
                .max(50)
                .describe('One or more salary reports matching the manual form fields'),
-            common: commonDefaultsSchema
+            common: salaryReportCommonSchema
                .optional()
                .describe('Defaults applied to every offer when a field is omitted'),
             start_index: z
@@ -50,58 +50,13 @@ ALWAYS present openmario_salary_url as a markdown link.`,
                .int()
                .min(0)
                .optional()
-               .describe('Optional starting offer index for multi-salary queues'),
+               .describe('Optional idx query param (legacy; multi-offer links import all drafts)'),
          },
          annotations: { readOnlyHint: true, openWorldHint: false },
       },
       async input => {
          try {
-            const common = input.common ?? {}
-            const offers = input.offers.map(o =>
-               salaryOfferInputSchema.parse({
-                  company: o.company,
-                  position: o.position,
-                  location: o.location,
-                  compensation: o.compensation,
-                  year: o.year ?? common.year ?? new Date().getFullYear(),
-                  coop_year: o.coop_year ?? common.coop_year ?? '1st',
-                  coop_cycle: o.coop_cycle ?? common.coop_cycle ?? 'Fall/Winter',
-                  program_level: o.program_level ?? common.program_level ?? 'Undergraduate',
-                  work_hours: o.work_hours ?? common.work_hours ?? 40,
-                  other_compensation: o.other_compensation ?? '',
-                  details: o.details ?? '',
-               }),
-            )
-
-            const encoded = encodeSalaryOffers(offers)
-            const openmario_salary_url = salaryReportUrl({
-               salariesEncoded: encoded,
-               ...(input.start_index != null ? { idx: input.start_index } : {}),
-            })
-
-            const per_offer_urls =
-               offers.length > 1
-                  ? offers.map((_, i) =>
-                       salaryReportUrl({ salariesEncoded: encoded, idx: i }),
-                    )
-                  : [openmario_salary_url]
-
-            return textResult({
-               openmario_salary_url,
-               offer_count: offers.length,
-               per_offer_urls,
-               offers: offers.map(o => ({
-                  company: o.company,
-                  position: o.position,
-                  location: o.location,
-                  compensation: o.compensation,
-                  year: o.year,
-               })),
-               tip:
-                  offers.length === 1
-                     ? `Present: [Report this salary](${openmario_salary_url})`
-                     : `Present one batch link (user submits 1→N): [Report ${offers.length} salaries](${openmario_salary_url}). Or share per_offer_urls individually.`,
-            })
+            return textResult(buildSalaryReportLink(input))
          } catch (e) {
             return errorResult(
                e instanceof Error ? e.message : 'Failed to encode salary report link',
@@ -181,10 +136,16 @@ ALWAYS present openmario_salary_url as a markdown link.`,
             workflow: [
                'Resolve company/position/location via autocomplete_* (do not invent names)',
                'Build offers JSON matching fields above',
-               'Call generate_salary_report_link',
-               'Show openmario_salary_url as a markdown link — user submits in browser one-by-one',
+               `Call generate_salary_report_link OR POST ${REPORT_LINK_HTTP}`,
+               'Show openmario_salary_url as a markdown link',
+               '1 offer → prefilled report form; 2+ offers → drafts at /salary/drafts',
             ],
-            tip: 'Never invent company/position/location strings. Prefer exact names returned by autocomplete tools.',
+            tip: `Never invent company/position/location strings. Prefer exact names from autocomplete. Without MCP, POST offer JSON to ${REPORT_LINK_HTTP}.`,
+            http_fallback: {
+               method: 'POST',
+               url: REPORT_LINK_HTTP,
+               body: '{ "offers": [ … ], "common"?: { year, coop_year, coop_cycle, program_level, work_hours } }',
+            },
          }),
    )
 

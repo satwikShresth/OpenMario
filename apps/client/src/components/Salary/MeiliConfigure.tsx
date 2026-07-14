@@ -15,6 +15,24 @@ export function SalaryMeiliConfigure({ query }: SalaryMeiliConfigureProps) {
    useConfigure({
       hitsPerPage: PAGE_SIZE,
       filters: filters ?? '',
+      attributesToRetrieve: [
+         'id',
+         'year',
+         'coop_year',
+         'coop_cycle',
+         'program_level',
+         'work_hours',
+         'compensation',
+         'other_compensation',
+         'details',
+         'company_id',
+         'company_name',
+         'position_id',
+         'position_name',
+         'city',
+         'state',
+         'state_code',
+      ],
    });
 
    return null;

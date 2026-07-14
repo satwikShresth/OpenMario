@@ -14,17 +14,19 @@ OpenMario helps Drexel students explore co-op salaries, employer reviews (ESAP),
 - **Companies / positions**: omega scores and aggregates via search_companies / get_company*
 - **Reviews**: get_company_reviews / get_position_reviews
 - **Salaries**: search_salaries (read-only browse) + generate_salary_report_link (prefilled submit links)
-- **Plan of Study**: generate_plan_of_study_link / get_plan_of_study_from_link
+- **Plan of Study**: generate_plan_of_study_link / get_plan_of_study_from_link (multi-year course UUIDs)
+- **Quarter Schedule**: generate_quarter_schedule_link / get_quarter_schedule_from_link (one-term CRNs)
 
 ## Guides
 - get_salary_form_guide — fields, enums, tools to fill salary JSON
 - get_plan_of_study_guide — structure and tools to build a plan link
+- get_quarter_schedule_guide — CRNs + unavailable blocks for a term calendar link
 
 ## Search
 search_* tools default to Meilisearch hybrid mode (keyword + semantic when embedders are configured).
 
 ## Writes
-This MCP server does not write salaries or plans to the database. It generates clickable openmario.com links; students confirm in the browser (plans import locally; salaries submit one-by-one).
+This MCP server does not write salaries, plans, or schedules to the database. It generates clickable openmario.com links; students confirm in the browser (plans/schedules import locally; one salary offer prefills the form, multiple offers become drafts).
 
 ## Linking (required in EVERY answer — not prompt-specific)
 Tool results include \`openmario_url\` / \`openmario_*_url\` fields. Always cite them as markdown links.
@@ -34,6 +36,7 @@ Tool results include \`openmario_url\` / \`openmario_*_url\` fields. Always cite
 - Position (UUIDs): https://openmario.com/companies/{company_id}/{position_id}
 - Salary: https://openmario.com/salary?search={query} (also link company + position when citing a wage)
 - Plan of Study: openmario_plan_url from generate_plan_of_study_link
+- Quarter Schedule: openmario_schedule_url from generate_quarter_schedule_link
 - Salary report: openmario_salary_url from generate_salary_report_link
 Never invent IDs. Never leave course codes, professors, companies, positions, or dollar amounts unlinked.
 `;
@@ -45,6 +48,9 @@ coop_cycle: Fall/Winter | Winter/Spring | Spring/Summer | Summer/Fall
 program_level: Undergraduate | Graduate
 review sort: year_desc | rating_desc | rating_asc
 search mode: hybrid | keyword | semantic
+plan quarter mode: courses | break | coop
+schedule term: Fall | Winter | Spring | Summer
+schedule action: add | replace
 `;
 
 export function registerResources(server: McpServer) {

@@ -6,7 +6,7 @@ import { Box, Flex } from '@chakra-ui/react';
 import type { QueryClient } from '@tanstack/react-query';
 import TanStackQueryLayout from '@/integrations/tanstack-query/layout.tsx';
 import { Footer, PageHeader } from '@/components/common';
-import { getPageMaxWidth } from '@/components/common/page-layout';
+import { getPageMaxWidth, isImmersiveScheduleRoute } from '@/components/common/page-layout';
 import { Sidebar, BottomBar } from '@/components/nav';
 
 interface MyRouterContext {
@@ -25,6 +25,7 @@ function RootComponent() {
    const pathname = useRouterState({ select: (s) => s.location.pathname });
    const pageMaxW = getPageMaxWidth(pathname);
    const isMarketingShell = pathname === '/';
+   const isImmersive = isImmersiveScheduleRoute(pathname);
 
    return (
       <>
@@ -77,23 +78,29 @@ function RootComponent() {
                            flex='1'
                            minH={0}
                            minW={0}
-                           overflowY='auto'
+                           overflowY={isImmersive ? 'hidden' : 'auto'}
                            overscrollBehavior='contain'
-                           px={{ base: 4, md: 6 }}
-                           py={6}
-                           pb={{ base: '72px', sm: 6 }}
+                           px={isImmersive ? 0 : { base: 4, md: 6 }}
+                           py={isImmersive ? 0 : 6}
+                           pb={isImmersive ? 0 : { base: '72px', sm: 6 }}
+                           display={isImmersive ? 'flex' : undefined}
+                           flexDirection={isImmersive ? 'column' : undefined}
                         >
                            <Box
                               maxW={pageMaxW}
                               w='full'
                               mx='auto'
                               minW={0}
+                              flex={isImmersive ? '1' : undefined}
+                              minH={isImmersive ? 0 : undefined}
+                              display={isImmersive ? 'flex' : undefined}
+                              flexDirection={isImmersive ? 'column' : undefined}
                               style={{ viewTransitionName: 'page-content' }}
                            >
                               <Outlet />
                            </Box>
                         </Box>
-                        <Footer />
+                        {!isImmersive && <Footer />}
                      </Box>
                   </Flex>
                </Flex>

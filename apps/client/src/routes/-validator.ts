@@ -55,7 +55,10 @@ export const submissionSchema = z.object({
          z.minLength(3, { error: 'Name must be more than 3 characters' }),
          z.maxLength(100, { error: 'Name must be less than 100 characters' })
       ),
-   location: z.string(),
+   location: z.string().check(z.minLength(1, { error: 'Location is required' })),
+   company_id: z.uuid({ error: 'Select or add a company' }),
+   position_id: z.uuid({ error: 'Select or add a position' }),
+   location_id: z.uuid({ error: 'Select or add a location' }),
    work_hours: z
       .number()
       .check(

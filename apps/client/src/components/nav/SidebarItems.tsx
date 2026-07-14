@@ -131,6 +131,7 @@ export function SidebarItems({ onClose, minimized }: SidebarItemsProps) {
                               key={child.href}
                               to={child.href}
                               onClick={onClose}
+                              activeOptions={{ exact: child.href === '/courses/plan' }}
                               style={{ textDecoration: 'none', display: 'block' }}
                            >
                               <Flex

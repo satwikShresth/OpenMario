@@ -4,9 +4,9 @@
  */
 
 import { authContract } from './auth.contract';
-import { autocompleteContract } from './autocomplete.contract';
 import { companyContract } from './company.contract';
 import { positionContract } from './position.contract';
+import { locationContract } from './location.contract';
 import { courseContract } from './course.contract';
 import { submissionContract } from './submission.contract';
 import { esapContract } from './esap.contract';
@@ -18,9 +18,9 @@ import { professorContract } from './professor.contract';
  */
 export const contracts = {
    auth: authContract,
-   autocomplete: autocompleteContract,
    company: companyContract,
    position: positionContract,
+   location: locationContract,
    course: courseContract,
    submission: submissionContract,
    companies: esapContract,
@@ -31,70 +31,40 @@ export const contracts = {
 // Re-export all schemas and contracts for client usage
 // ============================================================================
 
-// Auth contracts & schemas
 export * from './auth.contract';
-
-// Autocomplete contracts & schemas
-export * from './autocomplete.contract';
-
-// Company contracts & schemas
 export * from './company.contract';
-
-// Position contracts & schemas
 export * from './position.contract';
-
-// Course contracts & schemas
+export * from './location.contract';
 export * from './course.contract';
-
-// Submission contracts & schemas
 export * from './submission.contract';
-
-// ESAP contracts & schemas
 export * from './esap.contract';
-
-// Professor contracts & schemas
 export * from './professor.contract';
-
-// ============================================================================
-// Type utilities for inferring input/output types from contracts
-// ============================================================================
 
 export type {
    InferContractRouterInputs,
    InferContractRouterOutputs
 } from '@orpc/contract';
 
-// ============================================================================
-// Inferred TypeScript types from Zod schemas (for client usage)
-// ============================================================================
-
 import type { z } from 'zod';
 
-// Auth types
-
-// Autocomplete types
-import type {
-   AutocompleteResultSchema,
-   CompanyQuerySchema,
-   PositionQuerySchema,
-   LocationQuerySchema
-} from './autocomplete.contract';
-
-// Company types
 import type {
    CompanyInsertSchema,
    CompanyItemSchema,
    CompanyCreateResponseSchema
 } from './company.contract';
 
-// Position types
 import type {
    PositionInsertSchema,
    PositionItemSchema,
    PositionCreateResponseSchema
 } from './position.contract';
 
-// Course types
+import type {
+   LocationInsertSchema,
+   LocationItemSchema,
+   LocationCreateResponseSchema
+} from './location.contract';
+
 import type {
    CourseIdParamSchema,
    CourseSchema,
@@ -111,7 +81,6 @@ import type {
    GetCourseAvailabilitiesResponseSchema
 } from './course.contract';
 
-// Submission types
 import type {
    SubmissionQuerySchema,
    SubmissionAggregateSchema,
@@ -123,12 +92,6 @@ import type {
    SubmissionUpdateResponseSchema
 } from './submission.contract';
 
-// Export inferred types
-export type AutocompleteResult = z.infer<typeof AutocompleteResultSchema>;
-export type CompanyQuery = z.infer<typeof CompanyQuerySchema>;
-export type PositionQuery = z.infer<typeof PositionQuerySchema>;
-export type LocationQuery = z.infer<typeof LocationQuerySchema>;
-
 export type CompanyInsert = z.infer<typeof CompanyInsertSchema>;
 export type CompanyItem = z.infer<typeof CompanyItemSchema>;
 export type CompanyCreateResponse = z.infer<typeof CompanyCreateResponseSchema>;
@@ -137,6 +100,12 @@ export type PositionInsert = z.infer<typeof PositionInsertSchema>;
 export type PositionItem = z.infer<typeof PositionItemSchema>;
 export type PositionCreateResponse = z.infer<
    typeof PositionCreateResponseSchema
+>;
+
+export type LocationInsert = z.infer<typeof LocationInsertSchema>;
+export type LocationItem = z.infer<typeof LocationItemSchema>;
+export type LocationCreateResponse = z.infer<
+   typeof LocationCreateResponseSchema
 >;
 
 export type CourseIdParam = z.infer<typeof CourseIdParamSchema>;

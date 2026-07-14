@@ -3,6 +3,8 @@ import professors from './seeds/professors.ts'
 import sections from './seeds/sections.ts'
 import submissions from './seeds/submissions.ts'
 import courses from './seeds/courses.ts'
+import positions from './seeds/positions.ts'
+import locations from './seeds/locations.ts'
 import { join } from 'node:path'
 import { migrateAndSeed } from './lib/migrate-and-seed.ts'
 import { meilisearchService } from './services/meilisearch.service.ts'
@@ -37,6 +39,16 @@ const indexes = {
       config: join(root, 'indexes/submissions.json'),
       seeder: submissions,
    },
+   positions: {
+      name: 'positions',
+      config: join(root, 'indexes/positions.json'),
+      seeder: positions,
+   },
+   locations: {
+      name: 'locations',
+      config: join(root, 'indexes/locations.json'),
+      seeder: locations,
+   },
 } as const
 
 /** Legacy alias: professors + sections (pre-catalog courses index). */
@@ -49,7 +61,7 @@ const runs =
 
 if (runs.length === 0) {
    throw new Error(
-      `Unknown seed mode "${mode}". Use: all | courses | legacy-courses | companies | professors | sections | submissions`,
+      `Unknown seed mode "${mode}". Use: all | courses | legacy-courses | companies | professors | sections | submissions | positions | locations`,
    )
 }
 

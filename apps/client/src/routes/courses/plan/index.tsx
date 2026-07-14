@@ -25,7 +25,7 @@ const searchSchema = z.object({
 })
 
 export const Route = createFileRoute('/courses/plan/')({
-   // Label comes from parent `/courses/plan` layout — avoid duplicate breadcrumb
+   beforeLoad: () => ({ getLabel: () => 'Plan of Study' }),
    validateSearch: searchSchema,
    component: PlanOfStudyPage,
 })

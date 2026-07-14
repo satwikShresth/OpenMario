@@ -3,18 +3,13 @@ import { useEffect, useEffectEvent, useState } from 'react'
 import { z } from 'zod'
 import { toaster } from '@/components/ui/toaster'
 import { Salary } from '@/components/Salary'
-import { ImportSalaryDialog } from '@/components/Salary/ImportSalaryDialog'
 import type { SubmissionAggregate } from '@openmario/contracts'
 import { useMutation } from '@tanstack/react-query'
 import { orpc } from '@/helpers'
 import { upsertSubmission } from '@/db/mutations'
 import {
-   advanceSalaryQueue,
-   clearSalaryQueue,
-   currentOffer,
    decodeSalaryBatch,
-   readSalaryQueue,
-   writeSalaryQueue,
+   salaryOfferToDraft,
    type SalaryOffer,
 } from '@/lib/salary-import'
 
@@ -24,6 +19,7 @@ const searchSchema = z.object({
 })
 
 export const Route = createFileRoute('/salary/_dialog/_form/report')({
+   beforeLoad: () => ({ getLabel: () => 'Report Salary' }),
    validateSearch: searchSchema,
    component: ReportSalaryPage,
 })
@@ -33,14 +29,11 @@ function ReportSalaryPage() {
    const search = Route.useSearch()
    const submitMutation = useMutation(orpc.submission.create.mutationOptions())
 
-   const [pendingOffers, setPendingOffers] = useState<SalaryOffer[] | null>(null)
-   const [queueVersion, setQueueVersion] = useState(0)
-   const queue = readSalaryQueue()
-   const activeOffer = queue ? currentOffer(queue) : undefined
+   const [importedOffer, setImportedOffer] = useState<SalaryOffer | undefined>()
+   const [formKey, setFormKey] = useState(0)
 
    const clearParams = useEffectEvent(() => {
       void navigate({
-         to: '/salary/report',
          search: prev => ({
             ...prev,
             salaries: undefined,
@@ -64,33 +57,31 @@ function ReportSalaryPage() {
          return
       }
 
-      const startIdx = Math.min(search.idx ?? 0, batch.offers.length - 1)
       if (batch.offers.length === 1) {
-         writeSalaryQueue({ offers: batch.offers, idx: 0 })
-         setPendingOffers(null)
-         setQueueVersion(v => v + 1)
+         setImportedOffer(batch.offers[0])
+         setFormKey(v => v + 1)
+         toaster.create({
+            type: 'success',
+            title: 'Offer loaded',
+            description: 'Review the form and submit when ready.',
+         })
          clearParams()
          return
       }
 
-      clearSalaryQueue()
-      setPendingOffers(batch.offers.slice(startIdx))
-      setQueueVersion(v => v + 1)
-      clearParams()
-   }, [search.salaries, search.idx])
-
-   const goNextOrClose = () => {
-      const next = advanceSalaryQueue()
-      setQueueVersion(v => v + 1)
-      if (next) {
+      void (async () => {
+         for (const offer of batch.offers) {
+            await upsertSubmission(salaryOfferToDraft(offer))
+         }
          toaster.create({
-            title: `Ready for salary ${next.idx + 1} of ${next.offers.length}`,
-            type: 'info',
+            type: 'success',
+            title: `${batch.offers.length} offers saved as drafts`,
+            description: 'Review and submit each draft when ready.',
          })
-         return
-      }
-      void navigate({ to: '/salary' })
-   }
+         clearParams()
+         void navigate({ to: '/salary/drafts' })
+      })()
+   }, [search.salaries, navigate])
 
    const onSubmit = ({ value }: { value: SubmissionAggregate }) => {
       const submissionPromise = submitMutation
@@ -104,9 +95,9 @@ function ReportSalaryPage() {
                status: 'synced',
                is_draft: false,
                company: value.company,
-               company_id: value.company ?? null,
+               company_id: value.company_id ?? null,
                position: value.position,
-               position_id: value.position ?? null,
+               position_id: value.position_id ?? null,
                location: value.location,
                location_city: null,
                location_state: null,
@@ -121,7 +112,7 @@ function ReportSalaryPage() {
                details: value.details ?? null,
                synced_at: new Date().toISOString(),
             })
-            goNextOrClose()
+            void navigate({ to: '/salary' })
          })
          .catch(console.error)
 
@@ -138,52 +129,15 @@ function ReportSalaryPage() {
       })
    }
 
-   const handleStartQueue = () => {
-      if (!pendingOffers?.length) return
-      writeSalaryQueue({ offers: pendingOffers, idx: 0 })
-      setPendingOffers(null)
-      setQueueVersion(v => v + 1)
-   }
-
-   const handleDismissImport = () => {
-      setPendingOffers(null)
-      clearSalaryQueue()
-      void navigate({ to: '/salary' })
-   }
-
-   // Force remount between queue items so defaults re-apply.
-   void queueVersion
-
    return (
-      <>
-         {pendingOffers != null ? (
-            <ImportSalaryDialog
-               open
-               offers={pendingOffers}
-               onStart={handleStartQueue}
-               onDismiss={handleDismissImport}
-            />
-         ) : (
-            <Salary.Form
-               key={queue ? `${queue.idx}-${queue.offers.length}` : 'blank'}
-               defaultValues={activeOffer}
-               onSubmit={onSubmit}
-               queue={
-                  queue && queue.offers.length > 1
-                     ? {
-                          index: queue.idx,
-                          total: queue.offers.length,
-                          onSkip: goNextOrClose,
-                          onDismissQueue: () => {
-                             clearSalaryQueue()
-                             setQueueVersion(v => v + 1)
-                             void navigate({ to: '/salary' })
-                          },
-                       }
-                     : undefined
-               }
-            />
-         )}
-      </>
+      <Salary.Form
+         key={
+            importedOffer
+               ? `${formKey}:${importedOffer.company}:${importedOffer.position}:${importedOffer.location}`
+               : `blank:${formKey}`
+         }
+         defaultValues={importedOffer}
+         onSubmit={onSubmit}
+      />
    )
 }

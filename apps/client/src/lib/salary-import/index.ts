@@ -7,12 +7,5 @@ export {
    encodeToBinary,
    decodeFromBinary,
 } from './encode'
-export {
-   readSalaryQueue,
-   writeSalaryQueue,
-   clearSalaryQueue,
-   advanceSalaryQueue,
-   currentOffer,
-   type SalaryImportQueue,
-} from './queue'
 export { parseSalaryPayload } from './compact'
+export { salaryOfferToDraft } from './to-draft'

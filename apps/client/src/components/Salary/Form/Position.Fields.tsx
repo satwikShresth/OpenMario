@@ -1,189 +1,225 @@
-import { Field, Stack } from '@chakra-ui/react';
-import type { withForm } from './context';
-import { convertFunc, defaultValues, isInvalid, orpc, selectProps } from '@/helpers';
-import { capitalizeWords } from '@/helpers/index.ts';
-import { AsyncCreatableSelect } from 'chakra-react-select';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { useMobile } from '@/hooks';
-import { toaster } from '@/components/ui/toaster';
+import { Field, Stack, Text } from '@chakra-ui/react'
+import type { withForm } from './context'
+import { capitalizeWords, defaultValues, isInvalid, orpc, useSearchClient } from '@/helpers'
+import {
+   searchCompanyOptions,
+   searchPositionOptions,
+   type EntityOption,
+} from '@/helpers/salary-meili'
+import { AsyncCreatableSelect } from 'chakra-react-select'
+import { useMutation } from '@tanstack/react-query'
+import { useMobile } from '@/hooks'
+import { toaster } from '@/components/ui/toaster'
+import { asyncComponents } from '@/components/common'
+import { useEntityCreateBusy } from './entityCreateBusy'
+
+function entityValue(id: string | undefined, name: string | undefined): EntityOption | null {
+   if (id && name) return { value: id, label: name, variant: 'subtle' }
+   return null
+}
 
 export default (withForm: withForm) =>
    withForm({
       defaultValues,
       render: ({ form }) => {
-         const isMobile = useMobile();
-         const queryClient = useQueryClient();
-         const createCompany = useMutation(orpc.company.create.mutationOptions());
-         const createPosition = useMutation(orpc.position.create.mutationOptions());
+         const isMobile = useMobile()
+         const { searchClient } = useSearchClient()
+         const createBusy = useEntityCreateBusy()
+         const createCompany = useMutation(orpc.company.create.mutationOptions())
+         const createPosition = useMutation(orpc.position.create.mutationOptions())
 
          return (
             <Stack direction={isMobile ? 'column' : 'row'} mb={2} gap={6}>
                <form.Field
                   name='company'
-                  validators={{
-                     onSubmitAsync: ({ value: comp }) =>
-                        queryClient
-                           .ensureQueryData(
-                              orpc.autocomplete.company.queryOptions({
-                                 input: { comp },
-                              })
-                           )
-                           .then((data) => data.some(({ name }) => name === comp) ? undefined : 'Unknown Company')
-                           .catch((e) => {
-                              console.error(e);
-                              return 'Value is unable to be validated';
-                           }),
+                  listeners={{
+                     onChange: ({ value, fieldApi }) => {
+                        const current = fieldApi.form.getFieldValue('position')
+                        if (value && current) {
+                           fieldApi.form.setFieldValue('position', '')
+                           fieldApi.form.setFieldValue('position_id', '')
+                        }
+                     },
                   }}
-                  listeners={{ onChange: ({ fieldApi }) => fieldApi.form.resetField('position') }}
                >
-                  {(field) => (
+                  {field => (
                      <Field.Root required invalid={isInvalid({ field })}>
                         <Field.Label fontSize='md'>
                            {capitalizeWords(field.name)}
                            <Field.RequiredIndicator />
                         </Field.Label>
-                        {/*@ts-ignore: shut up*/}
+                        {/*@ts-ignore*/}
                         <AsyncCreatableSelect
-                           {...selectProps(field)}
+                           name='company'
                            required
-                           onCreateOption={(name) => {
-                              const promise = createCompany
-                                 .mutateAsync({ name })
-                                 .then(({ company: { name } }) => {
-                                    field.handleChange(name);
-                                    queryClient.getQueryCache().clear();
-                                 })
-                                 .catch(console.error);
-
-                              toaster.promise(promise, {
-                                 success: {
-                                    title: 'Successfully created a new Comapny!',
-                                    description: 'Everything looks great',
-                                 },
-                                 error: {
-                                    title: 'Failed to create your new company',
-                                    description: 'Something wrong with the submission',
-                                 },
-                                 loading: {
-                                    title: 'Creating Company...',
-                                    description: 'Please wait',
-                                 },
-                              });
+                           components={asyncComponents}
+                           placeholder='Select a company'
+                           isDisabled={createBusy.busy}
+                           isLoading={createCompany.isPending}
+                           loadingMessage={() => 'Loading…'}
+                           noOptionsMessage={() => 'Keep typing — or add a new company'}
+                           value={entityValue(
+                              form.getFieldValue('company_id'),
+                              field.state.value,
+                           )}
+                           defaultOptions
+                           cacheOptions
+                           onBlur={field.handleBlur}
+                           onChange={(opt: EntityOption | null, meta?: { action?: string }) => {
+                              if (!opt) {
+                                 if (
+                                    meta?.action === 'clear' ||
+                                    meta?.action === 'pop-value' ||
+                                    meta?.action === 'remove-value'
+                                 ) {
+                                    field.handleChange('')
+                                    form.setFieldValue('company_id', '')
+                                    form.setFieldValue('position', '')
+                                    form.setFieldValue('position_id', '')
+                                 }
+                                 return
+                              }
+                              field.handleChange(opt.label)
+                              form.setFieldValue('company_id', opt.value)
                            }}
-                           loadOptions={(inputValue, callback) => {
-                              const comp = (inputValue.length >= 3)
-                                 ? inputValue
-                                 : field.state.value;
-                              const query = { comp };
-                              if (comp?.length >= 3) {
-                                 queryClient
-                                    .ensureQueryData(
-                                       orpc.autocomplete.company.queryOptions({
-                                          input: query,
-                                       })
-                                    )
-                                    .then((data) => callback(data?.map(convertFunc) || []))
-                                    .catch(() => callback([]));
+                           onCreateOption={async name => {
+                              createBusy.begin('Creating company…')
+                              try {
+                                 const { company } = await createCompany.mutateAsync({ name })
+                                 field.handleChange(company.name)
+                                 form.setFieldValue('company_id', company.id)
+                                 form.setFieldValue('position', '')
+                                 form.setFieldValue('position_id', '')
+                                 toaster.create({
+                                    title: 'Company added',
+                                    type: 'success',
+                                 })
+                              } catch (e) {
+                                 console.error(e)
+                                 toaster.create({
+                                    title: 'Failed to create company',
+                                    type: 'error',
+                                 })
+                              } finally {
+                                 createBusy.end()
                               }
                            }}
+                           loadOptions={(inputValue, callback) => {
+                              const q = inputValue.length >= 1 ? inputValue : field.state.value
+                              if (!q || q.length < 1) {
+                                 callback([])
+                                 return
+                              }
+                              void searchCompanyOptions(searchClient as never, q)
+                                 .then(callback)
+                                 .catch(() => callback([]))
+                           }}
+                           formatCreateLabel={(input: string) => `Add company “${input}”`}
                         />
-                        <Field.ErrorText>
-                           {/*@ts-ignore: shut up*/}
-                           {field.state.meta.errors.join(', ')}
-                        </Field.ErrorText>
+                        <Field.HelperText>
+                           <Text textStyle='2xs' color='fg.muted'>
+                              Pick a match or add a new company when none appear
+                           </Text>
+                        </Field.HelperText>
                      </Field.Root>
                   )}
                </form.Field>
-               <form.Subscribe
-                  selector={(state) => state.values.company}
-               >
-                  {(comp) => (
-                     <form.Field
-                        name='position'
-                        validators={{
-                           onSubmitAsync: ({ value: pos }) =>
-                              queryClient
-                                 .ensureQueryData(
-                                    orpc.autocomplete.position.queryOptions({
-                                       input: {
-                                          comp, pos
-                                       },
-                                    })
-                                 ).then(
-                                    (data) =>
-                                       data.some(({ name }) => name === pos)
-                                          ? undefined
-                                          : "Unknown Company's Position"
 
-                                 )
-                                 .catch((e) => {
-                                    console.error(e);
-                                    return 'Value is unable to be validated';
-                                 }),
-                        }}
-                     >
-                        {(field) => (
+               <form.Subscribe selector={state => state.values.company_id}>
+                  {companyId => (
+                     <form.Field name='position'>
+                        {field => (
                            <Field.Root required invalid={isInvalid({ field })}>
                               <Field.Label fontSize='md'>
                                  {capitalizeWords(field.name)}
                                  <Field.RequiredIndicator />
                               </Field.Label>
-                              {/*@ts-ignore: shut up*/}
+                              {/*@ts-ignore*/}
                               <AsyncCreatableSelect
-                                 {...selectProps(field)}
+                                 name='position'
                                  required
-                                 disabled={!comp || comp.length === 0}
-                                 onCreateOption={(name) => {
-                                    const promise = createPosition
-                                       .mutateAsync({ name, company: comp })
-                                       .then(({ position: { name } }) => {
-                                          field.handleChange(name);
-                                          queryClient.getQueryCache().clear();
-                                       })
-                                       .catch(console.error);
-
-                                    toaster.promise(promise, {
-                                       success: {
-                                          title: 'Successfully created a new Comapny!',
-                                          description: 'Everything looks great',
-                                       },
-                                       error: {
-                                          title: 'Failed to create your new company',
-                                          description: 'Something wrong with the submission',
-                                       },
-                                       loading: {
-                                          title: 'Creating Company...',
-                                          description: 'Please wait',
-                                       },
-                                    });
+                                 components={asyncComponents}
+                                 placeholder='Select a position'
+                                 isDisabled={!companyId || createBusy.busy}
+                                 isLoading={createPosition.isPending}
+                                 loadingMessage={() => 'Loading…'}
+                                 noOptionsMessage={() =>
+                                    companyId
+                                       ? 'Keep typing — or add a new position'
+                                       : 'Select a company first'
+                                 }
+                                 value={entityValue(
+                                    form.getFieldValue('position_id'),
+                                    field.state.value,
+                                 )}
+                                 defaultOptions
+                                 cacheOptions
+                                 onBlur={field.handleBlur}
+                                 onChange={(
+                                    opt: EntityOption | null,
+                                    meta?: { action?: string },
+                                 ) => {
+                                    if (!opt) {
+                                       if (
+                                          meta?.action === 'clear' ||
+                                          meta?.action === 'pop-value' ||
+                                          meta?.action === 'remove-value'
+                                       ) {
+                                          field.handleChange('')
+                                          form.setFieldValue('position_id', '')
+                                       }
+                                       return
+                                    }
+                                    field.handleChange(opt.label)
+                                    form.setFieldValue('position_id', opt.value)
                                  }}
-                                 loadOptions={(inputValue, callback) => {
-                                    const pos = (inputValue.length >= 3)
-                                       ? inputValue
-                                       : field.state.value;
-                                    const query = { comp, pos };
-                                    if (pos?.length >= 3) {
-                                       queryClient
-                                          .ensureQueryData(
-                                             orpc.autocomplete.position.queryOptions({
-                                                input: query,
-                                             })
-                                          )
-                                          .then((data) => callback(data?.map(convertFunc) || []))
-                                          .catch(() => callback([]));
+                                 onCreateOption={async name => {
+                                    if (!companyId) return
+                                    createBusy.begin('Creating position…')
+                                    try {
+                                       const { position } = await createPosition.mutateAsync({
+                                          name,
+                                          company_id: companyId,
+                                       })
+                                       field.handleChange(position.name)
+                                       form.setFieldValue('position_id', position.id)
+                                       toaster.create({
+                                          title: 'Position added',
+                                          type: 'success',
+                                       })
+                                    } catch (e) {
+                                       console.error(e)
+                                       toaster.create({
+                                          title: 'Failed to create position',
+                                          type: 'error',
+                                       })
+                                    } finally {
+                                       createBusy.end()
                                     }
                                  }}
+                                 loadOptions={(inputValue, callback) => {
+                                    if (!companyId) {
+                                       callback([])
+                                       return
+                                    }
+                                    const q =
+                                       inputValue.length >= 1 ? inputValue : field.state.value
+                                    if (!q || q.length < 1) {
+                                       callback([])
+                                       return
+                                    }
+                                    void searchPositionOptions(searchClient as never, q, companyId)
+                                       .then(callback)
+                                       .catch(() => callback([]))
+                                 }}
+                                 formatCreateLabel={(input: string) => `Add position “${input}”`}
                               />
-                              <Field.ErrorText>
-                                 {/*@ts-ignore: shut up*/}
-                                 {field.state.meta.errors.join(', ')}
-                              </Field.ErrorText>
                            </Field.Root>
                         )}
                      </form.Field>
                   )}
                </form.Subscribe>
-            </Stack >
-         );
+            </Stack>
+         )
       },
-   });
+   })

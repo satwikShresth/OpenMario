@@ -11,6 +11,7 @@ Remote Model Context Protocol server for AI clients (Cursor, Claude, ChatGPT, et
 |------|----------------|
 | **Tools (read)** | Hybrid search + detail for sections, professors, companies, salaries, reviews, autocomplete; plan-of-study + salary-report link generate/decode; form/plan guides |
 | **Tools (write)** | None — MCP only generates clickable links; users confirm plans/salaries on the website |
+| **HTTP (no MCP session)** | `POST /api/salary/report-link` — same encode as `generate_salary_report_link` |
 | **Resources** | `openmario://docs/*`, `openmario://course/{id}`, `professor/{id}`, `company/{id}` |
 | **Prompts** | `compare-companies`, `plan-course-path`, `find-coop-by-budget`, `career-elective-advice`, `build-plan-of-study`, `report-salaries` |
 
@@ -31,7 +32,8 @@ bun run mcp:start   # runs apps/mcp/dist/index.js
 ```
 
 Health: `http://localhost:3100/health`  
-MCP: `http://localhost:3100/`
+MCP: `http://localhost:3100/`  
+Encode API: `POST http://localhost:3100/api/salary/report-link`
 
 ### Cursor remote MCP config
 
@@ -72,7 +74,7 @@ Without embedders, tools automatically fall back to keyword search.
 
 1. Run `apps/mcp` as its own process (Compose service recommended).
 2. Point DNS `mcp.openmario.com` at your reverse proxy.
-3. Proxy HTTPS → `http://mcp:3100` (MCP at `/`, plus `/health`).
+3. Proxy HTTPS → `http://mcp:3100` (MCP at `/`, encode API at `/api/salary/report-link`, plus `/health`).
 4. Set `MCP_ALLOWED_HOSTS=mcp.openmario.com` and `NODE_ENV=production`.
 
 Example Caddy snippet:

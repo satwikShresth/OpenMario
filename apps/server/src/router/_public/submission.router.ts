@@ -1,9 +1,7 @@
 import { os } from '@/router/helpers';
 import type { DbClient } from '@openmario/db';
 import {
-   company,
    position,
-   location,
    submission,
    submissionMView
 } from '@openmario/db';
@@ -30,42 +28,6 @@ import {
    searchSubmissionIds,
    searchSubmissions
 } from '@/utils/submission-search';
-
-/**
- * Helper function to get position ID by company and position name
- */
-const getPositionCTE = (
-   db: DbClient,
-   companyName: string,
-   positionName: string
-) =>
-   db.$with('position_cte').as(
-      db
-         .select({ position_id: position.id })
-         .from(position)
-         .innerJoin(company, eq(position.company_id, company.id))
-         .where(
-            and(eq(company.name, companyName), eq(position.name, positionName))
-         )
-         .limit(1)
-   );
-
-/**
- * Helper function to get location ID by city and state code
- */
-const getLocationCTE = (db: DbClient, locationStr: string) => {
-   const [city, state_code] = locationStr.split(',').map(s => s.trim());
-
-   return db.$with('location_cte').as(
-      db
-         .select({ location_id: location.id })
-         .from(location)
-         .where(
-            and(eq(location.city, city!), eq(location.state_code, state_code!))
-         )
-         .limit(1)
-   );
-};
 
 const toSubmissionDocument = (
    row: typeof submissionMView.$inferSelect
@@ -104,6 +66,22 @@ const syncSubmissionToMeili = async (
    await meilisearch.client
       .index<SubmissionDocument>(INDEX_NAMES.submissions)
       .addDocuments([toSubmissionDocument(row)]);
+};
+
+const assertPositionCompany = async (
+   db: DbClient,
+   positionId: string,
+   companyId?: string
+) => {
+   const [row] = await db
+      .select({ company_id: position.company_id })
+      .from(position)
+      .where(eq(position.id, positionId))
+      .limit(1);
+   if (!row) throw new Error('position_id not found');
+   if (companyId && row.company_id !== companyId) {
+      throw new Error('position_id does not belong to company_id');
+   }
 };
 
 /**
@@ -256,15 +234,13 @@ export const listSubmissions = os.submission.list.handler(
  */
 export const createSubmission = os.submission.create.handler(
    async ({ input, context: { db, meilisearch } }) => {
-      const positionCTE = getPositionCTE(db, input.company, input.position);
-      const locationCTE = getLocationCTE(db, input.location);
+      await assertPositionCompany(db, input.position_id, input.company_id);
 
       return await db
-         .with(positionCTE, locationCTE)
          .insert(submission)
          .values({
-            position_id: sql`(select ${positionCTE.position_id} from ${positionCTE})`,
-            location_id: sql`(select ${locationCTE.location_id} from ${locationCTE})`,
+            position_id: input.position_id,
+            location_id: input.location_id,
             coop_cycle: input.coop_cycle,
             coop_year: input.coop_year,
             year: input.year,
@@ -303,15 +279,13 @@ export const updateSubmission = os.submission.update.handler(
          throw new Error('Submission ID is required for update');
       }
 
-      const positionCTE = getPositionCTE(db, input.company, input.position);
-      const locationCTE = getLocationCTE(db, input.location);
+      await assertPositionCompany(db, input.position_id, input.company_id);
 
       return await db
-         .with(positionCTE, locationCTE)
          .update(submission)
          .set({
-            position_id: sql`(select ${positionCTE.position_id} from ${positionCTE})`,
-            location_id: sql`(select ${locationCTE.location_id} from ${locationCTE})`,
+            position_id: input.position_id,
+            location_id: input.location_id,
             coop_cycle: input.coop_cycle,
             coop_year: input.coop_year,
             year: input.year,

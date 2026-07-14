@@ -10,6 +10,7 @@ type NavNode = {
    icon?: NavItem['icon'];
    badge?: NavItem['badge'];
    activeWhen?: (pathname: string) => boolean;
+   isActive?: (pathname: string) => boolean;
    children?: NavNode[];
 };
 
@@ -30,6 +31,7 @@ const rootNode: NavNode = {
             id: child.href,
             name: child.label,
             href: child.href,
+            isActive: child.isActive,
          })),
       })),
    })),
@@ -47,8 +49,11 @@ const DesktopNav = () => {
       let groupHasActive = false;
       for (const item of group.items) {
          if (item.children?.length) {
-            const activeChild = item.children.find(c => pathname.startsWith(c.href));
+            const activeChild = item.children.find(c =>
+               c.isActive ? c.isActive(pathname) : pathname.startsWith(c.href),
+            );
             if (activeChild) {
+               selectedValue.push(activeChild.href);
                expandedValue.push(item.href);
                groupHasActive = true;
             }
@@ -108,7 +113,11 @@ const DesktopNav = () => {
 
                   return (
                      <TreeView.Item asChild>
-                        <Link to={navNode.href!} style={{ textDecoration: 'none' }}>
+                        <Link
+                           to={navNode.href!}
+                           activeOptions={{ exact: navNode.href === '/courses/plan' }}
+                           style={{ textDecoration: 'none' }}
+                        >
                            <Flex align='center' gap={2.5} px={2} py={1.5}>
                               {navNode.icon && (
                                  <Icon as={navNode.icon} boxSize={4} flexShrink={0} />

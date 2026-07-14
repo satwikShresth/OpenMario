@@ -4,6 +4,7 @@ import { cors } from 'hono/cors';
 import { env } from '@env';
 import { WebStandardStreamableHTTPServerTransport } from '@modelcontextprotocol/sdk/server/webStandardStreamableHttp.js';
 import { createOpenMarioMcpServer } from './server';
+import { salaryHttpRoutes } from './http/salary';
 
 const allowedHosts = env.MCP_ALLOWED_HOSTS.split(',')
    .map(h => h.trim())
@@ -51,9 +52,11 @@ const app = new Hono({ strict: false })
          status: 'ok',
          application: 'openmario-mcp',
          transport: 'streamable-http',
-         endpoint: '/'
+         endpoint: '/',
+         http_api: '/api/salary/report-link'
       })
    )
+   .route('/api', salaryHttpRoutes)
    // Primary endpoint is the host root; /mcp kept as a compatibility alias.
    .all('/', handleMcp)
    .all('/mcp', handleMcp);
@@ -64,5 +67,5 @@ export default {
 };
 
 console.log(
-   `OpenMario MCP listening on http://localhost:${env.MCP_PORT}/ (health: /health)`
+   `OpenMario MCP listening on http://localhost:${env.MCP_PORT}/ (health: /health, encode: /api/salary/report-link)`
 );

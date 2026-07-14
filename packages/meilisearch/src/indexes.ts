@@ -4,6 +4,8 @@ import type { CompanyDocument } from './types/company';
 import type { ProfessorDocument } from './types/professor';
 import type { SubmissionDocument } from './types/submission';
 import type { CourseDocument } from './types/course';
+import type { PositionDocument } from './types/position';
+import type { LocationDocument } from './types/location';
 
 export const INDEX_NAMES = {
    sections: 'sections',
@@ -11,7 +13,9 @@ export const INDEX_NAMES = {
    companies: 'companies',
    professors: 'professors',
    submissions: 'submissions',
-   job_postings: 'job_postings'
+   job_postings: 'job_postings',
+   positions: 'positions',
+   locations: 'locations'
 } as const;
 
 export type IndexName = (typeof INDEX_NAMES)[keyof typeof INDEX_NAMES];
@@ -30,3 +34,9 @@ export const professorsIndex = (client: MeiliSearch) =>
 
 export const submissionsIndex = (client: MeiliSearch) =>
    client.index<SubmissionDocument>(INDEX_NAMES.submissions);
+
+export const positionsIndex = (client: MeiliSearch) =>
+   client.index<PositionDocument>(INDEX_NAMES.positions);
+
+export const locationsIndex = (client: MeiliSearch) =>
+   client.index<LocationDocument>(INDEX_NAMES.locations);

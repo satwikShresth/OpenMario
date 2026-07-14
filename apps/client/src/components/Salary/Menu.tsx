@@ -28,7 +28,7 @@ export const ReportSalaryMenu = () => {
          <Portal>
             <Menu.Positioner>
                <Menu.Content>
-                  <Menu.Item value='auto-fill' p={2} asChild disabled={isMobile}>
+                  <Menu.Item value='auto-fill' p={2} asChild>
                      <Link to='/salary/auto-fill'>
                         <AutoFillIcon size={16} />
                         Auto-Fill

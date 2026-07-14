@@ -8,6 +8,7 @@ import { updateSubmission } from '@/db/mutations';
 import { useSubmissionByKey } from '@/db/stores/submissions';
 
 export const Route = createFileRoute('/salary/_dialog/_form/reported/$key')({
+   beforeLoad: () => ({ getLabel: () => 'Edit Report' }),
    component: () => {
       const { key } = Route.useParams();
       const navigate = Route.useNavigate();

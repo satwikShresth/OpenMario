@@ -1,13 +1,15 @@
-import { createFileRoute } from '@tanstack/react-router'
-import { CourseDialogPage } from '../../-courses.dialog'
-import { orpc } from '@/helpers'
+import { createFileRoute, redirect } from '@tanstack/react-router'
 
+/** Legacy URL → nested under Quarter Schedule */
 export const Route = createFileRoute('/courses/plan/$term_id/$course_id')({
-  beforeLoad: ({ context: { queryClient }, params: { course_id } }) => ({
-    getLabel: () =>
-      queryClient
-        .ensureQueryData(orpc.course.course.queryOptions({ input: { params: { course_id } }, staleTime: 30_000 }))
-        .then(data => data?.data ? `${data.data.subject_id} ${data.data.course_number}` : 'Course'),
-  }),
-  component: CourseDialogPage,
+   beforeLoad: ({ params }) => {
+      throw redirect({
+         to: '/courses/plan/schedule/$term_id/$course_id',
+         params: {
+            term_id: params.term_id,
+            course_id: params.course_id,
+         },
+         replace: true,
+      })
+   },
 })

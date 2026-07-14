@@ -192,7 +192,7 @@ ${LINKING_INSTRUCTIONS}`,
       {
          title: 'Report salaries via link',
          description:
-            'Turn salary/offer JSON into a clickable OpenMario prefilled report link. User submits one-by-one in the browser.',
+            'Turn salary/offer JSON into a clickable OpenMario report link. One offer prefills the form; multiple offers import as drafts.',
          argsSchema: {
             offers_json: z
                .string()
@@ -222,8 +222,53 @@ Workflow:
 2. For each offer, resolve exact names with autocomplete_company, autocomplete_position, and autocomplete_location (do not invent).
 3. Optionally check search_salaries / get_company for context.
 4. Call generate_salary_report_link with the normalized offers JSON (and common defaults when shared).
-5. Present openmario_salary_url as a markdown link. If multiple offers, explain they will submit one-by-one.
+5. Present openmario_salary_url as a markdown link. If multiple offers, explain they import as drafts at /salary/drafts.
 6. Never claim you submitted salaries server-side — the user must confirm in the browser.
+
+${LINKING_INSTRUCTIONS}`,
+               },
+            },
+         ],
+      }),
+   );
+
+   server.registerPrompt(
+      'build-quarter-schedule',
+      {
+         title: 'Build quarter schedule link',
+         description:
+            'Find sections for a term and give the user a clickable OpenMario quarter schedule setup link (CRNs).',
+         argsSchema: {
+            term: z
+               .string()
+               .describe('Term name: Fall | Winter | Spring | Summer'),
+            year: z.string().describe('Calendar year e.g. "2026"'),
+            courses: z
+               .string()
+               .describe(
+                  'Comma-separated course codes or titles to schedule e.g. "CS 260, MATH 221"',
+               ),
+            notes: z
+               .string()
+               .optional()
+               .describe('Constraints e.g. morning only, avoid Fridays, lab preference'),
+         },
+      },
+      ({ term, year, courses, notes }) => ({
+         messages: [
+            {
+               role: 'user',
+               content: {
+                  type: 'text',
+                  text: `Build a Quarter Schedule for ${term} ${year} covering: ${courses}.${notes ? ` Notes: ${notes}` : ''}
+
+Workflow:
+1. Call get_quarter_schedule_guide.
+2. For each course, search_sections (filter/select the correct term) and pick CRNs that don't conflict.
+3. Optionally add unavailable blocks for work/clubs.
+4. Call generate_quarter_schedule_link with { term, year, crns, unavailable?, action: "add"|"replace" }.
+5. Present openmario_schedule_url as a markdown link. Explain sections briefly; hyperlink courses via openmario_url.
+6. Never invent CRNs. Prefer get_quarter_schedule_from_link if the user already has a schedule URL.
 
 ${LINKING_INSTRUCTIONS}`,
                },

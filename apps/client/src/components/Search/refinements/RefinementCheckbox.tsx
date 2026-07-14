@@ -49,6 +49,7 @@ export const RefinementCheckbox = ({ attribute }: { attribute: string }) => {
                   <For each={refinements.items}>
                      {({ value, isRefined, label, count }) => (
                         <Checkbox.Root
+                           key={`${attribute}:${value}`}
                            name={value}
                            value={value}
                            checked={isRefined}

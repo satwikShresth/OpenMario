@@ -64,7 +64,7 @@ export function CourseChip({ course, term, academicYear, yearIndex }: CourseChip
 
          const termId = await upsertTerm(term, academicYear)
          await navigate({
-            to: '/courses/plan/$term_id',
+            to: '/courses/plan/schedule/$term_id',
             params: { term_id: termId },
             search: { search: course.code },
          })

@@ -82,6 +82,30 @@ export const NAV_GROUPS: NavGroup[] = [
                colorPalette: 'orange',
                variant: 'subtle',
             },
+            activeWhen: pathname =>
+               pathname === '/courses/plan' ||
+               pathname.startsWith('/courses/plan/'),
+            children: [
+               {
+                  label: 'Plan of Study',
+                  href: '/courses/plan',
+                  isActive: pathname => {
+                     const p = pathname.replace(/\/+$/, '') || '/'
+                     return p === '/courses/plan'
+                  },
+               },
+               {
+                  label: 'Quarter Schedule',
+                  href: '/courses/plan/schedule',
+                  isActive: pathname => {
+                     const p = pathname.replace(/\/+$/, '') || '/'
+                     return (
+                        p === '/courses/plan/schedule' ||
+                        p.startsWith('/courses/plan/schedule/')
+                     )
+                  },
+               },
+            ],
          },
          {
             label: 'Professors',

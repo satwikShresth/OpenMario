@@ -18,7 +18,6 @@ import {
    SalaryIcon,
    SearchIcon,
    ShaftIcon,
-   UploadIcon,
 } from '@/components/icons';
 import {
    BentoCard,
@@ -251,29 +250,29 @@ export function Landing() {
 
             {/* Salary auto-fill — featured at top */}
             <Box mb={4}>
-               <BentoCard to='/salary' accent='green' span={2}>
+               <BentoCard to='/salary/auto-fill' accent='green' span={2}>
                   <Box p={6}>
-                     <CardLabel accent='green'>Salary auto-fill</CardLabel>
-                     <CardTitle>Screenshot your DrexelOne offer page → salary entries in seconds</CardTitle>
+                     <CardLabel accent='green'>AI salary autofill</CardLabel>
+                     <CardTitle>Paste offers into Cursor or Claude → report links in seconds</CardTitle>
                      <CardDesc>
-                        OCR reads your co-op rankings screenshot and pre-fills every offer as a draft. Review and submit in one click — no manual typing.
+                        Connect OpenMario MCP, describe your offers, and get a share link that prefills the form — or saves every offer as a draft when you have several.
                      </CardDesc>
                      <Box mt={6}>
                         <FlowSteps accent='green' steps={[
                            {
-                              icon: <UploadIcon size={22} color='#4ade80' />,
-                              label: 'Drop screenshot',
-                              sub: 'DrexelOne offer page PNG or PDF',
+                              icon: <AutoFillIcon size={22} color='#4ade80' />,
+                              label: 'Connect MCP',
+                              sub: 'Add OpenMario in Cursor / Claude',
                            },
                            {
-                              icon: <AutoFillIcon size={22} color='#4ade80' />,
-                              label: 'OCR extracts data',
-                              sub: 'Company, role, pay — automatically',
+                              icon: <SearchIcon size={22} color='#4ade80' />,
+                              label: 'Ask AI for a link',
+                              sub: 'JSON offers → generate_salary_report_link',
                            },
                            {
                               icon: <SalaryIcon size={22} color='#4ade80' />,
-                              label: 'Review drafts',
-                              sub: '3 entries pre-filled, ready to submit',
+                              label: 'Review & submit',
+                              sub: 'One offer in the form, many as drafts',
                            },
                         ]} />
                      </Box>
@@ -468,9 +467,9 @@ export function Landing() {
                {[
                   { icon: SearchIcon,    label: 'Explore courses',     sub: 'Search every section, filter by rating', to: '/courses/explore', accent: 'teal'   as const },
                   { icon: BriefcaseIcon, label: 'Review your co-op',   sub: 'Write a review and help the next student',to: '/companies',       accent: 'blue'   as const },
-                  { icon: SalaryIcon,    label: 'Submit salary',       sub: 'Auto-fill from a screenshot',            to: '/salary',          accent: 'green'  as const },
+                  { icon: SalaryIcon,    label: 'Submit salary',       sub: 'AI autofill via MCP share links',         to: '/salary/auto-fill', accent: 'green'  as const },
                ].map(item => (
-                  <Link key={item.label} to={item.to as '/salary'} preload='intent' style={{ textDecoration: 'none' }}>
+                  <Link key={item.label} to={item.to as '/salary/auto-fill'} preload='intent' style={{ textDecoration: 'none' }}>
                      <Flex
                         direction='column'
                         align='center'

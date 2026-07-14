@@ -8,7 +8,7 @@ import {
    useDisclosure,
 } from '@chakra-ui/react';
 import { Suspense } from 'react';
-import { createFileRoute, Outlet } from '@tanstack/react-router';
+import { createFileRoute, Outlet, useRouterState } from '@tanstack/react-router';
 import { Index, InstantSearch } from 'react-instantsearch';
 import { FilterIcon } from '@/components/icons';
 import { Salary } from '@/components/Salary';
@@ -116,18 +116,24 @@ function SalarySearch() {
 
 function SalaryPage() {
    const { searchClient } = useSearchClient();
+   const showNested = useRouterState({
+      select: s => s.matches.some(m => m.routeId.startsWith('/salary/_dialog')),
+   });
 
    return (
       <Suspense>
          <Salary.Root>
-            {/* @ts-ignore: shupp */}
-            <InstantSearch
-               searchClient={searchClient}
-               future={{ preserveSharedStateOnUnmount: true }}
-            >
-               <SalarySearch />
-            </InstantSearch>
-            <Outlet />
+            {showNested ? (
+               <Outlet />
+            ) : (
+               // @ts-ignore: shupp
+               <InstantSearch
+                  searchClient={searchClient}
+                  future={{ preserveSharedStateOnUnmount: true }}
+               >
+                  <SalarySearch />
+               </InstantSearch>
+            )}
          </Salary.Root>
       </Suspense>
    );
