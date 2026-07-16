@@ -1,5 +1,9 @@
 import { os } from '@/router/helpers';
-import { meiliProfessorsIdx, instructorSectionsMView } from '@openmario/db';
+import {
+   meiliProfessorsIdx,
+   instructorSectionsMView,
+   isPlaceholderInstructor
+} from '@openmario/db';
 import { eq, desc } from 'drizzle-orm';
 
 // ============================================================================
@@ -19,7 +23,9 @@ export const getProfessor = os.professor.get.handler(
          .where(eq(meiliProfessorsIdx.id, professor_id))
          .limit(1);
 
-      if (!row) throw new Error('Professor not found');
+      if (!row || isPlaceholderInstructor(row.name)) {
+         throw new Error('Professor not found');
+      }
 
       return row;
    }

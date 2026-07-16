@@ -21,7 +21,8 @@ import {
    instructor_sections,
    course,
    subject,
-   term
+   term,
+   filterRealInstructorNames
 } from '@openmario/db';
 import { eq, inArray, sql, and } from 'drizzle-orm';
 import { getNeonDb } from '@/db/neon';
@@ -187,7 +188,9 @@ async function main() {
    const courseMap = await loadCourseMap(db);
    console.log(`Course map loaded: ${courseMap.size} entries.`);
 
-   const allInstructorNames = [...new Set(lines.flatMap(l => l.instructors))];
+   const allInstructorNames = filterRealInstructorNames([
+      ...new Set(lines.flatMap(l => l.instructors))
+   ]);
    console.log(`Resolving ${allInstructorNames.length} unique instructor names…`);
    const instrMap = await resolveInstructorMap(db, allInstructorNames);
    console.log(`Resolved ${instrMap.size} instructors.`);

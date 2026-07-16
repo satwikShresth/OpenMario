@@ -14,3 +14,7 @@ export type DbClient = ReturnType<typeof drizzle<typeof schema>>;
 
 export { schema };
 export * from './schema';
+export {
+   isPlaceholderInstructor,
+   filterRealInstructorNames
+} from './instructors';

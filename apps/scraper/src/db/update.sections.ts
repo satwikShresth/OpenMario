@@ -14,7 +14,7 @@
 import { createReadStream } from 'node:fs';
 import { createInterface } from 'node:readline';
 import { join } from 'node:path';
-import { section, section_days, instructor, instructor_sections } from '@openmario/db';
+import { section, section_days, instructor, instructor_sections, filterRealInstructorNames } from '@openmario/db';
 import { eq, inArray, sql, and } from 'drizzle-orm';
 import { getNeonDb } from '@/db/neon';
 import { env } from '@env';
@@ -146,7 +146,9 @@ async function main() {
    const lines = await readJsonl(SECTIONS_FILE);
    console.log(`Loaded ${lines.length} sections from JSONL.`);
 
-   const allInstructorNames = [...new Set(lines.flatMap(l => l.instructors))];
+   const allInstructorNames = filterRealInstructorNames([
+      ...new Set(lines.flatMap(l => l.instructors))
+   ]);
    console.log(`Resolving ${allInstructorNames.length} unique instructor names…`);
    const instrMap = await resolveInstructorMap(db, allInstructorNames);
    console.log(`Resolved ${instrMap.size} instructors.`);

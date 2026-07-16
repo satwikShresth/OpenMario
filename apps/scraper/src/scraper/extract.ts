@@ -1,5 +1,6 @@
 import type { Page } from 'playwright';
 import type { CleanCourse, CleanSection, DayOfWeek, RawSection } from './types';
+import { filterRealInstructorNames } from '@openmario/db';
 
 const DAY_MAP: Record<string, DayOfWeek> = {
    M: 'Monday',
@@ -55,7 +56,9 @@ function cleanSection(raw: RawSection): CleanSection {
       building: raw.building,
       room: raw.room,
       instructors: raw.instructor
-         ? raw.instructor.split(',').map(s => s.trim()).filter(Boolean)
+         ? filterRealInstructorNames(
+              raw.instructor.split(',').map(s => s.trim()).filter(Boolean)
+           )
          : [],
       offeringHistory: raw.offeringHistory
    };
