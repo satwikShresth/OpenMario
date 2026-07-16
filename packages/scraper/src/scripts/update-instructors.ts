@@ -6,7 +6,11 @@
  */
 
 import { eq } from 'drizzle-orm';
-import { connectDb, instructor } from '@openmario/db';
+import {
+   connectDb,
+   instructor,
+   isPlaceholderInstructor
+} from '@openmario/db';
 import { env } from '@env';
 import { searchSchools, getProfessorRating } from '../rmp';
 
@@ -33,6 +37,31 @@ async function resolveSchoolId(schoolName: string): Promise<string | null> {
    return node.id;
 }
 
+async function clearPlaceholderRmp(inst: typeof instructor.$inferSelect): Promise<void> {
+   if (
+      inst.rmp_id == null &&
+      inst.rmp_legacy_id == null &&
+      inst.avg_rating == null &&
+      inst.avg_difficulty == null &&
+      inst.num_ratings == null
+   ) {
+      return;
+   }
+
+   await db
+      .update(instructor)
+      .set({
+         avg_rating: null,
+         avg_difficulty: null,
+         num_ratings: null,
+         rmp_id: null,
+         rmp_legacy_id: null
+      })
+      .where(eq(instructor.id, inst.id));
+
+   console.log(`[scraper] Cleared RMP data for placeholder instructor: ${inst.name}`);
+}
+
 async function main() {
    const schoolId = await resolveSchoolId(RMP_SCHOOL_NAME);
    if (!schoolId) {
@@ -45,8 +74,15 @@ async function main() {
    let updated = 0;
    let skipped = 0;
    let failed = 0;
+   let placeholders = 0;
 
    for (const inst of instructors) {
+      if (isPlaceholderInstructor(inst.name)) {
+         await clearPlaceholderRmp(inst);
+         placeholders++;
+         continue;
+      }
+
       await sleep(RMP_DELAY_MS);
 
       const rating = await getProfessorRating(inst.name, schoolId);
@@ -81,7 +117,7 @@ async function main() {
    }
 
    console.log(
-      `[scraper] Done. Updated=${updated} skipped=${skipped} failed=${failed}`
+      `[scraper] Done. Updated=${updated} skipped=${skipped} failed=${failed} placeholders=${placeholders}`
    );
 }
 

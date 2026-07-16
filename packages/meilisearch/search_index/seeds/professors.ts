@@ -1,5 +1,5 @@
 import type { MeiliSearch } from 'meilisearch';
-import { meiliProfessorsIdx } from '@openmario/db';
+import { meiliProfessorsIdx, isPlaceholderInstructor } from '@openmario/db';
 import { db } from '../db';
 import { ACTIVE_TERM_NUMBERS } from '../constants';
 import { waitForTask } from '../lib/tasks';
@@ -17,6 +17,7 @@ export default async function seedProfessors(
    const allRows = await db.select().from(meiliProfessorsIdx);
    const rows = allRows.filter(
       row =>
+         !isPlaceholderInstructor(row.name) &&
          row.most_recent_term != null &&
          ACTIVE_TERM_NUMBERS.includes(row.most_recent_term)
    ) as ProfessorDocument[];

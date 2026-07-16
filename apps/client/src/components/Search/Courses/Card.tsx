@@ -16,7 +16,7 @@ import { Tag, Tooltip } from '@/components/ui';
 import { ExternalLinkIcon, HeartFilledIcon, HeartIcon } from '@/components/icons';
 import { Link, linkOptions, useMatch } from '@tanstack/react-router';
 import { getDifficultyColor, getRatingColor, weekItems, parseDrexelTerm, formatDrexelTerm } from './helpers';
-import { formatTime, orpc } from '@/helpers';
+import { formatTime, orpc, isPlaceholderInstructor } from '@/helpers';
 import { useInfiniteHits } from 'react-instantsearch';
 import { useCallback, useRef } from 'react';
 import { useMobile } from '@/hooks';
@@ -78,6 +78,9 @@ export const Card = ({ section }: { section: Section }) => {
       orpc.course.course.queryOptions({ input: { params: { course_id: section.course_id } } })
    );
    const { data: courseInfo } = courseRaw ?? {};
+   const realInstructors = (section.instructors ?? []).filter(
+      (i) => !isPlaceholderInstructor(i.name),
+   );
 
    return (
       <CCard.Root
@@ -246,10 +249,10 @@ export const Card = ({ section }: { section: Section }) => {
                </Text>
                <Separator width='full' mb={4} />
 
-               {section?.instructors?.length > 0
+               {realInstructors.length > 0
                   ? (
                      <VStack align='start' gap={3}>
-                        <For each={section.instructors} >
+                        <For each={realInstructors} >
                            {(instructor) => (
                               <Flex
                                  key={`${section.crn}-${instructor.id}`}

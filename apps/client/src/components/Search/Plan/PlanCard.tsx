@@ -12,7 +12,7 @@ import type { Section } from '@/types'
 import { Tag, Tooltip } from '@/components/ui'
 import { toaster } from '@/components/ui/toaster'
 import { Link, useMatch } from '@tanstack/react-router'
-import { formatTime } from '@/helpers'
+import { formatTime, isPlaceholderInstructor } from '@/helpers'
 import { getDifficultyColor, getRatingColor, weekItems } from '@/components/Search/Courses/helpers'
 import { ExternalLinkIcon, AddCircleIcon, CheckCircleIcon } from '@/components/icons'
 import { upsertCourse, upsertSection, insertPlanEvent } from '@/db/mutations'
@@ -37,6 +37,9 @@ export const PlanCard = ({ section, currentTerm, currentYear }: PlanCardProps) =
 
   const courseData = useCourseData(section.course_id)
   const isTaken = courseData?.completed ?? false
+  const realInstructors = (section.instructors ?? []).filter(
+    (i) => !isPlaceholderInstructor(i.name),
+  )
 
   const hasSchedule = !!(section.days && section.start_time && section.end_time)
   const isOnlineAsync = section.instruction_method === 'Online' && section.instruction_type === 'Asynchronous'
@@ -182,10 +185,10 @@ export const PlanCard = ({ section, currentTerm, currentYear }: PlanCardProps) =
           <Tag size="sm" variant="subtle">CRN: {section.crn}</Tag>
         </Flex>
 
-        {section.instructors && section.instructors.length > 0 && (
+        {realInstructors.length > 0 && (
           <VStack align="start" gap={2} width="full">
             <Text fontSize="xs" color="fg.muted">Instructors:</Text>
-            <For each={section.instructors}>
+            <For each={realInstructors}>
               {(instructor) => (
                 <Flex key={instructor.id} direction="column" gap={2} width="full">
                   <Text fontSize="sm" fontWeight="medium" color="fg">{instructor.name}</Text>

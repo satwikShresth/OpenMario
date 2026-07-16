@@ -6,7 +6,8 @@ import {
    instructor_sections,
    section,
    prerequisitesMView,
-   corequisitesMView
+   corequisitesMView,
+   isPlaceholderInstructor
 } from '@openmario/db';
 
 // ---------------------------------------------------------------------------
@@ -235,22 +236,29 @@ export const getCourseAvailabilities = os.course.availabilities.handler(
          )
          .where(eq(section.course_id, course_id));
 
-      return rows.map(row => ({
-         term: String(row.term),
-         crn: String(row.crn),
-         instructor: row.instructor_id
-            ? {
-                 id: row.instructor_id,
-                 name: row.instructor_name!,
-                 avg_difficulty: row.avg_difficulty
-                    ? Number.parseFloat(row.avg_difficulty)
-                    : null,
-                 avg_rating: row.avg_rating
-                    ? Number.parseFloat(row.avg_rating)
-                    : null,
-                 num_ratings: row.num_ratings
-              }
-            : null
-      }));
+      return rows.map(row => {
+         const isPlaceholder =
+            row.instructor_id != null &&
+            isPlaceholderInstructor(row.instructor_name);
+
+         return {
+            term: String(row.term),
+            crn: String(row.crn),
+            instructor:
+               row.instructor_id && !isPlaceholder
+                  ? {
+                       id: row.instructor_id,
+                       name: row.instructor_name!,
+                       avg_difficulty: row.avg_difficulty
+                          ? Number.parseFloat(row.avg_difficulty)
+                          : null,
+                       avg_rating: row.avg_rating
+                          ? Number.parseFloat(row.avg_rating)
+                          : null,
+                       num_ratings: row.num_ratings
+                    }
+                  : null
+         };
+      });
    }
 );

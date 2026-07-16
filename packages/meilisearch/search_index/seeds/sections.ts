@@ -1,5 +1,5 @@
 import type { MeiliSearch } from 'meilisearch';
-import { meiliSectionsIdx } from '@openmario/db';
+import { meiliSectionsIdx, isPlaceholderInstructor } from '@openmario/db';
 import { db } from '../db';
 import {
    isActiveTerm,
@@ -14,9 +14,14 @@ const BATCH_SIZE = 1000;
 function toSectionDocument(
    row: typeof meiliSectionsIdx.$inferSelect
 ): SectionDocument {
+   const instructors = (row.instructors ?? []).filter(
+      (inst) => !isPlaceholderInstructor(inst.name)
+   );
+
    return {
       id: `${row.term}_${row.crn}`,
       ...row,
+      instructors,
       credits: row.credits != null ? Number(row.credits) : null
    };
 }

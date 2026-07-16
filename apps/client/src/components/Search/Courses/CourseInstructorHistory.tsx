@@ -14,7 +14,7 @@ import {
 } from '@chakra-ui/react';
 import { useQuery } from '@tanstack/react-query';
 import { Link } from '@tanstack/react-router';
-import { orpc } from '@/helpers';
+import { orpc, isPlaceholderInstructor } from '@/helpers';
 import { Tag } from '@/components/ui';
 import { termLabel } from '@/components/Professor/types';
 import { getDifficultyColor, getRatingColor } from './helpers';
@@ -121,7 +121,10 @@ export default function CourseInstructorHistory({ course_id }: Props) {
 
    for (const row of [...rows].sort((a, b) => String(b.term).localeCompare(String(a.term)))) {
       const { year, suffix, label } = parseTerm(row.term);
-      const instrName = row.instructor?.name ?? 'TBA';
+      const instructor = isPlaceholderInstructor(row.instructor?.name)
+         ? null
+         : row.instructor;
+      const instrName = instructor?.name ?? 'TBA';
       const key = `${year}-${suffix}-${instrName}`;
       if (seen.has(key)) {
          const existing = instrRows.find(
@@ -132,7 +135,7 @@ export default function CourseInstructorHistory({ course_id }: Props) {
       }
       seen.add(key);
       instrRows.push({
-         instructor: row.instructor,
+         instructor,
          termLabel: label,
          year,
          termSuffix: suffix,
