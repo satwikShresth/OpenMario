@@ -148,7 +148,7 @@ export function useCourseGraph({ courseId, mode = 'requirements' }: UseCourseGra
    const queryClient = useQueryClient();
    const navigate = useNavigate();
    const planMatch = useMatch({ from: '/courses/plan/schedule/$term_id/$course_id', shouldThrow: false });
-   const profileMatch = useMatch({ from: '/courses/profile/$course_id', shouldThrow: false });
+   const profileMatch = useMatch({ from: '/courses/plan/profile/$course_id', shouldThrow: false });
    const isVisualizer = mode === 'visualizer';
    const [expansion, setExpansion] = useState<ExpansionState>({
       expandedPrereqs: new Set(),
@@ -288,7 +288,7 @@ export function useCourseGraph({ courseId, mode = 'requirements' }: UseCourseGra
 
          if (profileMatch) {
             navigate({
-               to: '/courses/profile/$course_id',
+               to: '/courses/plan/profile/$course_id',
                params: { course_id: selectedCourseId },
                resetScroll: false
             });

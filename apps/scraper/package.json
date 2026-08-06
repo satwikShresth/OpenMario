@@ -9,7 +9,11 @@
     "push:sections": "bun run src/db/push.sections.ts",
     "update:sections": "bun run src/db/update.sections.ts",
     "push:course-history": "bun run src/db/push.course_history.ts",
-    "backfill:courses": "bun run scripts/backfill-missing-courses.ts"
+    "backfill:courses": "bun run scripts/backfill-missing-courses.ts",
+    "majors:discover": "bun run scripts/catalog-majors.ts discover",
+    "majors:scrape": "bun run scripts/catalog-majors.ts scrape",
+    "majors:markdown": "bun run scripts/catalog-majors.ts markdown",
+    "majors:all": "bun run scripts/catalog-majors.ts all"
   },
   "dependencies": {
     "@dotenvx/dotenvx": "^1.52.0",

@@ -6,7 +6,7 @@ import { Box, Flex } from '@chakra-ui/react';
 import type { QueryClient } from '@tanstack/react-query';
 import TanStackQueryLayout from '@/integrations/tanstack-query/layout.tsx';
 import { Footer, PageHeader } from '@/components/common';
-import { getPageMaxWidth, isImmersiveScheduleRoute } from '@/components/common/page-layout';
+import { getPageMaxWidth, isImmersivePlanCanvasRoute, isImmersiveScheduleRoute } from '@/components/common/page-layout';
 import { Sidebar, BottomBar } from '@/components/nav';
 
 interface MyRouterContext {
@@ -25,7 +25,8 @@ function RootComponent() {
    const pathname = useRouterState({ select: (s) => s.location.pathname });
    const pageMaxW = getPageMaxWidth(pathname);
    const isMarketingShell = pathname === '/';
-   const isImmersive = isImmersiveScheduleRoute(pathname);
+   const isImmersive =
+      isImmersiveScheduleRoute(pathname) || isImmersivePlanCanvasRoute(pathname);
 
    return (
       <>

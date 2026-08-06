@@ -15,6 +15,12 @@ export function isImmersiveScheduleRoute(pathname: string): boolean {
    return /^\/courses\/plan\/schedule\/term-[^/]+/.test(path)
 }
 
+/** Full-bleed graph / canvas pages inside Plan */
+export function isImmersivePlanCanvasRoute(pathname: string): boolean {
+   const path = normalizePathname(pathname)
+   return path === '/courses/plan/major' || path.startsWith('/courses/plan/major/')
+}
+
 /** Faceted search / dense table routes — wider than detail, still capped. */
 export function isSearchRoute(pathname: string): boolean {
    const path = normalizePathname(pathname)
@@ -34,6 +40,8 @@ export function isSearchRoute(pathname: string): boolean {
 export type PageMaxWidth = '5xl' | '7xl' | 'none'
 
 export function getPageMaxWidth(pathname: string): PageMaxWidth {
-   if (isImmersiveScheduleRoute(pathname)) return 'none'
+   if (isImmersiveScheduleRoute(pathname) || isImmersivePlanCanvasRoute(pathname)) {
+      return 'none'
+   }
    return isSearchRoute(pathname) ? '7xl' : '5xl'
 }

@@ -1,8 +1,8 @@
-import { forwardRef } from 'react'
+import { forwardRef, useEffect, useState } from 'react'
 import type React from 'react'
-import { Link, Box, Flex, Icon, Text } from '@chakra-ui/react'
+import { Link, Box, Flex, Icon, IconButton, Text } from '@chakra-ui/react'
 import { Link as TLink, useRouterState } from '@tanstack/react-router'
-import { GithubIcon, MessageCircleIcon } from '@/components/icons'
+import { ChevronDownIcon, GithubIcon, MessageCircleIcon } from '@/components/icons'
 import { useColorModeValue } from '@/components/ui/color-mode'
 import { FeedbackDialog } from '@/components/common/Feedback'
 import { Tooltip } from '@/components/ui/tooltip'
@@ -88,39 +88,106 @@ const PRIMARY_GROUP_IDS = ['coop', 'academics']
 
 export function SidebarItems({ onClose, minimized }: SidebarItemsProps) {
    const pathname = useRouterState({ select: s => s.location.pathname })
+   const [expanded, setExpanded] = useState<Record<string, boolean>>({})
 
    const subActiveBg = useColorModeValue('teal.50', 'whiteAlpha.100')
    const subHoverBg = useColorModeValue('blackAlpha.50', 'whiteAlpha.80')
+   const hoverBg = useColorModeValue('blackAlpha.50', 'whiteAlpha.80')
 
    const primaryGroups = NAV_GROUPS.filter(g => PRIMARY_GROUP_IDS.includes(g.id))
    const bottomGroups = NAV_GROUPS.filter(g => !PRIMARY_GROUP_IDS.includes(g.id))
+
+   useEffect(() => {
+      for (const group of NAV_GROUPS) {
+         for (const item of group.items) {
+            if (!item.children?.length) continue
+            const isActive = item.activeWhen
+               ? item.activeWhen(pathname)
+               : pathname.startsWith(item.href)
+            if (isActive) {
+               setExpanded(prev =>
+                  prev[item.label] === undefined ? { ...prev, [item.label]: true } : prev,
+               )
+            }
+         }
+      }
+   }, [pathname])
+
+   const toggleExpanded = (label: string, currentlyOpen: boolean) => {
+      setExpanded(prev => ({ ...prev, [label]: !currentlyOpen }))
+   }
 
    const renderGroupItems = (items: (typeof NAV_GROUPS)[number]['items']) =>
       items.map(item => {
          const isActive = item.activeWhen
             ? item.activeWhen(pathname)
             : pathname.startsWith(item.href)
-         const showChildren = isActive && !minimized && item.children?.length
+         const hasChildren = Boolean(item.children?.length)
+         const isOpen = !minimized && hasChildren && (expanded[item.label] ?? isActive)
 
          return (
             <Box key={item.label}>
-               <Tooltip content={item.label} disabled={!minimized}>
-                  <TLink
-                     to={item.href}
-                     onClick={onClose}
-                     style={{ textDecoration: 'none', display: 'block' }}
-                  >
-                     <NavButton
-                        icon={item.icon}
-                        label={item.label}
-                        minimized={minimized}
-                        isActive={isActive}
-                        badge={item.badge?.text}
-                     />
-                  </TLink>
-               </Tooltip>
+               <Flex align='center' gap={0.5}>
+                  {hasChildren ? (
+                     <Tooltip content={item.label} disabled={!minimized}>
+                        <Box flex='1' minW={0}>
+                           <NavButton
+                              icon={item.icon}
+                              label={item.label}
+                              minimized={minimized}
+                              isActive={isActive}
+                              badge={item.badge?.text}
+                              aria-expanded={isOpen}
+                              onClick={() => {
+                                 if (minimized) return
+                                 toggleExpanded(item.label, isOpen)
+                              }}
+                           />
+                        </Box>
+                     </Tooltip>
+                  ) : (
+                     <Tooltip content={item.label} disabled={!minimized}>
+                        <TLink
+                           to={item.href}
+                           onClick={onClose}
+                           style={{ textDecoration: 'none', display: 'block', flex: 1, minWidth: 0 }}
+                        >
+                           <NavButton
+                              icon={item.icon}
+                              label={item.label}
+                              minimized={minimized}
+                              isActive={isActive}
+                              badge={item.badge?.text}
+                           />
+                        </TLink>
+                     </Tooltip>
+                  )}
 
-               {showChildren && (
+                  {!minimized && hasChildren && (
+                     <IconButton
+                        aria-label={isOpen ? `Collapse ${item.label}` : `Expand ${item.label}`}
+                        aria-expanded={isOpen}
+                        variant='ghost'
+                        size='xs'
+                        borderRadius='md'
+                        color='fg.muted'
+                        flexShrink={0}
+                        _hover={{ bg: hoverBg, color: 'fg' }}
+                        onClick={() => toggleExpanded(item.label, isOpen)}
+                     >
+                        <Box
+                           as='span'
+                           display='inline-flex'
+                           transition='transform 0.15s ease'
+                           transform={isOpen ? 'rotate(0deg)' : 'rotate(-90deg)'}
+                        >
+                           <ChevronDownIcon size={14} />
+                        </Box>
+                     </IconButton>
+                  )}
+               </Flex>
+
+               {isOpen && (
                   <Flex direction='column' gap={0.5} mt={1} ml={4} pl={3}>
                      {item.children!.map(child => {
                         const childActive = child.isActive

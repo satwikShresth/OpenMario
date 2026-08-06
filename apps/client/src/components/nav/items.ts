@@ -4,7 +4,6 @@ import {
    BriefcaseIcon,
    UsersIcon,
    BookOpenIcon,
-   ListIcon,
    CalendarIcon,
    McpIcon,
 } from '@/components/icons';
@@ -35,7 +34,7 @@ export interface NavItem {
          | 'pink';
       variant?: 'solid' | 'subtle' | 'outline' | 'surface' | 'plain';
    };
-   /** Sub-items shown indented below the parent when the parent is active */
+   /** Sub-items shown indented below the parent; expandable via accordion arrow */
    children?: SubNavItem[];
    /** Override the default startsWith(href) active check */
    activeWhen?: (pathname: string) => boolean;
@@ -105,6 +104,25 @@ export const NAV_GROUPS: NavGroup[] = [
                      )
                   },
                },
+               {
+                  label: 'Major Map',
+                  href: '/courses/plan/major',
+                  isActive: pathname => {
+                     const p = pathname.replace(/\/+$/, '') || '/'
+                     return p === '/courses/plan/major' || p.startsWith('/courses/plan/major/')
+                  },
+               },
+               {
+                  label: 'My Courses',
+                  href: '/courses/plan/profile',
+                  isActive: pathname => {
+                     const p = pathname.replace(/\/+$/, '') || '/'
+                     return (
+                        p === '/courses/plan/profile' ||
+                        p.startsWith('/courses/plan/profile/')
+                     )
+                  },
+               },
             ],
          },
          {
@@ -115,14 +133,9 @@ export const NAV_GROUPS: NavGroup[] = [
       ],
    },
    {
-      id: 'profile',
-      label: 'Profile',
+      id: 'tools',
+      label: 'Tools',
       items: [
-         {
-            label: 'Profile',
-            href: '/courses/profile',
-            icon: ListIcon,
-         },
          {
             label: 'MCP',
             href: '/mcp',
