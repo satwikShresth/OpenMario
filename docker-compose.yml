@@ -1,7 +1,7 @@
 services:
   server:
     build:
-      dockerfile: Dockerfile
+      dockerfile: prod.server.dockerfile
       target: production-server
     restart: unless-stopped
     # ports:
@@ -52,7 +52,7 @@ services:
   # MCP Streamable HTTP — proxy mcp.openmario.com → this service (MCP at /)
   mcp:
     build:
-      dockerfile: Dockerfile
+      dockerfile: prod.mcp.dockerfile
       target: production-mcp
     restart: unless-stopped
     env_file:
@@ -68,7 +68,7 @@ services:
     ports:
       - "${MCP_PORT:-3100}:${MCP_PORT:-3100}"
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3100/health"]
+      test: bun run /app/healthcheck.ts
       interval: 30s
       timeout: 10s
       retries: 3
