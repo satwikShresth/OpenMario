@@ -15,7 +15,14 @@ export const env = createEnv({
       MEILI_HOST: z.url(),
       MEILI_MASTER_KEY: z.string(),
       BETTER_AUTH_SECRET: z.string(),
-      BETTER_AUTH_BASE_URL: z.url()
+      BETTER_AUTH_BASE_URL: z.url(),
+      /** Comma-separated list of allowed CORS origins */
+      CORS_ORIGINS: z
+         .string()
+         .optional()
+         .default(
+            'http://localhost:5173,http://localhost:3001,https://openmario.com,https://www.openmario.com,https://staging.openmario.com'
+         )
    },
    clientPrefix: 'VITE_',
    client: {},

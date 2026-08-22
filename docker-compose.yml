@@ -20,6 +20,7 @@ services:
       DATABASE_URL: ${DATABASE_URL?Variable not set}
       MEILI_HOST: ${MEILI_HOST?Variable not set}
       MEILI_MASTER_KEY: ${MEILI_MASTER_KEY?Variable not set}
+      CORS_ORIGINS: ${CORS_ORIGINS:-http://localhost:5173,http://localhost:3001,https://openmario.com,https://www.openmario.com,https://staging.openmario.com}
       NEO4J_URI: ${NEO4J_URI?Variable not set}
       NEO4J_USERNAME: ${NEO4J_USERNAME?Variable not set}
       NEO4J_PASSWORD: ${NEO4J_PASSWORD?Variable not set}
