@@ -1,16 +1,11 @@
 import { env } from '@env';
 
-const ALLOWED_ORIGINS = {
-   staging: ['https://staging.openmario.com'],
-   production: ['https://openmario.com', 'https://www.openmario.com']
-};
+const allowedOrigins = env.CORS_ORIGINS.split(',')
+   .map(origin => origin.trim())
+   .filter(Boolean);
 
 export const CORS_OPTIONS = {
-   origin: (['staging', 'production'] as const).includes(
-      env.NODE_ENV as 'staging' | 'production'
-   )
-      ? ALLOWED_ORIGINS[env.NODE_ENV as keyof typeof ALLOWED_ORIGINS]
-      : ['http://localhost:5173', 'http://localhost:3001'],
+   origin: allowedOrigins,
    credentials: true,
    allowMethods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
    allowHeaders: ['Content-Type', 'Authorization'],

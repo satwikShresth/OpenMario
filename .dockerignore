@@ -1,9 +1,34 @@
+# Dependencies & VCS
 node_modules
+**/node_modules
 .git
-*.log
+.cursor
+.agents
+.pnpm-store
+.turbo
+**/.turbo
+
+# Env & secrets (inject at runtime via --env-file / compose)
 .env
 .env.*
+**/.env
+**/.env.*
+
+# Build outputs
 dist
+**/dist
 build
-apps/server/.env
-apps/client/.env 
+**/build
+*.log
+**/.DS_Store
+
+# Heavy / unused across server/mcp/client images (keep */package.json for lockfile install)
+packages/archives
+packages/email
+apps/scraper/src
+packages/scraper/src
+crons
+README.md
+**/*.md
+**/*.test.ts
+**/*.spec.ts

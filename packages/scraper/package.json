@@ -1,5 +1,5 @@
 {
-  "name": "@openmario/pkg/scraper",
+  "name": "@openmario/rmp-scraper",
   "version": "1.0.0",
   "description": "RMP scraper for updating professor ratings in OpenMario",
   "type": "module",

@@ -1,4 +1,4 @@
-# @openmario/scraper
+# @openmario/rmp-scraper
 
 RMP (Rate My Professor) scraper for updating professor ratings in OpenMario.
 
@@ -32,7 +32,7 @@ import {
   searchSchools,
   searchProfessorsAtSchool,
   getProfessorRating,
-} from '@openmario/scraper';
+} from '@openmario/rmp-scraper';
 
 // Find school ID
 const schools = await searchSchools('Drexel University');
