@@ -13,7 +13,7 @@ import {
 import { useState } from 'react';
 import { CheckIcon, ClipboardIcon } from '@/components/icons';
 
-const MCP_URL = 'https://mcp.openmario.com';
+const MCP_URL = 'https://mcp.openmario.com/mcp';
 
 const CURSOR_JSON = `{
   "mcpServers": {
